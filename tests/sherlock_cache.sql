@@ -1,0 +1,5 @@
+CREATE TABLE IF NOT EXISTS cache(
+  name VARCHAR(127) NOT NULL PRIMARY KEY,
+  class VARCHAR(127) NOT NULL,
+  crossmatch TEXT
+);
