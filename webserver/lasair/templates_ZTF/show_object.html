@@ -1,0 +1,230 @@
+{% extends "base.html"%}
+{% load static %}
+{% block content %}
+<script type="text/javascript" src="{% static '/js/plotly-latest.min.js' %}" ></script>
+<script type="text/javascript" src="{% static '/js/lc.js' %}" ></script>
+<!--<script type="text/javascript" src="{% static '/js/lc_apparent.js' %}" ></script> -->
+<script type="text/javascript" src="//code.jquery.com/jquery-1.12.1.min.js" charset="utf-8"></script>
+<script type="text/javascript" src="{% static '/js/jquery.tablesorter.min.js' %}" ></script>
+<link rel="stylesheet" href="//aladin.u-strasbg.fr/AladinLite/api/v2/latest/aladin.min.css" />
+
+<div class="container">
+<div class="row">
+    <div class="col-sm">
+        <h3>Object {{ data.objectId }}</h3>
+    </div>
+</div>
+
+{% if not data.objectData.ramean %}
+This object is not in the Lasair database.
+{%  else %}
+
+<div class="row">
+        <div class="w-50" id="lc" style="width:100%;height:500px;"></div>
+<!--	<div id="lc_apparent" style="width:100%;height:300px"></div> -->
+<!--<center>        <input type="radio" name="mag" id="lc_button" checked="checked"> Difference Magnitude |
+<input type="radio" name="mag" id="lc_apparent_button"> Apparent Magnitude (see <a href=/about#photometry>note</a>) </center> -->
+
+<!--        <div id="radec" style="width:100%;height:300px;"></div> -->
+      <div class="w-50">
+        <div id="SV-layerBox"> </div><br/>
+        <div id="aladin-lite-div" style="width:450px;height:450px;"></div>
+        <span class="small">Transient position: red square.<br/>Sherlock source: blue square.</span>
+      </div>
+
+<div class="w-50">
+<ul>
+	<li>Object has {{ data.objectData.ncand }} candidates between {{ data.objectData.mjdmin_ago|floatformat:0 }} and {{ data.objectData.mjdmax_ago|floatformat:0 }} days ago, at mean position:
+<ul>
+<li> (RA, Dec) = ({{ data.objectData.ramean|floatformat:6 }}, {{ data.objectData.decmean|floatformat:6 }})</li>
+<li> (RA, Dec) = ({{ data.objectData.rasex }}, {{ data.objectData.decsex }})</li>
+{% if data.objectData.glonmean %}<li> (galactic_lon, galactic_lat) = ({{ data.objectData.glonmean|floatformat:6 }}, {{ data.objectData.glatmean|floatformat:6 }})</li> {% endif %}
+{% if data.objectData.ec_lon %}<li> (ecliptic_lon, ecliptic_lat) = ({{ data.objectData.ec_lon|floatformat:6 }}, {{ data.objectData.ec_lat|floatformat:6 }})</li> {% endif %}
+</ul>
+
+{% if data.count_isdiffpos %}
+<li>NOTE: There are {{ data.count_isdiffpos }} of {{ data.count_all_candidates }} candidates (below) where the detected brightness is less than the reference brightness (where the magnitude is followed by "f"), also indicated by an open circle in the light curve above.</li>
+{% endif %}
+
+
+{% if data.objectData.MPCname %}
+<li><form method="post" id="JPLsearch" action="https://ssd.jpl.nasa.gov/sbdb.cgi">
+<input type="hidden" name="sstr" value="{{ data.objectData.MPCname }}"></form>
+Moving object, MPC name is <a href="#" onclick="document.forms[1].submit();">{{ data.objectData.MPCname }}</a></li>
+{% else %}
+{% if data.annotation %}
+<li>{{ data.annotation|safe }}{% endif %}</li>
+{% endif %}
+
+<!--<li>Information on this webpage also&nbsp; <a href="/object/{{ data.objectId }}/json/">available as JSON.</a></li> -->
+
+<form method="post" name="ZTFDR1" action="https://irsa.ipac.caltech.edu/cgi-bin/Gator/nph-query" enctype="multipart/form-data">
+<input type="hidden" name="objstr" value="{{ data.objectData.ramean|floatformat:6 }} {{ data.objectData.decmean|floatformat:6 }}" />
+<input type="hidden" name="radius" value="1" />
+<input type="hidden" name="catalog" value="ztf_objects_dr1" />
+</form>
+<li><a href=http://nedwww.ipac.caltech.edu/cgi-bin/nph-calc?in_csys=Equatorial&in_equinox=J2000.0&obs_epoch=2000.0&lon={{ data.objectData.ramean }}d&lat={{ data.objectData.decmean }}&pa=0.0&out_csys=Equatorial&out_equinox=J2000.0>Galactic Extinction</a></li>
+<li>Conesearch Links (at 5 arcsec):
+&nbsp;&nbsp;|&nbsp;&nbsp;
+<a href="http://simbad.u-strasbg.fr/simbad/sim-coo?Coord={{ data.objectData.ramean }}%20{{ data.objectData.decmean }}&Radius=0.08" target="new">Simbad</a>
+&nbsp;&nbsp;|&nbsp;&nbsp;
+<a href="http://ned.ipac.caltech.edu/cgi-bin/nph-objsearch?lon={{ data.objectData.ramean|floatformat:6 }}d&lat={{ data.objectData.decmean|floatformat:6 }}d&radius=2&search_type=Near+Position+Search" target="new">NED</a>
+&nbsp;&nbsp;|&nbsp;&nbsp;
+<a href="https://wis-tns.org/search?ra={{ data.objectData.ramean }}&decl={{ data.objectData.decmean }}&radius=5&coords_unit=arcsec" target="new">Transient Name Server</a>
+&nbsp;&nbsp;|&nbsp;&nbsp;
+<a href="#" onclick="document.forms[2].submit();" target="new">ZTF DR1</a></li>
+</li>
+
+</ul>
+
+{% if data.sherlock.classification %}
+<h4>Sherlock</h4>
+<ul>
+
+<li>Classified as {{ data.sherlock.classification }},
+{% if data.sherlock.separationArcsec %} 
+at {{ data.sherlock.separationArcsec|floatformat:2 }} arcsec.{% endif %}
+</li>
+
+<li>
+{% if data.sherlock.catalogue_object_type %}
+Best crossmatch is {{ data.sherlock.catalogue_object_type }}{% endif %}
+{% if data.sherlock.z %} at z = {{ data.sherlock.z }}{% endif %}
+</li> 
+
+<li>
+{{ data.sherlock.description|safe }}
+</li>
+</ul>
+{% endif %}
+
+{% if data.TNS.tns_name %}
+<h4>TNS</h4>
+<ul>
+<li>TNS name is {{ data.TNS.tns_prefix }} <a href=https://www.wis-tns.org/object/{{ data.TNS.tns_name }}>{{ data.TNS.tns_name }}</a><br/>
+{% if data.TNS.type %} 
+  <li> type {{ data.TNS.type }}, z={{ data.TNS.z }}, host is {{ data.TNS.host_name }} {% endif %}
+{% if data.TNS.source_group %} 
+  <li>discovered by {{ data.TNS.source_group }} {% endif %}
+{% if data.TNS.disc_mag %} 
+  <li>discovery magnitude {{ data.TNS.disc_mag }} {% endif %}
+</ul>
+<p>
+{% endif %}
+</div>
+
+<div class="w-50">
+<table class="table"><tr><td>
+  <div id="fits_div" style='width:317px; height:317px; '>
+</td></tr><tr><td>
+  <small>This image is the most recent. 
+Click on these links to inspect the 
+<a href="/fitsview/{{ data.candidates.0.candid }}_cutoutScience/" target=_blank>science</a>,
+<a href="/fitsview/{{ data.candidates.0.candid }}_cutoutTemplate/" target=_blank>ref</a>, and
+<a href="/fitsview/{{ data.candidates.0.candid }}_cutoutDifference/" target=_blank>diff</a>
+images in detail.</small>
+</td></tr></table
+</div>
+</div>
+<hr/>
+
+<div class ="row">
+<h4>Candidates</h4>&nbsp;&nbsp;
+(To sort, click the column headings)
+    <div class="col-sm-12">
+        <table id=candidates_table class="table">
+        <thead><tr>
+        <th>MJD</th>
+        <th>UTC</th>
+        <th>Filter</th>
+        <th>magpsf</th>
+        <th>status</th>
+        <th>images</th>
+        </tr></thead>
+                <tbody>
+        {% for cand in data.candidates %}
+
+            <tr>
+            <td>{% if not cand.candid %}<font color="gray" size=-2>{% endif %}{{ cand.mjd|floatformat:3 }}{% if not cand.candid %}</font>{% endif %}</td>
+            <td>{% if not cand.candid %}<font color="gray" size=-2>{% endif %}{{ cand.utc }}{% if not cand.candid %}</font>{% endif %}</td>
+            <td>{% if not cand.candid %}<font color="gray" size=-2>{% endif %}{% if cand.fid == 1 %}g{% else %}r{% endif %}{% if not cand.candid %}</font>{% endif %}</td>
+            <td>{% if not cand.candid %}<font color="gray" size=-2>{% endif %}{{ cand.magpsf|floatformat:3 }} {% if cand.candid %}&plusmn; {{ cand.sigmapsf|floatformat:3 }}{% endif %}{% if not cand.candid %}</font>{% endif %}</td>
+
+            <td> {% if cand.candid %}{{ cand.isdiffpos }}
+             {% else %}<font color="gray" size=-2>non-detection</font>
+		    {% endif %}</td>
+
+	    <td>{% if cand.candid > 0 %}
+		    <a href=/fitsview/{{ cand.candid }}_cutoutScience/ target=_blank><small>target</small></a> 
+		    <a href=/fitsview/{{ cand.candid }}_cutoutTemplate/ target=_blank><small>ref</small></a>
+		    <a href=/fitsview/{{ cand.candid }}_cutoutDifference/ target=_blank><small>diff</small></a>
+                {% endif %}</td>
+
+            </tr>
+
+        {% endfor %}
+                </tbody>
+        </table>
+    </div>
+</div>
+</div>
+
+<script type="text/javascript">
+$(document).ready(function() 
+    { 
+        $("#candidates_table").tablesorter(); 
+    } 
+); 
+</script>
+
+<!--<script type="text/javascript" src="//aladin.u-strasbg.fr/AladinLite/api/v2/latest/aladin.min.js" charset="utf-8"></script> -->
+<script src="{% static 'js/surveys.js' %}"></script>
+<script src="{% static 'js/aladin.js' %}"></script>
+<script src="{% static 'js/fitsview_init.js' %}"></script>
+<script src="{% static 'js/fitsview.js' %}"></script>
+<script type="text/javascript">
+	var aladin = A.aladin('#aladin-lite-div', {survey: "P/PanSTARRS/DR1/color-z-zg-g", fov:0.025, target: "{{ data.objectData.ramean }}, {{ data.objectData.decmean }}", showLayersControl:true});
+
+    aladin.showLayerBox();
+    $('input[name=survey]').change(function() {
+        aladin.setImageSurvey($(this).val());
+    });
+
+    var alertcat = A.catalog({name: 'Alert', sourceSize: 18});
+    var alert = A.source({{ data.objectData.ramean }}, {{ data.objectData.decmean }});
+    alertcat.addSources([alert]);
+    aladin.addCatalog(alertcat);
+
+{% if data.sherlock.eastSeparationArcsec %}
+    var sherlockcat = A.catalog({name: 'Sherlock', sourceSize: 18});
+    var sherlock = A.source(
+	    {{ data.objectData.ramean }} + {{ data.sherlock.eastSeparationArcsec }}/3600, 
+	    {{ data.objectData.decmean }} + {{ data.sherlock.northSeparationArcsec }}/3600);
+    sherlockcat.addSources([sherlock]);
+    aladin.addCatalog(sherlockcat);
+{% endif %}
+/*
+    var hipsCats = {
+        'ps1': A.catalogHiPS('https://axel.u-strasbg.fr/HiPSCatService/II/349/ps1', {name: 'PanSTARRS DR1 sources', shape: 'circle', sourceSize: 8, color: '#6baed6', onClick: 'showTable', name: '          PanSTARRS DR1'}),
+        'gdr2': A.catalogHiPS('https://axel.u-strasbg.fr/HiPSCatService/I/345/gaia2', {name: 'Gaia DR2 sources', shape: 'circle', sourceSize: 8, color: '#d66bae', onClick: 'showTable', name: 'Gaia DR2'})
+        };
+    hipsCats['ps1'].hide();
+    hipsCats['gdr2'].hide();
+    aladin.addCatalog(hipsCats['ps1']);
+    aladin.addCatalog(hipsCats['gdr2']);
+*/
+    var fits_url = '/fits/{{ data.candidates.0.candid }}_cutoutScience';
+    console.log('starting fitsview');
+    console.log(fits_url)
+    var fits = new FITS (gebi ("fits_div"), 0);
+    start_fitsview(fits, fits_url);
+
+    console.log('starting light curve');
+    var pd = "{{ json_data }}";
+    pd = pd.replace(/&quot;/g,'"')
+    var json_data = JSON.parse(pd);
+    plotlc(json_data, 'lc', true);
+</script>
+{% endif %}
+{% endblock %}
+

@@ -1,0 +1,34 @@
+{% extends "base.html"%}
+{% load static %}
+{% block content %}
+<div class="row">
+<h3>Lasair Ingestion Status</h3>
+</div>
+<div class="row">
+<h5>See <a href=https://ztf-alert-monitor.lsst.ac.uk/d/iILmd8-Wz/alerts?orgId=1&refresh=5m&from=now-24h&to=now&viewPanel=8>graph of last 24 hours</a></h5>
+</div>
+<div class="row">
+	<div class="col-sm">
+<font color="red"><h4>{{ message }}</h4> </font>
+<table class="table">
+<tr><td>Total objects in database</td><td> {{ status.total_count }}</td></tr>
+<tr><td>Night number (nid)</td><td> {{ status.nid }}</td></tr>
+<tr><td>Last Lasair update time (UTC)</td><td> {{ status.update_time }}</td></tr>
+<tr> <td colspan="2" class="divider"></td> </tr>
+<tr><td>Alerts sent by ZTF today</td><td> {{ status.today_ztf }}</td></tr>
+<tr><td>Alerts received by Ingest stage today</td><td> {{ status.today_alert }}</td></tr>
+<tr><td>Alerts received by Filter stage today</td><td> {{ status.today_filter }} = </td></tr>
+<tr><td>Alerts sent to database today</td><td> {{ status.today_filter_out }} +</td></tr>
+<tr><td>Solar system detections today</td><td> {{ status.today_filter_ss }} +</td></tr>
+<tr><td>Singletons today</td><td> {{ status.today_singleton }} </td></tr>
+<tr> <td colspan="2" class="divider"></td> </tr>
+<tr><td>New detections today</td><td> {{ status.today_candidate }}</td></tr>
+<tr><td>Updated objects in database today</td><td> {{ status.today_database }}</td></tr>
+<tr><td>Since most recent alert, hours:minutes</td><td> {{ status.min_delay }}</td></tr>
+<tr><td>Number in TNS database</td><td> {{ status.countTNS }}</td></tr>
+</table>
+
+<a href=/lasair/static/services_log/{{ date }}.log>services log</a>
+</div>
+</div>
+{% endblock %}
