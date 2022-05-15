@@ -1,16 +1,16 @@
 import sys
-sys.path.append('../../../common')
+sys.path.append('../common')
+import settings
 from django.shortcuts import render, get_object_or_404, redirect
 from django.http import HttpResponseRedirect, HttpResponse
 from django.template.context_processors import csrf
 from django.views.decorators.csrf import csrf_exempt
 from django.db import connection
 from django.db.models import Q
-from models import Myqueries, Annotators
-import settings
+from lasair.models import Myqueries, Annotators
 import json, math, time
 import src.date_nid as date_nid
-from objects import obj
+from lasair.objects import obj
 
 from django.contrib.auth.models import User
 from django.contrib.auth import login, authenticate

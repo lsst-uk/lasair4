@@ -1,9 +1,8 @@
 from rest_framework.throttling import UserRateThrottle
 from rest_framework.views import exception_handler
 from rest_framework.exceptions import Throttled
-import settings
+import lasair.settings
 import datetime
-
 def custom_exception_handler(exc, context):
     # Call REST framework's default exception handler first,
     # to get the standard error response.
@@ -74,7 +73,7 @@ class UserClassRateThrottle(UserRateThrottle):
         else:
             user_type = "DEFAULT_THROTTLE_RATES"
 
-        throttle_rates = settings.REST_FRAMEWORK[user_type]
+        throttle_rates = lasair.settings.REST_FRAMEWORK[user_type]
 
         try:
             return throttle_rates[self.scope]

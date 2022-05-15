@@ -18,7 +18,7 @@ from django.contrib.auth import views as authviews
 from django.urls import include, path
 from django.views.generic import TemplateView
 
-import views, services, objects, areas, watchlists, queries, skymap
+from lasair import views, services, objects, areas, watchlists, queries, skymap
 
 from django.contrib import admin
 #admin.autodiscover()
@@ -27,9 +27,8 @@ urlpatterns = [
     path('about',                   views.about,                name='about'),
     path('sherlock',    TemplateView.as_view(template_name='sherlock.html')),
     path('lasairlsst',  TemplateView.as_view(template_name='lasairlsst.html')),
-    path('release',  TemplateView.as_view(template_name='release.html')),
+#    path('release',  TemplateView.as_view(template_name='release.html')),
     path('contact',  TemplateView.as_view(template_name='contact.html')),
-    # above will disappear
 
     path('',              views.index,                  name='index'),
     path('index2',        views.index2,                  name='index2'),

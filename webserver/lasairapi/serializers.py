@@ -1,6 +1,7 @@
 import sys
-sys.path.append('../../common')
-import settings
+sys.path.append('../common')
+import settings as lasair_settings
+from src import db_connect
 from rest_framework import serializers
 from gkutils.commonutils import coneSearchHTM, FULL, QUICK, CAT_ID_RA_DEC_COLS, base26, Struct
 from confluent_kafka import Producer, KafkaError
@@ -67,7 +68,7 @@ class ConeSerializer(serializers.Serializer):
 
         return info
 
-from objects import objjson
+from lasair.objects import objjson
 class ObjectsSerializer(serializers.Serializer):
     objectIds = serializers.CharField(required=True)
 
@@ -109,7 +110,7 @@ class SherlockObjectsSerializer(serializers.Serializer):
             userId = request.user
 
         datadict = {}
-        url = 'http://%s/object/%s' % (settings.SHERLOCK_SERVICE, objectIds)
+        url = 'http://%s/object/%s' % (lasair_settings.SHERLOCK_SERVICE, objectIds)
         if lite: url += '?lite=true'
         r = requests.get(url)
         if r.status_code == 200:
@@ -137,7 +138,7 @@ class SherlockPositionSerializer(serializers.Serializer):
 # can also send multiples, but not yet implemented
 # http://192.41.108.29/query?ra=115.811388,97.486925&dec=-25.76404,-26.975506
 
-        url = 'http://%s/query?ra=%f&dec=%f' % (settings.SHERLOCK_SERVICE, ra, dec)
+        url = 'http://%s/query?ra=%f&dec=%f' % (lasair_settings.SHERLOCK_SERVICE, ra, dec)
         if lite: url += '&lite=true'
         r = requests.get(url)
         if r.status_code != 200:
@@ -145,7 +146,7 @@ class SherlockPositionSerializer(serializers.Serializer):
         else:
             return json.loads(r.text)
 
-from query_builder import check_query, build_query
+from lasair.query_builder import check_query, build_query
 
 class QuerySerializer(serializers.Serializer):
     selected   = serializers.CharField(max_length=4096, required=True)
@@ -198,7 +199,7 @@ class QuerySerializer(serializers.Serializer):
             
         sqlquery_real += ' LIMIT %d OFFSET %d' % (limit, offset)
 
-        msl = db_connect.readonly()
+        msl = db_connect.remote()   ######## hack
         cursor = msl.cursor(buffered=True, dictionary=True)
         result = []
         try:
@@ -238,7 +239,7 @@ class StreamsSerializer(serializers.Serializer):
 
         if topic:
             try:
-                datafile = open(settings.KAFKA_STREAMS + topic, 'r').read()
+                datafile = open(lasair_settings.KAFKA_STREAMS + topic, 'r').read()
                 data = json.loads(datafile)['digest']
                 if limit: 
                     data = data[:limit]
@@ -254,7 +255,7 @@ class StreamsSerializer(serializers.Serializer):
                 replyMessage = '%s is not a regular expression' % regex
                 return { "topics": [], "info": replyMessage }
 
-            msl = db_connect.readonly()
+            msl = db_connect.remote()  ###### hack
             cursor = msl.cursor(buffered=True, dictionary=True)
             result = []
             query = 'SELECT mq_id, user, name, topic_name FROM myqueries WHERE active>0'
@@ -271,8 +272,7 @@ class StreamsSerializer(serializers.Serializer):
 
 from cassandra.cluster import Cluster
 from cassandra.query import dict_factory
-from utility.objectStore import objectStore
-from lightcurves import lightcurve_fetcher
+from lasair.lightcurves import lightcurve_fetcher
 
 class LightcurvesSerializer(serializers.Serializer):
     objectIds = serializers.CharField(max_length=16384, required=True)
@@ -289,7 +289,7 @@ class LightcurvesSerializer(serializers.Serializer):
             userId = request.user
 
             # Fetch the lightcurve, either from cassandra or file system
-        LF = lightcurve_fetcher(cassandra_hosts=settings.CASSANDRA_HEAD)
+        LF = lightcurve_fetcher(cassandra_hosts=lasair_settings.CASSANDRA_HEAD)
 
         lightcurves = []
         for objectId in olist:
@@ -369,11 +369,11 @@ class AnnotateSerializer(serializers.Serializer):
         # when active=2, we push a kafka message to make sure queries are run immediately
         message = {'objectId': objectId, 'annotator':topic}
         conf = {
-            'bootstrap.servers': settings.INTERNAL_KAFKA_PRODUCER,
+            'bootstrap.servers': lasair_settings.INTERNAL_KAFKA_PRODUCER,
             'client.id': 'client-1',
         }
         producer = Producer(conf)
-        topicout = settings.ANNOTATION_TOPIC_OUT
+        topicout = lasair_settings.ANNOTATION_TOPIC_OUT
         try:
             s = json.dumps(message)
             producer.produce(topicout, s)

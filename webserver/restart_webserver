@@ -7,8 +7,8 @@ sleep 1
 mod_wsgi-express setup-server \
 --user ubuntu \
 --group ubuntu \
---working-directory /home/ubuntu/lasair-new/webserver/lasair \
---python-path       /home/ubuntu/lasair-new/webserver/lasair \
+--working-directory /home/ubuntu/lasair-new/webserver/ \
+--python-path       /home/ubuntu/lasair-new/webserver/ \
 --url-alias /lasair/static static \
 --url-alias /media media \
 --application-type module lasair.wsgi \

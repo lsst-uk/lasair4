@@ -1,19 +1,16 @@
 import os, sys
-sys.path.append('../../../common')
+sys.path.append('../common')
+import settings
+from src.objectStore import objectStore
+from src import db_connect
 from django.shortcuts import render, get_object_or_404, HttpResponse
 from django.template.context_processors import csrf
 from django.views.decorators.csrf import csrf_exempt
 from django.db.models import Q
-from django.db import connection
-from models import Myqueries
-from models import Watchlists
-import mysql.connector
-import ephem, math
+from lasair.models import Myqueries, Watchlists
+from lasair.lightcurves import lightcurve_fetcher
 from datetime import datetime, timedelta
-import json
-from src.objectStore import objectStore
-import time
-from lightcurves import lightcurve_fetcher
+import ephem, math, json, time
 
 def mjd_now():
     return time.time()/86400 + 40587.0
@@ -92,7 +89,7 @@ def obj(objectId):
     """Show a specific object, with all its candidates"""
     objectData = None
     message = ''
-    msl = db_connect.readonly()
+    msl = db_connect.remote()   ######## hack 
     cursor = msl.cursor(buffered=True, dictionary=True)
     query = 'SELECT ncand, ramean, decmean, glonmean, glatmean, jdmin, jdmax '
     query += 'FROM objects WHERE objectId = "%s"' % objectId

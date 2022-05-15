@@ -1,23 +1,21 @@
 import sys
-sys.path.append('../../../common')
+sys.path.append('../common')
 from src import db_connect
 from django.shortcuts import render, get_object_or_404
 from django.template.context_processors import csrf
 from django.views.decorators.csrf import csrf_exempt
 from django.contrib.auth.models import User
 from django.http import HttpResponse, FileResponse
-import settings
-from models import Areas
-import json
+from django.utils.text import slugify
+from lasair import settings
+from lasair.models import Areas
 from random import randrange
 from subprocess import Popen, PIPE
-import time
-import base64
 from mocpy import MOC, World2ScreenMPL
 from astropy.coordinates import Angle, SkyCoord
 import astropy.units as u
 import matplotlib.pyplot as plt
-import io
+import json, time, base64, io, tempfile
 
 def bytes2string(bytes):
     """bytes2string.
@@ -142,8 +140,9 @@ def show_area_file(request, ar_id):
 
     moc = string2bytes(area.moc)
 
-    filename = area.name + '%d.fits'%randrange(1000)
-    f = open('/home/ubuntu/tmp/%s' % filename, 'wb')
+    filename = slugify(area.name) + '.fits'
+    tmpfilename = tempfile.NamedTemporaryFile().name + '.fits'
+    f = open(tmpfilename, 'wb')
     f.write(moc)
     f.close()
 
@@ -183,7 +182,8 @@ def show_area(request, ar_id):
             area.save()
             message += 'area updated'
 
-    cursor = db_connect.readonly().cursor()
+    msl = db_connect.readonly()
+    cursor = msl.cursor()
     cursor.execute('SELECT count(*) AS count FROM area_hits WHERE ar_id=%d' % ar_id)
     for row in cursor:
         count = row[0]

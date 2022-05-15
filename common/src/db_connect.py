@@ -1,22 +1,22 @@
 import sys
-sys.path.append('../../common')
+sys.path.append('..')
 import settings
 import mysql.connector
 
-def remote():
+def readonly():
     config = {
-        'user'    : settings.DB_USER_READWRITE,
-        'password': settings.DB_PASS_READWRITE,
+        'user'    : settings.DB_USER_READONLY,
+        'password': settings.DB_PASS_READONLY,
         'host'    : settings.DB_HOST,
         'port'    : settings.DB_PORT,
         'database': 'ztf'
     }
     return mysql.connector.connect(**config)
 
-def readonly():
+def remote():
     config = {
-        'user'    : settings.DB_USER_READONLY,
-        'password': settings.DB_PASS_READONLY,
+        'user'    : settings.DB_USER_READWRITE,
+        'password': settings.DB_PASS_READWRITE,
         'host'    : settings.DB_HOST,
         'port'    : settings.DB_PORT,
         'database': 'ztf'
