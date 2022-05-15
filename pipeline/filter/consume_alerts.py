@@ -3,16 +3,14 @@
 from __future__ import print_function
 import os, sys
 sys.path.append('../../common')
-import argparse
-import time
-import settings
-import mysql.connector
-from multiprocessing import Process, Manager
-import insert_query
-import confluent_kafka
-import json
-import date_nid
+from src import date_nid, slack_webhook, db_connect
 from src.manage_status import manage_status
+import settings
+
+from multiprocessing import Process, Manager
+from features_ZTF import insert_query
+import confluent_kafka
+import argparse, time, json
 
 sherlock_attributes = [
     "classification",
@@ -67,18 +65,6 @@ def parse_args():
 
     args = parser.parse_args()
     return args
-
-def make_database_connection():
-    """make_database_connection.
-    """
-    # Make a connection to the *local* database to put these
-    msl = mysql.connector.connect(
-        user     = settings.LOCAL_DB_USER_LOCAL, 
-        password = settings.LOCAL_DB_PASS_LOCAL, 
-        host     = settings.LOCAL_DB_HOST_LOCAL, 
-        database = 'ztf',
-        )
-    return msl
 
 def execute_query(query, msl):
     try:
@@ -139,7 +125,7 @@ def run(runarg, return_dict):
     processID = runarg['processID']
     # Configure database connection
     try:
-        msl = make_database_connection()
+        msl = db_connect.local()
     except Exception as e:
         print('ERROR cannot connect to local database', e)
         sys.stdout.flush()
@@ -185,7 +171,7 @@ def run(runarg, return_dict):
                 # refresh the database every 1000 alerts
                 # make sure everything is committed
                 msl.close()
-                msl = make_database_connection()
+                msl = db_connect.local()
 
     consumer.close()
     return_dict[processID] = {
@@ -256,8 +242,6 @@ def main():
     else:             return 0
 
 if __name__ == '__main__':
-    sys.path.append('../utility/')
-    import slack_webhook
     try:
         rc = main()
         sys.exit(rc)

@@ -2,16 +2,11 @@
 """
 import sys
 sys.path.append('../../common')
+from src import db_connect
 import settings
-import mysql.connector
-config = {
-    'user'    : settings.LOCAL_DB_USER,
-    'password': settings.LOCAL_DB_PASS,
-    'host'    : settings.LOCAL_DB_HOST,
-    'database': 'ztf'
-}
+
 try:
-    msl = mysql.connector.connect(**config)
+    msl = db_connect.local()
     cursor = msl.cursor(buffered=True, dictionary=True)
 except:
     print('ERROR in filter/refresh: cannot clear local database')

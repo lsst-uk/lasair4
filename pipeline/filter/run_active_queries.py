@@ -43,7 +43,6 @@ import settings
 from src import db_connect
 from confluent_kafka import Consumer, Producer, KafkaError
 import datetime
-import mysql.connector
 import smtplib
 #from email.message import EmailMessage
 from email.mime.multipart import MIMEMultipart

@@ -21,9 +21,7 @@ from check_alerts_areas import get_area_hits, insert_area_hits
 from counts import since_midnight, grafana_today
 import mysql.connector
 
-def main(topic='ztf_sherlock')
-    topic = settings.KAFKA_TOPIC_IN
-    
+def main(nprocesses=1, topic='ztf_sherlock'):
     print('------------------')
     ##### clear out the local database
     os.system('date')
@@ -44,9 +42,9 @@ def main(topic='ztf_sherlock')
     
     cmd =  'python3 consume_alerts.py '
     cmd += '--maxalert %d ' % settings.KAFKA_MAXALERTS
-    cmd += '--nprocess %d ' % settings.KAFKA_PROCESSES
+    cmd += '--nprocess %d ' % nprocesses
     cmd += '--group %s '    % settings.KAFKA_GROUPID
-    cmd += '--host %s '     % settings.KAFKA_HOST
+    cmd += '--host %s '     % settings.KAFKA_SERVER
     cmd += '--topic ' + topic
     
     print(cmd)
@@ -174,14 +172,9 @@ def main(topic='ztf_sherlock')
     print('SEND to ARCHIVE')
     sys.stdout.flush()
     cmd = 'rm /home/ubuntu/csvfiles/*'
-    if os.system(cmd) != 0:
-        rtxt = "ERROR in filter/filter.py: refresh.py failed"
-        slack_webhook.send(settings.SLACK_URL, rtxt)
-        print(rtxt)
-        sys.stdout.flush()
-        sys.exit(-1)
+    os.system(cmd)
     
-    cmd = 'mysql --user=ztf --database=ztf --password=%s < output_csv.sql' % settings.DB_PASS_LOCAL
+    cmd = 'mysql --user=ztf --database=ztf --password=%s < output_csv.sql' % settings.LOCAL_DB_PASS
     if os.system(cmd) != 0:
         rtxt = 'ERROR in filter/filter: cannot build CSV from local database'
         slack_webhook.send(settings.SLACK_URL, rtxt)
@@ -200,7 +193,7 @@ def main(topic='ztf_sherlock')
             sys.stdout.flush()
         else:
             vm = gethostname()
-            cmd = 'scp /home/ubuntu/csvfiles/%s.txt %s:scratch/%s__%s' % (table, settings.DB_HOST_REMOTE, vm, table)
+            cmd = 'scp /home/ubuntu/csvfiles/%s.txt %s:scratch/%s__%s' % (table, settings.DB_HOST, vm, table)
             os.system(cmd)
             if os.system(cmd) != 0:
                 rtxt = 'ERROR in filter/filter: cannot copy CSV to master database node'
@@ -210,7 +203,7 @@ def main(topic='ztf_sherlock')
                 sys.exit(-1)
     
     ##### ingest CSV file to central database
-            cmd = 'ssh %s "python3 /home/ubuntu/lasair-lsst/lasair-db/archive_in.py %s__%s"' % (settings.DB_HOST_REMOTE, vm, table)
+            cmd = 'ssh %s "python3 /home/ubuntu/lasair-lsst/lasair-db/archive_in.py %s__%s"' % (settings.DB_HOST, vm, table)
             if os.system(cmd) != 0:
                 rtxt = 'ERROR in filter/filter: cannot ingest CSV on master database node'
                 slack_webhook.send(settings.SLACK_URL, rtxt)
@@ -235,8 +228,9 @@ def main(topic='ztf_sherlock')
     if rc > 0: sys.exit(1)
     else:      sys.exit(0)
 
-if __name__ == "__main__":
-    if len(sys.argv) > 1:
-        main(sys.argv[1])
+if __name__ == '__main__':
+    if len(sys.argv) > 2:
+        rc = main(int(sys.argv[1]), sys.argv[2])
     else:
-        main('ztf_sherlock')
+        rc = main(1, 'ztf_sherlock')
+    sys.exit(rc)
