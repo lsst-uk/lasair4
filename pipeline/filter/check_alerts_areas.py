@@ -141,14 +141,8 @@ if __name__ == "__main__":
     import sys
     sys.path.append('../../common')
     import settings
-    import mysql.connector
-    config = {
-        'user'    : settings.LOCAL_DB_USER,
-        'password': settings.LOCAL_DB_PASS,
-        'host'    : settings.LOCAL_DB_HOST,
-        'database': 'ztf'
-    }
-    msl_local = mysql.connector.connect(**config)
+    from src import db_connect
+    msl_local = db_connect.local()
 
     # can run the area process without the rest of the filter code 
     hits = get_area_hits(msl_local, settings.AREA_MOCS)
