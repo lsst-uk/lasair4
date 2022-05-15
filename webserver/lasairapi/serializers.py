@@ -199,7 +199,7 @@ class QuerySerializer(serializers.Serializer):
             
         sqlquery_real += ' LIMIT %d OFFSET %d' % (limit, offset)
 
-        msl = db_connect.remote()   ######## hack
+        msl = db_connect.readonly()
         cursor = msl.cursor(buffered=True, dictionary=True)
         result = []
         try:
@@ -255,7 +255,7 @@ class StreamsSerializer(serializers.Serializer):
                 replyMessage = '%s is not a regular expression' % regex
                 return { "topics": [], "info": replyMessage }
 
-            msl = db_connect.remote()  ###### hack
+            msl = db_connect.readonly()
             cursor = msl.cursor(buffered=True, dictionary=True)
             result = []
             query = 'SELECT mq_id, user, name, topic_name FROM myqueries WHERE active>0'
