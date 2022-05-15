@@ -1,12 +1,14 @@
 import sys
 sys.path.append('../../common')
+import settings
+from src import db_connect
+
 import requests
 import urllib
 import urllib.parse
 import json
 import time
 import mysql.connector
-import settings
 import math
 import datetime
 
@@ -18,12 +20,7 @@ def since_midnight():
     jdnow = (time.time()/86400 + 2440587.5)
     midnight = math.floor(jdnow - 0.5) + 0.5
 
-    msl = mysql.connector.connect(\
-                user    =settings.DB_USER_READONLY, \
-                password=settings.DB_PASS_READONLY, \
-                host    =settings.DB_HOST, \
-                database='ztf')
-    
+    msl = db_connect.readonly()
     cursor = msl.cursor(buffered=True, dictionary=True)
     query = 'SELECT count(*) AS count FROM objects WHERE jdmax > %.1f' % midnight
     try:
@@ -60,7 +57,6 @@ def grafana_today():
     """since_midnight.
     How many objects reported today from ZTF
     """
-
     g = datetime.datetime.utcnow()
     date = '%4d%02d%02d' % (g.year, g.month, g.day)
     url = 'https://monitor.alerts.ztf.uw.edu/api/datasources/proxy/7/api/v1/query?query='
