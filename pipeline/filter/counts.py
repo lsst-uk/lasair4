@@ -8,7 +8,6 @@ import urllib
 import urllib.parse
 import json
 import time
-import mysql.connector
 import math
 import datetime
 

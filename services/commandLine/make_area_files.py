@@ -7,7 +7,6 @@ named ar_<nn>.fits where nn is the area id from the database. These files are
 """
 import os, sys
 sys.path.append('../../common')
-import mysql.connector
 import stat
 import time
 from datetime import datetime

@@ -21,6 +21,7 @@ import astropy.units as u
 try:
     sys.path.append('../../common')
     import settings
+    from src import db_connect
     import slack_webhook
 except:
     pass
@@ -248,15 +249,7 @@ def insert_watchlist_hits(msl, hits):
     msl.commit()
 
 if __name__ == "__main__":
-    import settings
-    import mysql.connector
-    config = {
-        'user'    : settings.LOCAL_DB_USER,
-        'password': settings.LOCAL_DB_PASS,
-        'host'    : settings.LOCAL_DB_HOST,
-        'database': 'ztf'
-    }
-    msl_local = mysql.connector.connect(**config)
+    msl_local = db_connect.local()
 
     # can run the watchlist process without the rest of the filter code 
     hits = get_watchlist_hits(msl_local, settings.WATCHLIST_MOCS, settings.WATCHLIST_CHUNK)

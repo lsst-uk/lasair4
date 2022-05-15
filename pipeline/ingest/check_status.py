@@ -1,14 +1,7 @@
 import sys
 sys.path.append('../../common')
-import requests
-import urllib
-import urllib.parse
-import json
-import time
-import mysql.connector
 import settings
-import math
-import datetime
+import json, time, math, datetime
 
 def check_status(nid, nalert):
     """check_status.

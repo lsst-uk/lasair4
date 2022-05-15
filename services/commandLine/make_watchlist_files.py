@@ -19,7 +19,6 @@ sys.path.append('../../common')
 from src import db_connect
 from mocpy import MOC
 import astropy.units as u
-import mysql.connector
 import math
 import time
 from datetime import datetime

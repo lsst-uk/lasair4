@@ -19,7 +19,6 @@ import run_active_queries
 from check_alerts_watchlists import get_watchlist_hits, insert_watchlist_hits
 from check_alerts_areas import get_area_hits, insert_area_hits
 from counts import since_midnight, grafana_today
-import mysql.connector
 
 def main(nprocesses=1, topic='ztf_sherlock'):
     print('------------------')
