@@ -89,7 +89,7 @@ def obj(objectId):
     """Show a specific object, with all its candidates"""
     objectData = None
     message = ''
-    msl = db_connect.remote()   ######## hack 
+    msl = db_connect.readonly()
     cursor = msl.cursor(buffered=True, dictionary=True)
     query = 'SELECT ncand, ramean, decmean, glonmean, glatmean, jdmin, jdmax '
     query += 'FROM objects WHERE objectId = "%s"' % objectId
