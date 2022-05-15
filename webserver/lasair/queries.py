@@ -1,4 +1,6 @@
-import os
+import os, sys
+sys.path.append('../common')
+import settings
 from django.shortcuts import render, get_object_or_404, redirect
 from django.template.context_processors import csrf
 from django.http import HttpResponse
@@ -9,7 +11,7 @@ from lasair.models import Watchlists, Areas, Annotators
 from lasair.query_builder import check_query, build_query
 from lasair.topic_name import topic_name
 from lasair.topic_refresh import topic_refresh
-import utility.date_nid as date_nid
+from src import date_nid, db_connect
 from datetime import datetime, timedelta
 import string, random, json
 

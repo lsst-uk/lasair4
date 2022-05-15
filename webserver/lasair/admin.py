@@ -1,5 +1,5 @@
 from django.contrib import admin
-from models import Annotators, Myqueries, Areas, Watchlists
+from lasair.models import Annotators, Myqueries, Areas, Watchlists
 
 admin.site.register(Annotators)
 admin.site.register(Myqueries)

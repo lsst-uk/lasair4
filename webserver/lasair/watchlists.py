@@ -1,17 +1,16 @@
 import sys
-sys.path.append('../../../common')
+sys.path.append('../common')
+from src import db_connect
 import settings
-from src.run_crossmatch import run_watchlist
+import src.run_crossmatch as run_crossmatch
 from django.shortcuts import render, get_object_or_404
 from django.template.context_processors import csrf
 from django.views.decorators.csrf import csrf_exempt
 from django.contrib.auth.models import User
 from django.http import HttpResponse
-from models import Watchlists, WatchlistCones
-import json
-import random
+from lasair.models import Watchlists, WatchlistCones
 from subprocess import Popen, PIPE
-import time
+import json, random, time
 
 def handle_uploaded_file(f):
     """handle_uploaded_file.
@@ -142,7 +141,8 @@ def show_watchlist_txt(request, wl_id):
     if not is_visible:
         return render(request, 'error.html',{
             'message': "This watchlist is private and not visible to you"})
-    cursor = db_connect.remote().cursor()
+    msl = db_connect.remote()
+    cursor = msl.cursor()
     s = []
     cursor.execute('SELECT ra, decl, name, radius FROM watchlist_cones WHERE wl_id=%d LIMIT 10000' % wl_id)
     cones = cursor.fetchall()
@@ -186,10 +186,12 @@ def show_watchlist(request, wl_id):
             watchlist.save()
             message += 'watchlist updated'
         else:
-            hits = run_watchlist(wl_id)
+            msl = db_connect.remote()
+            hits = run_crossmatch.run_crossmatch(msl, watchlist.radius, watchlist.wl_id)
             message += '%d crossmatches found' % hits
 
-    cursor = db_connect.remote().cursor()
+    msl = db_connect.remote()
+    cursor = msl.cursor()
     cursor.execute('SELECT count(*) AS count FROM watchlist_cones WHERE wl_id=%d' % wl_id)
     for row in cursor:
         number_cones = row[0]

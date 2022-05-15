@@ -1,21 +1,10 @@
-import os
-import time
-import json
-import lasair.settings
-from datetime import datetime
-import mysql.connector
+import os, sys
+sys.path.append('../common')
+import settings
+from src import db_connect
 from confluent_kafka import Producer, KafkaError, admin
-
-def connect_db():
-    """connect_db.
-    """
-    msl = mysql.connector.connect(
-        user    =lasair.settings.READONLY_USER,
-        password=lasair.settings.READONLY_PASS,
-        host    =lasair.settings.DATABASES['default']['HOST'],
-        port    =lasair.settings.DATABASES['default']['PORT'],
-        database='ztf')
-    return msl
+from datetime import datetime
+import time, json
 
 def datetime_converter(o):
 # used by json encoder when it gets a type it doesn't understand
@@ -24,7 +13,7 @@ def datetime_converter(o):
 
 def topic_refresh(real_sql, topic, limit=10):
     message = ''
-    msl = connect_db()
+    msl = db_connect.readonly()
     cursor = msl.cursor(buffered=True, dictionary=True)
     query = real_sql + ' LIMIT %d' % limit
 
@@ -43,11 +32,11 @@ def topic_refresh(real_sql, topic, limit=10):
         recent.append(recorddict)
 
     conf = {
-        'bootstrap.servers': lasair.settings.PUBLIC_KAFKA_PRODUCER,
+        'bootstrap.servers': settings.PUBLIC_KAFKA_SERVER,
         'security.protocol': 'SASL_PLAINTEXT',
         'sasl.mechanisms'  : 'SCRAM-SHA-256',
         'sasl.username'    : 'admin',
-        'sasl.password'    : lasair.settings.PUBLIC_KAFKA_PASSWORD
+        'sasl.password'    : settings.PUBLIC_KAFKA_PASSWORD
     }
 
     # delete the old topic
