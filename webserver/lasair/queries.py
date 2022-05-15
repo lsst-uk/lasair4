@@ -13,7 +13,7 @@ from lasair.topic_name import topic_name
 from lasair.topic_refresh import topic_refresh
 from src import date_nid, db_connect
 from datetime import datetime, timedelta
-import string, random, json
+import string, random, json, importlib
 
 def check_query_zero_limit(real_sql):
     msl = db_connect.readonly()
@@ -117,6 +117,10 @@ def delete_stream_file(request, query_name):
     if os.path.exists(filename):
         os.remove(filename)
 
+def get_schema(schema_name):
+    schema_package = importlib.import_module('schema.' + schema_name)
+    return schema_package.schema['fields']
+
 def handle_myquery(request, mq_id=None):
     """handle_myquery.
 
@@ -126,6 +130,13 @@ def handle_myquery(request, mq_id=None):
     """
     logged_in = request.user.is_authenticated
     message = ''
+
+    schemas = {
+        'objects'                 : get_schema('objects'),
+        'sherlock_classifications': get_schema('sherlock_classifications'),
+        'crossmatch_tns'          : get_schema('crossmatch_tns'),
+        'annotations'             : get_schema('annotations'),
+    }
 
     if logged_in:
         email = request.user.email
@@ -191,9 +202,11 @@ def handle_myquery(request, mq_id=None):
                 'email'     : email,
                 'new'       : False,
                 'newandloggedin': False,
+                'schemas'   : schemas,
                 'message'   : message})
         else:
             # New query, blank query form
+            message += 'New query'
             return render(request, 'queryform.html',{
                 'watchlists': watchlists,
                 'areas'     : areas,
@@ -205,7 +218,8 @@ def handle_myquery(request, mq_id=None):
                 'email'     : email,
                 'new'       : True,
                 'newandloggedin': logged_in,
-                'message'   : 'New query'
+                'schemas'   : schemas,
+                'message'   : message,
             })
 
     # Existing query
@@ -299,6 +313,7 @@ def handle_myquery(request, mq_id=None):
             'email'     : email,
             'new'       : False,
             'newandloggedin': False,
+            'schemas'   : schemas,
             'message'   : message})
 
     # Existing query, view it 
@@ -313,6 +328,7 @@ def handle_myquery(request, mq_id=None):
         'email'     : email,
         'new'       : False,
         'newandloggedin': False,
+        'schemas'   : schemas,
         'message'   : message})
 
 

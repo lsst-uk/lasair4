@@ -162,10 +162,43 @@ The SQL <b><font color="red">WHERE</font></b>. Which objects to return. See list
 		</td><td style="background-color:#AAAAAA">&nbsp;</td><td width=400>
 <div class="overflow-auto" style="height:600px;">
 	Click on the table name to see the schema:
-	<div id="schema_objects"></div>
-	<div id="schema_sherlock_classifications"></div>
-	<div id="schema_crossmatch_tns"></div>
-	<div id="schema_annotations"></div>
+	<div id="schema_objects">
+	    <h4><a href='#' onclick="showdiv('table_objects');">objects</a></h4>
+            <div id="table_objects" style="display:none">
+                <table class="table w-auto small">
+                    {% for row in schemas.objects %}
+		    <tr><td>{{ row.name }}</td><td>{{ row.doc }}</td></tr>
+		    {% endfor %}
+                </table>
+	    </div>
+	</div>
+	<div id="schema_sherlock_classifications">
+	    <h4><a href='#' onclick="showdiv('table_sherlock_classifications');">sherlock_classifications</a></h4>
+            <div id="table_sherlock_classifications" style="display:none">
+                <table class="table w-auto small">
+                    {% for row in schemas.sherlock_classifications %}
+		    <tr><td>{{ row.name }}</td><td>{{ row.doc }}</td></tr>
+		    {% endfor %}
+                </table>
+	</div>
+	<div id="schema_crossmatch_tns">
+	    <h4><a href='#' onclick="showdiv('table_crossmatch_tns');">crossmatch_tns</a></h4>
+            <div id="table_crossmatch_tns" style="display:none">
+                <table class="table w-auto small">
+                    {% for row in schemas.crossmatch_tns %}
+		    <tr><td>{{ row.name }}</td><td>{{ row.doc }}</td></tr>
+		    {% endfor %}
+                </table>
+	</div>
+	<div id="schema_annotations">
+	    <h4><a href='#' onclick="showdiv('table_annotations');">annotations</a></h4>
+            <div id="table_annotations" style="display:none">
+                <table class="table w-auto small">
+                    {% for row in schemas.annotations %}
+		    <tr><td>{{ row.name }}</td><td>{{ row.doc }}</td></tr>
+		    {% endfor %}
+                </table>
+	</div>
 </div>
 </td></tr></table>
 
@@ -249,10 +282,6 @@ value=" Save query" value=" Save this Query"
 <script type="text/javascript">
 $(document).ready(function(){
   check_boxes();
-  fill_schema('objects',                  'objects');
-  fill_schema('sherlock_classifications', 'sherlock_classifications');
-  fill_schema('crossmatch_tns',           'crossmatch_tns');
-  fill_schema('annotations',              '&lt;topic&gt;');
 });
 </script>
 
