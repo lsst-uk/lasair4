@@ -78,6 +78,7 @@ def read_watchlist_cache_files(cache_dir):
                     delist.append(float(tok[2]))
                     radius.append(float(tok[3]))
                     names.append(tok[4].strip())
+
                 watchlist['cones'] = {
                     'cone_ids':cone_ids, 
                     'ra':ralist, 'de':delist, 
@@ -114,7 +115,7 @@ def check_alerts_against_moc(alertlist, wl_id, moc, cones):
         result = moc.contains(alertralist*u.deg, alertdelist*u.deg)
     except Exception as e:
         rtxt = 'ERROR in filter/check_alerts_against_moc: ' + str(e)
-        slack_webhook.send(settings.SLACK_URL, rtxt)
+#        slack_webhook.send(settings.SLACK_URL, rtxt)
         return []
 
     hits = []

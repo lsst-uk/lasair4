@@ -2,18 +2,17 @@ from __future__ import print_function
 import argparse
 import sys
 sys.path.append('../../common')
+import settings
 import os
 import time
 from datetime import datetime
-import settings
 from multiprocessing import Process, Manager
 import alertConsumer
-from src import objectStore
+from src import objectStore, date_nid
 import json
 import zlib
 from src.manage_status import manage_status
 from confluent_kafka import Producer, KafkaError
-import date_nid
 from gkhtm import _gkhtm as htmCircle
 from cassandra.cluster import Cluster
 from gkdbutils.ingesters.cassandra import executeLoad
@@ -333,6 +332,6 @@ def main(nprocess=1, topicout='ztf_ingest'):
 if __name__ == '__main__':
     if len(sys.argv) > 2:
         rc = main(int(sys.argv[1]), sys.argv[2])
-    else
+    else:
         rc = main()
     sys.exit(rc)

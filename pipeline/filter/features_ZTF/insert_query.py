@@ -1,7 +1,6 @@
 """ Computes features of the light curve and builds and object record
 """
 from __future__ import print_function
-from mag import dc_mag_dict
 import json
 import sys
 import math
@@ -28,13 +27,6 @@ def make_ema(candlist):
         jd = c['jd']
         if not 'magpsf' in c:
             continue
-#        d = dc_mag_dict(
-#            c['fid'], 
-#            c['magpsf'], c['sigmapsf'], 
-#            c['magnr'],  c['sigmagnr'], 
-#            c['magzpsci'], c['isdiffpos'])
-        # compute the apparent (DC) magnitude
-#        dc_mag = d['dc_mag']
         mag = c['magpsf']
 
         # separate the g mag (fid=1) from r mag (fid=2)
