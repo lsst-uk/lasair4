@@ -347,7 +347,7 @@ def streams(request, topic):
         topic:
     """
     try:
-        data = open(settings.KAFKA_STREAMS + topic, 'r').read()
+        data = open(settings.KAFKA_STREAMS +'/'+ topic, 'r').read()
     except:
         return render(request, 'error.html', {'message': 'Cannot find log file for ' + topic})
     table = json.loads(data)['digest']
