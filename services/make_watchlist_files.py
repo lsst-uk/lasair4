@@ -185,7 +185,7 @@ if __name__ == "__main__":
     from src import date_nid
     nid  = date_nid.nid_now()
     date = date_nid.nid_to_date(nid)
-    logfile = open('/mnt/cephfs/lasair/services_log/' + date + '.log', 'a')
+    logfile = open(settings.SERVICES_LOG +'/'+ date + '.log', 'a')
     now = datetime.now()
     message = '\n-- make_watchlist_files at %s\n' % now.strftime("%d/%m/%Y %H:%M:%S")
     logfile.write(message)

@@ -45,6 +45,7 @@ SLACK_URL              = 'https://hooks.slack.com/services/{{ settings.slack_url
 DB_HOST                = '{{ db_host }}'
 DB_PORT                = '{{ settings.master_db_port }}'
 DB_DATABASE            = 'ztf'
+DB_ROOT_PASS           = '{{ settings.master_db_root_password }}'
 
 # Read/write access
 DB_USER_READWRITE      = '{{ settings.master_db_username }}'
@@ -72,9 +73,12 @@ CASSANDRA_NONCANDIDATES = 'noncandidates'
 #############################
 IMAGEFITS              = '/mnt/cephfs/lasair/fits'
 SYSTEM_STATUS          = '/mnt/cephfs/lasair/system_status/status'
+SERVICES_LOG           = '/mnt/cephfs/lasair/services_log'
 KAFKA_STREAMS          = '/mnt/cephfs/lasair/streams'
 AREA_MOCS              = '/mnt/cephfs/lasair/areas'
 WATCHLIST_MOCS         = '/mnt/cephfs/lasair/watchlists'
+ANNOTATIONS_DUMP       = '/mnt/cephfs/lasair/annotations'
+CROSSMATCH_TNS_DUMP    = '/mnt/cephfs/lasair/crossmatch_tns'
 
 # Fast annotations
 ##################
