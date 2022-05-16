@@ -4,12 +4,11 @@ Run the TNS refresher, putting logs where Lasair can see them
 """
 
 import os,sys, time
-sys.path.append('../../common')
+sys.path.append('../../../common')
+import settings
+from src import date_nid
 from datetime import datetime
 from subprocess import Popen, PIPE
-import settings
-sys.path.append('/home/ubuntu/lasair-lsst/utility')
-import date_nid
 
 def now():
     # current UTC as string
