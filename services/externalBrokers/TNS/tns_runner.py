@@ -16,7 +16,7 @@ def now():
 
 nid  = date_nid.nid_now()
 date = date_nid.nid_to_date(nid)
-log = open('/mnt/cephfs/lasair/services_log/' + date + '.log', 'a')
+log = open(settings.SERVICES_LOG +'/'+ date + '.log', 'a')
 
 rtxt = 'poll_tns at ' +  now()
 log.write(rtxt + '\n')
