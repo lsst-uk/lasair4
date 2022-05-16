@@ -243,7 +243,7 @@ def run(runarg, return_dict):
 
     return_dict[processID] = { 'nalert':nalert, 'ncandidate': ncandidate }
 
-def main(nprocess=1, topicout='ztf_ingest'):
+def main(nprocess=2, topicout='ztf_ingest'):
     """main.
     """
 
@@ -330,8 +330,12 @@ def main(nprocess=1, topicout='ztf_ingest'):
     else:          return 0
 
 if __name__ == '__main__':
+    # nmber of processes, output topic
+    # defaults to 2 and ztf_ingest
     if len(sys.argv) > 2:
         rc = main(int(sys.argv[1]), sys.argv[2])
+    elif len(sys.argv) > 1:
+        rc = main(int(sys.argv[1]))
     else:
         rc = main()
     sys.exit(rc)
