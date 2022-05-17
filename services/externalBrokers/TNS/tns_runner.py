@@ -6,7 +6,7 @@ Run the TNS refresher, putting logs where Lasair can see them
 import os,sys, time
 sys.path.append('../../../common')
 import settings
-from src import date_nid
+from src import date_nid, slack_webhook
 from datetime import datetime
 from subprocess import Popen, PIPE
 
@@ -37,7 +37,7 @@ while 1:
 
     # scream to the humans if ERROR
     if rtxt.startswith('ERROR'):
-        slack_webhook.send(rtxt)
+        slack_webhook.send(settings.SLACK_URL, rtxt)
 
 # close the log and get the return code
 rc = process.wait()

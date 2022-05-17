@@ -1,5 +1,5 @@
 import sys
-sys.path.append('../../common')
+sys.path.append('../../../common')
 from src import db_connect
 import math
 import settings

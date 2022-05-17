@@ -15,20 +15,19 @@ Options:
 """
 
 import sys
-sys.path.append('../../common')
+sys.path.append('../../../common')
 __doc__ = __doc__ % (sys.argv[0], sys.argv[0], sys.argv[0], sys.argv[0])
 from docopt import docopt
 import os, sys
 import csv
 from datetime import datetime
-from gkutils import Struct, dbConnect, cleanOptions
+from gkutils.commonutils import Struct, dbConnect, cleanOptions
 from gkhtm import _gkhtm as htmCircle
 import tns_crossmatch
 from fetch_from_tns import fetch_csv
 import settings
-from manage_status import manage_status
-from src import db_connect
-import date_nid
+from src.manage_status import manage_status
+from src import db_connect, date_nid
 
 def getTNSRow(conn, tnsName):
    """
@@ -101,6 +100,9 @@ def insertTNS(conn, tnsEntry):
             if len(v) > 75: v = v[:75] + "..."
             e[k] = "'" + v + "'"
 
+        elif k == 'source_group':
+            e[k] = "'" + v[:16] + "'"
+
         # anything else, enclose in quotes
         else:
             e[k] = "'" + str(v) + "'"
@@ -157,7 +159,7 @@ def insertTNS(conn, tnsEntry):
         insertId = cursor.lastrowid
         cursor.close ()
 
-    except MySQLdb.Error as e:
+    except Exception as e:
         print('ERROR in services/TNS/poll_tns', e)
         print(tnsEntry)
         print(e)
