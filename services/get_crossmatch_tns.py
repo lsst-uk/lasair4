@@ -1,5 +1,5 @@
 import sys, os
-sys.path.append('../../common/')
+sys.path.append('../common/')
 import settings
 from datetime import datetime
 today = datetime.today().strftime('%Y%m%d')
