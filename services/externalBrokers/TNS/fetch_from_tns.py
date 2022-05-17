@@ -1,5 +1,5 @@
 import os, sys
-sys.path.append('../../common')
+sys.path.append('../../../common')
 import settings
 import tempfile
 import zipfile
@@ -22,7 +22,11 @@ def fetch_csv(date):
 
     cmd += ' > %s' % filename
     os.system(cmd)
-    archive = zipfile.ZipFile(filename, mode='r')
+    try:
+        archive = zipfile.ZipFile(filename, mode='r')
+    except:
+        print("ERROR with TNS/poll_tns: Cannot download " + cmd)
+        sys.exit()
 
     if date == 'All':
         csvfile = 'tns_public_objects.csv'

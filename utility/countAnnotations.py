@@ -1,5 +1,5 @@
 import sys
-sys.path.append('../../common')
+sys.path.append('../common')
 import settings
 from src import date_nid, db_connect
 from src.manage_status import manage_status

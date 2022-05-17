@@ -15,7 +15,7 @@ where cone_id is the id of the cone in the database, at the given position and r
 files is the same as the list of cones associated with the watchlist.
 """
 import os, sys
-sys.path.append('../../common')
+sys.path.append('../common')
 from src import db_connect
 from mocpy import MOC
 import astropy.units as u
