@@ -228,8 +228,11 @@ def main(nprocesses=1, topic='ztf_sherlock'):
     else:      sys.exit(0)
 
 if __name__ == '__main__':
+    # number of processes, input topic
     if len(sys.argv) > 2:
         rc = main(int(sys.argv[1]), sys.argv[2])
+    elif len(sys.argv) > 1:
+        rc = main(int(sys.argv[1]), 'ztf_sherlock')
     else:
-        rc = main(1, 'ztf_sherlock')
+        rc = main(2, 'ztf_sherlock')
     sys.exit(rc)

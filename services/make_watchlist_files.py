@@ -15,7 +15,7 @@ where cone_id is the id of the cone in the database, at the given position and r
 files is the same as the list of cones associated with the watchlist.
 """
 import os, sys
-sys.path.append('../../common')
+sys.path.append('../common')
 from src import db_connect
 from mocpy import MOC
 import astropy.units as u
@@ -185,7 +185,7 @@ if __name__ == "__main__":
     from src import date_nid
     nid  = date_nid.nid_now()
     date = date_nid.nid_to_date(nid)
-    logfile = open('/mnt/cephfs/lasair/services_log/' + date + '.log', 'a')
+    logfile = open(settings.SERVICES_LOG +'/'+ date + '.log', 'a')
     now = datetime.now()
     message = '\n-- make_watchlist_files at %s\n' % now.strftime("%d/%m/%Y %H:%M:%S")
     logfile.write(message)

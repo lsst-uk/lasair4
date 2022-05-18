@@ -1,5 +1,5 @@
 import os, sys
-sys.path.append('../../common')
+sys.path.append('../../../common')
 from fink_client.consumer import AlertConsumer
 import random
 from datetime import datetime
@@ -29,12 +29,15 @@ while 1:
 
     objectId = alert['objectId']
     classification = 'early_sn'
-    classdict = {
+    try:
+        classdict = {
             'rfcsore':           float(alert['rfscore']), 
             'snn_snia_vs_nonia': float(alert['snn_snia_vs_nonia']), 
             'snn_sn_vs_all':     float(alert['snn_sn_vs_all']), 
             'knscore':           float(alert['knscore']),
-    }
+        }
+    except:
+        continue
 
     L.annotate(
         topic_out,
