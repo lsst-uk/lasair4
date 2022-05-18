@@ -68,8 +68,12 @@ def grafana_today():
         result = json.loads(resultjson.text)
         alertsstr = result['data']['result'][0]['value'][1]
         today_candidates_ztf = int(alertsstr)
-    except:
+    except Exception as e:
         print('Cannot parse grafana: %s' % str(result))
+        print(e)
         today_candidates_ztf = -1
 
     return today_candidates_ztf
+
+if __name__ == "__main__":
+    print('Grafana today:', grafana_today())

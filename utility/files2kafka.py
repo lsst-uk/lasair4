@@ -17,7 +17,7 @@ if len(sys.argv) > 3:
     maxalert = int(sys.argv[3])
 
 conf = {
-    'bootstrap.servers': settings.KAFKA_SERVER
+    'bootstrap.servers': settings.KAFKA_SERVER,
     'client.id': 'client-1',
 }
 

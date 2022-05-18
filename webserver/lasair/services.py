@@ -1,5 +1,6 @@
 import sys
-sys.path.append('../../../common')
+sys.path.append('../common')
+import settings
 from django.shortcuts import get_object_or_404
 from django.http import HttpResponse, HttpResponseRedirect
 from django.template.context_processors import csrf
@@ -8,7 +9,7 @@ from src.objectStore import objectStore
 
 def fits(request, candid_cutoutType):
     # cutoutType can be cutoutDifference, cutoutTemplate, cutoutScience
-    image_store = objectStore(suffix = 'fits', fileroot='/mnt/cephfs/lasair/fits')
+    image_store = objectStore(suffix = 'fits', fileroot=settings.IMAGEFITS)
     try:
         fitsdata = image_store.getFileObject(candid_cutoutType)
     except:

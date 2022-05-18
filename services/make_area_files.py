@@ -6,7 +6,7 @@ named ar_<nn>.fits where nn is the area id from the database. These files are
 "Multi-Order Coverage maps", https://cds-astro.github.io/mocpy/. 
 """
 import os, sys
-sys.path.append('../../common')
+sys.path.append('../common')
 import stat
 import time
 from datetime import datetime
@@ -89,7 +89,7 @@ if __name__ == "__main__":
     import settings
     nid  = date_nid.nid_now()
     date = date_nid.nid_to_date(nid)
-    logfile = open('/mnt/cephfs/lasair/services_log/' + date + '.log', 'a')
+    logfile = open(settings.SERVICES_LOG +'/'+ date + '.log', 'a')
     now = datetime.now()
     logfile.write('\n-- make_area_files at %s\n' % now.strftime("%d/%m/%Y %H:%M:%S"))
 
