@@ -22,6 +22,8 @@ def check_query_syntax(msl, mq_id):
     else:
         real_sql = build_query(s, f, w)
 #        print(real_sql)
+        query = "UPDATE myqueries SET real_sql='%s' WHERE mq_id=%d" % (real_sql, mq_id)
+        cursor.execute(query)
 
     try:
         cursor.execute(real_sql + ' LIMIT 0')
@@ -32,7 +34,7 @@ def check_query_syntax(msl, mq_id):
     return message
 
 if __name__ == "__main__":
-    msl = db_connect.readonly()
+    msl = db_connect.remote()
     if len(sys.argv) > 1:
         mq_id = int(msl, sys.argv[1])
         message = check_query_syntax(mq_id)
