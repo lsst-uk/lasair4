@@ -22,7 +22,7 @@ while 1:
     log = open('/home/ubuntu/logs/' + topic + '.log', 'a')
 
     if os.path.isfile(settings.LOCKFILE):
-        args = ['python3', 'ingest.py', str(nid)]
+        args = ['python3', 'ingest.py']
 
         process = Popen(args, stdout=PIPE, stderr=PIPE)
 
