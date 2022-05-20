@@ -89,7 +89,7 @@ def index2(request):
     web_domain = settings.WEB_DOMAIN
     topic = 'lasair_2BrightSNe'
     try:
-        jsonstreamdata = open(settings.KAFKA_STREAMS + topic, 'r').read()
+        jsonstreamdata = open(settings.KAFKA_STREAMS +'/'+ topic, 'r').read()
         streamdata = json.loads(jsonstreamdata)
     except:
         return redirect('/')
