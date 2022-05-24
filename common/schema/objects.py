@@ -62,6 +62,11 @@ schema = {
       "doc": "Error estimate for dmdt_g"
     },
     {
+      "name": "dmdt_g_2",
+      "type": "float",
+      "doc": "deprecated -- always Null"
+    },
+    {
       "name": "mag_g02",
       "type": "float",
       "doc": "Latest Exponential Moving Average of difference magnitude in g band, with 2-day timescale (see note)"
@@ -129,6 +134,11 @@ schema = {
       "name": "dmdt_r_err",
       "type": "float",
       "doc": "Error estimate for dmdt_r"
+    },
+    {
+      "name": "dmdt_r_2",
+      "type": "float",
+      "doc": "deprecated -- always Null"
     },
     {
       "name": "magrmax",

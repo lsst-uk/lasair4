@@ -282,6 +282,8 @@ def create_features(objectId, candlist):
     sets['dmdt_r']     = dmdt_r
     sets['dmdt_g_err']   = dmdt_g_err
     sets['dmdt_r_err']   = dmdt_r_err
+    sets['dmdt_g_2']     = None   # left in for backward compat
+    sets['dmdt_r_2']     = None   # left in for backward compat
     sets['jdgmax']     = jdgmax
     sets['jdrmax']     = jdrmax
     sets['jdmax']      = jdmax
