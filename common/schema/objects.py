@@ -57,9 +57,9 @@ schema = {
       "doc": "most recent increase in g magnitude divided by time difference, (brightening = positive)"
     },
     {
-      "name": "dmdt_g_2",
+      "name": "dmdt_g_err",
       "type": "float",
-      "doc": "2nd most recent increase in g magnitude divided by time difference"
+      "doc": "Error estimate for dmdt_g"
     },
     {
       "name": "mag_g02",
@@ -126,9 +126,9 @@ schema = {
       "doc": "most recent increase in r magnitude divided by time difference, (brightening = positive)"
     },
     {
-      "name": "dmdt_r_2",
+      "name": "dmdt_r_err",
       "type": "float",
-      "doc": "2nd most recent increase in r magnitude divided by time difference"
+      "doc": "Error estimate for dmdt_r"
     },
     {
       "name": "magrmax",
