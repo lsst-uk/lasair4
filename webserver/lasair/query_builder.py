@@ -77,9 +77,11 @@ where_forbidden_word_list = [
 def check_where_forbidden(where_condition):
     """ Check the select expression for bad things
     """
+    if not where_condition:
+        return None
     # Check no forbidden strings
     for s in forbidden_string_list:
-        if where_condition.find(s)>=0: 
+        if where_condition and where_condition.find(s)>=0: 
             return('Cannot use %s in the WHERE clause' % s)
 
     # Want to split on whitespace, parentheses, curlys
@@ -115,8 +117,10 @@ def sanitise(expression):
 def build_query(select_expression, from_expression, where_condition):
     """ Build a real SQL query from the pre-sanitised input
     """
-    select_expression = sanitise(select_expression)
-    where_condition  = sanitise(where_condition)
+    if select_expression:
+        select_expression = sanitise(select_expression)
+    if where_condition:
+        where_condition  = sanitise(where_condition)
 
     # ----- Handle the from_expression. 
     # This is a comma-separated list, of very restricted form
@@ -201,11 +205,14 @@ def build_query(select_expression, from_expression, where_condition):
 
     # if the WHERE is just an ORDER BY, then we mustn't have AND before it
     order_condition = ''
-    if where_condition.lower().strip().startswith('order'):
-        order_condition = ' ' + where_condition
+    if where_condition:
+        if where_condition.lower().strip().startswith('order'):
+            order_condition = ' ' + where_condition
+        else:
+            if len(where_condition.strip()) > 0:
+                where_clauses.append(where_condition)
     else:
-        if len(where_condition.strip()) > 0:
-            where_clauses.append(where_condition)
+        where_clauses = []
 
     # Now we can build the real SQL
     sql = 'SELECT /*+ MAX_EXECUTION_TIME(%d) */ ' % max_execution_time
