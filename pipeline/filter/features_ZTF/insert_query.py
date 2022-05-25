@@ -117,6 +117,9 @@ def good(cand):
 def diffpos(cand):
     return cand['isdiffpos'] == 't' or cand['isdiffpos'] == '1'
 
+def rms(a, b):
+    return math.sqrt(a*a + b*b)
+
 def create_features(objectId, candlist):
     # version 1.0
     ema = make_ema(candlist)
@@ -216,7 +219,7 @@ def create_features(objectId, candlist):
             jd_g_minus_r = g_nid[nid][1]
 
     # statistics of the g light curve
-    dmdt_g = dmdt_g_err = None
+    dmdt_g = dmdt_g_err = dmdt_g_2 = None
     if len(magg) > 0:
         maggmin = np.min(magg)
         maggmax = np.max(magg)
@@ -225,13 +228,18 @@ def create_features(objectId, candlist):
             if diffposg[-1] and diffposg[-2]:
                 dt = jdg[-1] - jdg[-2]
                 dmdt_g       = (magg[-2]     - magg[-1])    /dt
-                dmdt_g_err   = (magg_err[-2] + magg_err[-1])/dt
+                dmdt_g_err   = rms(magg_err[-2], magg_err[-1])/dt
+        except:  pass
+        try:
+            if diffposg[-2] and diffposg[-3]:
+                dt = jdg[-2] - jdg[-3]
+                dmdt_g_2  = (magg[-2]     - magg[-3])/dt
         except:  pass
     else:
         maggmin = maggmax = maggmean = maggmedian = None
 
     # statistics of the r light curve
-    dmdt_r = dmdt_r_err = None
+    dmdt_r = dmdt_r_err = dmdt_r_2 = None
     if len(magr) > 0:
         magrmin = np.min(magr)
         magrmax = np.max(magr)
@@ -240,7 +248,12 @@ def create_features(objectId, candlist):
             if diffposr[-1] and diffposr[-2]:
                 dt = jdr[-1] - jdr[-2]
                 dmdt_r       = (magr[-2]     - magr[-1])    /dt
-                dmdt_r_err   = (magr_err[-2] + magr_err[-1])/dt
+                dmdt_r_err   = rms(magr_err[-2], magr_err[-1])/dt
+        except:  pass
+        try:
+            if diffposr[-2] and diffposr[-3]:
+                dt = jdr[-2] - jdr[-3]
+                dmdt_r_2  = (magr[-2]     - magr[-3])/dt
         except:  pass
     else:
         magrmin = magrmax = magrmean = magrmedian = None
@@ -282,8 +295,8 @@ def create_features(objectId, candlist):
     sets['dmdt_r']     = dmdt_r
     sets['dmdt_g_err']   = dmdt_g_err
     sets['dmdt_r_err']   = dmdt_r_err
-    sets['dmdt_g_2']     = None   # left in for backward compat
-    sets['dmdt_r_2']     = None   # left in for backward compat
+    sets['dmdt_g_2']     = dmdt_g_2
+    sets['dmdt_r_2']     = dmdt_r_2
     sets['jdgmax']     = jdgmax
     sets['jdrmax']     = jdrmax
     sets['jdmax']      = jdmax
