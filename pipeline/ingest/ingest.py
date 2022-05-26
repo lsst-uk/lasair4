@@ -172,7 +172,7 @@ def run(runarg, return_dict):
         print(e)
 
     try:
-        streamReader = alertConsumer.AlertConsumer(runarg['topic'], **runarg['conf'])
+        streamReader = alertConsumer.AlertConsumer(runarg['topic'], **runarg['consumer_conf'])
         streamReader.__enter__()
     except alertConsumer.EopError as e:
         print('ERROR in ingest/ingestBatch: Cannot connect to Kafka')
@@ -180,16 +180,16 @@ def run(runarg, return_dict):
         return
 
     topicout = runarg['topicout']
-    conf = {
+    producer_conf = {
         'bootstrap.servers': '%s' % settings.KAFKA_SERVER,
-        'group.id': 'copy-topic',
+#        'group.id': 'copy-topic',
         'client.id': 'client-1',
-        'enable.auto.commit': True,
-        'session.timeout.ms': 6000,
-        'default.topic.config': {'auto.offset.reset': 'smallest'}
+#        'enable.auto.commit': True,
+#        'session.timeout.ms': 6000,
+#        'default.topic.config': {'auto.offset.reset': 'smallest'}
     }
-    producer = Producer(conf)
-#        print('Producing Kafka to %s with topic %s' % (settings.KAFKA_SERVER, topicout))
+    producer = Producer(producer_conf)
+    print('Producing Kafka to %s with topic %s' % (settings.KAFKA_SERVER, topicout))
 
     if runarg['maxalert']:
         maxalert = runarg['maxalert']
@@ -243,20 +243,11 @@ def run(runarg, return_dict):
 
     return_dict[processID] = { 'nalert':nalert, 'ncandidate': ncandidate }
 
-def main(nprocess=2, topicout='ztf_ingest'):
+def main(topic=None, topicout='ztf_ingest', nprocess=2):
     """main.
     """
 
-    nid = 0
-    if len(sys.argv) > 1:
-        try:
-            nid = int(sys.argv[1])
-        except:
-            topic = sys.argv[1]
-    else:
-        nid  = date_nid.nid_now()
-
-    if nid > 0:
+    if not topic:
         date = date_nid.nid_to_date(nid)
         topic  = 'ztf_' + date + '_programid1'
 
@@ -271,10 +262,10 @@ def main(nprocess=2, topicout='ztf_ingest'):
 
     print('INGEST ----------', now())
 
-    conf = {
+    consumer_conf = {
         'bootstrap.servers': '%s' % settings.KAFKA_SERVER,
         'group.id': group_id,
-        'client.id': 'client-1',
+#        'client.id': 'client-1',
         'enable.auto.commit': True,
         'session.timeout.ms': 6000,
         'default.topic.config': {'auto.offset.reset': 'smallest'}
@@ -304,7 +295,7 @@ def main(nprocess=2, topicout='ztf_ingest'):
             'maxalert'   : maxalert,
             'topicout':topicout,
             'image_store': image_store,
-            'conf':conf,
+            'consumer_conf':consumer_conf,
         }
         p = Process(target=run, args=(runarg, return_dict))
         process_list.append(p)
@@ -330,12 +321,10 @@ def main(nprocess=2, topicout='ztf_ingest'):
     else:          return 0
 
 if __name__ == '__main__':
-    # nmber of processes, output topic
-    # defaults to 2 and ztf_ingest
-    if len(sys.argv) > 2:
-        rc = main(int(sys.argv[1]), sys.argv[2])
-    elif len(sys.argv) > 1:
-        rc = main(int(sys.argv[1]))
+    # input topic, output topic, number of processes
+    # defaults to ztf_<date>_programid1, ztf_ingest, nprocess
+    if len(sys.argv) > 3:
+        rc = main(sys.argv[1], sys.argv[2], int(sys.argv[3]))
     else:
         rc = main()
     sys.exit(rc)
