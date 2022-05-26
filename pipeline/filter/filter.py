@@ -9,7 +9,7 @@
 """
 import os,sys
 sys.path.append('../../common')
-import time
+import time, tempfile
 from socket import gethostname
 from datetime import datetime
 import settings
@@ -158,19 +158,17 @@ def main(nprocesses=1, topic='ztf_sherlock'):
     try:
         run_active_queries.run_annotation_queries(query_list)
     except Exception as e:
-        rtxt = "ERROR in filter/run_active_queries.run_annotation_queries"
+        rtxt = "WARNING in filter/run_active_queries.run_annotation_queries"
         rtxt += str(e)
-        slack_webhook.send(settings.SLACK_URL, rtxt)
         print(rtxt)
         sys.stdout.flush()
-        sys.exit(-1)
     print('ANNOTATION QUERIES %.1f seconds' % (time.time() - t))
     
     ##### build CSV file with local database
     t = time.time()
     print('SEND to ARCHIVE')
     sys.stdout.flush()
-    cmd = 'rm /home/ubuntu/csvfiles/*'
+    cmd = 'sudo rm /data/mysql/*.txt'
     os.system(cmd)
     
     cmd = 'mysql --user=ztf --database=ztf --password=%s < output_csv.sql' % settings.LOCAL_DB_PASS
@@ -185,30 +183,27 @@ def main(nprocesses=1, topic='ztf_sherlock'):
     
     ##### send CSV file to central database
     t = time.time()
+
     for table in tablelist:
-        outfile = '/home/ubuntu/csvfiles/%s.txt' % table
-        if os.path.exists(outfile) and os.stat(outfile).st_size == 0:
-            print('SEND %s file is empty' % table)
+        sql  = "LOAD DATA LOCAL INFILE '/data/mysql/%s.txt' " % table
+        sql += "REPLACE INTO TABLE %s FIELDS TERMINATED BY ',' " % table
+        sql += "ENCLOSED BY '\"' LINES TERMINATED BY '\n'"
+
+        tmpfilename = tempfile.NamedTemporaryFile().name + '.sql'
+        f = open(tmpfilename, 'w')
+        f.write(sql)
+        f.close()
+
+        cmd =  "mysql --user=%s --database=ztf --password=%s --port=%s --host=%s < %s" 
+        cmd = cmd % (settings.DB_USER_READWRITE, settings.DB_PASS_READWRITE, settings.DB_PORT, settings.DB_HOST, tmpfilename)
+        if os.system(cmd) != 0:
+            rtxt = 'ERROR in filter/filter: cannot push local to master database'
+            slack_webhook.send(settings.SLACK_URL, rtxt)
+            print(rtxt)
             sys.stdout.flush()
-        else:
-            vm = gethostname()
-            cmd = 'scp /home/ubuntu/csvfiles/%s.txt %s:scratch/%s__%s' % (table, settings.DB_HOST, vm, table)
-            os.system(cmd)
-            if os.system(cmd) != 0:
-                rtxt = 'ERROR in filter/filter: cannot copy CSV to master database node'
-                slack_webhook.send(settings.SLACK_URL, rtxt)
-                print(rtxt)
-                sys.stdout.flush()
-                sys.exit(-1)
-    
-    ##### ingest CSV file to central database
-            cmd = 'ssh %s "python3 /home/ubuntu/lasair-lsst/lasair-db/archive_in.py %s__%s"' % (settings.DB_HOST, vm, table)
-            if os.system(cmd) != 0:
-                rtxt = 'ERROR in filter/filter: cannot ingest CSV on master database node'
-                slack_webhook.send(settings.SLACK_URL, rtxt)
-                print(rtxt)
-                sys.stdout.flush()
-                sys.exit(-1)
+            sys.exit(-1)
+        print(table, 'ingested to master')
+
     print('Transfer to master %.1f seconds' % (time.time() - t))
     sys.stdout.flush()
     

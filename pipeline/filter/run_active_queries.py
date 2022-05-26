@@ -94,8 +94,11 @@ def run_annotation_queries(query_list):
     while 1:
         msg = streamReader.poll(timeout=5)
         if msg == None: break
-        ann = json.loads(msg.value())
-        annotation_list.append(ann)
+        try:
+            ann = json.loads(msg.value())
+            annotation_list.append(ann)
+        except:
+            continue
     streamReader.close()
     #print('got ', annotation_list)
     run_queries(query_list, annotation_list)
