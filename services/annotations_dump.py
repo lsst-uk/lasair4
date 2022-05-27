@@ -9,6 +9,9 @@ cmd = 'echo "\\n-- dump annotations master at %s" >> %s'
 cmd = cmd % (today, logfile)
 os.system(cmd)
 
+if not os.path.exists(settings.ANNOTATIONS_DUMP):
+    os.makedirs(settings.ANNOTATIONS_DUMP)
+
 cmd = 'ssh %s sudo mysqldump -u root -p%s --port=%s ztf annotations > %s/annotations.sql'
 cmd = cmd % (settings.DB_HOST, settings.DB_ROOT_PASS, settings.DB_PORT, settings.ANNOTATIONS_DUMP)
 os.system(cmd)
