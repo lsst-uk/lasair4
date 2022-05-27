@@ -197,12 +197,12 @@ def main(nprocesses=1, topic='ztf_sherlock'):
         cmd =  "mysql --user=%s --database=ztf --password=%s --port=%s --host=%s < %s" 
         cmd = cmd % (settings.DB_USER_READWRITE, settings.DB_PASS_READWRITE, settings.DB_PORT, settings.DB_HOST, tmpfilename)
         if os.system(cmd) != 0:
-            rtxt = 'ERROR in filter/filter: cannot push local to master database'
+            rtxt = 'ERROR in filter/filter: cannot push %s local to master database' % table
             slack_webhook.send(settings.SLACK_URL, rtxt)
             print(rtxt)
             sys.stdout.flush()
-            sys.exit(-1)
-        print(table, 'ingested to master')
+        else:
+            print(table, 'ingested to main db')
 
     print('Transfer to master %.1f seconds' % (time.time() - t))
     sys.stdout.flush()
