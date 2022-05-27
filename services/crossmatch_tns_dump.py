@@ -9,6 +9,9 @@ cmd = 'echo "\\n-- dump crossmatch_tns master at %s" >> %s'
 cmd = cmd % (today, logfile)
 os.system(cmd)
 
+if not os.path.exists(settings.CROSSMATCH_TNS_DUMP):
+    os.makedirs(settings.CROSSMATCH_TNS_DUMP)
+
 cmd = 'ssh %s sudo mysqldump -u root -p%s --port=%s ztf crossmatch_tns > %s/crossmatch_tns.sql'
 cmd = cmd % (settings.DB_HOST, settings.DB_ROOT_PASS, settings.DB_PORT, settings.CROSSMATCH_TNS_DUMP)
 os.system(cmd)
