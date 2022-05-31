@@ -12,8 +12,8 @@ os.system(cmd)
 if not os.path.exists(settings.CROSSMATCH_TNS_DUMP):
     os.makedirs(settings.CROSSMATCH_TNS_DUMP)
 
-cmd = 'ssh %s sudo mysqldump -u root -p%s --port=%s ztf crossmatch_tns > %s/crossmatch_tns.sql'
-cmd = cmd % (settings.DB_HOST, settings.DB_ROOT_PASS, settings.DB_PORT, settings.CROSSMATCH_TNS_DUMP)
+cmd = 'mysqldump -u %s -p%s --port=%s --host=lasair-dev-db ztf crossmatch_tns > %s/crossmatch_tns.sql'
+cmd = cmd % (settings.DB_USER_READWRITE, settings.DB_PASS_READWRITE, settings.DB_PORT, settings.CROSSMATCH_TNS_DUMP)
 os.system(cmd)
 
 cmd = 'mysql -u %s -p%s --port=%s --host=%s ztf -e "select count(*) from crossmatch_tns" >> %s'
