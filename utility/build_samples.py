@@ -27,7 +27,7 @@ def create_TNS(user_id, radius):
     msl = db_connect.remote()
     cursor = msl.cursor(buffered=True, dictionary=True)
     query = 'REPLACE INTO watchlists (wl_id, name, description, active, public, radius, user)'
-    query += ' VALUES (1, "__TNS__", "Copy of Transient Name Server", 0, 0, %f, %d)'
+    query += ' VALUES (1, "__TNS__", "Copy of Transient Name Server", 1, 0, %f, %d)'
     query = query % (radius, user_id)
     cursor.execute(query)
     msl.commit()
@@ -48,11 +48,11 @@ def create_lightweight_query(user_id):
     msl = db_connect.remote()
     cursor = msl.cursor(buffered=True, dictionary=True)
     query = 'REPLACE INTO myqueries ('
-    query += 'name, description, '
+    query += 'mq_id, name, description, '
     query += 'selected, conditions, tables, '
     query += 'public, active, topic_name, real_sql, user)'
     query += ' VALUES ('
-    query += '"Lightweight", "Heartbeat query for public Kafka", '
+    query += '1, "Lightweight", "Heartbeat query for public Kafka", '
     query += '"objects.objectId", "", "objects",'
     query += '0, 2, "lasair_1Lightweight", "%s", %d'
     query += ')'
@@ -77,11 +77,11 @@ def create_sample_email_query(user_id):
     msl = db_connect.remote()
     cursor = msl.cursor(buffered=True, dictionary=True)
     query = 'REPLACE INTO myqueries ('
-    query += 'name, description, '
+    query += 'mq_id, name, description, '
     query += 'selected, conditions, tables, '
     query += 'public, active, topic_name, real_sql, user)'
     query += ' VALUES ('
-    query += '"Sample Email", "Sample to check email queries", '
+    query += '2, "Sample Email", "Sample to check email queries", '
     query += '"%s", "%s", "%s",'
     query += '0, 1, "lasair_1SampleEmail", "%s", %d'
     query += ')'
@@ -125,11 +125,11 @@ def create_fast_annotation_query(user_id):
     msl = db_connect.remote()
     cursor = msl.cursor(buffered=True, dictionary=True)
     query = 'REPLACE INTO myqueries ('
-    query += 'name, description, '
+    query += 'mq_id, name, description, '
     query += 'selected, conditions, tables, '
     query += 'public, active, topic_name, real_sql, user)'
     query += ' VALUES ('
-    query += '"Sample Fast", "Sample fast annotator query", '
+    query += '3, "Sample Fast", "Sample fast annotator query", '
     query += '"%s", "%s", "%s", '
     query += '0, 2, "lasair_1Sample_Fast", "%s", %d'
     query += ')'
