@@ -119,7 +119,7 @@ def run_queries(query_list, annotation_list=None):
         t = time.time()
 
         # normal case of streaming queries
-        if not annotation_list:  
+        if annotation_list == None:  
             query_results = run_query(query, msl_local)
             n += dispose_query_results(query, query_results)
 
