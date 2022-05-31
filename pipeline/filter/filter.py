@@ -1,11 +1,11 @@
-""" This is the master script that does these steps:
+""" This is the main script that does these steps:
     -- fetch a batch of alerts from kafka
     -- run the watchlist code and insert the hits
     -- run the active user queries and produce kafka
     -- build a CSV file of three tables with the batch: 
         objects, sherlock_classifications, watchlist_hits, area_hits
     -- scp those files to lasair-db
-    -- ssh to ingest those files to master database
+    -- ssh to ingest those files to main database
 """
 import os,sys
 sys.path.append('../../common')
@@ -197,14 +197,14 @@ def main(nprocesses=1, topic='ztf_sherlock'):
         cmd =  "mysql --user=%s --database=ztf --password=%s --port=%s --host=%s < %s" 
         cmd = cmd % (settings.DB_USER_READWRITE, settings.DB_PASS_READWRITE, settings.DB_PORT, settings.DB_HOST, tmpfilename)
         if os.system(cmd) != 0:
-            rtxt = 'ERROR in filter/filter: cannot push %s local to master database' % table
+            rtxt = 'ERROR in filter/filter: cannot push %s local to main database' % table
             slack_webhook.send(settings.SLACK_URL, rtxt)
             print(rtxt)
             sys.stdout.flush()
         else:
             print(table, 'ingested to main db')
 
-    print('Transfer to master %.1f seconds' % (time.time() - t))
+    print('Transfer to main database %.1f seconds' % (time.time() - t))
     sys.stdout.flush()
     
     ms = manage_status(settings.SYSTEM_STATUS)
