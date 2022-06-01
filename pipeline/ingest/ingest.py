@@ -252,6 +252,8 @@ def main(topic=None, topicout='ztf_ingest', nprocess=2):
         date = date_nid.nid_to_date(nid)
         topic  = 'ztf_' + date + '_programid1'
 
+    print('Topic_in is %s, topic_out is %s, nprocesses is %s' % (topic, topicout, nprocess))
+
     maxalert = settings.KAFKA_MAXALERTS
 
     try:
