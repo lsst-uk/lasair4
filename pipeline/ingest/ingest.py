@@ -248,6 +248,7 @@ def main(topic=None, topicout='ztf_ingest', nprocess=2):
     """
 
     if not topic:
+        nid  = date_nid.nid_now()
         date = date_nid.nid_to_date(nid)
         topic  = 'ztf_' + date + '_programid1'
 
