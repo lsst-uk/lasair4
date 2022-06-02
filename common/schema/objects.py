@@ -57,11 +57,6 @@ schema = {
       "doc": "most recent increase in g magnitude divided by time difference, (brightening = positive)"
     },
     {
-      "name": "dmdt_g_err",
-      "type": "float",
-      "doc": "Error estimate for dmdt_g"
-    },
-    {
       "name": "dmdt_g_2",
       "type": "float",
       "doc": "deprecated -- always Null"
@@ -129,11 +124,6 @@ schema = {
       "name": "dmdt_r",
       "type": "float",
       "doc": "most recent increase in r magnitude divided by time difference, (brightening = positive)"
-    },
-    {
-      "name": "dmdt_r_err",
-      "type": "float",
-      "doc": "Error estimate for dmdt_r"
     },
     {
       "name": "dmdt_r_2",
@@ -227,6 +217,16 @@ schema = {
       "name": "ssnamenr",
       "type": "string",
       "doc": "MPC name of Solar System object"
+    },
+    {
+      "name": "dmdt_g_err",
+      "type": "float",
+      "doc": "Error estimate for dmdt_g"
+    },
+    {
+      "name": "dmdt_r_err",
+      "type": "float",
+      "doc": "Error estimate for dmdt_r"
     }
   ],
   "indexes": [
