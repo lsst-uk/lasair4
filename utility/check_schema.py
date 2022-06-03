@@ -31,8 +31,6 @@ def get_mysql_attrs(msl):
 
 if __name__ == "__main__":
     args = docopt(__doc__)
-    import pprint; pprint.pprint(args)
-
     schema_name = args['<schema_name>']
 
     schema_attrs = []
