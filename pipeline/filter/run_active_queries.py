@@ -9,7 +9,7 @@ may be called to get all the recent fast annotations
 
 (3) run_queries(query_list, annotation_list=None):
 Uses query_list and possibly annotation_list and runs all the queries against 
-local, or those involving annotator against master databaase
+local, or those involving annotator against main databaase
 
 (4) query_for_object(query, objectId):
 If doing fast annotations, convert a given query with specific objectId
@@ -50,12 +50,12 @@ from email.mime.text import MIMEText
 
 def fetch_queries():
     """fetch_queries.
-    Get all the stored queries from the master database
+    Get all the stored queries from the main database
     """
     # first get the user queries from the database that the webserver uses
     msl_remote = db_connect.remote()
 
-    # Fetch all the stored queries from the master database
+    # Fetch all the stored queries from the main database
     cursor   = msl_remote.cursor(buffered=True, dictionary=True)
     query = 'SELECT mq_id, user, name, email, tables, active, real_sql, topic_name '
     query += 'FROM myqueries, auth_user WHERE myqueries.user = auth_user.id AND active > 0'
@@ -94,8 +94,11 @@ def run_annotation_queries(query_list):
     while 1:
         msg = streamReader.poll(timeout=5)
         if msg == None: break
-        ann = json.loads(msg.value())
-        annotation_list.append(ann)
+        try:
+            ann = json.loads(msg.value())
+            annotation_list.append(ann)
+        except:
+            continue
     streamReader.close()
     #print('got ', annotation_list)
     run_queries(query_list, annotation_list)
@@ -103,7 +106,7 @@ def run_annotation_queries(query_list):
 def run_queries(query_list, annotation_list=None):
     """
     When annotation_list is None, it runs all the queries against the local database
-    When not None, runs some queires agains a specific object, using the master database
+    When not None, runs some queires agains a specific object, using the main database
     """
     try:
         msl_local = db_connect.local()
@@ -116,7 +119,7 @@ def run_queries(query_list, annotation_list=None):
         t = time.time()
 
         # normal case of streaming queries
-        if not annotation_list:  
+        if annotation_list == None:  
             query_results = run_query(query, msl_local)
             n += dispose_query_results(query, query_results)
 
@@ -152,7 +155,7 @@ def run_query(query, msl, annotator=None, objectId=None):
     """run_query. Two cases here: 
     if annotator=None, runs the query against the local database
     if annotator and objectId, checks if the query involves the annotator, 
-        and if so, runs the query for the given object on master database
+        and if so, runs the query for the given object on main database
 
     Args:
         query:
@@ -169,7 +172,7 @@ def run_query(query, msl, annotator=None, objectId=None):
         # if the annotator does not appear in the query tables, then we don't need to run it
         if not annotator in query['tables']:
             return []
-        # run the query against master for this specific object that has been annotated
+        # run the query against main for this specific object that has been annotated
         sqlquery_real = query_for_object(sqlquery_real, objectId)
 
     # in any case, limit the output
@@ -314,7 +317,7 @@ def dispose_kafka(query_results, topic):
         'bootstrap.servers': settings.PUBLIC_KAFKA_SERVER,
         'security.protocol': 'SASL_PLAINTEXT',
         'sasl.mechanisms': 'SCRAM-SHA-256',
-        'sasl.username': 'admin',
+        'sasl.username': settings.PUBLIC_KAFKA_USERNAME,
         'sasl.password': settings.PUBLIC_KAFKA_PASSWORD
     }
 

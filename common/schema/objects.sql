@@ -40,6 +40,8 @@ CREATE TABLE IF NOT EXISTS objects(
 `ncandgp_7` int,
 `ncandgp_14` int,
 `ssnamenr` varchar(16),
+`dmdt_g_err` float,
+`dmdt_r_err` float,
 PRIMARY KEY (`objectId`),
 KEY `htmid16idx` (`htm16`),
 KEY `idx_ncand` (`ncand`),

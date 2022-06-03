@@ -8,7 +8,7 @@ Output: name.sql
 import json
 import os
 import sys
-sys.path.append('../../filter')
+sys.path.append('../../pipeline/filter/features_ZTF')
 from insert_query import create_insert_query, create_insert_annotation
 
 # the expected attributes in the 'sherlock' annotation
@@ -51,11 +51,11 @@ for filename in os.listdir('sample_alerts'):
     # write the queries here
     queryfile = open('sample_queries/%s.sql' % filename, 'w')
 
-    try:
-        querydict = create_insert_query(alert)
+    querydict = create_insert_query(alert)
+    if querydict and 'query' in querydict:
         queryfile.write(querydict['query'] + ';\n\n')
-    except Exception as e:
-        print(repr(e))
+    else:
+        print('No query created')
 
     # look for any queries labelled 'sherlock'
     if 'annotations' in alert:

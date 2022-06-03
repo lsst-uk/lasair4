@@ -14,9 +14,8 @@ from lasair.objects import obj
 
 from django.contrib.auth.models import User
 from django.contrib.auth import login, authenticate
+import string, random, importlib
 
-import string
-import random
 def id_generator(size=10):
     """id_generator.
 
@@ -338,6 +337,24 @@ def coverage(request):
     nid1 = date_nid.date_to_nid(date1)
     nid2 = date_nid.date_to_nid(date2)
     return render(request, 'coverage.html',{'nid1':nid1, 'nid2': nid2, 'date1':date1, 'date2':date2})
+
+def get_schema(schema_name):
+    schema_package = importlib.import_module('schema.' + schema_name)
+    return schema_package.schema['fields']
+
+def schema(request):
+    """schema
+
+    Args:
+        request:
+    """
+    schemas = {
+        'objects'                 : get_schema('objects'),
+        'sherlock_classifications': get_schema('sherlock_classifications'),
+        'crossmatch_tns'          : get_schema('crossmatch_tns'),
+        'annotations'             : get_schema('annotations'),
+    }
+    return render(request, 'schema.html', {'schemas':schemas})
 
 def streams(request, topic):
     """stream.

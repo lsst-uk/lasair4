@@ -2,7 +2,8 @@
     up to a maximum maxalert
 """
 import os, sys
-sys.path.append('../../common')
+sys.path.append('../common')
+import settings
 from confluent_kafka import Producer, KafkaError
 
 if len(sys.argv) < 3:
