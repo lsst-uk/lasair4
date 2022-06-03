@@ -28,6 +28,8 @@ def make_ema(candlist):
         if not 'magpsf' in c:
             continue
         mag = c['magpsf']
+        if 'fid' not in c:
+            continue
 
         # separate the g mag (fid=1) from r mag (fid=2)
         if c['fid'] == 1:
@@ -112,6 +114,12 @@ def good(cand):
         return True
     return False
 
+def diffpos(cand):
+    return cand['isdiffpos'] == 't' or cand['isdiffpos'] == '1'
+
+def rms(a, b):
+    return math.sqrt(a*a + b*b)
+
 def create_features(objectId, candlist):
     # version 1.0
     ema = make_ema(candlist)
@@ -122,6 +130,10 @@ def create_features(objectId, candlist):
     dec = []
     magg = []
     magr = []
+    magg_err = []
+    magr_err = []
+    diffposg = []
+    diffposr = []
     jdg   = []
     jdr   = []
     latestgmag = latestrmag = None
@@ -137,23 +149,30 @@ def create_features(objectId, candlist):
         # if this is a real detection, it will have a candid else nondetection
         if not 'candid' in cand or not cand['candid']: 
             continue
+        if 'fid' not in cand:
+            continue
 
         nid = cand['nid']
+        dp = diffpos(cand)
         ra.append(cand['ra'])
         dec.append(cand['dec'])
         if cand['jd'] < jdmin:
             jdmin = cand['jd']
         if cand['fid'] == 1:
             magg.append(cand['magpsf'])
+            magg_err.append(cand['sigmapsf'])
             jdg.append(cand['jd'])
             latestgmag = cand['magpsf']
-            if cand['isdiffpos'] == 't':
+            diffposg.append(dp)
+            if dp:
                 g_nid[nid] = (cand['magpsf'], cand['jd'])
         else:
             magr.append(cand['magpsf'])
+            magr_err.append(cand['sigmapsf'])
             jdr.append(cand['jd'])
             latestrmag = cand['magpsf']
-            if cand['isdiffpos'] == 't':
+            diffposr.append(dp)
+            if dp:
                 r_nid[nid] = (cand['magpsf'], cand['jd'])
 
         # if it also has the 'drb' data quality flag, copy the PS1 data
@@ -186,7 +205,7 @@ def create_features(objectId, candlist):
         if not 'candid'in cand: 
             continue
 
-        if good(cand) and cand['isdiffpos'] == 't' and jdmax and cand['jd']:
+        if good(cand) and diffpos(cand) and jdmax and cand['jd']:
             ncandgp += 1
             age = jdmax - cand['jd']
             if age < 7.0:  ncandgp_7 += 1
@@ -200,27 +219,41 @@ def create_features(objectId, candlist):
             jd_g_minus_r = g_nid[nid][1]
 
     # statistics of the g light curve
-    dmdt_g = dmdt_g_2 = None
+    dmdt_g = dmdt_g_err = dmdt_g_2 = None
     if len(magg) > 0:
         maggmin = np.min(magg)
         maggmax = np.max(magg)
         maggmean = np.mean(magg)
-        try:     dmdt_g   = (magg[-2] - magg[-1])/(jdg[-1] - jdg[-2])
+        try:
+            if diffposg[-1] and diffposg[-2]:
+                dt = jdg[-1] - jdg[-2]
+                dmdt_g       = (magg[-2]     - magg[-1])    /dt
+                dmdt_g_err   = rms(magg_err[-2], magg_err[-1])/dt
         except:  pass
-        try:     dmdt_g_2 = (magg[-3] - magg[-2])/(jdg[-2] - jdg[-3])
+        try:
+            if diffposg[-2] and diffposg[-3]:
+                dt = jdg[-2] - jdg[-3]
+                dmdt_g_2  = (magg[-2]     - magg[-3])/dt
         except:  pass
     else:
         maggmin = maggmax = maggmean = maggmedian = None
 
     # statistics of the r light curve
-    dmdt_r = dmdt_r_2 = None
+    dmdt_r = dmdt_r_err = dmdt_r_2 = None
     if len(magr) > 0:
         magrmin = np.min(magr)
         magrmax = np.max(magr)
         magrmean = np.mean(magr)
-        try:     dmdt_r   = (magr[-2] - magr[-1])/(jdr[-1] - jdr[-2])
+        try:
+            if diffposr[-1] and diffposr[-2]:
+                dt = jdr[-1] - jdr[-2]
+                dmdt_r       = (magr[-2]     - magr[-1])    /dt
+                dmdt_r_err   = rms(magr_err[-2], magr_err[-1])/dt
         except:  pass
-        try:     dmdt_r_2 = (magr[-3] - magr[-2])/(jdr[-2] - jdr[-3])
+        try:
+            if diffposr[-2] and diffposr[-3]:
+                dt = jdr[-2] - jdr[-3]
+                dmdt_r_2  = (magr[-2]     - magr[-3])/dt
         except:  pass
     else:
         magrmin = magrmax = magrmean = magrmedian = None
@@ -260,8 +293,10 @@ def create_features(objectId, candlist):
     sets['rmag']       = latestrmag
     sets['dmdt_g']     = dmdt_g
     sets['dmdt_r']     = dmdt_r
-    sets['dmdt_g_2']   = dmdt_g_2
-    sets['dmdt_r_2']   = dmdt_r_2
+    sets['dmdt_g_err']   = dmdt_g_err
+    sets['dmdt_r_err']   = dmdt_r_err
+    sets['dmdt_g_2']     = dmdt_g_2
+    sets['dmdt_r_2']     = dmdt_r_2
     sets['jdgmax']     = jdgmax
     sets['jdrmax']     = jdrmax
     sets['jdmax']      = jdmax

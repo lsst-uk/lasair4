@@ -39,6 +39,7 @@ urlpatterns = [
     path('support',       TemplateView.as_view(template_name='support.html')),
 
     path('conesearch/',             views.conesearch,           name='conesearch'),
+    path('schema',                  views.schema,               name='schema'),
     path('status/',                 views.status_today,         name='status_today'),
     path('status/<int:nid>/',       views.status,               name='status'),
     path('streams/<slug:topic>/',   views.streams,              name='streams'),
@@ -74,7 +75,6 @@ urlpatterns = [
     path('skymap/',                 skymap.skymap,              name='skymap'),
     path('skymap/<skymap_id_version>/',     skymap.show_skymap, name='show_skymap'),
 
-    path('schema',   TemplateView.as_view(template_name='schema.html')),
     path('jupyter',  TemplateView.as_view(template_name='jupyter.html')),
     path('jupyter2',  TemplateView.as_view(template_name='jupyter2.html')),
     path('fits/<slug:candid_cutoutType>/',  services.fits,     name='fits'),

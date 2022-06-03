@@ -1,18 +1,32 @@
-""" This is the master script that does these steps:
-    -- fetch a batch of alerts from kafka
-    -- run the watchlist code and insert the hits
-    -- run the active user queries and produce kafka
-    -- build a CSV file of three tables with the batch: 
-        objects, sherlock_classifications, watchlist_hits, area_hits
-    -- scp those files to lasair-db
-    -- ssh to ingest those files to master database
+""" 
+Filter code for Lasair. 
+    fetch a batch of alerts from kafka
+    run the watchlist code and insert the hits
+    run the active user queries and produce kafka
+    build a CSV file of three tables with the batch: 
+      objects, sherlock_classifications, watchlist_hits, area_hits
+    send data to main db with mysql --host
+
+Usage:
+    filter.py [--nprocess=NPROCESS]
+              [--maxalert=MAX]
+              [--group_id=GID]
+              [--topic_in=TIN]
+
+Options:
+    --nprocess=NP      Number of processes to use [default:1]
+    --maxalert=MAX     Number of alerts to process, default is from settings.
+    --group_id=GID     Group ID for kafka, default is from settings
+    --topic_in=TIN     Kafka topic to use, default is from settings
+
 """
 import os,sys
 sys.path.append('../../common')
-import time
+import settings
+import time, tempfile
+from docopt import docopt
 from socket import gethostname
 from datetime import datetime
-import settings
 from src.manage_status import manage_status
 from src import slack_webhook, date_nid, db_connect
 import run_active_queries
@@ -20,7 +34,29 @@ from check_alerts_watchlists import get_watchlist_hits, insert_watchlist_hits
 from check_alerts_areas import get_area_hits, insert_area_hits
 from counts import since_midnight, grafana_today
 
-def main(nprocesses=1, topic='ztf_sherlock'):
+def main(args):
+    if args['--topic_in']:
+        topic_in = args['--topic_in']
+    else:
+        topic  = 'ztf_sherlock'
+
+    if args['--nprocess']:
+        nprocess = int(args['--nprocess'])
+    else:
+        nprocess = 1
+
+    if args['--group_id']:
+        group_id = args['--group_id']
+    else:
+        group_id = settings.KAFKA_GROUPID
+
+    if args['--maxalert']:
+        maxalert = int(args['--maxalert'])
+    else:
+        maxalert = settings.KAFKA_MAXALERTS
+
+    print('Topic_in=%s, group_id=%s, nprocess=%d, maxalert=%d' % (topic, group_id, nprocess, maxalert))
+
     print('------------------')
     ##### clear out the local database
     os.system('date')
@@ -40,9 +76,9 @@ def main(nprocesses=1, topic='ztf_sherlock'):
     t = time.time()
     
     cmd =  'python3 consume_alerts.py '
-    cmd += '--maxalert %d ' % settings.KAFKA_MAXALERTS
-    cmd += '--nprocess %d ' % nprocesses
-    cmd += '--group %s '    % settings.KAFKA_GROUPID
+    cmd += '--maxalert %d ' % maxalert
+    cmd += '--nprocess %d ' % nprocess
+    cmd += '--group %s '    % group_id
     cmd += '--host %s '     % settings.KAFKA_SERVER
     cmd += '--topic ' + topic
     
@@ -158,19 +194,17 @@ def main(nprocesses=1, topic='ztf_sherlock'):
     try:
         run_active_queries.run_annotation_queries(query_list)
     except Exception as e:
-        rtxt = "ERROR in filter/run_active_queries.run_annotation_queries"
+        rtxt = "WARNING in filter/run_active_queries.run_annotation_queries"
         rtxt += str(e)
-        slack_webhook.send(settings.SLACK_URL, rtxt)
         print(rtxt)
         sys.stdout.flush()
-        sys.exit(-1)
     print('ANNOTATION QUERIES %.1f seconds' % (time.time() - t))
     
     ##### build CSV file with local database
     t = time.time()
     print('SEND to ARCHIVE')
     sys.stdout.flush()
-    cmd = 'rm /home/ubuntu/csvfiles/*'
+    cmd = 'sudo rm /data/mysql/*.txt'
     os.system(cmd)
     
     cmd = 'mysql --user=ztf --database=ztf --password=%s < output_csv.sql' % settings.LOCAL_DB_PASS
@@ -185,31 +219,28 @@ def main(nprocesses=1, topic='ztf_sherlock'):
     
     ##### send CSV file to central database
     t = time.time()
+
     for table in tablelist:
-        outfile = '/home/ubuntu/csvfiles/%s.txt' % table
-        if os.path.exists(outfile) and os.stat(outfile).st_size == 0:
-            print('SEND %s file is empty' % table)
+        sql  = "LOAD DATA LOCAL INFILE '/data/mysql/%s.txt' " % table
+        sql += "REPLACE INTO TABLE %s FIELDS TERMINATED BY ',' " % table
+        sql += "ENCLOSED BY '\"' LINES TERMINATED BY '\n'"
+
+        tmpfilename = tempfile.NamedTemporaryFile().name + '.sql'
+        f = open(tmpfilename, 'w')
+        f.write(sql)
+        f.close()
+
+        cmd =  "mysql --user=%s --database=ztf --password=%s --port=%s --host=%s < %s" 
+        cmd = cmd % (settings.DB_USER_READWRITE, settings.DB_PASS_READWRITE, settings.DB_PORT, settings.DB_HOST, tmpfilename)
+        if os.system(cmd) != 0:
+            rtxt = 'ERROR in filter/filter: cannot push %s local to main database' % table
+            slack_webhook.send(settings.SLACK_URL, rtxt)
+            print(rtxt)
             sys.stdout.flush()
         else:
-            vm = gethostname()
-            cmd = 'scp /home/ubuntu/csvfiles/%s.txt %s:scratch/%s__%s' % (table, settings.DB_HOST, vm, table)
-            os.system(cmd)
-            if os.system(cmd) != 0:
-                rtxt = 'ERROR in filter/filter: cannot copy CSV to master database node'
-                slack_webhook.send(settings.SLACK_URL, rtxt)
-                print(rtxt)
-                sys.stdout.flush()
-                sys.exit(-1)
-    
-    ##### ingest CSV file to central database
-            cmd = 'ssh %s "python3 /home/ubuntu/lasair-lsst/lasair-db/archive_in.py %s__%s"' % (settings.DB_HOST, vm, table)
-            if os.system(cmd) != 0:
-                rtxt = 'ERROR in filter/filter: cannot ingest CSV on master database node'
-                slack_webhook.send(settings.SLACK_URL, rtxt)
-                print(rtxt)
-                sys.stdout.flush()
-                sys.exit(-1)
-    print('Transfer to master %.1f seconds' % (time.time() - t))
+            print(table, 'ingested to main db')
+
+    print('Transfer to main database %.1f seconds' % (time.time() - t))
     sys.stdout.flush()
     
     ms = manage_status(settings.SYSTEM_STATUS)
@@ -228,11 +259,6 @@ def main(nprocesses=1, topic='ztf_sherlock'):
     else:      sys.exit(0)
 
 if __name__ == '__main__':
-    # number of processes, input topic
-    if len(sys.argv) > 2:
-        rc = main(int(sys.argv[1]), sys.argv[2])
-    elif len(sys.argv) > 1:
-        rc = main(int(sys.argv[1]), 'ztf_sherlock')
-    else:
-        rc = main(2, 'ztf_sherlock')
+    args = docopt(__doc__)
+    rc = main(args)
     sys.exit(rc)

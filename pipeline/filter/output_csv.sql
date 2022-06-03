@@ -1,7 +1,7 @@
-SELECT * FROM objects INTO OUTFILE '/home/ubuntu/csvfiles/objects.txt' FIELDS TERMINATED BY ',' ENCLOSED BY '"' LINES TERMINATED BY '\n';
+SELECT * FROM objects INTO OUTFILE '/data/mysql/objects.txt' FIELDS TERMINATED BY ',' ENCLOSED BY '"' LINES TERMINATED BY '\n';
 
-SELECT * FROM sherlock_classifications INTO OUTFILE '/home/ubuntu/csvfiles/sherlock_classifications.txt' FIELDS TERMINATED BY ',' ENCLOSED BY '"' LINES TERMINATED BY '\n';
+SELECT * FROM sherlock_classifications INTO OUTFILE '/data/mysql/sherlock_classifications.txt' FIELDS TERMINATED BY ',' ENCLOSED BY '"' LINES TERMINATED BY '\n';
 
-SELECT * FROM watchlist_hits INTO OUTFILE '/home/ubuntu/csvfiles/watchlist_hits.txt' FIELDS TERMINATED BY ',' ENCLOSED BY '"' LINES TERMINATED BY '\n';
+SELECT * FROM watchlist_hits INTO OUTFILE '/data/mysql/watchlist_hits.txt' FIELDS TERMINATED BY ',' ENCLOSED BY '"' LINES TERMINATED BY '\n';
 
-SELECT * FROM area_hits INTO OUTFILE '/home/ubuntu/csvfiles/area_hits.txt' FIELDS TERMINATED BY ',' ENCLOSED BY '"' LINES TERMINATED BY '\n';
+SELECT * FROM area_hits INTO OUTFILE '/data/mysql/area_hits.txt' FIELDS TERMINATED BY ',' ENCLOSED BY '"' LINES TERMINATED BY '\n';
