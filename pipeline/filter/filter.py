@@ -77,7 +77,7 @@ def main(args):
     
     cmd =  'python3 consume_alerts.py '
     cmd += '--maxalert %d ' % maxalert
-    cmd += '--nprocess %d ' % nprocesses
+    cmd += '--nprocess %d ' % nprocess
     cmd += '--group %s '    % group_id
     cmd += '--host %s '     % settings.KAFKA_SERVER
     cmd += '--topic ' + topic
