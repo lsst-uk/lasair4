@@ -282,7 +282,7 @@ def main(args):
     if args['--topic_out']:
         topic_out = args['--topic_out']
     else:
-        topic_out = 'ztf_sherlock'
+        topic_out = 'ztf_ingest'
 
     if args['--group_id']:
         group_id = args['--group_id']
