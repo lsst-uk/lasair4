@@ -76,9 +76,9 @@ def main(args):
     t = time.time()
     
     cmd =  'python3 consume_alerts.py '
-    cmd += '--maxalert %d ' % settings.KAFKA_MAXALERTS
+    cmd += '--maxalert %d ' % maxalert
     cmd += '--nprocess %d ' % nprocesses
-    cmd += '--group %s '    % settings.KAFKA_GROUPID
+    cmd += '--group %s '    % group_id
     cmd += '--host %s '     % settings.KAFKA_SERVER
     cmd += '--topic ' + topic
     
