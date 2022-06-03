@@ -1,21 +1,37 @@
-from __future__ import print_function
-import argparse
+"""
+Ingestion code for Lasair. Takes a stream of AVRO, splits it into
+FITS cutouts to Ceph, Lightcurves to Cassandra, and JSON versions of 
+the AVRO packets, but without the cutouts, to Kafka.
+Usage:
+    ingest.py [--nprocess=NPROCESS] 
+              [--maxalert=MAX]
+              [--group_id=GID]
+              [--topic_in=TIN | --nid=NID] 
+              [--topic_out=TOUT]
+
+Options:
+    --nprocess=NP      Number of processes to use [default:1]
+    --maxalert=MAX     Number of alerts to process, default is from settings.
+    --group_id=GID     Group ID for kafka, default is from settings
+    --topic_in=TIN     Kafka topic to use, or
+    --nid=NID          ZTF night number to use (default today)
+    --topic_out=TOUT   Kafka topic for output [default:ztf_sherlock]
+"""
+
 import sys
 sys.path.append('../../common')
 import settings
-import os
-import time
+from docopt import docopt
 from datetime import datetime
 from multiprocessing import Process, Manager
 import alertConsumer
 from src import objectStore, date_nid
-import json
-import zlib
 from src.manage_status import manage_status
 from confluent_kafka import Producer, KafkaError
 from gkhtm import _gkhtm as htmCircle
 from cassandra.cluster import Cluster
 from gkdbutils.ingesters.cassandra import executeLoad
+import os, time, json, zlib
 
 def now():
     # current UTC as string
@@ -109,7 +125,7 @@ def insert_cassandra(alert, cassandra_session):
 
     return len(detectionCandlist)
 
-def handle_alert(alert, image_store, producer, topicout, cassandra_session):
+def handle_alert(alert, image_store, producer, topic_out, cassandra_session):
     """handle_alert.
     Filter to apply to each alert.
        See schemas: https://github.com/ZwickyTransientFacility/ztf-avro-alert
@@ -118,7 +134,7 @@ def handle_alert(alert, image_store, producer, topicout, cassandra_session):
         alert:
         image_store:
         producer:
-        topicout:
+        topic_out:
     """
     # here is the part of the alert that has no binary images
     alert_noimages = msg_text(alert)
@@ -148,9 +164,9 @@ def handle_alert(alert, image_store, producer, topicout, cassandra_session):
     if producer is not None:
         try:
             s = json.dumps(alert_noimages)
-            producer.produce(topicout, json.dumps(alert_noimages))
+            producer.produce(topic_out, json.dumps(alert_noimages))
         except Exception as e:
-            print("ERROR in ingest/ingestBatch: Kafka production failed for %s" % topicout)
+            print("ERROR in ingest/ingestBatch: Kafka production failed for %s" % topic_out)
             print(e)
             sys.stdout.flush()
     return ncandidate
@@ -179,7 +195,7 @@ def run(runarg, return_dict):
         sys.stdout.flush()
         return
 
-    topicout = runarg['topicout']
+    topic_out = runarg['topic_out']
     producer_conf = {
         'bootstrap.servers': '%s' % settings.KAFKA_SERVER,
 #        'group.id': 'copy-topic',
@@ -189,7 +205,7 @@ def run(runarg, return_dict):
 #        'default.topic.config': {'auto.offset.reset': 'smallest'}
     }
     producer = Producer(producer_conf)
-    print('Producing Kafka to %s with topic %s' % (settings.KAFKA_SERVER, topicout))
+    print('Producing Kafka to %s with topic %s' % (settings.KAFKA_SERVER, topic_out))
 
     if runarg['maxalert']:
         maxalert = runarg['maxalert']
@@ -216,7 +232,7 @@ def run(runarg, return_dict):
             for alert in msg:
                 # Apply filter to each alert
                 icandidate = handle_alert(alert, runarg['image_store'], \
-                        producer, topicout, cassandra_session)
+                        producer, topic_out, cassandra_session)
 
                 nalert += 1
                 ncandidate += icandidate
@@ -243,32 +259,54 @@ def run(runarg, return_dict):
 
     return_dict[processID] = { 'nalert':nalert, 'ncandidate': ncandidate }
 
-def main(topic=None, topicout='ztf_ingest', nprocess=2):
+def main(args):
     """main.
     """
 
-    if not topic:
+    if args['--topic_in']:
+        topic_in = args['--topic_in']
+    elif args['--nid']:
+        nid = int(args['--nid'])
+        date = date_nid.nid_to_date(nid)
+        topic  = 'ztf_' + date + '_programid1'
+    else:
         nid  = date_nid.nid_now()
         date = date_nid.nid_to_date(nid)
         topic  = 'ztf_' + date + '_programid1'
 
-    print('Topic_in is %s, topic_out is %s, nprocesses is %s' % (topic, topicout, nprocess))
+    if args['--nprocess']:
+        nprocess = int(args['--nprocess'])
+    else:
+        nprocess = 1
 
-    maxalert = settings.KAFKA_MAXALERTS
+    if args['--topic_out']:
+        topic_out = args['--topic_out']
+    else:
+        topic_out = 'ztf_sherlock'
+
+    if args['--group_id']:
+        group_id = args['--group_id']
+    else:
+        group_id = settings.KAFKA_GROUPID
+
+    if args['--maxalert']:
+        maxalert = int(args['--maxalert'])
+    else:
+        maxalert = settings.KAFKA_MAXALERTS
+    
+
+    print('Topic_in=%s, topic_out=%s, group_id=%s, nprocess=%d, maxalert=%d' % (topic, topic_out, group_id, nprocess, maxalert))
 
     try:
         fitsdir = settings.IMAGEFITS
     except:
         fitsdir = None
 
-    group_id = settings.KAFKA_GROUPID
-
     print('INGEST ----------', now())
 
     consumer_conf = {
         'bootstrap.servers': '%s' % settings.KAFKA_SERVER,
         'group.id': group_id,
-#        'client.id': 'client-1',
         'enable.auto.commit': True,
         'session.timeout.ms': 6000,
         'default.topic.config': {'auto.offset.reset': 'smallest'}
@@ -296,7 +334,7 @@ def main(topic=None, topicout='ztf_ingest', nprocess=2):
             'processID':t, 
             'topic'   : topic,
             'maxalert'   : maxalert,
-            'topicout':topicout,
+            'topic_out':topic_out,
             'image_store': image_store,
             'consumer_conf':consumer_conf,
         }
@@ -323,11 +361,7 @@ def main(topic=None, topicout='ztf_ingest', nprocess=2):
     if nalert > 0: return 1
     else:          return 0
 
-if __name__ == '__main__':
-    # input topic, output topic, number of processes
-    # defaults to ztf_<date>_programid1, ztf_ingest, nprocess
-    if len(sys.argv) > 3:
-        rc = main(sys.argv[1], sys.argv[2], int(sys.argv[3]))
-    else:
-        rc = main()
+if __name__ == "__main__":
+    args = docopt(__doc__)
+    rc = main(args)
     sys.exit(rc)
