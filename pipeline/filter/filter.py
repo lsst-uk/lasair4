@@ -1,18 +1,32 @@
-""" This is the main script that does these steps:
-    -- fetch a batch of alerts from kafka
-    -- run the watchlist code and insert the hits
-    -- run the active user queries and produce kafka
-    -- build a CSV file of three tables with the batch: 
-        objects, sherlock_classifications, watchlist_hits, area_hits
-    -- scp those files to lasair-db
-    -- ssh to ingest those files to main database
+""" 
+Filter code for Lasair. 
+    fetch a batch of alerts from kafka
+    run the watchlist code and insert the hits
+    run the active user queries and produce kafka
+    build a CSV file of three tables with the batch: 
+      objects, sherlock_classifications, watchlist_hits, area_hits
+    send data to main db with mysql --host
+
+Usage:
+    filter.py [--nprocess=NPROCESS]
+              [--maxalert=MAX]
+              [--group_id=GID]
+              [--topic_in=TIN]
+
+Options:
+    --nprocess=NP      Number of processes to use [default:1]
+    --maxalert=MAX     Number of alerts to process, default is from settings.
+    --group_id=GID     Group ID for kafka, default is from settings
+    --topic_in=TIN     Kafka topic to use, default is from settings
+
 """
 import os,sys
 sys.path.append('../../common')
+import settings
 import time, tempfile
+from docopt import docopt
 from socket import gethostname
 from datetime import datetime
-import settings
 from src.manage_status import manage_status
 from src import slack_webhook, date_nid, db_connect
 import run_active_queries
@@ -20,7 +34,29 @@ from check_alerts_watchlists import get_watchlist_hits, insert_watchlist_hits
 from check_alerts_areas import get_area_hits, insert_area_hits
 from counts import since_midnight, grafana_today
 
-def main(nprocesses=1, topic='ztf_sherlock'):
+def main(args):
+    if args['--topic_in']:
+        topic_in = args['--topic_in']
+    else:
+        topic  = 'ztf_sherlock'
+
+    if args['--nprocess']:
+        nprocess = int(args['--nprocess'])
+    else:
+        nprocess = 1
+
+    if args['--group_id']:
+        group_id = args['--group_id']
+    else:
+        group_id = settings.KAFKA_GROUPID
+
+    if args['--maxalert']:
+        maxalert = int(args['--maxalert'])
+    else:
+        maxalert = settings.KAFKA_MAXALERTS
+
+    print('Topic_in=%s, group_id=%s, nprocess=%d, maxalert=%d' % (topic, group_id, nprocess, maxalert))
+
     print('------------------')
     ##### clear out the local database
     os.system('date')
@@ -223,11 +259,6 @@ def main(nprocesses=1, topic='ztf_sherlock'):
     else:      sys.exit(0)
 
 if __name__ == '__main__':
-    # number of processes, input topic
-    if len(sys.argv) > 2:
-        rc = main(int(sys.argv[1]), sys.argv[2])
-    elif len(sys.argv) > 1:
-        rc = main(int(sys.argv[1]), 'ztf_sherlock')
-    else:
-        rc = main(2, 'ztf_sherlock')
+    args = docopt(__doc__)
+    rc = main(args)
     sys.exit(rc)
