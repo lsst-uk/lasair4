@@ -108,8 +108,9 @@ def alert_filter(alert, msl):
         annClass = 'sherlock'
         if annClass in annotations:
             for ann in annotations[annClass]:
-                if "transient_object_id" in ann:  # hack here. Sherlock and Lasair have different names
-                    ann['objectId'] = ann.pop('transient_object_id')
+                if "transient_object_id" in ann:
+                    ann.pop('transient_object_id')
+                ann['objectId'] = objectId
 
                 query = insert_query.create_insert_annotation(objectId, annClass, ann, 
                     sherlock_attributes, 'sherlock_classifications', replace=True)
