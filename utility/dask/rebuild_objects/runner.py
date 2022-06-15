@@ -3,7 +3,7 @@ sys.path.append('../../../common')
 from src import db_connect
 import settings
 import dask.bag as db
-from build import get_cassandra_session, get_schema_names, rebuild_features
+from build import get_cassandra_session, get_mysql_attrs, rebuild_features
 
 def main():
     global cassandra_session, schema_names
@@ -28,7 +28,7 @@ def main():
     objectIdList = []
 
     cassandra_session = get_cassandra_session()
-    schema_names = get_schema_names()
+    schema_names = get_mysql_attrs(msl)
 
     for row in cursor:
        objectIdList.append({
