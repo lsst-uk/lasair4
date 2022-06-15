@@ -15,10 +15,9 @@ use_cephfs    = True
 global cassandra_session
 cassandra_session = None
 
-import sys
-import time
-import mysql.connector
-import json
+import sys, time, json
+sys.path.append('../../../common')
+from src import db_connect
 import settings
 import dask.bag as db
 
@@ -65,11 +64,7 @@ def main():
     time_width = float(sys.argv[2])
     #print('rect_width %.0f time_width %.0f ' % (rect_width, time_width))
     
-    msl = mysql.connector.connect(
-        user    = settings.READONLY_USER,
-        password= settings.READONLY_PASS,
-        host    = settings.DB_HOST,
-        database='ztf')
+    msl = db_connect.readonly()
     cursor = msl.cursor(buffered=True, dictionary=True)
     
     query = "SELECT objects.objectId FROM objects "
@@ -83,9 +78,7 @@ def main():
 
     from cassandra.cluster import Cluster
     from cassandra.query import dict_factory
-    host = ['192.168.0.17', '192.168.0.11', '192.168.0.18', '192.168.0.39', '192.168.0.23']
-    table = 'candidates'
-    cluster = Cluster(host)
+    cluster = Cluster(settings.CASSANDRA_HEAD)
     cassandra_session = cluster.connect()
     cassandra_session.row_factory = dict_factory
     cassandra_session.set_keyspace('lasair')

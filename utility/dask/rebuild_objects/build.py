@@ -5,15 +5,14 @@ import mysql.connector
 from cassandra.cluster import Cluster
 from cassandra.query import dict_factory
 
-from check_schema import get_schema_names
-
-sys.path.append('../../filter')
+sys.path.append('../../../pipeline/filter/features_ZTF')
 from insert_query import create_features
 
+sys.path.append('../../')
+from check_schema import get_schema_names
+
 def get_cassandra_session():
-    host = ['192.168.0.17', '192.168.0.11', '192.168.0.18', '192.168.0.39', '192.168.0.23']
-    table = 'candidates'
-    cluster = Cluster(host)
+    cluster = Cluster(settings.CASSANDRA_HEAD)
     cassandra_session = cluster.connect()
     cassandra_session.row_factory = dict_factory
     cassandra_session.set_keyspace('lasair')

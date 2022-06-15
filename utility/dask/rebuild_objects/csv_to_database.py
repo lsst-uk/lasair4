@@ -1,4 +1,6 @@
 import os, sys, time
+sys.path.append('../../../common')
+from src import db_connect
 import settings
 
 def handle(filename):
@@ -11,8 +13,9 @@ def handle(filename):
     f.write(sql)
     f.close()
 
-    cmd =  "mysql --user=ztf --database=ztf --password=%s --host=%s --port=%d < tmp.sql" 
-    cmd = cmd % (settings.GDB_PASSWORD, settings.GDB_HOST, settings.GDB_PORT)
+    cmd =  "mysql --user=%s --database=ztf --password=%s --host=%s --port=%s < tmp.sql" 
+    cmd = cmd % (settings.DB_USER_READWRITE, settings.DB_PASS_READWRITE, settings.DB_HOST, settings.DB_PORT)
+    print(cmd)
     os.system(cmd)
 
 ################
