@@ -6,8 +6,8 @@
 #dask-worker 192.168.0.40
 
 mkdir csvfiles
-python3 runner.py        0 2459400 csvfiles/output1.csv
-python3 runner.py  2459400 2459500 csvfiles/output2.csv
+python3 runner.py        0 2459260 csvfiles/output1.csv
+python3 runner.py  2459260 2459500 csvfiles/output2.csv
 python3 runner.py  2459500 2459600 csvfiles/output3.csv
 
-#python3 csv_to_database.py         csvfiles
+python3 csv_to_database.py         csvfiles

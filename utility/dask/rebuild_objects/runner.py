@@ -1,7 +1,6 @@
-import sys
-import time
-import mysql.connector
-import json
+import sys, time, json
+sys.path.append('../../../common')
+from src import db_connect
 import settings
 import dask.bag as db
 from build import get_cassandra_session, get_schema_names, rebuild_features
@@ -19,12 +18,7 @@ def main():
         output = sys.argv[3]
     print('jdmax_min %.2f jdmax_max %.2f' % (jdmax_min, jdmax_max))
     
-    msl = mysql.connector.connect(
-        user    = settings.READONLY_USER,
-        password= settings.READONLY_PASS,
-        host    = settings.LASAIR_DB,
-        port    = settings.LASAIR_PORT,
-        database='ztf')
+    msl = db_connect.readonly()
     cursor = msl.cursor(buffered=True, dictionary=True)
     
     query = "SELECT objects.objectId FROM objects "
@@ -45,23 +39,24 @@ def main():
     nobject = len(objectIdList)
     print('%d objects' % nobject)
 
-    if nobjects > 0:
-        from dask.distributed import Client
-        client = Client()
-        t = time.time()
-        bag = db.from_sequence(objectIdList, npartitions=4)
-        result = bag.map(rebuild_features).compute(scheduler='threads')
-        csvlines = client.gather(result)
-
-        f = open(output, 'w')
-        for line in csvlines:
-            if line:
-                f.write(line+'\n')
-        f.close()
-        t = time.time() - t
-        print('%d objects in %.1f msec each' % (nobject, t*1000.0/nobject))
-    else:
+    if nobject ==  0:
         print('no objects found')
+        sys.exit(1)
+
+    from dask.distributed import Client
+    client = Client()
+    t = time.time()
+    bag = db.from_sequence(objectIdList, npartitions=4)
+    result = bag.map(rebuild_features).compute(scheduler='threads')
+    csvlines = client.gather(result)
+
+    f = open(output, 'w')
+    for line in csvlines:
+        if line:
+            f.write(line+'\n')
+    f.close()
+    t = time.time() - t
+    print('%d objects in %.1f msec each' % (nobject, t*1000.0/nobject))
 
     cassandra_session.shutdown()
     client.shutdown()
