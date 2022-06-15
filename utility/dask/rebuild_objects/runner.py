@@ -9,7 +9,7 @@ def main():
 
     jdmax_min   = 2459550.68
     jdmax_max   = 2459550.70
-    output      = 'csvfiles/output.csv'
+    output      = 'csvfiles'
 
     if len(sys.argv) > 3:
         jdmax_min = float(sys.argv[1])
@@ -48,7 +48,7 @@ def main():
         ndone += 1
         #print(ndone, ' of ', nobject)
 
-    f = open(output, 'w')
+    f = open('%s_%d_%d' % (output, jdmax_min, jdmax_max) , 'w')
     f.write(csvlines)
     f.close()
 
