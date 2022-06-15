@@ -48,7 +48,7 @@ def main():
         ndone += 1
         #print(ndone, ' of ', nobject)
 
-    f = open('%s_%d_%d' % (output, jdmax_min, jdmax_max) , 'w')
+    f = open('%s_%07d_%07d' % (output, jdmax_min, jdmax_max) , 'w')
     f.write(csvlines)
     f.close()
 
