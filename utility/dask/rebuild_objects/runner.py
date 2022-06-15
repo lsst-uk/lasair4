@@ -2,7 +2,6 @@ import sys, time, json
 sys.path.append('../../../common')
 from src import db_connect
 import settings
-import dask.bag as db
 from build import get_cassandra_session, get_mysql_attrs, rebuild_features
 
 def main():
@@ -25,41 +24,42 @@ def main():
     query += "WHERE jdmax > %f and jdmax < %f " % (jdmax_min, jdmax_max)
 #    query += "LIMIT 1000 "
     cursor.execute(query)
-    objectIdList = []
 
     cassandra_session = get_cassandra_session()
     schema_names = get_mysql_attrs(msl)
 
+    t = time.time()
+    nobject = 0
+    objectList = []
     for row in cursor:
-       objectIdList.append({
-           'objectId': row['objectId'],
+        objectList.append(row['objectId'])
+    nobject = len(objectList)
+
+    ndone = 0
+    csvlines = ''
+    for objectId in objectList:
+        csvline = rebuild_features({
+           'objectId': objectId,
            'schema_names': schema_names,
            'cassandra_session':cassandra_session,
         })
-    nobject = len(objectIdList)
-    print('%d objects' % nobject)
+        if csvline:
+            csvlines += csvline + '\n'
+        ndone += 1
+        #print(ndone, ' of ', nobject)
+
+    f = open(output, 'w')
+    f.write(csvlines)
+    f.close()
 
     if nobject ==  0:
         print('no objects found')
         sys.exit(1)
 
-    from dask.distributed import Client
-    client = Client()
-    t = time.time()
-    bag = db.from_sequence(objectIdList, npartitions=4)
-    result = bag.map(rebuild_features).compute(scheduler='threads')
-    csvlines = client.gather(result)
-
-    f = open(output, 'w')
-    for line in csvlines:
-        if line:
-            f.write(line+'\n')
-    f.close()
     t = time.time() - t
     print('%d objects in %.1f msec each' % (nobject, t*1000.0/nobject))
 
     cassandra_session.shutdown()
-    client.shutdown()
 
 if __name__ == "__main__":
     main()
