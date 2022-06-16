@@ -30,6 +30,7 @@ def run(runargs):
     global_sjd = float(runargs['--sjd'])
     global_ejd = float(runargs['--ejd'])
     out = runargs['--out']
+    job = runargs['--job']
 
     dt = (global_ejd - global_sjd)/nprocess
     sjd = global_sjd + dt*iprocess
@@ -68,7 +69,7 @@ def run(runargs):
         ndone += 1
         #print(ndone, ' of ', nobject)
 
-    f = open('%s/%07d_%07d_%s.csv' % (out, int(global_sjd), int(global_ejd), iprocess) , 'w')
+    f = open('%s/%s_%s.csv' % (out, job, iprocess) , 'w')
     f.write(csvlines)
     f.close()
 
@@ -85,14 +86,19 @@ if __name__ == "__main__":
     args = docopt(__doc__)
     nprocess = int(args['--nprocess'])
     print('Running %d processes' % nprocess)
+    global_sjd = int(float(args['--sjd']))
+    global_ejd = int(float(args['--ejd']))
+    job = '%07d_%07d' % (int(global_sjd), int(global_ejd))
 
     process_list = []
     for iprocess in range(nprocess):
         runargs = args.copy()
         runargs['--iprocess'] = iprocess
+        runargs['--job'] = job
         p = Process(target=run, args=(runargs,))
         process_list.append(p)
         p.start()
 
     for p in process_list:
         p.join()
+    print(job, 'Finished')
