@@ -1,25 +1,23 @@
 import os, sys
-s = 0
-e = 2459260
-n = 3
-esn = (e-s) // n
-print(esn)
-directory = 'csvfiles/out'
-hosts = ['192.168.0.40']
+global_sjd = 0
+global_ejd = 2459260
+nchunk     = 3
+nprocess   = 2
+out        = 'csvfiles'
+hosts      = ['192.168.0.40']
 
-for i in range(n):
-    sta = s + esn*i
-    if i == n-1:
-        end = e
-    else:
-        end = s + esn*(i+1)
-    print(sta, end)
-    host = hosts[i % len(hosts)]
+dt = (global_ejd - global_sjd) / nchunk
+for ichunk in range(nchunk):
+    sjd = global_sjd + dt*ichunk
+    ejd = global_sjd + dt*(ichunk+1)
+    print('Chunk %d: %.2f to %.2f' % (ichunk, sjd, ejd))
+    host = hosts[ichunk % len(hosts)]
 
     cmd = 'ssh -n -f %s '
-    cmd += '"sh -c \'cd /home/ubuntu/lasair4/utility/dask/rebuild_objects; '
-    cmd += 'nohup python3 runner.py %d %d %s > /dev/null 2>&1 &\'"'
-    cmd = cmd % (host, sta, end, directory)
+    cmd += '"sh -c \'cd /home/ubuntu/lasair4/utility/parallel/rebuild_objects; '
+    cmd += 'nohup python3 runner.py --sjd=%.2f --ejd=%.2f --out=%s --nprocess=%d'
+    cmd += ' &\'"'
+    cmd = cmd % (host, sjd, ejd, out, nprocess)
 
     print (cmd)
     os.system(cmd)
