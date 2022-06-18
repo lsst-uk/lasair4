@@ -11,14 +11,14 @@ os.system('date')
 nhost    = int(sys.argv[1])
 nprocess = int(sys.argv[2])
 
-global_sjd = 2459260  # 2021-02-14
-global_ejd = 2459270  # 2021-02-24
+global_soff = 1000000 
+global_eoff = 1010000
 out        = '/mnt/cephfs/roy/features'
 hosts      = [
+    '192.168.0.40', 
     '192.168.0.27', 
     '192.168.0.8',
     '192.168.0.25',
-    '192.168.0.40', 
     ]
 
 hosts = hosts[:nhost]
@@ -26,16 +26,18 @@ print(hosts)
 
 cmdlist = []
 nchunk     = 20
-dt = (global_ejd - global_sjd) / nchunk
+per_chunk = (global_eoff - global_soff) // nchunk
 for ichunk in range(nchunk):
-    sjd = global_sjd + dt*ichunk
-    ejd = global_sjd + dt*(ichunk+1)
-#    print('Chunk %d: %.2f to %.2f' % (ichunk, sjd, ejd))
-    host = hosts[ichunk % len(hosts)]
+    soff = global_soff + per_chunk*ichunk
+    if ichunk == nchunk-1:
+        eoff = global_eoff
+else:
+        eoff = global_soff + per_chunk*(ichunk+1)
+#    print('Chunk %d: %d to %d' % (ichunk, soff, eoff))
 
     cmd = 'cd /home/ubuntu/lasair4/utility/parallel/rebuild_objects; '
-    cmd += 'python3 runner.py --sjd=%.2f --ejd=%.2f --out=%s --nprocess=%d'
-    cmd = cmd % (sjd, ejd, out, nprocess)
+    cmd += 'python3 runner.py --soff=%d --eoff=%d --out=%s --nprocess=%d'
+    cmd = cmd % (soff, eoff, out, nprocess)
 #    print (cmd)
     cmdlist.append(cmd)
 
