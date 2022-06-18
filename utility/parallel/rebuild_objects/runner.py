@@ -1,18 +1,16 @@
 """
-Rebuilds features for Lasair. Takes a start JD, end JD,
+Rebuilds features for Lasair. Takes a start OFFSET, end OFFSET,
+within the list of objects,
 and makes CSV files suitable for ingestion with sister program csv_to_database.
 Can run with multiprocessing.
 Usage:
-    runner.py [--nprocess=NP]
-              (--sjd=SJD)
-              (--ejd=EJD)
-              (--out=OUT)
+    runner.py [--nprocess=NP] (--soff=SOFF) (--eoff=EOFF) (--out=OUT)
 
 Options:
-  --nprocess=NP    Number of processes to use [default: 1]
-  --sjd=SJD        Start JD, example 2459550.68
-  --ejd=EJD        End JD, example 2459550.70
-  --out=OUT        Directory name for output
+  --nprocess=NP  Number of processes to use [default: 1]
+  --soff=SOFF    Start OFF, example 1000000
+  --eoff=EOFF    End OFF,   example 1000010
+  --out=OUT      Directory name for output
 """
 import sys, time, json
 sys.path.append('../../../common')
@@ -27,23 +25,25 @@ def run(runargs):
     nprocess = int(runargs['--nprocess'])
     iprocess = int(runargs['--iprocess'])
 
-    global_sjd = float(runargs['--sjd'])
-    global_ejd = float(runargs['--ejd'])
+    global_soff = int(runargs['--soff'])
+    global_eoff = int(runargs['--eoff'])
     out = runargs['--out']
     job = runargs['--job']
 
-    dt = (global_ejd - global_sjd)/nprocess
-    sjd = global_sjd + dt*iprocess
-    ejd = global_sjd + dt*(iprocess+1)
+    per_process = (global_eoff - global_soff)/nprocess
+    soff = global_soff + per_process*iprocess
+    if iprocess == nprocess-1:
+        eoff = global_eoff
+    else:
+        eoff = global_soff + per_process*(iprocess+1)
 
-    print('%d: start JD %.2f end JD %.2f' % (iprocess, sjd, ejd))
+    print('%d: start OFF %d end OFF %d' % (iprocess, soff, eoff))
     
     msl = db_connect.readonly()
     cursor = msl.cursor(buffered=True, dictionary=True)
     
     query = "SELECT objects.objectId FROM objects "
-    query += "WHERE jdmax > %f and jdmax < %f " % (sjd, ejd)
-#    query += "LIMIT 1000 "
+    query += "LIMIT %d OFFSET %d" % (eoff-soff, soff)
     cursor.execute(query)
 
     cassandra_session = get_cassandra_session()
@@ -78,7 +78,7 @@ def run(runargs):
         sys.exit(1)
 
     t = time.time() - t
-    print('%d %d objects in %.1f msec each' % (iprocess, nobject, t*1000.0/nobject))
+    print('%d: %d objects in %.1f msec each' % (iprocess, nobject, t*1000.0/nobject))
 
     cassandra_session.shutdown()
 
@@ -86,9 +86,9 @@ if __name__ == "__main__":
     args = docopt(__doc__)
     nprocess = int(args['--nprocess'])
     print('Running %d processes' % nprocess)
-    global_sjd = int(float(args['--sjd']))
-    global_ejd = int(float(args['--ejd']))
-    job = '%07d_%07d' % (int(global_sjd), int(global_ejd))
+    global_soff = int(args['--soff'])
+    global_eoff = int(args['--eoff'])
+    job = '%07d_%07d' % (global_soff, global_eoff)
 
     process_list = []
     for iprocess in range(nprocess):
