@@ -12,9 +12,10 @@ nhost    = int(sys.argv[1])
 nprocess = int(sys.argv[2])
 
 global_soff = 1000000 
-global_eoff = 1010000
-out        = '/mnt/cephfs/roy/features'
-hosts      = [
+global_eoff = 1032000
+nchunk      = 2
+out         = '/mnt/cephfs/roy/features'
+hosts       = [
     '192.168.0.40', 
     '192.168.0.27', 
     '192.168.0.8',
@@ -25,13 +26,12 @@ hosts = hosts[:nhost]
 print(hosts)
 
 cmdlist = []
-nchunk     = 20
 per_chunk = (global_eoff - global_soff) // nchunk
 for ichunk in range(nchunk):
     soff = global_soff + per_chunk*ichunk
     if ichunk == nchunk-1:
         eoff = global_eoff
-else:
+    else:
         eoff = global_soff + per_chunk*(ichunk+1)
 #    print('Chunk %d: %d to %d' % (ichunk, soff, eoff))
 
