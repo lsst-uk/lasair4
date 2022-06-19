@@ -2,6 +2,7 @@
 The input is a set of hosts and a set of commands to be executed on them.
 Uses the parallel-SSH library https://pypi.org/project/parallel-ssh/
 To see how it works, try the "busy" example
+WARNING: there is a ~60 second lag between the remote program finishing and this code finding out.
 """
 import sys, time, random
 from pssh.clients import ParallelSSHClient
