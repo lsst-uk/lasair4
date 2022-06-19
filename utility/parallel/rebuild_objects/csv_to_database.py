@@ -19,7 +19,7 @@ def handle(filename):
     os.system(cmd)
 
 ################
-csvfiles = 'csvfiles'
+csvfiles = sys.argv[1]
 
 try:
     os.mkdir('tmp')

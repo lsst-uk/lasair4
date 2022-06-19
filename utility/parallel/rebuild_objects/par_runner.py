@@ -12,8 +12,8 @@ nhost    = int(sys.argv[1])
 nprocess = int(sys.argv[2])
 
 global_soff = 1000000 
-global_eoff = 1032000
-nchunk      = 2
+global_eoff = 1128000
+nchunk      = 4
 out         = '/mnt/cephfs/roy/features'
 hosts       = [
     '192.168.0.40', 
