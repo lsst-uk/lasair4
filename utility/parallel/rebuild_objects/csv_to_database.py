@@ -15,23 +15,21 @@ def handle(filename):
 
     cmd =  "mysql --user=%s --database=ztf --password=%s --host=%s --port=%s < tmp.sql" 
     cmd = cmd % (settings.DB_USER_READWRITE, settings.DB_PASS_READWRITE, settings.DB_HOST, settings.DB_PORT)
-    print(cmd)
+#    print(cmd)
     os.system(cmd)
 
 ################
-csvfile = sys.argv[1]
+csvdir = sys.argv[1]
+print ('Database', settings.DB_HOST, settings.DB_PORT)
 
-try:
-    os.mkdir('tmp')
-except:
-    pass
-
-t = time.time()
-cmd = 'split -l 100000 %s; mv x* tmp' % csvfile
-print(cmd)
-os.system(cmd)
-for tmpfile in os.listdir('tmp'):
-    handle('tmp/' + tmpfile)
-os.system('rm tmp/*')
-print('%s imported in %.0f seconds' % (csvfile, (time.time() - t)))
+tstart = time.time()
+filelist =  os.listdir(csvdir)
+filelist.sort()
+for csvfile in os.listdir(csvdir):
+    filename = '%s/%s' % (csvdir,csvfile)
+    os.system('wc %s' % filename)
+    t = time.time()
+    handle(filename)
+    print('%s imported in %.1f seconds' % (csvfile, (time.time() - t)))
+print('Finished in %.1f seconds' % (time.time() - tstart))
 
