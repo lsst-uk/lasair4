@@ -19,23 +19,19 @@ def handle(filename):
     os.system(cmd)
 
 ################
-csvfiles = sys.argv[1]
+csvfile = sys.argv[1]
 
 try:
     os.mkdir('tmp')
 except:
     pass
 
-filelist = os.listdir(csvfiles)
-filelist.sort()
-
-for csvfile in filelist:
-    t = time.time()
-    cmd = 'cd %s; split -l 100000 %s; mv x* ../tmp' % (csvfiles, csvfile)
-    print(cmd)
-    os.system(cmd)
-    for tmpfile in os.listdir('tmp'):
-        handle('tmp/' + tmpfile)
-    os.system('rm tmp/*')
-    print('%s imported in %.0f seconds' % (csvfile, (time.time() - t)))
+t = time.time()
+cmd = 'split -l 100000 %s; mv x* tmp' % csvfile
+print(cmd)
+os.system(cmd)
+for tmpfile in os.listdir('tmp'):
+    handle('tmp/' + tmpfile)
+os.system('rm tmp/*')
+print('%s imported in %.0f seconds' % (csvfile, (time.time() - t)))
 
