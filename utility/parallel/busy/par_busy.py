@@ -1,5 +1,5 @@
 """ Simple usage of the parallel system.
-Each node runs thew program 'busy' for about 10 seconds
+Commands are 16 invocations of the program 'busy', each for about 10 seconds
 """
 import sys
 sys.path.append('..')
