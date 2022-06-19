@@ -1,3 +1,8 @@
+""" Make a cluster from nodes, where you can ssh to any node from the head node with no auth.
+The input is a set of hosts and a set of commands to be executed on them.
+Uses the parallel-SSH library https://pypi.org/project/parallel-ssh/
+To see how it works, try the "busy" example
+"""
 import sys, time, random
 from pssh.clients import ParallelSSHClient
 
@@ -35,31 +40,3 @@ def run_commands_on_hosts(cmdlist, hosts):
             break
         else:
             time.sleep(5)
-    
-if __name__ == "__main__":
-# Assumes that each worker can run the program busy.py:
-# import sys, math, random, time
-# tstart = time.time()
-# N = 10000000 * int(sys.argv[1])
-# for i in range(N):
-#     x = math.sqrt(random.random())
-# t = time.time() - t
-# print('%d: Finished' % time.time()-tstart)
-    nhosts = int(sys.argv[1])
-
-    hosts      = [
-    '192.168.0.40',
-    '192.168.0.27',
-    '192.168.0.8',
-    '192.168.0.25',
-    ]
-    hosts = hosts[:nhosts]
-    print(hosts)
-    
-    cmdlist = []
-    for i in range(16):
-#        cmd = 'python3 busy.py %s' % random.randrange(2, 7)
-        cmd = 'python3 busy.py 100'
-        cmdlist.append(cmd)
-    
-    run_commands_on_hosts(cmdlist, hosts)
