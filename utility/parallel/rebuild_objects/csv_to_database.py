@@ -15,7 +15,7 @@ def handle(filename):
 
     cmd =  "mysql --user=%s --database=ztf --password=%s --host=%s --port=%s < tmp.sql" 
     cmd = cmd % (settings.DB_USER_READWRITE, settings.DB_PASS_READWRITE, settings.DB_HOST, settings.DB_PORT)
-#    print(cmd)
+    print(cmd)
     os.system(cmd)
 
 ################
