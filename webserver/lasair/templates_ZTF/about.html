@@ -32,7 +32,7 @@ query on any column from the candidate or object table -- see
 <li>Some functions of this website require a login. If you want to use these functions, use the "login/signup" links
 at the top left of this page.</li>
 <li>Questions and enquiries, please click <i><b>Contact</b></i>. Make suggestions for improvements and fixes at the 
-<a href="https://github.com/lsst-uk/lasair/issues">Lasair github issues page</a>.</li>
+<a href="https://github.com/lsst-uk/lasair4/issues">Lasair github issues page</a>.</li>
 <li>Lasair started ingesting ZTF on 28 May 2018, and now has {{ n_candidates }} candidate alerts.</li>
 <li>You may wish to use other brokers that have the ZTF stream: 
 <a href=https://mars.lco.global/>MARS</a> from Las Cumbres Observatory, or 
@@ -88,7 +88,7 @@ Note that objects that get processed with different reference images -- and henc
 difference fluxes -- are offsets from different magnitudes. This re-engineered 
 magnitude is NOT a forced PSF flux measurement on the unsubtracted science image. 
 The code that converts the attributes supplied by ZTF to the DC magnitude and its error can be 
-found <a href=https://github.com/lsst-uk/lasair/blob/master/src/alert_stream_ztf/common/mag.py>here</a>. To reconstruct the apparent magnitude, the zero point of the science image is 
+found <a href=https://lasair-iris.roe.ac.uk/lasair/static/mag.py>here</a>. To reconstruct the apparent magnitude, the zero point of the science image is 
 required, which ZTF did not make available before Nov 2018. 
 Therefore the apparant magnitudes are not reliable before this time.
 </p><p>

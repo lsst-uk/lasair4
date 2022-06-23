@@ -57,9 +57,11 @@ def rebuild_features(d):
 
 if __name__ == "__main__":
     objectIds = ["ZTF17aaadzrz", "ZTF17aaaewks", "ZTF17aaagqzj", "ZTF17aaahdxk"]
+    objectIds = ["ZTF19aaxqivq", "ZTF19aawoaio"]
     cassandra_session = get_cassandra_session()
     msl = db_connect.readonly()
     schema_names = get_mysql_attrs(msl)
+    print(schema_names)
 
     nobj = 0
     t = time.time()
