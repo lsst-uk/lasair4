@@ -32,6 +32,7 @@ urlpatterns = [
 
     path('',              views.index,                  name='index'),
     path('index2',        views.index2,                  name='index2'),
+    path('simple_search',       TemplateView.as_view(template_name='simple_search.html')),
     path('explore',       TemplateView.as_view(template_name='explore.html')),
     path('learn',         TemplateView.as_view(template_name='learn.html')),
     path('code',          TemplateView.as_view(template_name='code.html')),
