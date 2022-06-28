@@ -48,7 +48,7 @@ def parse_args():
     parser.add_argument('--host', type=str,
                         help='Hostname or IP of Kafka host to connect to.')
 
-    parser.add_argument('--topic', type=str,
+    parser.add_argument('--topic_in', type=str,
                         help='Name of Kafka topic to listen to.')
 
     parser.add_argument('--group', type=str,
@@ -135,7 +135,7 @@ def run(runarg, return_dict):
     # Start consumer and print alert stream
     try:
         consumer = confluent_kafka.Consumer(**runarg['conf'])
-        consumer.subscribe([runarg['args'].topic])
+        consumer.subscribe([runarg['args'].topic_in])
     except Exception as e:
         print('ERROR cannot connect to kafka', e)
         sys.stdout.flush()

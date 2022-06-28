@@ -38,7 +38,7 @@ def main(args):
     if args['--topic_in']:
         topic_in = args['--topic_in']
     else:
-        topic  = 'ztf_sherlock'
+        topic_in  = 'ztf_sherlock'
 
     if args['--nprocess']:
         nprocess = int(args['--nprocess'])
@@ -55,7 +55,7 @@ def main(args):
     else:
         maxalert = settings.KAFKA_MAXALERTS
 
-    print('Topic_in=%s, group_id=%s, nprocess=%d, maxalert=%d' % (topic, group_id, nprocess, maxalert))
+    print('Topic_in=%s, group_id=%s, nprocess=%d, maxalert=%d' % (topic_in, group_id, nprocess, maxalert))
 
     print('------------------')
     ##### clear out the local database
@@ -72,7 +72,7 @@ def main(args):
     
     ##### fetch a batch of annotated alerts
     print('INGEST start %s' % datetime.utcnow().strftime("%H:%M:%S"))
-    print("Topic is %s" % topic)
+    print("Topic is %s" % topic_in)
     t = time.time()
     
     cmd =  'python3 consume_alerts.py '
@@ -80,7 +80,7 @@ def main(args):
     cmd += '--nprocess %d ' % nprocess
     cmd += '--group %s '    % group_id
     cmd += '--host %s '     % settings.KAFKA_SERVER
-    cmd += '--topic ' + topic
+    cmd += '--topic_in ' + topic_in
     
     print(cmd)
     # rc is the return code from ingestion, number of alerts received
