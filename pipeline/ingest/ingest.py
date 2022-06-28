@@ -188,7 +188,7 @@ def run(runarg, return_dict):
         print(e)
 
     try:
-        streamReader = alertConsumer.AlertConsumer(runarg['topic'], **runarg['consumer_conf'])
+        streamReader = alertConsumer.AlertConsumer(runarg['topic_in'], **runarg['consumer_conf'])
         streamReader.__enter__()
     except alertConsumer.EopError as e:
         print('ERROR in ingest/ingestBatch: Cannot connect to Kafka')
@@ -295,7 +295,7 @@ def main(args):
         maxalert = settings.KAFKA_MAXALERTS
     
 
-    print('Topic_in=%s, topic_out=%s, group_id=%s, nprocess=%d, maxalert=%d' % (topic, topic_out, group_id, nprocess, maxalert))
+    print('Topic_in=%s, topic_out=%s, group_id=%s, nprocess=%d, maxalert=%d' % (topic_in, topic_out, group_id, nprocess, maxalert))
 
     try:
         fitsdir = settings.IMAGEFITS
@@ -332,7 +332,7 @@ def main(args):
     for t in range(nprocess):
         runarg = {
             'processID':t, 
-            'topic'   : topic,
+            'topic_in'   : topic_in,
             'maxalert'   : maxalert,
             'topic_out':topic_out,
             'image_store': image_store,
