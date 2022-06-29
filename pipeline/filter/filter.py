@@ -43,7 +43,7 @@ def main(args):
     if args['--nprocess']:
         nprocess = int(args['--nprocess'])
     else:
-        nprocess = 1
+        nprocess = 2
 
     if args['--group_id']:
         group_id = args['--group_id']
