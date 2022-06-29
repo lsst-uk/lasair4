@@ -268,11 +268,11 @@ def main(args):
     elif args['--nid']:
         nid = int(args['--nid'])
         date = date_nid.nid_to_date(nid)
-        topic  = 'ztf_' + date + '_programid1'
+        topic_in  = 'ztf_' + date + '_programid1'
     else:
         nid  = date_nid.nid_now()
         date = date_nid.nid_to_date(nid)
-        topic  = 'ztf_' + date + '_programid1'
+        topic_in  = 'ztf_' + date + '_programid1'
 
     if args['--nprocess']:
         nprocess = int(args['--nprocess'])
