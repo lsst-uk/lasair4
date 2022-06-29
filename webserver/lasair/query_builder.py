@@ -223,7 +223,10 @@ def build_query(select_expression, from_expression, where_condition):
 
     # The WHERE clauses
     if len(where_clauses) > 0:
-        sql += ' \nWHERE\n ' + ' AND\n '.join(where_clauses) + order_condition
+        sql += ' \nWHERE\n ' + ' AND\n '.join(where_clauses)
+
+    # order condition if any
+    sql += order_condition
 
     return sql
 
