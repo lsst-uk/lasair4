@@ -1,19 +1,20 @@
 import os,sys
 import time
-import settings
-import mysql.connector
 from cassandra.cluster import Cluster
 from cassandra.query import dict_factory
 
-from check_schema import get_schema_names
+sys.path.append('../../../common')
+import settings
+from src import db_connect
 
-sys.path.append('../../filter')
+sys.path.append('../../../pipeline/filter/features_ZTF')
 from insert_query import create_features
 
+sys.path.append('../../')
+from check_schema import get_mysql_attrs
+
 def get_cassandra_session():
-    host = ['192.168.0.17', '192.168.0.11', '192.168.0.18', '192.168.0.39', '192.168.0.23']
-    table = 'candidates'
-    cluster = Cluster(host)
+    cluster = Cluster(settings.CASSANDRA_HEAD)
     cassandra_session = cluster.connect()
     cassandra_session.row_factory = dict_factory
     cassandra_session.set_keyspace('lasair')
@@ -56,8 +57,11 @@ def rebuild_features(d):
 
 if __name__ == "__main__":
     objectIds = ["ZTF17aaadzrz", "ZTF17aaaewks", "ZTF17aaagqzj", "ZTF17aaahdxk"]
+    objectIds = ["ZTF19aaxqivq", "ZTF19aawoaio"]
     cassandra_session = get_cassandra_session()
-    schema_names = get_schema_names()
+    msl = db_connect.readonly()
+    schema_names = get_mysql_attrs(msl)
+    print(schema_names)
 
     nobj = 0
     t = time.time()
