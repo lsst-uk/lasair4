@@ -50,6 +50,7 @@ def lookup(names):
         settings = yaml.safe_load(f)
         connection = pymysql.connect(
             host=settings['database']['host'],
+            port=settings['database']['port'],
             user=settings['database']['username'],
             password=settings['database']['password'],
             db=settings['database']['db'],
