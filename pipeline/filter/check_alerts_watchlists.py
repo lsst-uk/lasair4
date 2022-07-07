@@ -88,7 +88,8 @@ def read_watchlist_cache_files(cache_dir):
                 }
             watchlist['moclist'] = moclist
 
-        watchlistlist.append(watchlist)
+        if len(moclist) > 0:
+            watchlistlist.append(watchlist)
     return watchlistlist
 
 def check_alerts_against_moc(alertlist, wl_id, moc, cones):
