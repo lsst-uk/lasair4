@@ -238,14 +238,15 @@ class StreamsSerializer(serializers.Serializer):
             userId = request.user
 
         if topic:
+            filename = lasair_settings.KAFKA_STREAMS +'/'+ topic
             try:
-                datafile = open(lasair_settings.KAFKA_STREAMS + topic, 'r').read()
+                datafile = open(filename, 'r').read()
                 data = json.loads(datafile)['digest']
                 if limit: 
                     data = data[:limit]
                 return data
             except:
-                error = 'Cannot open digest file for topic %s' % topic
+                error = 'Cannot open digest file %s' % filename
                 return {"error":error}
 
         if regex:
@@ -263,7 +264,7 @@ class StreamsSerializer(serializers.Serializer):
             for row in cursor: 
                 tn = row['topic_name']
                 if r.match(tn):
-                    td = {'topic':tn, 'more_info':'https://lasair-iris.roe.ac.uk/query/%d/' % row['mq_id']}
+                    td = {'topic':tn, 'more_info':'https://%s/query/%d/' % (lasair_settings.LASAIR_URL, row['mq_id'])}
                     result.append(td)
             info = result
             return info
