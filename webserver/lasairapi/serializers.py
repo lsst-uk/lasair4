@@ -110,9 +110,17 @@ class SherlockObjectsSerializer(serializers.Serializer):
             userId = request.user
 
         datadict = {}
-        url = 'http://%s/object/%s' % (lasair_settings.SHERLOCK_SERVICE, objectIds)
-        if lite: url += '?lite=true'
-        r = requests.get(url)
+#        url = 'http://%s/object/%s' % (lasair_settings.SHERLOCK_SERVICE, objectIds)
+#        if lite: url += '?lite=true'
+#        r = requests.get(url)
+
+        data = { 'lite': lite }
+        r = requests.post(
+            'http://%s/object/%s' % (lasair_settings.SHERLOCK_SERVICE, objectIds),
+            headers={"Content-Type":"application/json"},
+            data=json.dumps(data)
+        )
+
         if r.status_code == 200:
             return r.json()
         else: 
@@ -138,9 +146,16 @@ class SherlockPositionSerializer(serializers.Serializer):
 # can also send multiples, but not yet implemented
 # http://192.41.108.29/query?ra=115.811388,97.486925&dec=-25.76404,-26.975506
 
-        url = 'http://%s/query?ra=%f&dec=%f' % (lasair_settings.SHERLOCK_SERVICE, ra, dec)
-        if lite: url += '&lite=true'
-        r = requests.get(url)
+#        url = 'http://%s/query?ra=%f&dec=%f' % (lasair_settings.SHERLOCK_SERVICE, ra, dec)
+#        if lite: url += '&lite=true'
+#        r = requests.get(url)
+        data = { 'lite': lite, 'ra': '%.7f'%ra, 'dec': '%.7f'%dec }
+        r = requests.post(
+            'http://%s/query' % lasair_settings.SHERLOCK_SERVICE,
+            headers={"Content-Type":"application/json"},
+            data=json.dumps(data)
+        )
+
         if r.status_code != 200:
             return {"error":  r.text}
         else:
