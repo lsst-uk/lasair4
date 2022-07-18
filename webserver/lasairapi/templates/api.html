@@ -58,7 +58,7 @@ for discovery and play, not serious use.
 <a name=auth_token><h5>Get Your Token</h5></a>
 We recommend that users request their own key by running the following script:
 <pre class="literal-block">
-curl --data "username=u&password=p" https://lasair-iris.roe.ac.uk/api/auth-token/
+curl --data "username=u&password=p" https://lasair-ztf.lsst.ac.uk/api/auth-token/
 </pre>
 where <code>u</code> and <code>p</code> are replaced with username and password for your Lasair account,
 which you can obtain <a href=/signup>here</a>. Each key can only do a certain number of requests 
@@ -98,7 +98,7 @@ The arguments are:<ul>
 </dd>
 <dt class="url-label">GET URL Example</dt> <dd>
 <pre class="literal-block">
-https://lasair-iris.roe.ac.uk/api/cone/?&ra=194.494&dec=48.851&radius=240.0&requestType=all&token=4b762569bb349bd8d60f1bc7da3f39dbfaefff9a&format=json
+https://lasair-ztf.lsst.ac.uk/api/cone/?&ra=194.494&dec=48.851&radius=240.0&requestType=all&token=4b762569bb349bd8d60f1bc7da3f39dbfaefff9a&format=json
 </pre>
 </dd>
 
@@ -107,7 +107,7 @@ https://lasair-iris.roe.ac.uk/api/cone/?&ra=194.494&dec=48.851&radius=240.0&requ
 <pre class="literal-block">
 curl --header "Authorization: Token 4b762569bb349bd8d60f1bc7da3f39dbfaefff9a" \
 --data "ra=194.494&dec=48.851&radius=240.0&requestType=all" \
-https://lasair-iris.roe.ac.uk/api/cone/
+https://lasair-ztf.lsst.ac.uk/api/cone/
 </pre>
 </dd>
 
@@ -153,7 +153,7 @@ The arguments are:<ul>
 
 <dt class="url-label">GET URL Example</dt> <dd>
 <pre class="literal-block">
-https://lasair-iris.roe.ac.uk/api/query/?selected=objectId%2Cgmag&tables=objects&conditions=gmag%3C12.0&token=4b762569bb349bd8d60f1bc7da3f39dbfaefff9a&format=json
+https://lasair-ztf.lsst.ac.uk/api/query/?selected=objectId%2Cgmag&tables=objects&conditions=gmag%3C12.0&token=4b762569bb349bd8d60f1bc7da3f39dbfaefff9a&format=json
 </pre>
 </dd>
 
@@ -162,7 +162,7 @@ https://lasair-iris.roe.ac.uk/api/query/?selected=objectId%2Cgmag&tables=objects
 <pre class="literal-block">
 curl --header "Authorization: Token 4b762569bb349bd8d60f1bc7da3f39dbfaefff9a" \
 --data "selected=objectId,gmag&tables=objects&conditions=gmag&lt;12.0&limit=3" \
-https://lasair-iris.roe.ac.uk/api/query/
+https://lasair-ztf.lsst.ac.uk/api/query/
 </pre>
 </dd>
 
@@ -217,7 +217,7 @@ The arguments are:<ul>
 
 <dt class="url-label">GET URL Example with Regex</dt> <dd>
 <pre class="literal-block">
-https://lasair-iris.roe.ac.uk/api/streams/?regex=.%2ASN.%2A&token=4b762569bb349bd8d60f1bc7da3f39dbfaefff9a&format=json
+https://lasair-ztf.lsst.ac.uk/api/streams/?regex=.%2ASN.%2A&token=4b762569bb349bd8d60f1bc7da3f39dbfaefff9a&format=json
 </pre>
 </dd>
 
@@ -227,7 +227,7 @@ https://lasair-iris.roe.ac.uk/api/streams/?regex=.%2ASN.%2A&token=4b762569bb349b
 <pre class="literal-block">
 curl --header "Authorization: Token 4b762569bb349bd8d60f1bc7da3f39dbfaefff9a" \
 --data "regex=.*SN.*" \
-https://lasair-iris.roe.ac.uk/api/streams/
+https://lasair-ztf.lsst.ac.uk/api/streams/
 </pre>
 <p>and the return is a list of topic names, and a URL to get more information: </p>
 <pre class="literal-block">
@@ -235,7 +235,7 @@ status= 200
 [
   {
     "topic": "2SN-likecandidates",
-    "more_info": "https://lasair-iris.roe.ac.uk/query/2/"
+    "more_info": "https://lasair-ztf.lsst.ac.uk/query/2/"
   },
 ... ]
 </pre>
@@ -243,18 +243,18 @@ status= 200
 
 <dt class="url-label">GET URL Example with Topic</dt> <dd>
 <pre class="literal-block">
-https://lasair-iris.roe.ac.uk/api/streams/2SN-likecandidates/?limit=1&token=4b762569bb349bd8d60f1bc7da3f39dbfaefff9a&format=json
+https://lasair-ztf.lsst.ac.uk/api/streams/2SN-likecandidates/?limit=1&token=4b762569bb349bd8d60f1bc7da3f39dbfaefff9a&format=json
 </pre>
 </dd>
 
 <dt class="url-label">Curl Example with Topic</dt> <dd>
 <p> The authorization token goes in the header of the request, and the data in the data section.  
-For more information about this stream, see <a href=https://lasair-iris.roe.ac.uk/query/2/>here</a>.
+For more information about this stream, see <a href=https://lasair-ztf.lsst.ac.uk/query/2/>here</a>.
 </p>
 <pre class="literal-block">
 curl --header "Authorization: Token 4b762569bb349bd8d60f1bc7da3f39dbfaefff9a" \
 --data "2SN-likecandidates&limit=1" \
-https://lasair-iris.roe.ac.uk/api/streams/
+https://lasair-ztf.lsst.ac.uk/api/streams/
 </pre>
 <p>and the return is something like: </p>
 <pre class="literal-block">
@@ -303,7 +303,7 @@ The arguments are:<ul>
 
 <dt class="url-label">GET URL Example</dt> <dd>
 <pre class="literal-block">
-https://lasair-iris.roe.ac.uk/api/objects/?objectIds=ZTF18abdphvf,ZTF21aapzzgf&token=4b762569bb349bd8d60f1bc7da3f39dbfaefff9a&format=json
+https://lasair-ztf.lsst.ac.uk/api/objects/?objectIds=ZTF18abdphvf,ZTF21aapzzgf&token=4b762569bb349bd8d60f1bc7da3f39dbfaefff9a&format=json
 </pre>
 </dd>
 
@@ -312,7 +312,7 @@ https://lasair-iris.roe.ac.uk/api/objects/?objectIds=ZTF18abdphvf,ZTF21aapzzgf&t
 <pre class="literal-block">
 curl --header "Authorization: Token 4b762569bb349bd8d60f1bc7da3f39dbfaefff9a" \
 --data "objectIds=ZTF18abdphvf,ZTF21aapzzgf" \
-https://lasair-iris.roe.ac.uk/api/objects/
+https://lasair-ztf.lsst.ac.uk/api/objects/
 </pre>
 </dd>
 
@@ -376,7 +376,7 @@ The arguments are:<ul>
 
 <dt class="url-label">GET URL Example</dt> <dd>
 <pre class="literal-block">
-https://lasair-iris.roe.ac.uk/api/lightcurves/?objectIds=ZTF20acgrvqo%2CZTF19acylwtd%2CZTF18acmziob&token=4b762569bb349bd8d60f1bc7da3f39dbfaefff9a&format=json
+https://lasair-ztf.lsst.ac.uk/api/lightcurves/?objectIds=ZTF20acgrvqo%2CZTF19acylwtd%2CZTF18acmziob&token=4b762569bb349bd8d60f1bc7da3f39dbfaefff9a&format=json
 </pre>
 </dd>
 
@@ -386,7 +386,7 @@ https://lasair-iris.roe.ac.uk/api/lightcurves/?objectIds=ZTF20acgrvqo%2CZTF19acy
 <pre class="literal-block">
 curl --header "Authorization: Token 4b762569bb349bd8d60f1bc7da3f39dbfaefff9a" \
 --data "objectIds=ZTF20acgrvqo,ZTF19acylwtd,ZTF18acmziob" \
-https://lasair-iris.roe.ac.uk/api/lightcurves/
+https://lasair-ztf.lsst.ac.uk/api/lightcurves/
 </pre>
 </dd>
 
@@ -441,7 +441,7 @@ The arguments are:
 
 <dt class="url-label">GET URL Example with objects</dt> <dd>
 <pre class="literal-block">
-https://lasair-iris.roe.ac.uk/api/sherlock/objects/?objectIds=ZTF20acpwljl%2CZTF20acqqbkl%2CZTF20acplggt&token=4b762569bb349bd8d60f1bc7da3f39dbfaefff9a&lite=true&format=json
+https://lasair-ztf.lsst.ac.uk/api/sherlock/objects/?objectIds=ZTF20acpwljl%2CZTF20acqqbkl%2CZTF20acplggt&token=4b762569bb349bd8d60f1bc7da3f39dbfaefff9a&lite=true&format=json
 </pre>
 </dd>
 
@@ -451,7 +451,7 @@ https://lasair-iris.roe.ac.uk/api/sherlock/objects/?objectIds=ZTF20acpwljl%2CZTF
 <pre class="literal-block">
 curl --header "Authorization: Token 4b762569bb349bd8d60f1bc7da3f39dbfaefff9a" \
 --data "objectIds=ZTF20acpwljl,ZTF20acqqbkl,ZTF20acplggt&lite=True" \
-https://lasair-iris.roe.ac.uk/api/sherlock/objects/
+https://lasair-ztf.lsst.ac.uk/api/sherlock/objects/
 </pre>
 </dd>
 
@@ -508,7 +508,7 @@ The arguments are:
 
 <dt class="url-label">GET URL Example</dt> <dd>
 <pre class="literal-block">
-https://lasair-iris.roe.ac.uk/api/sherlock/position/?ra=16.851866&dec=34.53307&token=4b762569bb349bd8d60f1bc7da3f39dbfaefff9a&format=json
+https://lasair-ztf.lsst.ac.uk/api/sherlock/position/?ra=16.851866&dec=34.53307&token=4b762569bb349bd8d60f1bc7da3f39dbfaefff9a&format=json
 </pre>
 </dd>
 
@@ -518,7 +518,7 @@ https://lasair-iris.roe.ac.uk/api/sherlock/position/?ra=16.851866&dec=34.53307&t
 <pre class="literal-block">
 curl --header "Authorization: Token 4b762569bb349bd8d60f1bc7da3f39dbfaefff9a" \
 --data "ra=16.851866&dec=34.53307" \
-https://lasair-iris.roe.ac.uk/api/sherlock/position/
+https://lasair-ztf.lsst.ac.uk/api/sherlock/position/
 </pre>
 </dd>
 
