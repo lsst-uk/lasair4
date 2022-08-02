@@ -1,0 +1,79 @@
+1{% extends "layouts/base.html" %}
+{% load static %}
+{% block content %}
+
+    <div class="row">
+        <p>
+            A watchlist is a set of points in the sky, together with a radius in arcseconds. It is assumed to be a list of "interesting" sources, so that any transient that falls within the radius of one of the sources might indicate activity of that source. Each user of the Lasair system has their own set of watchlists, and can be alerted when a ZTF transient is coincident with a watchlist source.
+        </p></p>
+    An "Active" watchlist is one that is run every day, so that it is up to date with the
+    latest objects.
+    </p><p>
+        If you are logged in, you can <a href=/watchlist_new>create a watchlist</a>.
+    </p>
+
+    <div class="col-xs-6">
+        <h3>My Watchlists</h3>
+        Your private watchlists are listed below. Click "Create new watchlist"
+        above to make a new one. Click on the name of the watchlist for more information and crossmatching.
+        <table class="table table-bordered" style="width:70%">
+            <thead>
+                <tr>
+                    <th style="width:10%">Name</th>
+                    <th class="width:70%">Description</th>
+                    <th class="width:5%">Number</th>
+                    <th class="width:5%">Radius</th>
+                    <th class="width:5%">Active</th>
+                    <th class="width:5%">Public</th>
+                    <th class="width:10%"></th>
+                </tr>
+            </thead>
+            {% for wl in my_watchlists %}
+                <tr><td><b><a href=/watchlist/{{ wl.wl_id }}>{{ wl.name }}</a></b></td>
+                    <td>{{ wl.description }}</td>
+                    <td> {{ wl.number }} </td>
+                    <td> {{ wl.radius }} arcsec </td>
+                    <td> {% if wl.active == 1 %}&#x2714;{% endif %} </td>
+                    <td> {% if wl.public == 1 %}&#x2714;{% endif %} </td>
+
+                    <td><form method="POST"  action="/watchlists/">
+                        {% csrf_token %}
+                        <input type="hidden" name="delete" value="{{ wl.wl_id }}">
+                        <input type="submit" value="(delete)">
+                    </form>
+
+                    </td></tr>
+            {% endfor %}
+        </table>
+    </div>
+
+    </div>
+
+    <div class="row">
+        <div class="col-xs-6">
+            <h3>Public Watchlists</h3>
+            Watchlists created and made public are listed below. Click on the name of
+            the watchlist for more information and crossmatching.
+            <table class="table table-bordered" style="width:80%">
+                <thead>
+                    <tr>
+                        <th style="width:20%">Name</th>
+                        <th style="width:20%">Owner</th>
+                        <th class="width:60%">Description</th>
+                        <th class="width:5%">Radius</th>
+                        <th class="width:3%">Active</th>
+                    </tr>
+                </thead>
+                {% for wl in other_watchlists %}
+                    <tr><td><b><a href=/watchlist/{{ wl.wl_id }}>{{ wl.name }}</a></b></td>
+                        <td>{{ wl.user.first_name }} {{ wl.user.last_name }}</td>
+                        <td>{{ wl.description }}</td>
+                        <td> {{ wl.radius }} arcsec </td>
+                        <td> {% if wl.active == 1 %}&#x2714;{% endif %} </td>
+                    </tr>
+                {% endfor %}
+            </table>
+        </div>
+    </div>
+
+{% endblock %}
