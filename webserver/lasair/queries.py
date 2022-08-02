@@ -1,19 +1,24 @@
-import os, sys
-sys.path.append('../common')
-import settings
-from django.shortcuts import render, get_object_or_404, redirect
-from django.template.context_processors import csrf
-from django.http import HttpResponse
-from django.db.models import Q
-from django.contrib.auth.models import User
-from lasair.models import Myqueries
-from lasair.models import Watchlists, Areas, Annotators
-from lasair.query_builder import check_query, build_query
-from lasair.topic_name import topic_name
-from lasair.topic_refresh import topic_refresh
-from src import date_nid, db_connect
+import importlib
+import json
+import random
+import string
 from datetime import datetime, timedelta
-import string, random, json, importlib
+from src import date_nid, db_connect
+from lasair.topic_refresh import topic_refresh
+from lasair.topic_name import topic_name
+from lasair.query_builder import check_query, build_query
+from lasair.models import Watchlists, Areas, Annotators
+from lasair.models import Myqueries
+from django.contrib.auth.models import User
+from django.db.models import Q
+from django.http import HttpResponse
+from django.template.context_processors import csrf
+from django.shortcuts import render, get_object_or_404, redirect
+import settings
+import os
+import sys
+sys.path.append('../common')
+
 
 def check_query_zero_limit(real_sql):
     msl = db_connect.readonly()
@@ -25,6 +30,7 @@ def check_query_zero_limit(real_sql):
     except Exception as e:
         message = 'Your query:<br/><b>' + real_sql + '</b><br/>returned the error<br/><i>' + str(e) + '</i>'
         return message
+
 
 def query_list(qs):
     """query_list.
@@ -38,15 +44,15 @@ def query_list(qs):
         return list
     for q in qs:
         d = {
-            'mq_id'      :q.mq_id,
-            'usersname'  :q.user.first_name +' '+ q.user.last_name,
-            'selected'   :q.selected,
-            'tables'     :q.tables,
-            'conditions' :q.conditions,
-            'name'       :q.name,
-            'active'     :q.active,
-            'public'     :q.public,
-            'description':q.description
+            'mq_id': q.mq_id,
+            'usersname': q.user.first_name + ' ' + q.user.last_name,
+            'selected': q.selected,
+            'tables': q.tables,
+            'conditions': q.conditions,
+            'name': q.name,
+            'active': q.active,
+            'public': q.public,
+            'description': q.description
         }
         d['streamlink'] = 'inactive'
         if q.active:
@@ -55,8 +61,6 @@ def query_list(qs):
         list.append(d)
     return list
 
-def querylist_all(request):
-    return querylist(request, 'all')
 
 def querylist(request, which):
     """querylist.
@@ -67,32 +71,33 @@ def querylist(request, which):
     """
     # shows the list of queries
     if request.user.is_authenticated:
-        myqueries    = Myqueries.objects.filter(user=request.user)
+        myqueries = Myqueries.objects.filter(user=request.user)
     else:
-        myqueries    = None
+        myqueries = None
 
     if request.user.is_authenticated:
         watchlists = Watchlists.objects.filter(Q(user=request.user) | Q(public__gte=1))
-        areas      =      Areas.objects.filter(Q(user=request.user) | Q(public__gte=1))
+        areas = Areas.objects.filter(Q(user=request.user) | Q(public__gte=1))
         annotators = Annotators.objects.filter(Q(user=request.user) | Q(public__gte=1))
     else:
         watchlists = Watchlists.objects.filter(public__gte=1)
-        areas      =      Areas.objects.filter(public__gte=1)
+        areas = Areas.objects.filter(public__gte=1)
         annotators = Annotators.objects.filter(public__gte=1)
 
     promoted_queries = Myqueries.objects.filter(public=2)
     public_queries = Myqueries.objects.filter(public__gte=1)
 
     return render(request, 'querylist.html', {
-        'which'            : which,
-        'promoted_queries' : query_list(promoted_queries),
-        'is_authenticated' : request.user.is_authenticated,
-        'myqueries'        : query_list(myqueries), 
-        'watchlists'       : watchlists,
-        'areas'            : areas,
-        'annotators'       : annotators,
-        'public_queries'   : query_list(public_queries)
+        'which': which,
+        'promoted_queries': query_list(promoted_queries),
+        'is_authenticated': request.user.is_authenticated,
+        'myqueries': query_list(myqueries),
+        'watchlists': watchlists,
+        'areas': areas,
+        'annotators': annotators,
+        'public_queries': query_list(public_queries)
     })
+
 
 def new_myquery(request):
     """new_myquery.
@@ -101,6 +106,7 @@ def new_myquery(request):
         request:
     """
     return handle_myquery(request)
+
 
 def show_myquery(request, mq_id):
     """show_myquery.
@@ -111,15 +117,18 @@ def show_myquery(request, mq_id):
     """
     return handle_myquery(request, mq_id)
 
+
 def delete_stream_file(request, query_name):
     topic = topic_name(request.user.id, query_name)
     filename = settings.KAFKA_STREAMS + topic
     if os.path.exists(filename):
         os.remove(filename)
 
+
 def get_schema(schema_name):
     schema_package = importlib.import_module('schema.' + schema_name)
     return schema_package.schema['fields']
+
 
 def handle_myquery(request, mq_id=None):
     """handle_myquery.
@@ -132,38 +141,38 @@ def handle_myquery(request, mq_id=None):
     message = ''
 
     schemas = {
-        'objects'                 : get_schema('objects'),
+        'objects': get_schema('objects'),
         'sherlock_classifications': get_schema('sherlock_classifications'),
-        'crossmatch_tns'          : get_schema('crossmatch_tns'),
-        'annotations'             : get_schema('annotations'),
+        'crossmatch_tns': get_schema('crossmatch_tns'),
+        'annotations': get_schema('annotations'),
     }
 
     if logged_in:
         email = request.user.email
         watchlists = Watchlists.objects.filter(Q(user=request.user) | Q(public__gte=1))
-        areas      =      Areas.objects.filter(Q(user=request.user) | Q(public__gte=1))
+        areas = Areas.objects.filter(Q(user=request.user) | Q(public__gte=1))
         annotators = Annotators.objects.filter(Q(user=request.user) | Q(public__gte=1))
     else:
         email = ''
         watchlists = Watchlists.objects.filter(public__gte=1)
-        areas      =      Areas.objects.filter(public__gte=1)
+        areas = Areas.objects.filter(public__gte=1)
         annotators = Annotators.objects.filter(public__gte=1)
 
     if mq_id is None:
         # New query, returned from form
         if request.method == 'POST' and logged_in:
-            name        = request.POST.get('name')
+            name = request.POST.get('name')
             description = request.POST.get('description')
-            selected    = request.POST.get('selected')
-            conditions  = request.POST.get('conditions')
-            tables      = request.POST.get('tables')
+            selected = request.POST.get('selected')
+            conditions = request.POST.get('conditions')
+            tables = request.POST.get('tables')
             try:
-                active  = int(request.POST.get('active'))
+                active = int(request.POST.get('active'))
             except:
                 active = 0
 
-            public      = request.POST.get('public')
-            if public == 'on': 
+            public = request.POST.get('public')
+            if public == 'on':
                 public = 1
             else:
                 public = 0
@@ -179,11 +188,11 @@ def handle_myquery(request, mq_id=None):
 
             tn = topic_name(request.user.id, name)
 
-            myquery = Myqueries(user=request.user, 
-                    name=name, description=description,
-                    public=public, active=active, 
-                    selected=selected, conditions=conditions, tables=tables,
-                    real_sql=sqlquery_real, topic_name=tn)
+            myquery = Myqueries(user=request.user,
+                                name=name, description=description,
+                                public=public, active=active,
+                                selected=selected, conditions=conditions, tables=tables,
+                                real_sql=sqlquery_real, topic_name=tn)
             myquery.save()
 
             # after saving, delete the topic and push some records from the database
@@ -191,51 +200,51 @@ def handle_myquery(request, mq_id=None):
                 message += topic_refresh(myquery.real_sql, tn, limit=10)
 
             message += "Query saved successfully"
-            return render(request, 'queryform.html',{
-                'myquery'   : myquery,
+            return render(request, 'queryform.html', {
+                'myquery': myquery,
                 'watchlists': watchlists,
-                'areas'     : areas,
+                'areas': areas,
                 'annotators': annotators,
-                'topic'     : tn,
-                'is_owner'  : True,
-                'logged_in' : logged_in,
-                'email'     : email,
-                'new'       : False,
+                'topic': tn,
+                'is_owner': True,
+                'logged_in': logged_in,
+                'email': email,
+                'new': False,
                 'newandloggedin': False,
-                'schemas'   : schemas,
-                'message'   : message})
+                'schemas': schemas,
+                'message': message})
         else:
             # New query, blank query form
             message += 'New query'
-            return render(request, 'queryform.html',{
+            return render(request, 'queryform.html', {
                 'watchlists': watchlists,
-                'areas'     : areas,
+                'areas': areas,
                 'annotators': annotators,
-                'random'    : '%d'%random.randrange(1000),
-                'email'     : email,
-                'is_owner'  : False,
-                'logged_in' : logged_in,
-                'email'     : email,
-                'new'       : True,
+                'random': '%d' % random.randrange(1000),
+                'email': email,
+                'is_owner': False,
+                'logged_in': logged_in,
+                'email': email,
+                'new': True,
                 'newandloggedin': logged_in,
-                'schemas'   : schemas,
-                'message'   : message,
+                'schemas': schemas,
+                'message': message,
             })
 
     # Existing query
     myquery = get_object_or_404(Myqueries, mq_id=mq_id)
     is_owner = logged_in and (request.user == myquery.user)
 
-    if not is_owner and myquery.public==0:
+    if not is_owner and myquery.public == 0:
         return render(request, 'error.html', {'message': 'This query is private'})
 
     # Existing query, owner wants to change it
     if request.method == 'POST' and logged_in:
 
-#        s = ''   ####
-#        for k,v in request.POST.items():
-#            s += '%s --> %s<br/>' % (k,v)
-#        return render(request, 'error.html', {'message': s})
+        #        s = ''   ####
+        #        for k,v in request.POST.items():
+        #            s += '%s --> %s<br/>' % (k,v)
+        #        return render(request, 'error.html', {'message': s})
 
         # Delete the given query
         if 'delete' in request.POST:
@@ -249,12 +258,12 @@ def handle_myquery(request, mq_id=None):
             letters = string.ascii_lowercase
             newname += ''.join(random.choice(letters) for i in range(6))
             tn = topic_name(request.user.id, newname)
-            mq = Myqueries(user=request.user, name=newname, 
-                    description=myquery.description,
-                    public=0, active=0, 
-                    selected=myquery.selected, 
-                    conditions=myquery.conditions, tables=myquery.tables,
-                    real_sql=myquery.real_sql, topic_name=tn)
+            mq = Myqueries(user=request.user, name=newname,
+                           description=myquery.description,
+                           public=0, active=0,
+                           selected=myquery.selected,
+                           conditions=myquery.conditions, tables=myquery.tables,
+                           real_sql=myquery.real_sql, topic_name=tn)
             mq.save()
 
             # after saving, delete the topic and push some records from the database
@@ -266,33 +275,33 @@ def handle_myquery(request, mq_id=None):
 
         # Update the given query from the post
         else:
-            myquery.name         = request.POST.get('name')
-            myquery.description  = request.POST.get('description')
-            myquery.selected     = request.POST.get('selected')
-            myquery.tables       = request.POST.get('tables')
-            myquery.conditions   = request.POST.get('conditions')
-            public               = request.POST.get('public')
+            myquery.name = request.POST.get('name')
+            myquery.description = request.POST.get('description')
+            myquery.selected = request.POST.get('selected')
+            myquery.tables = request.POST.get('tables')
+            myquery.conditions = request.POST.get('conditions')
+            public = request.POST.get('public')
             e = check_query(myquery.selected, myquery.tables, myquery.conditions)
             if e:
-                return render(request, 'error.html', {'message': str(e)+'<br/>'})
+                return render(request, 'error.html', {'message': str(e) + '<br/>'})
 
             myquery.real_sql = build_query(myquery.selected, myquery.tables, myquery.conditions)
             e = check_query_zero_limit(myquery.real_sql)
             if e:
-                return render(request, 'error.html', {'message': str(e)+'<br/>'})
+                return render(request, 'error.html', {'message': str(e) + '<br/>'})
 
             tn = topic_name(request.user.id, myquery.name)
             myquery.topic_name = tn
             try:
-                myquery.active   = int(request.POST.get('active'))
+                myquery.active = int(request.POST.get('active'))
             except:
                 myquery.active = 0
 
             if public == 'on':
                 if myquery.public is None or myquery.public == 0:
-                    myquery.public  = 1 # if set to 1 or 2 leave it as it is
+                    myquery.public = 1  # if set to 1 or 2 leave it as it is
             else:
-                myquery.public  = 0
+                myquery.public = 0
             delete_stream_file(request, myquery.name)
 
             # after saving, delete the topic and push some records from the database
@@ -302,34 +311,34 @@ def handle_myquery(request, mq_id=None):
             message += 'Query %s updated<br/>' % myquery.name
 
         myquery.save()
-        return render(request, 'queryform.html',{
-            'myquery'   : myquery,
+        return render(request, 'queryform.html', {
+            'myquery': myquery,
             'watchlists': watchlists,
-            'areas'     : areas,
+            'areas': areas,
             'annotators': annotators,
-            'topic'     : tn,
-            'is_owner'  : is_owner,
-            'logged_in' : logged_in,
-            'email'     : email,
-            'new'       : False,
+            'topic': tn,
+            'is_owner': is_owner,
+            'logged_in': logged_in,
+            'email': email,
+            'new': False,
             'newandloggedin': False,
-            'schemas'   : schemas,
-            'message'   : message})
+            'schemas': schemas,
+            'message': message})
 
-    # Existing query, view it 
-    return render(request, 'queryform.html',{
-        'myquery'   : myquery,
+    # Existing query, view it
+    return render(request, 'queryform.html', {
+        'myquery': myquery,
         'watchlists': watchlists,
-        'areas'     : areas,
+        'areas': areas,
         'annotators': annotators,
-        'topic'     : myquery.topic_name,
-        'is_owner'  : is_owner,
-        'logged_in' : logged_in,  
-        'email'     : email,
-        'new'       : False,
+        'topic': myquery.topic_name,
+        'is_owner': is_owner,
+        'logged_in': logged_in,
+        'email': email,
+        'new': False,
         'newandloggedin': False,
-        'schemas'   : schemas,
-        'message'   : message})
+        'schemas': schemas,
+        'message': message})
 
 
 def record_query(request, query):
@@ -343,11 +352,11 @@ def record_query(request, query):
     time = datetime.now().replace(microsecond=0).isoformat()
 
     if request.user.is_authenticated:
-        name = request.user.first_name +' '+ request.user.last_name
+        name = request.user.first_name + ' ' + request.user.last_name
     else:
         name = 'anonymous'
 
-    IP       = request.META.get('REMOTE_ADDR')
+    IP = request.META.get('REMOTE_ADDR')
     if 'HTTP_X_FORWARDED_FOR' in request.META:
         IP = record.request.META['HTTP_X_FORWARDED_FOR']
 
@@ -358,20 +367,22 @@ def record_query(request, query):
     f.write(s)
     f.close()
 
+
 def runquery_db(request, mq_id):
     msl = db.connect.readonly()
     cursor = msl.cursor(buffered=True, dictionary=True)
     cursor.execute('SELECT name, selected, tables, conditions FROM myqueries WHERE mq_id=%d' % mq_id)
     for row in cursor:
         query_name = row['name']
-        selected   = row['selected']
-        tables     = row['tables']
+        selected = row['selected']
+        tables = row['tables']
         conditions = row['conditions']
 
-    limit  = 1000
+    limit = 1000
     offset = 0
     json_checked = False
     return runquery(request, mq_id, query_name, selected, tables, conditions, limit, offset, json_checked)
+
 
 def runquery_post(request):
     """runquery.
@@ -385,14 +396,14 @@ def runquery_post(request):
         return render(request, 'error.html', {'message': 'This code expects a POST'})
 
     query_name = request.POST['query_name'].strip()
-    mq_id      = request.POST['mq_id'].strip()
-    selected   = request.POST['selected'].strip()
-    tables     = request.POST['tables'].strip()
+    mq_id = request.POST['mq_id'].strip()
+    selected = request.POST['selected'].strip()
+    tables = request.POST['tables'].strip()
     conditions = request.POST['conditions'].strip()
 
     limit = 1000
     if 'limit' in request.POST:
-        limit      = request.POST['limit']
+        limit = request.POST['limit']
         try:
             limit = int(limit)
         except:
@@ -402,7 +413,7 @@ def runquery_post(request):
 
     offset = 0
     if 'offset' in request.POST:
-        offset     = request.POST['offset']
+        offset = request.POST['offset']
         try:
             offset = int(offset)
         except:
@@ -412,6 +423,7 @@ def runquery_post(request):
         json_checked = True
 
     return runquery(request, mq_id, query_name, selected, tables, conditions, limit, offset, json_checked)
+
 
 def runquery(request, mq_id, query_name, selected, tables, conditions, limit, offset, json_checked):
     message = ''
@@ -444,13 +456,13 @@ def runquery(request, mq_id, query_name, selected, tables, conditions, limit, of
         return HttpResponse(json.dumps(queryset, indent=2), content_type="application/json")
     else:
         return render(request, 'runquery.html',
-            {'table': queryset, 'nalert': nalert, 
-                'query_name': query_name,
-                'mq_id': mq_id,
-                'selected'  :selected, 
-                'tables'    :tables, 
-                'conditions'  :conditions, 
-                'nalert'   : nalert,
-                'ps' : offset, 'pe' : offset+nalert,
-                'limit'  :limit, 'offset'  :offset, 
-                'message': message})
+                      {'table': queryset, 'nalert': nalert,
+                       'query_name': query_name,
+                       'mq_id': mq_id,
+                       'selected': selected,
+                       'tables': tables,
+                       'conditions': conditions,
+                       'nalert': nalert,
+                       'ps': offset, 'pe': offset + nalert,
+                       'limit': limit, 'offset': offset,
+                       'message': message})
