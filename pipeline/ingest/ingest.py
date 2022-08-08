@@ -34,8 +34,11 @@ from gkdbutils.ingesters.cassandra import executeLoad
 import os, time, json, zlib
 import signal
 
+sigterm_raised = False
+
 def sigterm_handler(signum, frame):
-    print("Ignoring SIGTERM")
+    global sigterm_raised
+    print("Caught SIGTERM")
 
 signal.signal(signal.SIGTERM, sigterm_handler)
 
@@ -180,6 +183,7 @@ def handle_alert(alert, image_store, producer, topic_out, cassandra_session):
 def run(runarg, return_dict):
     """run.
     """
+    global sigterm_raised
     processID = runarg['processID']
 
     # connect to cassandra cluster
@@ -222,6 +226,12 @@ def run(runarg, return_dict):
     ncandidate = 0
     startt = time.time()
     while nalert < maxalert:
+        if sigterm_raised:
+            print("Stopping ingest")
+            sys.stdout.flush()
+            alertConsumer.close()
+            break
+
         t = time.time()
         try:
             msg = streamReader.poll(decode=True, timeout=5)
