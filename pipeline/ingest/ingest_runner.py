@@ -32,7 +32,7 @@ while 1:
     topic  = 'ztf_' + date + '_programid1'
     log = open('/home/ubuntu/logs/' + topic + '.log', 'a')
     if sigterm_raised:
-        log.write("Caught SIGTERM, exiting.")
+        log.write("Caught SIGTERM, exiting.\n")
         sys.exit(0)
 
     if os.path.isfile(settings.LOCKFILE):
@@ -48,6 +48,7 @@ while 1:
             # if the worher uses 'print', there will be at least the newline
             rtxt = rbin.decode('utf-8').rstrip()
             log.write(rtxt + '\n')
+            log.flush()
 
             # scream to the humans if ERROR
             if rtxt.startswith('ERROR'):
@@ -61,6 +62,7 @@ while 1:
             # if the worher uses 'print', there will be at least the newline
             rtxt = 'stderr:' + rbin.decode('utf-8').rstrip()
             log.write(rtxt + '\n')
+            log.flush()
             print(rtxt)
 
         process.wait()
@@ -77,4 +79,5 @@ while 1:
         rtxt = 'Waiting for lockfile ' + now()
         print(rtxt)
         log.write(rtxt + '\n')
+        log.flush()
         time.sleep(settings.WAIT_TIME)
