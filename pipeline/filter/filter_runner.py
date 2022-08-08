@@ -79,7 +79,11 @@ while 1:
         # else just go ahead immediately
         elif rc == 0:
             log.write("END waiting %d seconds ...\n\n" % settings.WAIT_TIME)
-            time.sleep(settings.WAIT_TIME)
+            for i in range(settings.WAIT_TIME):
+                if sigterm_raised:
+                    log.write("Caught SIGTERM, exiting.\n")
+                    sys.exit(0)
+                time.sleep(1)
         else:   # rc < 0
             log.write("STOP on error!")
             sys.exit(1)
