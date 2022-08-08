@@ -38,6 +38,7 @@ sigterm_raised = False
 
 def sigterm_handler(signum, frame):
     global sigterm_raised
+    sigterm_raised = True
     print("Caught SIGTERM")
 
 signal.signal(signal.SIGTERM, sigterm_handler)
@@ -227,9 +228,10 @@ def run(runarg, return_dict):
     startt = time.time()
     while nalert < maxalert:
         if sigterm_raised:
+            # clean shutdown - this should stop the consumer and commit offsets
             print("Stopping ingest")
             sys.stdout.flush()
-            alertConsumer.close()
+            streamReader.consumer.close()
             break
 
         t = time.time()
