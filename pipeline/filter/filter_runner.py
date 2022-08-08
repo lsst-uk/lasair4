@@ -6,6 +6,16 @@ import settings
 from datetime import datetime
 from subprocess import Popen, PIPE
 from src import slack_webhook
+import signal
+
+# If we catch a SIGTERM, set a flag
+sigterm_raised = False
+
+def sigterm_handler(signum, frame):
+    global sigterm_raised
+    sigterm_raised = True
+
+signal.signal(signal.SIGTERM, sigterm_handler)
 
 def now():
     # current UTC as string
@@ -21,6 +31,10 @@ while 1:
         log = open('/home/ubuntu/logs/' + arg + '.log', 'a')
     else:
         log = open('/home/ubuntu/logs/ingest.log', 'a')
+
+    if sigterm_raised:
+        log.write("Caught SIGTERM, exiting.")
+        sys.exit(0)
 
     if os.path.isfile(settings.LOCKFILE):
         args = ['python3', 'filter.py']

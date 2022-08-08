@@ -4,10 +4,21 @@ from datetime import datetime
 from subprocess import Popen, PIPE
 import settings
 from src import date_nid, slack_webhook
+import signal
 
 """ Fire up the the ingestion and keep the results in a log file
     the start it again afte a minute or so
 """
+
+# If we catch a SIGTERM, set a flag
+sigterm_raised = False
+
+def sigterm_handler(signum, frame):
+    global sigterm_raised
+    sigterm_raised = True
+
+signal.signal(signal.SIGTERM, sigterm_handler)
+
 def now():
     # current UTC as string
     return datetime.utcnow().strftime("%Y/%m/%dT%H:%M:%S")
@@ -20,6 +31,9 @@ while 1:
     date = date_nid.nid_to_date(nid)
     topic  = 'ztf_' + date + '_programid1'
     log = open('/home/ubuntu/logs/' + topic + '.log', 'a')
+    if sigterm_raised:
+        log.write("Caught SIGTERM, exiting.")
+        sys.exit(0)
 
     if os.path.isfile(settings.LOCKFILE):
         args = ['python3', 'ingest.py', '--nid=%d'%nid]
