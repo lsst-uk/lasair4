@@ -33,6 +33,12 @@ import run_active_queries
 from check_alerts_watchlists import get_watchlist_hits, insert_watchlist_hits
 from check_alerts_areas import get_area_hits, insert_area_hits
 from counts import since_midnight, grafana_today
+import signal
+
+def sigterm_handler(signum, frame):
+    pass
+
+signal.signal(signal.SIGTERM, sigterm_handler)
 
 def main(args):
     if args['--topic_in']:
