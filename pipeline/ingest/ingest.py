@@ -32,6 +32,12 @@ from gkhtm import _gkhtm as htmCircle
 from cassandra.cluster import Cluster
 from gkdbutils.ingesters.cassandra import executeLoad
 import os, time, json, zlib
+import signal
+
+def sigterm_handler(signum, frame):
+    print("Ignoring SIGTERM")
+
+signal.signal(signal.SIGTERM, sigterm_handler)
 
 def now():
     # current UTC as string
