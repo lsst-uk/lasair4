@@ -34,6 +34,7 @@ else:
 while 1:
     if sigterm_raised:
         log.write("Caught SIGTERM, exiting.\n")
+        log.flush()
         sys.exit(0)
 
     if os.path.isfile(settings.LOCKFILE):
@@ -82,10 +83,12 @@ while 1:
             for i in range(settings.WAIT_TIME):
                 if sigterm_raised:
                     log.write("Caught SIGTERM, exiting.\n")
+                    log.flush()
                     sys.exit(0)
                 time.sleep(1)
         else:   # rc < 0
             log.write("STOP on error!")
+            log.flush()
             sys.exit(1)
 
     else:

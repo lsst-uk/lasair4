@@ -93,7 +93,7 @@ def main(args):
             '--topic_in',       topic_in
             ]
     print(' '.join(args))
-    process = Popen(args, stdout=PIPE, stderr=PIPE)
+    process = Popen(args)
     process.wait()
     rc = process.returncode
 
