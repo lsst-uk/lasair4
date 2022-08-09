@@ -86,11 +86,11 @@ def main(args):
     args = [
             'python3',
             'consume_alerts.py',
-            '--maxalert %d ' % maxalert,
-            '--nprocess %d ' % nprocess,
-            '--group %s '    % group_id,
-            '--host %s '     % settings.KAFKA_SERVER,
-            '--topic_in ' + topic_in
+            '--maxalert','%d' % maxalert,
+            '--nprocess','%d' % nprocess,
+            '--group','%s'    % group_id,
+            '--host','%s'     % settings.KAFKA_SERVER,
+            '--topic_in',       topic_in
             ]
     print(' '.join(args))
     process = Popen(args, stdout=PIPE, stderr=PIPE)
