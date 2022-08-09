@@ -82,7 +82,7 @@ def main(args):
     print("Topic is %s" % topic_in)
     t = time.time()
     
-    # use subprocess here rather than os.system because we want signals to propagate
+    # use subprocess here rather than os.system because we want child process to be in same PID group
     args = [
             'python3',
             'consume_alerts.py',
