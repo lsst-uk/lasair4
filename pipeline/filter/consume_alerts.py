@@ -11,6 +11,17 @@ from multiprocessing import Process, Manager
 from features_ZTF import insert_query
 import confluent_kafka
 import argparse, time, json
+import signal
+
+# If we catch a SIGTERM, set a flag
+sigterm_raised = False
+
+def sigterm_handler(signum, frame):
+    global sigterm_raised
+    sigterm_raised = True
+
+signal.signal(signal.SIGTERM, sigterm_handler)
+
 
 sherlock_attributes = [
     "classification",
@@ -150,6 +161,12 @@ def run(runarg, return_dict):
     nalert_in = nalert_out = nalert_ss = 0
     startt = time.time()
     while nalert_in < maxalert:
+        if sigterm_raised:
+            # clean shutdown - stop the consumer and commit offsets
+            print("Caught SIGTERM, aborting.")
+            sys.stdout.flush()
+            break
+
         # Here we get the next alert by kafka
         msg = consumer.poll(timeout=5)
         if msg is None:
