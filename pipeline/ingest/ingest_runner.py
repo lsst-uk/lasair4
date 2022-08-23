@@ -51,8 +51,9 @@ while 1:
             log.flush()
 
             # scream to the humans if ERROR
-            if rtxt.startswith('ERROR'):
+            if 'ERROR' in rtxt:
                 slack_webhook.send(settings.SLACK_URL, rtxt)
+                time.sleep(settings.WAIT_TIME)
 
         while 1:
             # same with stderr
