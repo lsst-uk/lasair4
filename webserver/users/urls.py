@@ -7,13 +7,12 @@ from django.conf import settings
 
 urlpatterns = [
     path('register/', views.register, name='register'),  # FIX ME
-    path('profile/', views.profile, name='profile'),  # FIX ME
+    path('profile/', views.profile, name='profile'),
     path('login/', auth_views.LoginView.as_view(template_name="users/login.html"), name='login'),
-    path('logout/', views.logout, name='logout'),  # FIX ME
-    path('password-reset-confirm/<uidb64>/<token>/', auth_views.PasswordResetConfirmView.as_view(template_name="users/password_reset_confirm.html"), name='password_reset_confirm'),  # FIX ME
-    path('password-reset/', auth_views.PasswordResetView.as_view(template_name="users/password_reset.html"), name='password_reset'),  # FIX ME
-    path('password-reset/done/', auth_views.PasswordResetDoneView.as_view(template_name="users/password_reset_done.html"), name='password_reset_done'),  # FIX ME
-    path('password-reset/complete/', auth_views.PasswordResetCompleteView.as_view(template_name="users/password_reset_complete.html"), name='password_reset_complete')  # FIX ME
+    path('logout/', views.logout, name='logout'),
+    path('password-reset-confirm/<uidb64>/<token>/', auth_views.PasswordResetConfirmView.as_view(template_name="users/password_reset_confirm.html", post_reset_login=True, success_url="/"), name='password_reset_confirm'),
+    path('password-reset/', auth_views.PasswordResetView.as_view(template_name="users/password_reset.html"), name='password_reset'),
+    path('password-reset/done/', auth_views.PasswordResetDoneView.as_view(template_name="index.html", extra_context={"alert": "Please check your email for instructions on how to reset your password."}), name='password_reset_done'),
 ]
 
 if settings.DEBUG:
