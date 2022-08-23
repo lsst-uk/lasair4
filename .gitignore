@@ -34,3 +34,4 @@ admin/
 /static
 /lasair.sublime-workspace
 /lasair.sublime-project
+node_modules
