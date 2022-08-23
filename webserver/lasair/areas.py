@@ -1,21 +1,26 @@
+import tempfile
+import io
+import base64
+import time
+import json
+import matplotlib.pyplot as plt
+import astropy.units as u
+from astropy.coordinates import Angle, SkyCoord
+from mocpy import MOC, World2ScreenMPL
+from subprocess import Popen, PIPE
+from random import randrange
+from lasair.models import Areas
+from lasair import settings
+from django.utils.text import slugify
+from django.http import HttpResponse, FileResponse
+from django.contrib.auth.models import User
+from django.views.decorators.csrf import csrf_exempt
+from django.template.context_processors import csrf
+from django.shortcuts import render, get_object_or_404
+from src import db_connect
 import sys
 sys.path.append('../common')
-from src import db_connect
-from django.shortcuts import render, get_object_or_404
-from django.template.context_processors import csrf
-from django.views.decorators.csrf import csrf_exempt
-from django.contrib.auth.models import User
-from django.http import HttpResponse, FileResponse
-from django.utils.text import slugify
-from lasair import settings
-from lasair.models import Areas
-from random import randrange
-from subprocess import Popen, PIPE
-from mocpy import MOC, World2ScreenMPL
-from astropy.coordinates import Angle, SkyCoord
-import astropy.units as u
-import matplotlib.pyplot as plt
-import json, time, base64, io, tempfile
+
 
 def bytes2string(bytes):
     """bytes2string.
@@ -23,9 +28,10 @@ def bytes2string(bytes):
     Args:
         bytes:
     """
-    base64_bytes   = base64.b64encode(bytes)
+    base64_bytes = base64.b64encode(bytes)
     str = base64_bytes.decode('utf-8')
     return str
+
 
 def string2bytes(str):
     """string2bytes.
@@ -33,9 +39,10 @@ def string2bytes(str):
     Args:
         str:
     """
-    base64_bytes  = str.encode('utf-8')
+    base64_bytes = str.encode('utf-8')
     bytes = base64.decodebytes(base64_bytes)
     return bytes
+
 
 def make_image_of_MOC(fits_bytes):
     """make_image_of_MOC.
@@ -55,7 +62,7 @@ def make_image_of_MOC(fits_bytes):
     with World2ScreenMPL(fig, fov=360 * u.deg, projection="AIT") as wcs:
         ax = fig.add_subplot(1, 1, 1, projection=wcs)
         notmoc.fill(ax=ax, wcs=wcs, alpha=1.0, fill=True, color="lightgray", linewidth=None)
-        moc.fill   (ax=ax, wcs=wcs, alpha=1.0, fill=True, color="red", linewidth=None)
+        moc.fill(ax=ax, wcs=wcs, alpha=1.0, fill=True, color="red", linewidth=None)
         moc.border(ax=ax, wcs=wcs, alpha=1, color="red")
 
     plt.grid(color="black", linestyle="dotted")
@@ -65,11 +72,13 @@ def make_image_of_MOC(fits_bytes):
     outbuf.close()
     return bytes
 
+
 def area_new(request):
-    return render(request, 'area_new.html',
-        {'random': '%d'%randrange(1000),
-        'authenticated': request.user.is_authenticated
-        })
+    return render(request, 'watchlist_regions_create.html',
+                  {'random': '%d' % randrange(1000),
+                   'authenticated': request.user.is_authenticated
+                   })
+
 
 @csrf_exempt
 def areas_home(request):
@@ -80,24 +89,24 @@ def areas_home(request):
     """
     message = ''
     if request.method == 'POST' and request.user.is_authenticated:
-        delete      = request.POST.get('delete')
+        delete = request.POST.get('delete')
 
         if delete == None:   # create new area
 
             t = time.time()
-            name           = request.POST.get('name')
-            description    = request.POST.get('description')
+            name = request.POST.get('name')
+            description = request.POST.get('description')
 
             if 'area_file' in request.FILES:
-                fits_bytes  = (request.FILES['area_file']).read()
+                fits_bytes = (request.FILES['area_file']).read()
                 fits_string = bytes2string(fits_bytes)
-                png_bytes   = make_image_of_MOC(fits_bytes)
-                png_string  = bytes2string(png_bytes)
+                png_bytes = make_image_of_MOC(fits_bytes)
+                png_string = bytes2string(png_bytes)
 
-                area = Areas(user=request.user, name=name, description=description, 
-                    moc=fits_string, mocimage=png_string, active=0)
+                area = Areas(user=request.user, name=name, description=description,
+                             moc=fits_string, mocimage=png_string, active=0)
                 area.save()
-                message += '\nArea created successfully in %.1f sec' % (time.time()-t)
+                message += '\nArea created successfully in %.1f sec' % (time.time() - t)
             else:
                 message = '\nNo file in upload'
         else:
@@ -109,17 +118,17 @@ def areas_home(request):
 
     other_areas = Areas.objects.filter(public=1)
     if request.user.is_authenticated:
-        my_areas    = Areas.objects.filter(user=request.user)
+        my_areas = Areas.objects.filter(user=request.user)
     else:
-        my_areas    = []
+        my_areas = []
 
+    return render(request, 'watchlist_regions.html',
+                  {'my_areas': my_areas,
+                   'random': '%d' % randrange(1000),
+                   'other_areas': other_areas,
+                   'authenticated': request.user.is_authenticated,
+                   'message': message})
 
-    return render(request, 'areas_home.html',
-        {'my_areas': my_areas, 
-        'random': '%d'%randrange(1000),
-        'other_areas': other_areas, 
-        'authenticated': request.user.is_authenticated,
-        'message': message})
 
 def show_area_file(request, ar_id):
     """show_area_file.
@@ -135,7 +144,7 @@ def show_area_file(request, ar_id):
     is_public = (area.public == 1)
     is_visible = is_owner or is_public
     if not is_visible:
-        return render(request, 'error.html',{
+        return render(request, 'error.html', {
             'message': "This area is private and not visible to you"})
 
     moc = string2bytes(area.moc)
@@ -151,6 +160,7 @@ def show_area_file(request, ar_id):
     r['Content-Disposition'] = 'attachment; filename="%s"' % filename
     return r
 
+
 def show_area(request, ar_id):
     """show_area.
 
@@ -165,19 +175,23 @@ def show_area(request, ar_id):
     is_public = (area.public == 1)
     is_visible = is_owner or is_public
     if not is_visible:
-        return render(request, 'error.html',{
+        return render(request, 'error.html', {
             'message': "This area is private and not visible to you"})
 
     if request.method == 'POST' and is_owner:
         if 'name' in request.POST:
-            area.name        = request.POST.get('name')
+            area.name = request.POST.get('name')
             area.description = request.POST.get('description')
 
-            if request.POST.get('active'): area.active  = 1
-            else:                          area.active  = 0
+            if request.POST.get('active'):
+                area.active = 1
+            else:
+                area.active = 0
 
-            if request.POST.get('public'): area.public  = 1
-            else:                          area.public  = 0
+            if request.POST.get('public'):
+                area.public = 1
+            else:
+                area.public = 0
 
             area.save()
             message += 'area updated'
@@ -192,11 +206,11 @@ def show_area(request, ar_id):
     objIds = []
     for row in cursor:
         objIds.append(row[0])
-    
-    return render(request, 'show_area.html',{
-        'area':area, 
-        'objIds' :objIds, 
-        'mocimage':area.mocimage,
-        'count'    :count, 
-        'is_owner' :is_owner,
-        'message'  :message})
+
+    return render(request, 'watchlist_regions_detail.html', {
+        'area': area,
+        'objIds': objIds,
+        'mocimage': area.mocimage,
+        'count': count,
+        'is_owner': is_owner,
+        'message': message})

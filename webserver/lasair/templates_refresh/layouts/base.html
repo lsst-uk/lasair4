@@ -22,19 +22,18 @@
         <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 
         <title>
-            Lasair - {% block title %}{% endblock %}
+            {% block title %}
+                Lasair
+            {% endblock title %}
         </title>
 
         {% include 'includes/metatags.html' %}
         {% include 'includes/analytics.html' %}
         {% include 'includes/favicons.html' %}
 
-        <!-- CSS LINKS -->
-        <link type="text/css" href="{{ ASSETS_ROOT }}/vendor/sweetalert2/dist/sweetalert2.min.css" rel="stylesheet">
-        <link type="text/css" href="{{ ASSETS_ROOT }}/vendor/notyf/notyf.min.css" rel="stylesheet">
-        <link type="text/css" href="{{ ASSETS_ROOT }}/css/volt.css" rel="stylesheet">
+        {% include 'includes/stylesheets.html' %}
 
-        <!-- Specific Page JS goes HERE  -->
+        <!-- Specific Page CSS goes HERE  -->
         {% block stylesheets %}{% endblock stylesheets %}
 
     </head>
@@ -45,6 +44,9 @@
         <main class="content">
 
             {% include 'includes/navigation.html' %}
+
+
+            {% include 'includes/messages.html' %}
 
             {% block content %}{% endblock content %}
 

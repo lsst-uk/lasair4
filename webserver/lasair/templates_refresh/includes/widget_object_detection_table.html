@@ -1,0 +1,40 @@
+<div class="card border-0 shadow">
+    <div class="card-body p-2 pt-5">
+        <div class="table-responsive p-4">
+            <table  class="table table-flush" id="datatable">
+                <thead class="thead-light">
+                    <tr>
+                        <th>MJD</th>
+                        <th>UTC</th>
+                        <th>Filter</th>
+                        <th>magpsf</th>
+                        <th>status</th>
+                        <th>images</th>
+                    </tr></thead>
+                <tbody>
+                    {% for cand in data.candidates %}
+
+                        <tr>
+                            <td>{% if not cand.candid %}<font color="gray" size=-2>{% endif %}{{ cand.mjd|floatformat:3 }}{% if not cand.candid %}</font>{% endif %}</td>
+                            <td>{% if not cand.candid %}<font color="gray" size=-2>{% endif %}{{ cand.utc }}{% if not cand.candid %}</font>{% endif %}</td>
+                            <td>{% if not cand.candid %}<font color="gray" size=-2>{% endif %}{% if cand.fid == 1 %}g{% else %}r{% endif %}{% if not cand.candid %}</font>{% endif %}</td>
+                            <td>{% if not cand.candid %}<font color="gray" size=-2>{% endif %}{{ cand.magpsf|floatformat:3 }} {% if cand.candid %}&plusmn; {{ cand.sigmapsf|floatformat:3 }}{% endif %}{% if not cand.candid %}</font>{% endif %}</td>
+
+                            <td> {% if cand.candid %}{{ cand.isdiffpos }}
+                            {% else %}<font color="gray" size=-2>non-detection</font>
+                            {% endif %}</td>
+
+                            <td>{% if cand.candid > 0 %}
+                                <a href=/fitsview/{{ cand.candid }}_cutoutScience/ target=_blank><small>target</small></a>
+                                <a href=/fitsview/{{ cand.candid }}_cutoutTemplate/ target=_blank><small>ref</small></a>
+                                <a href=/fitsview/{{ cand.candid }}_cutoutDifference/ target=_blank><small>diff</small></a>
+                            {% endif %}</td>
+
+                        </tr>
+
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
