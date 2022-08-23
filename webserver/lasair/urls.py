@@ -41,17 +41,21 @@ urlpatterns = [
     path('status/<int:nid>/', views.status, name='status'),
     path('streams/<slug:topic>/', views.streams, name='streams'),
     path('fitsview/<slug:filename>/', views.fitsview, name='fitsview'),
-    path('object/<slug:objectId>/', objects.objhtml, name='objhtml'),
+    path('object/<slug:objectId>/old/', objects.objhtml, name='objhtml'),
+    path('object/<slug:objectId>/', objects.object_detail, name='object_detail'),
 
-    path('areas/', areas.areas_home, name='areas_home'),
-    path('area_new/', areas.area_new, name='area_new'),
-    path('area/<int:ar_id>/', areas.show_area, name='show_area'),
-    path('area/<int:ar_id>/file/', areas.show_area_file, name='show_area_file'),
+    path('watchlist-regions/', areas.areas_home, name='watchlist_regions'),
+    path('watchlist-regions/create/', areas.area_new, name='watchlist_regions_create'),
+    path('watchlist-regions/<int:ar_id>/', areas.show_area, name='watchlist_regions_detail'),
+    path('watchlist-regions/<int:ar_id>/file/', areas.show_area_file, name='watchlist_regions_file'),
 
-    path('watchlists/', watchlists.watchlists_home, name='watchlists_home'),
-    path('watchlist_new/', watchlists.watchlist_new, name='watchlist_new'),
-    path('watchlist/<int:wl_id>/', watchlists.show_watchlist, name='show_watchlist'),
-    path('watchlist/<int:wl_id>/txt/', watchlists.show_watchlist_txt, name='show_watchlist_txt'),
+    path('watchlist-catalogues/', watchlists.watchlists_home, name='watchlist_catalogues'),
+    path('watchlist-catalogues/create/', watchlists.watchlist_new, name='watchlist_catalogues_create'),
+    path('watchlist-catalogues/<int:wl_id>/', watchlists.show_watchlist, name='watchlist_catalogues_detail'),
+    path('watchlist-catalogues/<int:wl_id>/txt/', watchlists.show_watchlist_txt, name='show_watchlist_txt'),
+
+    path('watchlist-smart/<slug:which>/', queries.querylist, name='watchlist_smart'),
+
 
     path('querylist/<slug:which>/', queries.querylist, name='querylist'),
     path('query/', queries.new_myquery, name='new_myquery'),
@@ -71,6 +75,8 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('', include('lasairapi.urls')),
     path('', include('users.urls')),
+
+    path("__reload__/", include("django_browser_reload.urls")),
 ]
 
 

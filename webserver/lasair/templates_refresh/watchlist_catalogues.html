@@ -9,7 +9,7 @@
     An "Active" watchlist is one that is run every day, so that it is up to date with the
     latest objects.
     </p><p>
-        If you are logged in, you can <a href=/watchlist_new>create a watchlist</a>.
+        If you are logged in, you can <a href="{% url 'watchlist_catalogues_create' %}">create a watchlist</a>.
     </p>
 
     <div class="col-xs-6">
@@ -29,14 +29,14 @@
                 </tr>
             </thead>
             {% for wl in my_watchlists %}
-                <tr><td><b><a href=/watchlist/{{ wl.wl_id }}>{{ wl.name }}</a></b></td>
+                <tr><td><b><a href="{% url 'watchlist_catalogues_detail' wl.wl_id %}">{{ wl.name }}</a></b></td>
                     <td>{{ wl.description }}</td>
                     <td> {{ wl.number }} </td>
                     <td> {{ wl.radius }} arcsec </td>
                     <td> {% if wl.active == 1 %}&#x2714;{% endif %} </td>
                     <td> {% if wl.public == 1 %}&#x2714;{% endif %} </td>
 
-                    <td><form method="POST"  action="/watchlists/">
+                    <td><form method="POST"  action="{% url 'watchlist_catalogues' %}">
                         {% csrf_token %}
                         <input type="hidden" name="delete" value="{{ wl.wl_id }}">
                         <input type="submit" value="(delete)">
@@ -65,7 +65,7 @@
                     </tr>
                 </thead>
                 {% for wl in other_watchlists %}
-                    <tr><td><b><a href=/watchlist/{{ wl.wl_id }}>{{ wl.name }}</a></b></td>
+                    <tr><td><b><a href="{% url 'watchlist_catalogues_detail' wl.wl_id %}">{{ wl.name }}</a></b></td>
                         <td>{{ wl.user.first_name }} {{ wl.user.last_name }}</td>
                         <td>{{ wl.description }}</td>
                         <td> {{ wl.radius }} arcsec </td>

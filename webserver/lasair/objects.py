@@ -1,19 +1,25 @@
-import os, sys
-sys.path.append('../common')
-import settings
-from src.objectStore import objectStore
-from src import db_connect
-from django.shortcuts import render, get_object_or_404, HttpResponse
-from django.template.context_processors import csrf
-from django.views.decorators.csrf import csrf_exempt
-from django.db.models import Q
-from lasair.models import Myqueries, Watchlists
-from lasair.lightcurves import lightcurve_fetcher
+import time
+import json
+import math
+import ephem
 from datetime import datetime, timedelta
-import ephem, math, json, time
+from lasair.lightcurves import lightcurve_fetcher
+from lasair.models import Myqueries, Watchlists
+from django.db.models import Q
+from django.views.decorators.csrf import csrf_exempt
+from django.template.context_processors import csrf
+from django.shortcuts import render, get_object_or_404, HttpResponse
+from src import db_connect
+from src.objectStore import objectStore
+import settings
+import os
+import sys
+sys.path.append('../common')
+
 
 def mjd_now():
-    return time.time()/86400 + 40587.0
+    return time.time() / 86400 + 40587.0
+
 
 def ecliptic(ra, dec):
     """ecliptic.
@@ -26,18 +32,20 @@ def ecliptic(ra, dec):
     e = ephem.Ecliptic(np)
     return (math.degrees(e.lon), math.degrees(e.lat))
 
+
 def rasex(ra):
     """rasex.
 
     Args:
         ra:
     """
-    h = math.floor(ra/15)
-    ra -= h*15
-    m = math.floor(ra*4)
-    ra -= m/4.0
-    s = ra*240
+    h = math.floor(ra / 15)
+    ra -= h * 15
+    m = math.floor(ra * 4)
+    ra -= m / 4.0
+    s = ra * 240
     return '%02d:%02d:%.3f' % (h, m, s)
+
 
 def decsex(de):
     """decsex.
@@ -48,13 +56,14 @@ def decsex(de):
     ade = abs(de)
     d = math.floor(ade)
     ade -= d
-    m = math.floor(ade*60)
-    ade -= m/60.0
-    s = ade*3600
+    m = math.floor(ade * 60)
+    ade -= m / 60.0
+    s = ade * 3600
     if de > 0.0:
         return '%02d:%02d:%.3f' % (d, m, s)
     else:
         return '-%02d:%02d:%.3f' % (d, m, s)
+
 
 def objhtml(request, objectId):
     """objhtml.
@@ -65,16 +74,46 @@ def objhtml(request, objectId):
     """
     data = obj(objectId)
     if not data:
-        return render(request, 'error.html', 
-                {'message': 'Object %s not in database' % objectId})
+        return render(request, 'error.html',
+                      {'message': 'Object %s not in database' % objectId})
 
     data2 = data.copy()
     if 'sherlock' in data2:
         data2.pop('sherlock')
 
     return render(request, 'show_object.html',
-        {'data':data, 'json_data':json.dumps(data2),
-        'authenticated': request.user.is_authenticated})
+                  {'data': data, 'json_data': json.dumps(data2),
+                   'authenticated': request.user.is_authenticated})
+
+
+def object_detail(request, objectId):
+    """object detail.
+
+    Args:
+        request:
+        objectId:
+    """
+    data = obj(objectId)
+    if not data:
+        return render(request, 'error.html',
+                      {'message': 'Object %s not in database' % objectId})
+
+    with open('/Users/Dave/Dropbox/Mac/Desktop/lasair-mac/object_example.json', 'w') as f:
+        json.dump(data, f)
+
+    if 'sherlock' in data:
+        data['sherlock']['classification_expanded'] = data['sherlock']['classification']
+        for k, v in {"NT": "Nuclear Transient", "BS": "Bright Star", "VS": "Variable Star", "SN": "Supernova", "CV": "Cataclysmic Variable", "AGN": "AGN"}.items():
+            if data['sherlock']['classification_expanded'] == k:
+                data['sherlock']['classification_expanded'] = v
+    data2 = data.copy()
+    if 'sherlock' in data2:
+        data2.pop('sherlock')
+
+    return render(request, 'object_detail.html',
+                  {'data': data, 'json_data': json.dumps(data2),
+                   'authenticated': request.user.is_authenticated})
+
 
 def objjson(objectId):
     """objjson.
@@ -85,6 +124,7 @@ def objjson(objectId):
     """
     data = obj(objectId)
     return data
+
 
 def obj(objectId):
     """Show a specific object, with all its candidates"""
@@ -130,8 +170,9 @@ def obj(objectId):
 
     cursor.execute(query)
     for row in cursor:
-        for k,v in row.items():
-            if v: TNS[k] = v
+        for k, v in row.items():
+            if v:
+                TNS[k] = v
 
     LF = lightcurve_fetcher(cassandra_hosts=settings.CASSANDRA_HEAD)
     candidates = LF.fetch(objectId)
@@ -140,7 +181,7 @@ def obj(objectId):
     count_isdiffpos = count_all_candidates = count_noncandidate = 0
     for cand in candidates:
         cand['mjd'] = mjd = float(cand['jd']) - 2400000.5
-        cand['since_now'] = mjd - now;
+        cand['since_now'] = mjd - now
         if 'candid' in cand:
             count_all_candidates += 1
             candid = cand['candid']
@@ -163,24 +204,24 @@ def obj(objectId):
     if not objectData:
         ra = float(cand['ra'])
         dec = float(cand['dec'])
-        objectData = {'ramean': ra, 'decmean': dec, 
-            'rasex': rasex(ra), 'decsex': decsex(dec),
-            'ncand':len(candidates), 'MPCname':ssnamenr}
+        objectData = {'ramean': ra, 'decmean': dec,
+                      'rasex': rasex(ra), 'decsex': decsex(dec),
+                      'ncand': len(candidates), 'MPCname': ssnamenr}
         objectData['annotation'] = 'Unknown object'
         if row['ssdistnr'] > 0 and row['ssdistnr'] < 10:
             objectData['MPCname'] = ssnamenr
 
     message += 'Got %d candidates and %d noncandidates' % (count_all_candidates, count_noncandidate)
 
-    candidates.sort(key= lambda c: c['mjd'], reverse=True)
+    candidates.sort(key=lambda c: c['mjd'], reverse=True)
 
-    data = {'objectId':objectId, 
-            'objectData': objectData, 
-            'candidates': candidates, 
-            'count_isdiffpos': count_isdiffpos, 
-            'count_all_candidates':count_all_candidates,
-            'count_noncandidate':count_noncandidate,
-            'sherlock': sherlock, 
-            'TNS':TNS, 'message':message,
+    data = {'objectId': objectId,
+            'objectData': objectData,
+            'candidates': candidates,
+            'count_isdiffpos': count_isdiffpos,
+            'count_all_candidates': count_all_candidates,
+            'count_noncandidate': count_noncandidate,
+            'sherlock': sherlock,
+            'TNS': TNS, 'message': message,
             }
     return data
