@@ -1,0 +1,135 @@
+
+
+// Shades of grey
+$white   : #ffffff !default;
+$gray-50:  #F9FAFB !default;
+$gray-100: #F2F4F6 !default;
+$gray-200: #E5E7EB !default;
+$gray-300: #D1D5DB !default;
+$gray-400: #9CA3AF !default;
+$gray-500: #6B7280 !default;
+$gray-600: #4B5563 !default;
+$gray-700: #374151 !default;
+$gray-800: #1F2937 !default;
+$gray-900: #111827 !default;
+$dark    : $gray-800 !default;
+$black   : $gray-900 !default;
+
+// fusv-disable
+$grays: ("100": $gray-100,
+    "200": $gray-200,
+    "300": $gray-300,
+    "400": $gray-400,
+    "500": $gray-500,
+    "600": $gray-600,
+    "700": $gray-700,
+    "800": $gray-800,
+    "900": $gray-900) !default;
+// fusv-enable
+
+// Generic colors
+$blue       : #2361ce !default;
+$indigo     : #4F46E5 !default;
+$purple     : #7C3AED !default;
+$pink       : #EF4683 !default;
+$red        : #E11D48 !default;
+$orange     : #FBA918 !default;
+$brown      : #b9a084 !default;
+$yellow     : #f3c78e !default;
+$yellow-100 : #ffeed6 !default;
+$yellow-200 : #f5dbb8 !default;
+$green      : #10B981 !default;
+$teal       : #1E90FF !default;
+$cyan       : #63b1bd !default;
+$soft-indigo: #f5e8ff !default;
+$soft-green : #2CA58D !default;
+
+// scss-docs-start colors-map
+$colors: ("blue": $blue,
+    "indigo": $indigo,
+    "purple": $purple,
+    "pink": $pink,
+    "red": $red,
+    "orange": $orange,
+    "yellow": $yellow,
+    "green": $green,
+    "teal": $teal,
+    "cyan": $cyan,
+    "white": $white,
+    "gray": $gray-600,
+    "gray-dark": $gray-800) !default;
+// scss-docs-end colors-map
+
+// Color scheme
+$primary  : #1F2937 !default;
+$secondary: #f0bc74 !default;
+$tertiary : #31316A !default;
+
+// Series names and colors. This can be extended or customized as desired. Just add more series and colors.
+$ct-series-names: (a, b, c, d, e, f, g) !default !default;
+$ct-series-colors: (#262B40,
+    #F8BD7A,
+    #2CA58D,
+    #31316A,
+    #C96480,
+    #ffffff,
+    #F8BD7A,
+
+) !default;
+
+
+$success: $green !default;
+$info   : $blue !default;
+$warning: $yellow !default;
+$danger : $red !default;
+$gray   : $gray-900 !default;
+$light  : $gray-400 !default;
+$lighten: $gray-300 !default;
+$soft   : $gray-200 !default;
+$dark   : $dark !default;
+
+
+// LASAIR COLOURS
+$lasair-blue: #00BABB;
+$lasair-red: #CE4257;
+$lasair-yellow: #F0A202;
+$lasair-black: #262626;
+$lasair-white: #FFFFF0;
+$lasair-grey: #878E88;
+
+// Color scheme
+$primary: $lasair-blue;
+$secondary: $lasair-yellow;
+$tertiary: $lasair-red;
+$link-color: $lasair-red;
+
+$gray-800: $lasair-black;
+
+$dark: $lasair-black;
+
+$component-active-bg: $tertiary;
+$component-active-color       : $white !default;
+$component-active-bg          : $tertiary !default;
+$component-active-border-color: $primary !default;
+
+$component-hover-color       : $gray-300 !default;
+$component-hover-bg          : $gray-300 !default;
+$component-hover-border-color: $gray-300 !default;
+
+
+
+$pagination-bg: $gray-200;
+$pagination-border-color :  $white;
+$pagination-hover-bg          : $component-active-bg !default;
+$pagination-hover-border-color: $pagination-border-color;
+$pagination-hover-color: $component-active-color !default;
+$pagination-active-color       : $component-active-color !default;
+$pagination-active-bg          : $component-active-bg !default;
+$pagination-active-border-color: $pagination-border-color;
+$pagination-disabled-color       : $gray-600 !default;
+$pagination-disabled-bg          : $white !default;
+$pagination-disabled-border-color: $gray-300 !default;
+
+
+// $primary: blue;
+$icon-size-xxs:         0.85rem; 
