@@ -71,7 +71,11 @@ while 1:
     
         if rc == 0:  # no more to get
             log.write("END waiting %d seconds ...\n\n" % settings.WAIT_TIME)
-            time.sleep(settings.WAIT_TIME)
+            for i in range(settings.WAIT_TIME):
+                if sigterm_raised:
+                    log.write("Caught SIGTERM, exiting.\n")
+                    sys.exit(0)
+                time.sleep(1)
         else:
             log.write("END getting more ...\n\n")
         log.close()

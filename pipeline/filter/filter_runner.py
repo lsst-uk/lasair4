@@ -22,18 +22,19 @@ def now():
     return datetime.utcnow().strftime("%Y/%m/%dT%H:%M:%S")
 
 # if there is an argument, use it on the filter instances
+arg = None
+if len(sys.argv) > 1: arg = sys.argv[1]
+
+# where the log files go
+if arg:
+    log = open('/home/ubuntu/logs/' + arg + '.log', 'a')
+else:
+    log = open('/home/ubuntu/logs/ingest.log', 'a')
+
 while 1:
-    arg = None
-    if len(sys.argv) > 1: arg = sys.argv[1]
-
-    # where the log files go
-    if arg:
-        log = open('/home/ubuntu/logs/' + arg + '.log', 'a')
-    else:
-        log = open('/home/ubuntu/logs/ingest.log', 'a')
-
     if sigterm_raised:
         log.write("Caught SIGTERM, exiting.\n")
+        log.flush()
         sys.exit(0)
 
     if os.path.isfile(settings.LOCKFILE):
@@ -79,12 +80,17 @@ while 1:
         # else just go ahead immediately
         elif rc == 0:
             log.write("END waiting %d seconds ...\n\n" % settings.WAIT_TIME)
-            time.sleep(settings.WAIT_TIME)
+            for i in range(settings.WAIT_TIME):
+                if sigterm_raised:
+                    log.write("Caught SIGTERM, exiting.\n")
+                    log.flush()
+                    sys.exit(0)
+                time.sleep(1)
         else:   # rc < 0
             log.write("STOP on error!")
+            log.flush()
             sys.exit(1)
 
-        log.close()
     else:
         # wait until the lockfile reappears
         rtxt = 'Waiting for lockfile ' + now()
