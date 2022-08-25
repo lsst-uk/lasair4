@@ -283,5 +283,5 @@ if __name__ == '__main__':
         slack_webhook.send(settings.SLACK_URL, rtxt)
         print(rtxt)
         sys.stdout.flush()
-        sys.exit(-1)
+        sys.exit(0)
 
