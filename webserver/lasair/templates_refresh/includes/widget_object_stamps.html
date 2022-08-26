@@ -1,16 +1,48 @@
 
 
+<div class="card border-0 shadow">
+    <div class="card-body">
+        <div class="accordion accordion-flush" id="accordionExample">
+            <div class="accordion-item">
+                <h2 class="accordion-header " id="headinOne">
+                    <button class="h6 accordion-button collapsed fw-extrabold text-gray-400  ps-0" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="false" aria-controls="collapseOne">
+                        {{ data.objectData.ramean|floatformat:6 }}, {{ data.objectData.decmean|floatformat:6 }}
+                    </button>
+                </h2>
+                <div id="collapseOne" class="accordion-collapse " aria-labelledby="headinOne" data-bs-parent="#accordionExample">
+                    <div class="JS9Menubar" data-width="100%" data-js9id="*"></div>
+                    <div class="row d-block d-xl-flex align-items-start">
+                        <div class="col-4">
+                            <div class="JS9Magnifier"   data-js9id="*"></div>
+                        </div>
+                        <div class="col-4">
+                            <div class="ImExamRadialProj"   data-js9id="*"></div>
+                        </div>
+                        <div class="col-4">
+                            <div class="ImExam3dPlot"   data-js9id="*"></div>
+                        </div>
+                    </div>
 
 
+                </div>
+            </div>
+        </div>
 
-<div id="fits_div"
-    style='width:98%; height:100%;' >
-    <!-- the 17 padding is to allow for the scroll bars in most browsers.
-               -->
+        <div class="row d-block d-xl-flex align-items-start">
+            <div class="col-4">
+                <h2 class="h6 text-gray-400 mb-0">target</h2>
+                <div class="fitsStamp fits-lite" src="/fits/{{ data.candidates.0.candid }}_cutoutScience"></div>
+            </div>
+            <div class="col-4">
+                <h2 class="h6 text-gray-400 mb-0">reference</h2>
+                <div class="fitsStamp fits-lite" src="/fits/{{ data.candidates.0.candid }}_cutoutTemplate"></div>
+            </div>
+            <div class="col-4">
+                <h2 class="h6 text-gray-400 mb-0">difference</h2>
+                <div class="fitsStamp fits-lite" src="/fits/{{ data.candidates.0.candid }}_cutoutDifference"></div>
+            </div>
+        </div>
+    </div>
 </div>
 
-<input type='range' id='contrast_slider_0' min='0' max='100'
-    step='1' value='0' onkeydown='newContrast(event)'
-    onmousemove='newContrast(event)'
-/>
-<label id='contrast_value_0' class='monospaced' >0</label>
+
