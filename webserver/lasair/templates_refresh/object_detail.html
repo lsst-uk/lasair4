@@ -14,13 +14,6 @@
 
 
 
-
-    <script type="text/javascript" src="//code.jquery.com/jquery-1.12.1.min.js" charset="utf-8"></script>
-    <link rel="stylesheet" href="//aladin.u-strasbg.fr/AladinLite/api/v2/latest/aladin.min.css" />
-
-
-
-
     <div class="container">
 
 
@@ -53,7 +46,7 @@
                 {% include "includes/widget_object_aladin.html" %}
             </div>
 
-            <div class="col-4 mb-4">
+            <div class="col-12 mb-4">
                 {% include "includes/widget_object_stamps.html" %}
             </div>
 
@@ -119,17 +112,9 @@
 <!-- Specific Page JS goes HERE  -->
 {% block javascripts %}
 
-    <script type="text/javascript" src="{% static '/js/plotly-latest.min.js' %}" ></script>
-    <script type="text/javascript" src="{% static '/js/lc.js' %}" ></script>
-    <!--<script type="text/javascript" src="{% static '/js/lc_apparent.js' %}" ></script> -->
-    <script src="{% static 'js/fitsview_init.js' %}"></script>
-    <script src="{% static 'js/fitsview.js' %}"></script>
-
-
     <script type="text/javascript">
         {% include "includes/widget_object_aladin.script" %}
         {% include "includes/widget_object_lightcurve.script" %}
-        {% include "includes/widget_object_stamps.script" %}
     </script>
 {% endblock javascripts %}
 

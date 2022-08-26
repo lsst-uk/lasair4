@@ -1,5 +1,0 @@
-var fits_url = '/fits/{{ data.candidates.0.candid }}_cutoutScience';
-console.log('starting fitsview');
-console.log(fits_url)
-var fits = new FITS (gebi ("fits_div"), 0);
-start_fitsview(fits, fits_url);
