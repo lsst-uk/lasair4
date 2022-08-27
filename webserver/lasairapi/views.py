@@ -8,6 +8,12 @@ from .serializers import AnnotateSerializer
 from rest_framework.authentication import TokenAuthentication
 from rest_framework.permissions import IsAuthenticated
 from .query_auth import QueryAuthentication
+import sys
+sys.path.append('../lasair')
+import settings
+
+def api(request):
+    return render(request, 'api.html', {'token': settings.SAMPLE_TOKEN})
 
 def retcode(message):
     if 'error' in message: return status.HTTP_400_BAD_REQUEST
