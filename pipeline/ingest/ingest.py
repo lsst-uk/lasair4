@@ -58,11 +58,16 @@ def msg_text(message):
     return message_text
 
 def store_images(message, store, candid):
-    for cutoutType in ['cutoutDifference', 'cutoutTemplate', 'cutoutScience']:
-        contentgz = message[cutoutType]['stampData']
-        content = zlib.decompress(contentgz, 16+zlib.MAX_WBITS)
-        filename = '%d_%s' % (candid, cutoutType)
-        store.putObject(filename, content)
+    try:
+        for cutoutType in ['cutoutDifference', 'cutoutTemplate', 'cutoutScience']:
+            contentgz = message[cutoutType]['stampData']
+            content = zlib.decompress(contentgz, 16+zlib.MAX_WBITS)
+            filename = '%d_%s' % (candid, cutoutType)
+            store.putObject(filename, content)
+        return 0
+    except:
+        return None # failure of batch
+
 
 def insert_cassandra(alert, cassandra_session):
     """insert_casssandra.
@@ -75,7 +80,7 @@ def insert_cassandra(alert, cassandra_session):
 
     # if this is not set, then we are not doing cassandra
     if not cassandra_session:
-        return 0
+        return None   # failure of batch
 
     # if it does not have all the ZTF attributes, don't try to ingest
     if not 'candid' in alert['candidate'] or not alert['candidate']['candid']:
@@ -149,13 +154,15 @@ def handle_alert(alert, image_store, producer, topic_out, cassandra_session):
     # here is the part of the alert that has no binary images
     alert_noimages = msg_text(alert)
     if not alert_noimages:
-        return None
+        print('ERROR: in ingest.py: No json in alert')
+        return None  # ingest batch failed
 
     # Call on Cassandra
-    if cassandra_session:
+    try:
         ncandidate = insert_cassandra(alert_noimages, cassandra_session)
-    else:
-        ncandidate = 0
+    except:
+        print('ERROR: in ingest.py: Cassandra insert failed')
+        return None  # ingest batch failed
 
     # add to CephFS
     candid = alert_noimages['candidate']['candid']
@@ -163,7 +170,9 @@ def handle_alert(alert, image_store, producer, topic_out, cassandra_session):
 
     # store the fits images
     if image_store:
-        store_images(alert, image_store, candid)
+        if store_images(alert, image_store, candid) == None:
+            print('ERROR: in ingest.py: Failed to put cutouts in file system')
+            return None   # ingest batch failed
 
     # do not put known solar system objects into kafka
 #    ss_mag = alert_noimages['candidate']['ssmagnr']
@@ -179,6 +188,7 @@ def handle_alert(alert, image_store, producer, topic_out, cassandra_session):
             print("ERROR in ingest/ingestBatch: Kafka production failed for %s" % topic_out)
             print(e)
             sys.stdout.flush()
+            return None   # ingest failed
     return ncandidate
 
 def run(runarg, return_dict):
@@ -209,11 +219,7 @@ def run(runarg, return_dict):
     topic_out = runarg['topic_out']
     producer_conf = {
         'bootstrap.servers': '%s' % settings.KAFKA_SERVER,
-#        'group.id': 'copy-topic',
         'client.id': 'client-1',
-#        'enable.auto.commit': True,
-#        'session.timeout.ms': 6000,
-#        'default.topic.config': {'auto.offset.reset': 'smallest'}
     }
     producer = Producer(producer_conf)
     print('Producing Kafka to %s with topic %s' % (settings.KAFKA_SERVER, topic_out))
@@ -225,6 +231,7 @@ def run(runarg, return_dict):
 
     nalert = 0
     ncandidate = 0
+    nuncommitted = 0
     startt = time.time()
     while nalert < maxalert:
         if sigterm_raised:
@@ -252,19 +259,34 @@ def run(runarg, return_dict):
                 icandidate = handle_alert(alert, runarg['image_store'], \
                         producer, topic_out, cassandra_session)
 
+                if icandidate == None:
+                    print('Ingestion batch failed with %d alerts to be done again' % nuncommitted)
+                    return_dict[processID] = None
+                    return
+
                 nalert += 1
+                nuncommitted += 1
                 ncandidate += icandidate
 
                 if nalert%1000 == 0:
                     print('process %d nalert %d time %.1f' % \
                             ((processID, nalert, time.time()-startt)))
                     sys.stdout.flush()
+
                     # if this is not flushed, it will run out of memory
                     if producer is not None:
                         producer.flush()
+
+                    # commit the alerts we have read
+                    streamReader.consumer.commit()
+                    nuncommitted = 0
+
     # finally flush
     if producer is not None:
         producer.flush()
+
+    # commit the alerts we have read
+    streamReader.consumer.commit()
 
     print('INGEST %d finished with %d alerts %d candidates' \
             % (processID, nalert, ncandidate))
@@ -325,7 +347,7 @@ def main(args):
     consumer_conf = {
         'bootstrap.servers': '%s' % settings.KAFKA_SERVER,
         'group.id': group_id,
-        'enable.auto.commit': True,
+        'enable.auto.commit': False,
         'session.timeout.ms': 6000,
         'default.topic.config': {'auto.offset.reset': 'smallest'}
     }
@@ -366,6 +388,10 @@ def main(args):
     r = return_dict.values()
     nalert = ncandidate = 0
     for t in range(nprocess):
+        if r[t] == None:
+            return 2   # did not complete the batch
+
+    for t in range(nprocess):
         nalert     += r[t]['nalert']
         ncandidate += r[t]['ncandidate']
     print('%d alerts and %d candidates' % (nalert, ncandidate))
@@ -376,10 +402,11 @@ def main(args):
     nid  = date_nid.nid_now()
     ms.add({'today_alert':nalert, 'today_candidate':ncandidate}, nid)
 
-    if nalert > 0: return 1
-    else:          return 0
+    if nalert > 0: return 1  # got alerts, more to come
+    else:          return 0  # got no alerts
 
 if __name__ == "__main__":
     args = docopt(__doc__)
     rc = main(args)
+    print('return code ', rc)
     sys.exit(rc)
