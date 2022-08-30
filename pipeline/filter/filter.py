@@ -75,7 +75,7 @@ def main(args):
         print(rtxt)
         slack_webhook.send(settings.SLACK_URL, rtxt)
         sys.stdout.flush()
-        sys.exit(-1)
+        sys.exit(0)
     
     ##### fetch a batch of annotated alerts
     print('INGEST start %s' % datetime.utcnow().strftime("%H:%M:%S"))
@@ -103,7 +103,7 @@ def main(args):
         slack_webhook.send(settings.SLACK_URL, rtxt)
         print(rtxt)
         sys.stdout.flush()
-        sys.exit(-1)
+        sys.exit(0)
     
     print('INGEST duration %.1f seconds' % (time.time() - t))
     
@@ -112,7 +112,7 @@ def main(args):
     except:
         print('ERROR in filter/filter: cannot connect to local database')
         sys.stdout.flush()
-        sys.exit(-1)
+        sys.exit(0)
     
     ##### run the watchlists
     print('WATCHLIST start %s' % datetime.utcnow().strftime("%H:%M:%S"))
@@ -126,7 +126,7 @@ def main(args):
         slack_webhook.send(settings.SLACK_URL, rtxt)
         print(rtxt)
         sys.stdout.flush()
-        sys.exit(-1)
+        sys.exit(0)
     
     print('got %d watchlist hits' % len(hits))
     sys.stdout.flush()
@@ -140,7 +140,7 @@ def main(args):
             slack_webhook.send(settings.SLACK_URL, rtxt)
             print(rtxt)
             sys.stdout.flush()
-            sys.exit(-1)
+            sys.exit(0)
     
     print('WATCHLIST %.1f seconds' % (time.time() - t))
     sys.stdout.flush()
@@ -157,7 +157,7 @@ def main(args):
         slack_webhook.send(settings.SLACK_URL, rtxt)
         print(rtxt)
         sys.stdout.flush()
-        sys.exit(-1)
+        sys.exit(0)
     
     print('got %d area hits' % len(hits))
     sys.stdout.flush()
@@ -170,7 +170,7 @@ def main(args):
             slack_webhook.send(settings.SLACK_URL, rtxt)
             print(rtxt)
             sys.stdout.flush()
-            sys.exit(-1)
+            sys.exit(0)
     print('AREA %.1f seconds' % (time.time() - t))
     sys.stdout.flush()
     
@@ -186,7 +186,7 @@ def main(args):
         slack_webhook.send(settings.SLACK_URL, rtxt)
         print(rtxt)
         sys.stdout.flush()
-        sys.exit(-1)
+        sys.exit(0)
     
     try:
         run_active_queries.run_queries(query_list)
@@ -196,7 +196,7 @@ def main(args):
         slack_webhook.send(settings.SLACK_URL, rtxt)
         print(rtxt)
         sys.stdout.flush()
-        sys.exit(-1)
+        sys.exit(0)
     print('QUERIES %.1f seconds' % (time.time() - t))
     sys.stdout.flush()
     
@@ -226,7 +226,7 @@ def main(args):
         slack_webhook.send(settings.SLACK_URL, rtxt)
         print(rtxt)
         sys.stdout.flush()
-        sys.exit(-1)
+        sys.exit(0)
     
     tablelist = ['objects', 'sherlock_classifications', 'watchlist_hits', 'area_hits']
     
