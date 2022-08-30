@@ -273,13 +273,14 @@ def run(runarg, return_dict):
                             ((processID, nalert, time.time()-startt)))
                     sys.stdout.flush()
 
+                    # if this is not flushed, it will run out of memory
+                    if producer is not None:
+                        producer.flush()
+
                     # commit the alerts we have read
                     streamReader.consumer.commit()
                     nuncommitted = 0
 
-                    # if this is not flushed, it will run out of memory
-                    if producer is not None:
-                        producer.flush()
     # finally flush
     if producer is not None:
         producer.flush()
