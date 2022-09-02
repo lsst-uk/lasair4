@@ -350,13 +350,13 @@ Each lightcurve is a sequence of detections, or <i>candidates</i>, each of which
 <ul>
   <li><code>candid</code>: the candidate ID for the detection</li>
   <li><code>fid</code>: The filter ID for the detection (1 = g and 2 = r)</li>
+  <li><code>jd</code>: Julian Day for the detection </li>
   <li><code>magpsf</code>: The difference magnitude</li>
   <li><code>sigmapsf</code>: the error in the difference magnitude.</li>
-  <li><code>isdiffpos</code>:set to 't' if positive difference magnitude, 'f' for negative</li>
   <li><code>magnr</code>: Magnitude of the reference source</li>
   <li><code>sigmagnr</code>: the error in the reference magnitude</li>
   <li><code>magzpsci</code>: Zero-point magnitude of the science image</li>
-  <li><code>mjd</code>: Modified Julain Day for the detection </li>
+  <li><code>isdiffpos</code>:set to 't' if positive difference magnitude, 'f' for negative</li>
 </ul>
 The arguments are:<ul>
 <li><code>objectIds</code>: (string) comma-separated string of objectIds to be fetched</li>
@@ -399,20 +399,15 @@ print(c)
   "objectId": "ZTF20acpwljl",
   "candidates":[
     {
-      "candid": 1411435461415015019,
-      "fid": 2,
-      "magpsf": 19.739900588989258,
-      "sigmapsf": 0.16019299626350403,
-      "isdiffpos": "t",
-      "mjd": 59165.43546300009
-    },
-    {
-      "candid": 1411436860315015015,
-      "fid": 2,
-      "magpsf": 19.987899780273438,
-      "sigmapsf": 0.18143899738788605,
-      "isdiffpos": "t",
-      "mjd": 59165.43686340004
+      "candid":1961223331015015002,
+      "fid":1,
+      "magpsf":19.46470069885254,
+      "sigmapsf":0.12973499298095703,
+      "magnr":21.349000930786133,
+      "sigmagnr":0.0989999994635582,
+      "magzpsci":26.41069984436035,
+      "isdiffpos":"t",
+      "jd":2459715.7233333,
     },
     ]
 ... snip ...
