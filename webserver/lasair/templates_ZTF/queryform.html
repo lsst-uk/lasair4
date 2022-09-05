@@ -213,8 +213,8 @@ The SQL <b><font color="red">WHERE</font></b>. Which objects to return. See list
 <tr><td>Selected</td><td><tt>{{ myquery.selected }}</tt></td></tr>
 <tr><td>Tables</td><td><tt>{{ myquery.tables }}</tt></td></tr>
 <tr><td>Conditions</td><td><tt>{{ myquery.conditions }}</tt></td></tr>
-<tr><td>Active</td><td>{% if myquery.active == 1 %}yes{% else %}no{% endif %} 
-<tr><td>Public</td><td>{% if myquery.public == 1 %}yes{% else %}no{% endif %}</td></tr>
+<tr><td>Active</td><td>{% if myquery.active == 0 %}no{% else %}yes{% endif %} 
+<tr><td>Public</td><td>{% if myquery.public == 0 %}no{% else %}yes{% endif %}</td></tr>
 </table>
 <input name='selected'   type='hidden' value='{{ myquery.selected }}'/>
 <input name='tables'     type='hidden' value='{{ myquery.tables }}'/>
