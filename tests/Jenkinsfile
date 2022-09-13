@@ -1,23 +1,24 @@
 pipeline {
-  agent { docker { image 'gpfrancis/sherlock-test:0.9.1' } }
-  stages {
-    stage('test') {
-      steps {
-        dir('tests') {
-          sh 'python3 test_sherlock_wrapper.py'
-          sh 'python3 integration_test_sherlock_wrapper.py'
-          sh 'python3 watchlist_test.py'
-          sh 'python3 manage_status_test.py'
+    agent { 
+        dockerfile {
+            dir 'tests'
+            filename 'Dockerfile'
         }
-        dir('tests/annotations') {
-          sh 'python3 kafka_test.py'
-        }
-      }
-      post {
-        always {
-          junit 'tests/test-reports/*.xml'
-        }  
-      }
     }
-  }
+    stages {
+        stage('Unit Tests') {
+            steps {
+                dir('tests/unit/pipeline/sherlock') {
+                    sh 'python3 test_sherlock_wrapper.py'
+                }
+            }
+            post {
+                always {
+                    junit 'tests/unit/pipeline/sherlock/test-reports/*.xml'
+                    deleteDir() /* clean up workspace */
+                }
+            }
+        }
+    }
 }
+
