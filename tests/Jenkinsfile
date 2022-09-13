@@ -11,10 +11,14 @@ pipeline {
                 dir('tests/unit/pipeline/sherlock') {
                     sh 'python3 test_sherlock_wrapper.py'
                 }
+                dir('tests/unit/pipeline/filter') {
+                    sh 'python3 test_watchlist.py'
+                }
             }
             post {
                 always {
                     junit 'tests/unit/pipeline/sherlock/test-reports/*.xml'
+                    junit 'tests/unit/pipeline/filter/test-reports/*.xml'
                     deleteDir() /* clean up workspace */
                 }
             }
