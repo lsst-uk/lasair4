@@ -2,14 +2,13 @@
     Test watchlist infrastucture
 """
 import os, sys
-sys.path.append('..')
 import unittest.main
 from unittest import TestCase, expectedFailure
 import json
 from time import sleep
-import context  # cant find sherlock_wrapper
+import context
 
-from services.commandLine.make_watchlist_files import rebuild_cache
+from services.make_watchlist_files import rebuild_cache
 from pipeline.filter.check_alerts_watchlists import check_alerts_against_watchlists
 from pipeline.filter.check_alerts_watchlists import read_watchlist_cache_files
 
