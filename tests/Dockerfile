@@ -25,3 +25,7 @@ RUN apt-get update && apt-get -yq dist-upgrade && apt-get install -yq --no-insta
   wget \
   sudo
 
+# Required for filter
+RUN pip3 install \
+  mocpy \
+  mysql-connector-python
