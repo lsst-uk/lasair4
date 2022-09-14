@@ -8,6 +8,9 @@ pipeline {
     stages {
         stage('Unit Tests') {
             steps {
+                dir('tests/unit/common/src') {
+                    sh 'python3 test_manage_status.py'
+                }
                 dir('tests/unit/pipeline/sherlock') {
                     sh 'python3 test_sherlock_wrapper.py'
                 }
@@ -17,6 +20,7 @@ pipeline {
             }
             post {
                 always {
+                    junit 'tests/unit/common/src/test-reports/*.xml'
                     junit 'tests/unit/pipeline/sherlock/test-reports/*.xml'
                     junit 'tests/unit/pipeline/filter/test-reports/*.xml'
                     deleteDir() /* clean up workspace */
