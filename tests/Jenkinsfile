@@ -3,6 +3,7 @@ pipeline {
         dockerfile {
             dir 'tests'
             filename 'Dockerfile'
+            args '--network host'
         }
     }
     stages {
@@ -36,11 +37,6 @@ pipeline {
                 always {
                     junit 'tests/integration/pipeline/sherlock/test-reports/*.xml'
                 }
-            }
-        }
-        stage('Cleanup') {
-            steps {
-                deleteDir() /* clean up workspace */
             }
         }
     }
