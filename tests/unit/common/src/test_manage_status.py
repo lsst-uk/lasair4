@@ -1,8 +1,7 @@
+import context
 import os, sys, json
 import unittest
-python_path = '../common/'
-sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), python_path)))
-from src.manage_status import manage_status
+from manage_status import manage_status
 
 class TestManageStatus(unittest.TestCase):
     def test_manage_status(self):
