@@ -39,7 +39,10 @@ urlpatterns = [
     path('schema', views.schema, name='schema'),
     path('status/', views.status_today, name='status_today'),
     path('status/<int:nid>/', views.status, name='status'),
+
+    # DEPECIATED
     path('streams/<slug:topic>/', views.streams, name='streams'),
+
     path('fitsview/<slug:filename>/', views.fitsview, name='fitsview'),
     path('object/<slug:objectId>/old/', objects.objhtml, name='objhtml'),
     path('object/<slug:objectId>/', objects.object_detail, name='object_detail'),

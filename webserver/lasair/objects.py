@@ -14,6 +14,7 @@ from src.objectStore import objectStore
 import settings
 import os
 import sys
+from astropy.time import Time
 sys.path.append('../common')
 
 
@@ -164,14 +165,30 @@ def obj(objectId):
         sherlock = row
 
     TNS = {}
-    query = 'SELECT tns_name, tns_prefix, disc_mag, type, z, host_name, source_group '
+    query = 'SELECT * '
     query += 'FROM crossmatch_tns JOIN watchlist_hits ON crossmatch_tns.tns_name = watchlist_hits.name '
     query += 'WHERE watchlist_hits.wl_id=%d AND watchlist_hits.objectId="%s"' % (settings.TNS_WATCHLIST_ID, objectId)
+
+    from datetime import date
+
+    def ordinal_suffix(day):
+        if 3 < day < 21 or 23 < day < 31:
+            return 'th'
+        else:
+            return {1: 'st', 2: 'nd', 3: 'rd'}[day % 10]
 
     cursor.execute(query)
     for row in cursor:
         for k, v in row.items():
-            if v:
+            if isinstance(v, datetime):
+                suffix = ordinal_suffix(v.day)
+                vstr = v.strftime(f"%-d{suffix} %B %Y at %H:%M:%S")
+                mjd = Time([v], scale='utc').mjd[0]
+                TNS[k] = vstr
+                TNS[k + "_mjd"] = mjd
+            elif k == "disc_int_name":
+                TNS[k] = v.split(",")[0]
+            elif v:
                 TNS[k] = v
 
     LF = lightcurve_fetcher(cassandra_hosts=settings.CASSANDRA_HEAD)

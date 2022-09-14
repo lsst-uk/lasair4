@@ -16,6 +16,9 @@ from django.template.context_processors import csrf
 from django.http import HttpResponseRedirect, HttpResponse
 from django.shortcuts import render, get_object_or_404, redirect
 import settings
+from lasair.db_schema import get_schema, get_schema_dict, get_schema_for_query_selected
+from src import db_connect
+import re
 import sys
 sys.path.append('../common')
 
@@ -340,11 +343,6 @@ def coverage(request):
     return render(request, 'coverage.html', {'nid1': nid1, 'nid2': nid2, 'date1': date1, 'date2': date2})
 
 
-def get_schema(schema_name):
-    schema_package = importlib.import_module('schema.' + schema_name)
-    return schema_package.schema['fields']
-
-
 def schema(request):
     """schema
 
@@ -371,9 +369,28 @@ def streams(request, topic):
         data = open(settings.KAFKA_STREAMS + '/' + topic, 'r').read()
     except:
         return render(request, 'error.html', {'message': f'Cannot find log file for {topic}.'})
-    table = json.loads(data)['digest']
-    n = len(table)
-    return render(request, 'streams.html', {'topic': topic, 'n': n, 'table': table})
+    table = json.loads(data)['digest'][:100]
+    nalert = len(table)
+
+    regex = re.compile(r'lasair_(\d*)')
+    title = regex.sub("", topic, count=1)
+    mq_id = int(topic.replace('lasair_', '').replace(title, ''))
+
+    msl = db_connect.readonly()
+    cursor = msl.cursor(buffered=True, dictionary=True)
+    cursor.execute('SELECT name, selected, tables, conditions FROM myqueries WHERE mq_id=%d' % mq_id)
+    for row in cursor:
+        title = row['name']
+        selected = row['selected']
+        tables = row['tables']
+        conditions = row['conditions']
+
+    tableSchema = get_schema_for_query_selected(selected)
+    for k in table[0].keys():
+        if k not in tableSchema:
+            tableSchema[k] = "custom column"
+
+    return render(request, 'filter_detail.html', {'topic': topic, 'nalert': nalert, 'table': table, 'mq_id': mq_id, 'title': title, "schema": tableSchema})
 
 
 def annotators(request):

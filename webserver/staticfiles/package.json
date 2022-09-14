@@ -41,6 +41,7 @@
         "nouislider": "^15.2.0",
         "onscreen": "^1.4.0",
         "plotly.js": "^2.14.0",
+        "prismjs": "^1.29.0",
         "sass": "^1.47.0",
         "simplebar": "^5.3.4",
         "simple-datatables": "^3.2.2",

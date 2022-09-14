@@ -107,6 +107,34 @@ $gray-800: $lasair-black;
 
 $dark: $lasair-black;
 
+
+// Theme colors
+$theme-colors: (
+    "primary": $primary,
+    "secondary": $secondary,
+    "tertiary": $tertiary,
+    "success": $success,
+    "info": $info,
+    "warning": $warning,
+    "danger": $danger,
+    "dark": $dark,
+    "white": $white,
+    "indigo": $indigo,
+    "purple": $purple,
+    "yellow-100": $yellow-100,
+    "yellow-200": $yellow-200,
+    "gray-50": $gray-50,
+    "gray-100": $gray-100,
+    "gray-200": $gray-200,
+    "gray-300": $gray-300,
+    "gray-400": $gray-400,
+    "gray-500": $gray-500,
+    "gray-600": $gray-600,
+    "gray-700": $gray-700,
+    "gray-800": $gray-800,
+    "gray-900": $gray-900
+    ) !default;
+
 $component-active-bg: $tertiary;
 $component-active-color       : $white !default;
 $component-active-bg          : $tertiary !default;
@@ -134,4 +162,5 @@ $pagination-disabled-border-color: $gray-300 !default;
 // $primary: blue;
 $icon-size-xxs:         0.85rem; 
 
-
+$tooltip-color        : $white !default;
+$tooltip-bg           : $dark !default;

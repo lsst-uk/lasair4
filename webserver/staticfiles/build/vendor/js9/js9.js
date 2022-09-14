@@ -11051,7 +11051,7 @@ var JS9 = (function() {
         }
         // sanity check
         if ((width < 10) || (height < 10)) {
-            JS9.error(`invalid dimension(s) passed to display resize ${width}, ${height}`);
+            JS9.error("invalid dimension(s) passed to display resize");
         }
         // nothing to do if we are not changing size
         if ((width === this.width) && (height === this.height)) {

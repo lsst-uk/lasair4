@@ -1,79 +1,51 @@
-1{% extends "layouts/base.html" %}
+{% extends "layouts/base.html" %}
 {% load static %}
 {% block content %}
 
-    <div class="row">
-        <p>
-            A watchlist is a set of points in the sky, together with a radius in arcseconds. It is assumed to be a list of "interesting" sources, so that any transient that falls within the radius of one of the sources might indicate activity of that source. Each user of the Lasair system has their own set of watchlists, and can be alerted when a ZTF transient is coincident with a watchlist source.
-        </p></p>
-    An "Active" watchlist is one that is run every day, so that it is up to date with the
-    latest objects.
-    </p><p>
-        If you are logged in, you can <a href="{% url 'watchlist_catalogues_create' %}">create a watchlist</a>.
-    </p>
+    <div class="container">
 
-    <div class="col-xs-6">
-        <h3>My Watchlists</h3>
-        Your private watchlists are listed below. Click "Create new watchlist"
-        above to make a new one. Click on the name of the watchlist for more information and crossmatching.
-        <table class="table table-bordered" style="width:70%">
-            <thead>
-                <tr>
-                    <th style="width:10%">Name</th>
-                    <th class="width:70%">Description</th>
-                    <th class="width:5%">Number</th>
-                    <th class="width:5%">Radius</th>
-                    <th class="width:5%">Active</th>
-                    <th class="width:5%">Public</th>
-                    <th class="width:10%"></th>
-                </tr>
-            </thead>
-            {% for wl in my_watchlists %}
-                <tr><td><b><a href="{% url 'watchlist_catalogues_detail' wl.wl_id %}">{{ wl.name }}</a></b></td>
-                    <td>{{ wl.description }}</td>
-                    <td> {{ wl.number }} </td>
-                    <td> {{ wl.radius }} arcsec </td>
-                    <td> {% if wl.active == 1 %}&#x2714;{% endif %} </td>
-                    <td> {% if wl.public == 1 %}&#x2714;{% endif %} </td>
+        <div class="row mt-4">
 
-                    <td><form method="POST"  action="{% url 'watchlist_catalogues' %}">
-                        {% csrf_token %}
-                        <input type="hidden" name="delete" value="{{ wl.wl_id }}">
-                        <input type="submit" value="(delete)">
-                    </form>
+            <div class="col-12  mb-4">
+                <div class="card border-0 shadow h-100">
+                    <div class="card-body">
+                        <div class="row d-block d-xl-flex align-items-start">
+                            <div class="col-4 col-xl-1 text-xl-center mb-3 mb-xl-0 d-flex align-items-center justify-content-xl-start">
+                                <div class="icon-shape icon-shape-primary rounded me-1 me-sm-0">
 
-                    </td></tr>
-            {% endfor %}
-        </table>
-    </div>
+                                    <svg class="w-6 h-6" fill="currentColor" stroke="currentColor"  stroke-linecap="round" stroke-linejoin="round" stroke-width="1" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
 
-    </div>
+                                        <path d="M9 2a1 1 0 000 2h2a1 1 0 100-2H9z"></path><path fill-rule="evenodd" d="M4 5a2 2 0 012-2 3 3 0 003 3h2a3 3 0 003-3 2 2 0 012 2v11a2 2 0 01-2 2H6a2 2 0 01-2-2V5zm3 4a1 1 0 000 2h.01a1 1 0 100-2H7zm3 0a1 1 0 000 2h3a1 1 0 100-2h-3zm-3 4a1 1 0 100 2h.01a1 1 0 100-2H7zm3 0a1 1 0 100 2h3a1 1 0 100-2h-3z" clip-rule="evenodd"></path></svg>
+                                </div>
+                            </div>
+                            <div class="col-12 col-xl-10 px-xl-0">
+                                <div class="d-block">
 
-    <div class="row">
-        <div class="col-xs-6">
-            <h3>Public Watchlists</h3>
-            Watchlists created and made public are listed below. Click on the name of
-            the watchlist for more information and crossmatching.
-            <table class="table table-bordered" style="width:80%">
-                <thead>
-                    <tr>
-                        <th style="width:20%">Name</th>
-                        <th style="width:20%">Owner</th>
-                        <th class="width:60%">Description</th>
-                        <th class="width:5%">Radius</th>
-                        <th class="width:3%">Active</th>
-                    </tr>
-                </thead>
-                {% for wl in other_watchlists %}
-                    <tr><td><b><a href="{% url 'watchlist_catalogues_detail' wl.wl_id %}">{{ wl.name }}</a></b></td>
-                        <td>{{ wl.user.first_name }} {{ wl.user.last_name }}</td>
-                        <td>{{ wl.description }}</td>
-                        <td> {{ wl.radius }} arcsec </td>
-                        <td> {% if wl.active == 1 %}&#x2714;{% endif %} </td>
-                    </tr>
-                {% endfor %}
-            </table>
+                                    <h3 class="fw-extrabold mb-2">Catalogue Watchlists</h3>
+                                </div>
+                                <small class="text-gray-500">
+                                    A catalogue based watchlist is generated from a set of points in the sky, together with an association radius. Each transient falling within an association radius of a watchlist source is flagged as <em>matched</em> against that watchlist.
+                                </small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
         </div>
+
+        <div class="col-12 mb-4">
+            {% include "includes/widget_watchlist_catalogues_table.html" with type="public" position="auto" %}
+        </div>
+
+        {% if user.is_authenticated %}
+            <div class="col-12 mb-4">
+                {% include "includes/widget_watchlist_catalogues_table.html" with type="my" position="auto" %}
+            </div>
+        {% endif %}
+
     </div>
+
+
 
 {% endblock %}

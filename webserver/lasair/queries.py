@@ -9,6 +9,7 @@ from lasair.topic_name import topic_name
 from lasair.query_builder import check_query, build_query
 from lasair.models import Watchlists, Areas, Annotators
 from lasair.models import Myqueries
+from lasair.db_schema import get_schema, get_schema_dict, get_schema_for_query_selected
 from django.contrib.auth.models import User
 from django.db.models import Q
 from django.http import HttpResponse
@@ -123,11 +124,6 @@ def delete_stream_file(request, query_name):
     filename = settings.KAFKA_STREAMS + topic
     if os.path.exists(filename):
         os.remove(filename)
-
-
-def get_schema(schema_name):
-    schema_package = importlib.import_module('schema.' + schema_name)
-    return schema_package.schema['fields']
 
 
 def handle_myquery(request, mq_id=None):
@@ -369,7 +365,7 @@ def record_query(request, query):
 
 
 def runquery_db(request, mq_id):
-    msl = db.connect.readonly()
+    msl = db_connect.readonly()
     cursor = msl.cursor(buffered=True, dictionary=True)
     cursor.execute('SELECT name, selected, tables, conditions FROM myqueries WHERE mq_id=%d' % mq_id)
     for row in cursor:
@@ -441,23 +437,31 @@ def runquery(request, mq_id, query_name, selected, tables, conditions, limit, of
     msl = db_connect.readonly()
     cursor = msl.cursor(buffered=True, dictionary=True)
 
+    topic = topic_name(mq_id, query_name)
+
     try:
         cursor.execute(sqlquery_limit)
     except Exception as e:
         message = 'Your query:<br/><b>' + sqlquery_limit + '</b><br/>returned the error<br/><i>' + str(e) + '</i>'
         return render(request, 'error.html', {'message': message})
 
-    queryset = []
+    table = []
     for row in cursor:
-        queryset.append(row)
+        table.append(row)
         nalert += 1
 
+    tableSchema = get_schema_for_query_selected(selected)
+    for k in table[0].keys():
+        if k not in tableSchema:
+            tableSchema[k] = "custom column"
+
     if json_checked:
-        return HttpResponse(json.dumps(queryset, indent=2), content_type="application/json")
+        return HttpResponse(json.dumps(table, indent=2), content_type="application/json")
     else:
-        return render(request, 'runquery.html',
-                      {'table': queryset, 'nalert': nalert,
-                       'query_name': query_name,
+        return render(request, 'filter_detail.html',
+                      {'table': table, 'nalert': nalert,
+                       'topic': topic,
+                       'title': query_name,
                        'mq_id': mq_id,
                        'selected': selected,
                        'tables': tables,
@@ -465,4 +469,5 @@ def runquery(request, mq_id, query_name, selected, tables, conditions, limit, of
                        'nalert': nalert,
                        'ps': offset, 'pe': offset + nalert,
                        'limit': limit, 'offset': offset,
-                       'message': message})
+                       'message': message,
+                       "schema": tableSchema})

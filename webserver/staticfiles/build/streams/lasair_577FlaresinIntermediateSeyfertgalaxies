@@ -1,0 +1,16 @@
+{
+  "last_entry": "2022-07-31 06:15:49",
+  "last_email": "2022-07-31 06:15:49",
+  "digest": [
+    {
+      "objectId": "ZTF19aavojzs",
+      "mjdmin": 59762.32081020018,
+      "mjdmax": 59791.24719909998,
+      "magrmin": 19.359,
+      "rmag": 19.4171,
+      "classification": "AGN",
+      "N_obs_14_day": 6,
+      "UTC": "2022-07-31 06:15:49"
+    }
+  ]
+}

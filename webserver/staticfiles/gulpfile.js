@@ -119,7 +119,8 @@ gulp.task('concat:vendor:css', function() {
             paths.src.node_modules + '/notyf/notyf.min.css',
             paths.src.node_modules + '/js9/js9support.css',
             paths.src.node_modules + '/js9/js9.css',
-            paths.src.vendor + '/aladin.min.css'
+            paths.src.vendor + '/aladin.min.css',
+            paths.src.vendor + '/prism.css'
         ])
         .pipe(sourcemaps.init())
         .pipe(cleanCss())
@@ -132,6 +133,8 @@ gulp.task('concat:vendor:css', function() {
 gulp.task('concat:dist:js', function() {
     return gulp.src([
             paths.src.js + '/volt.js',
+            paths.src.js + '/lasair_datatables.js',
+            paths.src.js + '/lasair_fixes.js',
             paths.src.js + '/lasair_lightcurve.js',
             paths.src.js + '/lasair_lightcurve_apparent.js',
             paths.src.js + '/lasair_js9.js',
@@ -166,6 +169,7 @@ gulp.task('concat:vendor:js', function() {
             paths.src.node_modules + '/plotly.js/dist/plotly.min.js',
             paths.src.node_modules + '/jquery/dist/jquery.min.js',
             paths.src.vendor + '/aladin.min.js',
+            paths.src.vendor + '/prism.js'
 
         ])
         .pipe(sourcemaps.init())
@@ -220,7 +224,7 @@ gulp.task('copy:dist:vendor', function() {
 });
 
 gulp.task('serve', gulp.series('copy:dist:css', 'copy:dist:files', 'copy:dist:img', 'concat:dist:js', function() {
-    gulp.watch([paths.src.scss + '/volt/**/*.scss', paths.src.scss + '/custom/*.scss', paths.src.scss + '/volt.scss'], gulp.series('copy:dist:css'));
+    gulp.watch([paths.src.scss + '/volt/**/*.scss', paths.src.scss + '/custom/*.scss', paths.src.scss + '/custom/**/*.scss', paths.src.scss + '/volt.scss'], gulp.series('copy:dist:css'));
     gulp.watch([paths.src.files], gulp.series('copy:dist:files'));
     gulp.watch([paths.src.img], gulp.series('copy:dist:img'));
     gulp.watch([paths.src.js], gulp.series('concat:dist:js'));
