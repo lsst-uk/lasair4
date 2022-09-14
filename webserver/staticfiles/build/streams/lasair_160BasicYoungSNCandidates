@@ -1,0 +1,7122 @@
+{
+  "last_entry": "2022-08-02 07:13:17",
+  "last_email": "2022-08-02 06:44:10",
+  "digest": [
+    {
+      "objectId": "ZTF21acbzkrf",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 0.08035880280658603,
+      "UTC": "2022-08-02 07:13:17"
+    },
+    {
+      "objectId": "ZTF22aaybwtp",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 0.054699096363037825,
+      "UTC": "2022-08-02 06:44:10"
+    },
+    {
+      "objectId": "ZTF22aaxlagl",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 1.9657407030463219,
+      "UTC": "2022-07-31 04:35:20"
+    },
+    {
+      "objectId": "ZTF22aaxypdx",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 1.9502083552069962,
+      "UTC": "2022-07-30 09:49:51"
+    },
+    {
+      "objectId": "ZTF21abwlces",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 0.01319446973502636,
+      "UTC": "2022-07-30 09:22:08"
+    },
+    {
+      "objectId": "ZTF22aaxgujq",
+      "sherlock_z": 0.02,
+      "days_since_first_det": 1.9467129847034812,
+      "UTC": "2022-07-30 07:58:10"
+    },
+    {
+      "objectId": "ZTF22aaxtysg",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 0.02431709598749876,
+      "UTC": "2022-07-30 07:26:28"
+    },
+    {
+      "objectId": "ZTF22aaxcztf",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 1.9934143810532987,
+      "UTC": "2022-07-30 06:23:44"
+    },
+    {
+      "objectId": "ZTF22aaxcztf",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 1.9504629918374121,
+      "UTC": "2022-07-30 05:21:53"
+    },
+    {
+      "objectId": "ZTF22aagzzbn",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 0.015821807086467743,
+      "UTC": "2022-07-29 11:53:34"
+    },
+    {
+      "objectId": "ZTF21ackzhum",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 0.038761592004448175,
+      "UTC": "2022-07-29 09:10:29"
+    },
+    {
+      "objectId": "ZTF22aaxnxer",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 0.030300951097160578,
+      "UTC": "2022-07-29 08:49:37"
+    },
+    {
+      "objectId": "ZTF22aaxcztf",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 1.0324421590194106,
+      "UTC": "2022-07-29 07:19:56"
+    },
+    {
+      "objectId": "ZTF22aaxcztf",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 0.9938079002313316,
+      "UTC": "2022-07-29 06:24:18"
+    },
+    {
+      "objectId": "ZTF22aaxlhpl",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 0.012210669927299023,
+      "UTC": "2022-07-29 06:02:20"
+    },
+    {
+      "objectId": "ZTF21abmemav",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 0.04118058504536748,
+      "UTC": "2022-07-29 05:20:13"
+    },
+    {
+      "objectId": "ZTF22aawtunt",
+      "sherlock_z": 0.06,
+      "days_since_first_det": 1.9720486588776112,
+      "UTC": "2022-07-29 05:16:11"
+    },
+    {
+      "objectId": "ZTF22aawtwfl",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 1.9734837622381747,
+      "UTC": "2022-07-29 04:52:43"
+    },
+    {
+      "objectId": "ZTF22aawtxek",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 1.9734837622381747,
+      "UTC": "2022-07-29 04:52:43"
+    },
+    {
+      "objectId": "ZTF22aaxjuvd",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 0.01631947699934244,
+      "UTC": "2022-07-28 12:05:48"
+    },
+    {
+      "objectId": "ZTF22aawqkai",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 1.9794213138520718,
+      "UTC": "2022-07-28 10:45:02"
+    },
+    {
+      "objectId": "ZTF21abavxki",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 0.05552086606621742,
+      "UTC": "2022-07-28 07:51:45"
+    },
+    {
+      "objectId": "ZTF22aaxcztf",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 0.05194447422400117,
+      "UTC": "2022-07-28 07:48:01"
+    },
+    {
+      "objectId": "ZTF22aawhiyc",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 1.9833102179691195,
+      "UTC": "2022-07-28 04:37:46"
+    },
+    {
+      "objectId": "ZTF22aapkjef",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 0.03067129570990801,
+      "UTC": "2022-07-27 11:06:58"
+    },
+    {
+      "objectId": "ZTF22aaxaduq",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 0.03067129570990801,
+      "UTC": "2022-07-27 11:06:58"
+    },
+    {
+      "objectId": "ZTF22aawzunz",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 0.0286574000492692,
+      "UTC": "2022-07-27 10:48:54"
+    },
+    {
+      "objectId": "ZTF22aawzuwg",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 0.0286574000492692,
+      "UTC": "2022-07-27 10:48:54"
+    },
+    {
+      "objectId": "ZTF22aawzvud",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 0.0286574000492692,
+      "UTC": "2022-07-27 10:48:54"
+    },
+    {
+      "objectId": "ZTF22aaxaezo",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 1.9876041850075126,
+      "UTC": "2022-07-27 10:37:01"
+    },
+    {
+      "objectId": "ZTF22aawetbp",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 1.9897916880436242,
+      "UTC": "2022-07-27 10:17:36"
+    },
+    {
+      "objectId": "ZTF22aawetsg",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 1.9897916880436242,
+      "UTC": "2022-07-27 10:17:36"
+    },
+    {
+      "objectId": "ZTF22aaweukv",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 1.9897801140323281,
+      "UTC": "2022-07-27 10:17:35"
+    },
+    {
+      "objectId": "ZTF22aawcmcr",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 1.9946990772150457,
+      "UTC": "2022-07-27 09:04:54"
+    },
+    {
+      "objectId": "ZTF22aawavtx",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 1.988657447975129,
+      "UTC": "2022-07-27 08:04:14"
+    },
+    {
+      "objectId": "ZTF22aawavtx",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 1.93302087392658,
+      "UTC": "2022-07-27 06:44:07"
+    },
+    {
+      "objectId": "ZTF22aavxkto",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 1.9953819219954312,
+      "UTC": "2022-07-27 04:56:36"
+    },
+    {
+      "objectId": "ZTF22aawqxzb",
+      "sherlock_z": 0.56,
+      "days_since_first_det": 0.01575234392657876,
+      "UTC": "2022-07-26 11:48:24"
+    },
+    {
+      "objectId": "ZTF22aawqntm",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 0.014548658858984709,
+      "UTC": "2022-07-26 11:43:11"
+    },
+    {
+      "objectId": "ZTF22aawdqfp",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 1.9667360773310065,
+      "UTC": "2022-07-26 10:05:12"
+    },
+    {
+      "objectId": "ZTF22aawavtx",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 0.0592823619954288,
+      "UTC": "2022-07-26 09:02:55"
+    },
+    {
+      "objectId": "ZTF22aavqlzi",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 1.9733101879246533,
+      "UTC": "2022-07-26 07:24:48"
+    },
+    {
+      "objectId": "ZTF22aavpkwo",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 1.9916087738238275,
+      "UTC": "2022-07-26 07:04:49"
+    },
+    {
+      "objectId": "ZTF22aavobvq",
+      "sherlock_z": 0.02,
+      "days_since_first_det": 1.9928009398281574,
+      "UTC": "2022-07-26 05:57:01"
+    },
+    {
+      "objectId": "ZTF22aawigwq",
+      "sherlock_z": 0.08,
+      "days_since_first_det": 0.03552083997055888,
+      "UTC": "2022-07-26 05:57:01"
+    },
+    {
+      "objectId": "ZTF22aawetbp",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 0.4228125219233334,
+      "UTC": "2022-07-25 20:41:09"
+    },
+    {
+      "objectId": "ZTF22aawcmcr",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 0.47668981831520796,
+      "UTC": "2022-07-25 20:38:58"
+    },
+    {
+      "objectId": "ZTF22aawetsg",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 0.41954863304272294,
+      "UTC": "2022-07-25 20:36:27"
+    },
+    {
+      "objectId": "ZTF22aaweukv",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 0.4171875221654773,
+      "UTC": "2022-07-25 20:33:03"
+    },
+    {
+      "objectId": "ZTF22aavdxrk",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 0.07438654405996203,
+      "UTC": "2022-07-23 09:51:24"
+    },
+    {
+      "objectId": "ZTF22aammepu",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 1.9766551218926907,
+      "UTC": "2022-07-23 07:49:51"
+    },
+    {
+      "objectId": "ZTF22aavbfhz",
+      "sherlock_z": 0.03,
+      "days_since_first_det": 0.058946711011230946,
+      "UTC": "2022-07-22 11:32:21"
+    },
+    {
+      "objectId": "ZTF22aavakpj",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 0.04335648799315095,
+      "UTC": "2022-07-22 11:21:30"
+    },
+    {
+      "objectId": "ZTF22aaudjgc",
+      "sherlock_z": 0.03,
+      "days_since_first_det": 0.09280093992128968,
+      "UTC": "2022-07-22 09:53:16"
+    },
+    {
+      "objectId": "ZTF22aausnwr",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 1.9666666919365525,
+      "UTC": "2022-07-22 09:45:08"
+    },
+    {
+      "objectId": "ZTF22aauxpfb",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 0.13325229194015265,
+      "UTC": "2022-07-22 09:45:08"
+    },
+    {
+      "objectId": "ZTF22aauvfay",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 0.09578700317069888,
+      "UTC": "2022-07-22 09:37:17"
+    },
+    {
+      "objectId": "ZTF22aauizen",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 0.07083333330228925,
+      "UTC": "2022-07-22 09:29:06"
+    },
+    {
+      "objectId": "ZTF22aaujonx",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 0.07151619577780366,
+      "UTC": "2022-07-22 09:17:10"
+    },
+    {
+      "objectId": "ZTF22aauvidu",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 0.07151619577780366,
+      "UTC": "2022-07-22 09:17:10"
+    },
+    {
+      "objectId": "ZTF22aauxutt",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 0.07925927359610796,
+      "UTC": "2022-07-22 08:56:52"
+    },
+    {
+      "objectId": "ZTF22aauuxul",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 0.094039355404675,
+      "UTC": "2022-07-22 07:02:54"
+    },
+    {
+      "objectId": "ZTF22aatxwjn",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 0.058344859164208174,
+      "UTC": "2022-07-22 06:12:53"
+    },
+    {
+      "objectId": "ZTF22aauxhdm",
+      "sherlock_z": 0.03,
+      "days_since_first_det": 1.9909259481355548,
+      "UTC": "2022-07-22 06:09:02"
+    },
+    {
+      "objectId": "ZTF22aaudmvw",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 1.9724768144078553,
+      "UTC": "2022-07-21 09:30:20"
+    },
+    {
+      "objectId": "ZTF22aauuflb",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 0.0945717548020184,
+      "UTC": "2022-07-21 08:55:51"
+    },
+    {
+      "objectId": "ZTF22aaudftc",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 1.9304282288067043,
+      "UTC": "2022-07-21 08:51:49"
+    },
+    {
+      "objectId": "ZTF22aauiabm",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 1.9764004396274686,
+      "UTC": "2022-07-21 06:58:13"
+    },
+    {
+      "objectId": "ZTF22aausixa",
+      "sherlock_z": 0.03,
+      "days_since_first_det": 0.05254629999399185,
+      "UTC": "2022-07-20 11:22:12"
+    },
+    {
+      "objectId": "ZTF22aausjcd",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 0.04498843988403678,
+      "UTC": "2022-07-20 11:14:43"
+    },
+    {
+      "objectId": "ZTF22aaudeny",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 1.9837963180616498,
+      "UTC": "2022-07-20 09:27:34"
+    },
+    {
+      "objectId": "ZTF22aaujqll",
+      "sherlock_z": 0.08,
+      "days_since_first_det": 0.05077543994411826,
+      "UTC": "2022-07-19 11:15:37"
+    },
+    {
+      "objectId": "ZTF22aaudmvw",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 0.035312462132424116,
+      "UTC": "2022-07-19 11:00:49"
+    },
+    {
+      "objectId": "ZTF22aaucozn",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 0.07000004407018423,
+      "UTC": "2022-07-19 07:58:54"
+    },
+    {
+      "objectId": "ZTF22aauhzre",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 0.0121643440797925,
+      "UTC": "2022-07-19 07:58:54"
+    },
+    {
+      "objectId": "ZTF22aatxmkk",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 0.03820606227964163,
+      "UTC": "2022-07-19 05:21:31"
+    },
+    {
+      "objectId": "ZTF22aatwwfb",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 1.994236099999398,
+      "UTC": "2022-07-19 04:41:42"
+    },
+    {
+      "objectId": "ZTF22aaagrqi",
+      "sherlock_z": 0.02,
+      "days_since_first_det": 0.04432871099561453,
+      "UTC": "2022-07-18 11:17:30"
+    },
+    {
+      "objectId": "ZTF22aaptzsd",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 0.04097221093252301,
+      "UTC": "2022-07-18 11:17:30"
+    },
+    {
+      "objectId": "ZTF22aauexsq",
+      "sherlock_z": 0.03,
+      "days_since_first_det": 0.04097221093252301,
+      "UTC": "2022-07-18 11:17:30"
+    },
+    {
+      "objectId": "ZTF22aatuzht",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 0.011377343907952309,
+      "UTC": "2022-07-18 10:31:27"
+    },
+    {
+      "objectId": "ZTF22aatrbvj",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 1.025891199707985,
+      "UTC": "2022-07-16 11:49:39"
+    },
+    {
+      "objectId": "ZTF22aatrbvj",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 1.0209490698762238,
+      "UTC": "2022-07-16 11:42:32"
+    },
+    {
+      "objectId": "ZTF22aatrbvj",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 1.0160185140557587,
+      "UTC": "2022-07-16 11:35:26"
+    },
+    {
+      "objectId": "ZTF22aatkeyf",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 1.9922106182202697,
+      "UTC": "2022-07-16 10:57:34"
+    },
+    {
+      "objectId": "ZTF22aatvdon",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 0.04171291785314679,
+      "UTC": "2022-07-16 10:57:34"
+    },
+    {
+      "objectId": "ZTF22aatkeyf",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 1.9554976550862193,
+      "UTC": "2022-07-16 10:04:42"
+    },
+    {
+      "objectId": "ZTF22aativsd",
+      "sherlock_z": 0.02,
+      "days_since_first_det": 1.9943055370822549,
+      "UTC": "2022-07-16 09:41:11"
+    },
+    {
+      "objectId": "ZTF22aatrbvj",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 0.8880208288319409,
+      "UTC": "2022-07-16 08:31:07"
+    },
+    {
+      "objectId": "ZTF22aaenewf",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 1.873854132834822,
+      "UTC": "2022-07-16 08:26:06"
+    },
+    {
+      "objectId": "ZTF22aatrbvj",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 0.8845370328053832,
+      "UTC": "2022-07-16 08:26:06"
+    },
+    {
+      "objectId": "ZTF22aatrbvj",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 0.8825925877317786,
+      "UTC": "2022-07-16 08:23:18"
+    },
+    {
+      "objectId": "ZTF22aatixbc",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 0.9334953250363469,
+      "UTC": "2022-07-16 08:21:17"
+    },
+    {
+      "objectId": "ZTF22aatrbvj",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 0.8807754586450756,
+      "UTC": "2022-07-16 08:20:41"
+    },
+    {
+      "objectId": "ZTF22aatkhta",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 1.8710416397079825,
+      "UTC": "2022-07-16 08:15:37"
+    },
+    {
+      "objectId": "ZTF22aatlhor",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 1.130879633128643,
+      "UTC": "2022-07-16 07:37:30"
+    },
+    {
+      "objectId": "ZTF21abahlgo",
+      "sherlock_z": 0.06,
+      "days_since_first_det": 1.1074421219527721,
+      "UTC": "2022-07-16 07:28:42"
+    },
+    {
+      "objectId": "ZTF22aatgiuw",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 1.0469212480820715,
+      "UTC": "2022-07-14 11:25:23"
+    },
+    {
+      "objectId": "ZTF22aativsd",
+      "sherlock_z": 0.02,
+      "days_since_first_det": 0.05376155488193035,
+      "UTC": "2022-07-14 11:06:48"
+    },
+    {
+      "objectId": "ZTF22aatgiuw",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 1.0106249507516623,
+      "UTC": "2022-07-14 10:33:07"
+    },
+    {
+      "objectId": "ZTF22aatcpoo",
+      "sherlock_z": 0.02,
+      "days_since_first_det": 1.9653587737120688,
+      "UTC": "2022-07-14 09:20:43"
+    },
+    {
+      "objectId": "ZTF22aatbjir",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 1.9790856181643903,
+      "UTC": "2022-07-14 07:55:19"
+    },
+    {
+      "objectId": "ZTF22aasycgf",
+      "sherlock_z": 0.02,
+      "days_since_first_det": 1.9750810251571238,
+      "UTC": "2022-07-14 07:50:14"
+    },
+    {
+      "objectId": "ZTF22aatcpoo",
+      "sherlock_z": 0.02,
+      "days_since_first_det": 1.887291643768549,
+      "UTC": "2022-07-14 07:28:18"
+    },
+    {
+      "objectId": "ZTF21aaayrxe",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 0.06564811803400517,
+      "UTC": "2022-07-14 06:58:37"
+    },
+    {
+      "objectId": "ZTF22aathzpd",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 0.051608792040497065,
+      "UTC": "2022-07-14 06:18:08"
+    },
+    {
+      "objectId": "ZTF22aasxnjm",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 1.9894444509409368,
+      "UTC": "2022-07-13 06:18:52"
+    },
+    {
+      "objectId": "ZTF22aasyada",
+      "sherlock_z": 0.07,
+      "days_since_first_det": 1.920787051320076,
+      "UTC": "2022-07-13 06:18:52"
+    },
+    {
+      "objectId": "ZTF22aataizc",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 0.031203721649944782,
+      "UTC": "2022-07-13 05:56:54"
+    },
+    {
+      "objectId": "ZTF22aarycqo",
+      "sherlock_z": 0.02,
+      "days_since_first_det": 0.06403936166316271,
+      "UTC": "2022-07-12 11:01:43"
+    },
+    {
+      "objectId": "ZTF22aatbjir",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 0.10086802486330271,
+      "UTC": "2022-07-12 10:50:41"
+    },
+    {
+      "objectId": "ZTF22aasxakz",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 1.9921875139698386,
+      "UTC": "2022-07-12 10:46:50"
+    },
+    {
+      "objectId": "ZTF22aasycgf",
+      "sherlock_z": 0.02,
+      "days_since_first_det": 0.09771991381421685,
+      "UTC": "2022-07-12 10:46:50"
+    },
+    {
+      "objectId": "ZTF22aasvuof",
+      "sherlock_z": 0.04,
+      "days_since_first_det": 0.053391202818602324,
+      "UTC": "2022-07-12 10:21:50"
+    },
+    {
+      "objectId": "ZTF22aaswdsf",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 1.9887268249876797,
+      "UTC": "2022-07-12 09:42:17"
+    },
+    {
+      "objectId": "ZTF22aasxgjp",
+      "sherlock_z": 0.01,
+      "days_since_first_det": 0.046400428749620914,
+      "UTC": "2022-07-12 06:02:10"
+    },
+    {
+      "objectId": "ZTF22aasthrj",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 1.9750462588854134,
+      "UTC": "2022-07-11 09:33:08"
+    },
+    {
+      "objectId": "ZTF22aasxnjm",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 0.0731828766874969,
+      "UTC": "2022-07-11 08:19:27"
+    },
+    {
+      "objectId": "ZTF22aaslyzf",
+      "sherlock_z": 0.03,
+      "days_since_first_det": 1.9956597071141005,
+      "UTC": "2022-07-11 07:50:07"
+    },
+    {
+      "objectId": "ZTF22aaslyzf",
+      "sherlock_z": 0.03,
+      "days_since_first_det": 1.9571180399507284,
+      "UTC": "2022-07-11 06:54:37"
+    },
+    {
+      "objectId": "ZTF22aabdioi",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 1.0226504588499665,
+      "UTC": "2022-07-10 11:41:23"
+    },
+    {
+      "objectId": "ZTF22aaptzap",
+      "sherlock_z": 0.02,
+      "days_since_first_det": 0.09981482522562146,
+      "UTC": "2022-07-10 11:18:35"
+    },
+    {
+      "objectId": "ZTF22aasoyhl",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 1.9714698698371649,
+      "UTC": "2022-07-10 09:07:17"
+    },
+    {
+      "objectId": "ZTF22aamhens",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 1.9695833697915077,
+      "UTC": "2022-07-10 09:07:17"
+    },
+    {
+      "objectId": "ZTF22aarujcp",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 1.9306481028907,
+      "UTC": "2022-07-10 05:12:14"
+    },
+    {
+      "objectId": "ZTF22aaslyzj",
+      "sherlock_z": 0.09,
+      "days_since_first_det": 1.947361137252301,
+      "UTC": "2022-07-10 04:50:29"
+    },
+    {
+      "objectId": "ZTF22aastzio",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 1.0110069741494954,
+      "UTC": "2022-07-09 11:26:43"
+    },
+    {
+      "objectId": "ZTF21abgxtua",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 0.06151620019227266,
+      "UTC": "2022-07-09 08:31:39"
+    },
+    {
+      "objectId": "ZTF22aanvuvq",
+      "sherlock_z": 0.06,
+      "days_since_first_det": 0.08434025105088949,
+      "UTC": "2022-07-08 11:53:13"
+    },
+    {
+      "objectId": "ZTF22aasqdqb",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 0.00960645079612732,
+      "UTC": "2022-07-08 11:38:22"
+    },
+    {
+      "objectId": "ZTF22aasolik",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 0.08524309191852808,
+      "UTC": "2022-07-08 11:17:23"
+    },
+    {
+      "objectId": "ZTF22aasolik",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 0.08440975891426206,
+      "UTC": "2022-07-08 11:16:11"
+    },
+    {
+      "objectId": "ZTF22aasojye",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 0.08086803695186973,
+      "UTC": "2022-07-08 11:12:33"
+    },
+    {
+      "objectId": "ZTF22aasoyhl",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 0.05844903690740466,
+      "UTC": "2022-07-08 11:12:33"
+    },
+    {
+      "objectId": "ZTF22aasoxwu",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 0.05253475904464722,
+      "UTC": "2022-07-08 11:05:23"
+    },
+    {
+      "objectId": "ZTF22aamhens",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 0.05136577691882849,
+      "UTC": "2022-07-08 11:05:03"
+    },
+    {
+      "objectId": "ZTF22aasolik",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 0.0337268877774477,
+      "UTC": "2022-07-08 10:03:12"
+    },
+    {
+      "objectId": "ZTF22aasmlyn",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 0.06115742912515998,
+      "UTC": "2022-07-08 08:01:25"
+    },
+    {
+      "objectId": "ZTF22aasluwn",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 0.07434027409180999,
+      "UTC": "2022-07-08 06:18:01"
+    },
+    {
+      "objectId": "ZTF22aasjwqv",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 0.050624999683350325,
+      "UTC": "2022-07-06 10:43:30"
+    },
+    {
+      "objectId": "ZTF22aasjcom",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 0.012083295732736588,
+      "UTC": "2022-07-06 09:18:31"
+    },
+    {
+      "objectId": "ZTF22aashrtn",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 0.02351848827674985,
+      "UTC": "2022-07-06 08:30:03"
+    },
+    {
+      "objectId": "ZTF22aashqrd",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 0.023043988272547722,
+      "UTC": "2022-07-06 08:30:03"
+    },
+    {
+      "objectId": "ZTF22aarvnwu",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 1.9722337699495256,
+      "UTC": "2022-07-06 06:49:35"
+    },
+    {
+      "objectId": "ZTF22aasdqlq",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 0.04289352474734187,
+      "UTC": "2022-07-05 11:11:50"
+    },
+    {
+      "objectId": "ZTF22aaombcw",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 0.036215325351804495,
+      "UTC": "2022-07-05 11:07:47"
+    },
+    {
+      "objectId": "ZTF21abulpnc",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 0.03821761067956686,
+      "UTC": "2022-07-05 11:07:09"
+    },
+    {
+      "objectId": "ZTF22aartmuz",
+      "sherlock_z": 0.07,
+      "days_since_first_det": 1.9926157440058887,
+      "UTC": "2022-07-05 10:38:12"
+    },
+    {
+      "objectId": "ZTF21abjjyoy",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 1.9908565222285688,
+      "UTC": "2022-07-05 10:19:15"
+    },
+    {
+      "objectId": "ZTF22aartgwb",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 1.9908565222285688,
+      "UTC": "2022-07-05 10:19:15"
+    },
+    {
+      "objectId": "ZTF22aarzucr",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 1.9717245739884675,
+      "UTC": "2022-07-05 06:24:19"
+    },
+    {
+      "objectId": "ZTF22aartvjh",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 1.0150809921324253,
+      "UTC": "2022-07-04 11:48:26"
+    },
+    {
+      "objectId": "ZTF22aartvjs",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 1.0150809921324253,
+      "UTC": "2022-07-04 11:48:26"
+    },
+    {
+      "objectId": "ZTF22aartvjh",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 1.012141177430749,
+      "UTC": "2022-07-04 11:44:12"
+    },
+    {
+      "objectId": "ZTF22aartvjs",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 1.012141177430749,
+      "UTC": "2022-07-04 11:44:12"
+    },
+    {
+      "objectId": "ZTF22aartvjh",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 1.009259233251214,
+      "UTC": "2022-07-04 11:40:03"
+    },
+    {
+      "objectId": "ZTF22aartvjs",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 1.009259233251214,
+      "UTC": "2022-07-04 11:40:03"
+    },
+    {
+      "objectId": "ZTF21acdgvlb",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 1.0102430619299412,
+      "UTC": "2022-07-04 11:33:40"
+    },
+    {
+      "objectId": "ZTF22aarynrs",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 0.02015046216547489,
+      "UTC": "2022-07-04 11:33:40"
+    },
+    {
+      "objectId": "ZTF22aarynsk",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 0.02015046216547489,
+      "UTC": "2022-07-04 11:33:40"
+    },
+    {
+      "objectId": "ZTF22aaryody",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 0.02015046216547489,
+      "UTC": "2022-07-04 11:33:40"
+    },
+    {
+      "objectId": "ZTF21abtnxfy",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 1.0148148029111326,
+      "UTC": "2022-07-04 11:29:20"
+    },
+    {
+      "objectId": "ZTF22aarynrs",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 0.017141202930361032,
+      "UTC": "2022-07-04 11:29:20"
+    },
+    {
+      "objectId": "ZTF22aarynsk",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 0.017141202930361032,
+      "UTC": "2022-07-04 11:29:20"
+    },
+    {
+      "objectId": "ZTF22aaryody",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 0.017141202930361032,
+      "UTC": "2022-07-04 11:29:20"
+    },
+    {
+      "objectId": "ZTF22aarynrs",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 0.01465277699753642,
+      "UTC": "2022-07-04 11:25:45"
+    },
+    {
+      "objectId": "ZTF22aarynsk",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 0.01465277699753642,
+      "UTC": "2022-07-04 11:25:45"
+    },
+    {
+      "objectId": "ZTF22aaryody",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 0.01465277699753642,
+      "UTC": "2022-07-04 11:25:45"
+    },
+    {
+      "objectId": "ZTF22aarwwyy",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 0.05664356565102935,
+      "UTC": "2022-07-04 10:41:51"
+    },
+    {
+      "objectId": "ZTF22aabhfzy",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 0.055497684981673956,
+      "UTC": "2022-07-04 10:37:28"
+    },
+    {
+      "objectId": "ZTF22aaombjf",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 0.055497684981673956,
+      "UTC": "2022-07-04 10:37:28"
+    },
+    {
+      "objectId": "ZTF22aarwpcf",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 0.0448494921438396,
+      "UTC": "2022-07-04 10:06:17"
+    },
+    {
+      "objectId": "ZTF22aarvnwu",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 0.018819418270140886,
+      "UTC": "2022-07-04 07:56:40"
+    },
+    {
+      "objectId": "ZTF22aartvjs",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 0.018321732990443707,
+      "UTC": "2022-07-03 11:53:06"
+    },
+    {
+      "objectId": "ZTF22aartvjh",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 0.013113400433212519,
+      "UTC": "2022-07-03 11:45:36"
+    },
+    {
+      "objectId": "ZTF22aaagvdj",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 0.01789354393258691,
+      "UTC": "2022-07-03 11:34:27"
+    },
+    {
+      "objectId": "ZTF21abtnxfy",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 0.01564813731238246,
+      "UTC": "2022-07-03 11:30:32"
+    },
+    {
+      "objectId": "ZTF22aapubuy",
+      "sherlock_z": 0.01,
+      "days_since_first_det": 0.04001159220933914,
+      "UTC": "2022-07-03 11:22:20"
+    },
+    {
+      "objectId": "ZTF22aapubwl",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 0.04001159220933914,
+      "UTC": "2022-07-03 11:22:20"
+    },
+    {
+      "objectId": "ZTF22aaooldm",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 1.0347917070612311,
+      "UTC": "2022-07-03 11:14:52"
+    },
+    {
+      "objectId": "ZTF22aaptwzn",
+      "sherlock_z": 0.04,
+      "days_since_first_det": 0.03622680716216564,
+      "UTC": "2022-07-03 11:14:52"
+    },
+    {
+      "objectId": "ZTF22aartorg",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 0.010463006794452667,
+      "UTC": "2022-07-03 11:14:52"
+    },
+    {
+      "objectId": "ZTF22aartdru",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 0.02438660291954875,
+      "UTC": "2022-07-03 11:01:53"
+    },
+    {
+      "objectId": "ZTF22aaooldm",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 1.0123380031436682,
+      "UTC": "2022-07-03 10:42:32"
+    },
+    {
+      "objectId": "ZTF22aapucey",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 1.0104398028925061,
+      "UTC": "2022-07-03 10:42:32"
+    },
+    {
+      "objectId": "ZTF22aarqpev",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 0.07616901397705078,
+      "UTC": "2022-07-03 08:56:08"
+    },
+    {
+      "objectId": "ZTF22aaqzqzk",
+      "sherlock_z": 0.06,
+      "days_since_first_det": 0.06925922213122249,
+      "UTC": "2022-07-03 07:03:03"
+    },
+    {
+      "objectId": "ZTF22aaooldm",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 0.02494216989725828,
+      "UTC": "2022-07-02 11:00:41"
+    },
+    {
+      "objectId": "ZTF22aabhczm",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 0.055289311334490776,
+      "UTC": "2022-07-02 09:38:03"
+    },
+    {
+      "objectId": "ZTF22aarlppe",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 0.07377313682809472,
+      "UTC": "2022-07-02 09:34:26"
+    },
+    {
+      "objectId": "ZTF22aaqytjb",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 0.04965279204770923,
+      "UTC": "2022-07-02 06:29:50"
+    },
+    {
+      "objectId": "ZTF22aaqgchw",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 1.9976041875779629,
+      "UTC": "2022-07-02 05:08:00"
+    },
+    {
+      "objectId": "ZTF22aaphemj",
+      "sherlock_z": 0.06,
+      "days_since_first_det": 1.984479121863842,
+      "UTC": "2022-07-02 05:00:39"
+    },
+    {
+      "objectId": "ZTF22aarjnez",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 0.0195139329880476,
+      "UTC": "2022-07-01 11:43:12"
+    },
+    {
+      "objectId": "ZTF22aaqtzli",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 1.029039366170764,
+      "UTC": "2022-07-01 11:00:18"
+    },
+    {
+      "objectId": "ZTF21aboxssl",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 0.05929394764825702,
+      "UTC": "2022-07-01 08:58:14"
+    },
+    {
+      "objectId": "ZTF22aapgtoe",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 0.06236106203868985,
+      "UTC": "2022-06-25 08:06:13"
+    },
+    {
+      "objectId": "ZTF22aapfqdz",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 0.08563659619539976,
+      "UTC": "2022-06-25 07:55:16"
+    },
+    {
+      "objectId": "ZTF22aapfhmh",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 0.21113428520038724,
+      "UTC": "2022-06-23 16:23:04"
+    },
+    {
+      "objectId": "ZTF22aapfhmh",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 0.195671321824193,
+      "UTC": "2022-06-23 16:00:48"
+    },
+    {
+      "objectId": "ZTF22aapfhmh",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 0.1781713217496872,
+      "UTC": "2022-06-23 15:35:36"
+    },
+    {
+      "objectId": "ZTF22aapfhmh",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 0.11863428493961692,
+      "UTC": "2022-06-23 14:09:52"
+    },
+    {
+      "objectId": "ZTF22aapazga",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 0.25947914784774184,
+      "UTC": "2022-06-23 13:19:41"
+    },
+    {
+      "objectId": "ZTF22aapbmjz",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 0.06250004004687071,
+      "UTC": "2022-06-23 09:00:10"
+    },
+    {
+      "objectId": "ZTF22aaosjja",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 1.9915856369771063,
+      "UTC": "2022-06-23 05:16:08"
+    },
+    {
+      "objectId": "ZTF21accuqig",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 0.13320598797872663,
+      "UTC": "2022-06-22 12:57:21"
+    },
+    {
+      "objectId": "ZTF22aaouxyw",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 0.13322913693264127,
+      "UTC": "2022-06-21 12:44:47"
+    },
+    {
+      "objectId": "ZTF22aaouoxr",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 0.14131942484527826,
+      "UTC": "2022-06-21 12:36:53"
+    },
+    {
+      "objectId": "ZTF22aaosjja",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 0.04954859986901283,
+      "UTC": "2022-06-21 06:39:36"
+    },
+    {
+      "objectId": "ZTF22aaomtfm",
+      "sherlock_z": 0.03,
+      "days_since_first_det": 1.9719328880310059,
+      "UTC": "2022-06-21 05:10:15"
+    },
+    {
+      "objectId": "ZTF22aaosccu",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 1.969294024631381,
+      "UTC": "2022-06-21 04:50:41"
+    },
+    {
+      "objectId": "ZTF22aaoqwnm",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 0.2453472246415913,
+      "UTC": "2022-06-20 14:32:59"
+    },
+    {
+      "objectId": "ZTF22aaolhhl",
+      "sherlock_z": 0.03,
+      "days_since_first_det": 1.9748495477251709,
+      "UTC": "2022-06-20 06:57:11"
+    },
+    {
+      "objectId": "ZTF22aaolbbe",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 1.9695254848338664,
+      "UTC": "2022-06-20 05:19:46"
+    },
+    {
+      "objectId": "ZTF22aaonsgo",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 0.08366893278434873,
+      "UTC": "2022-06-19 10:42:00"
+    },
+    {
+      "objectId": "ZTF21abtszei",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 1.9829976549372077,
+      "UTC": "2022-06-19 09:39:03"
+    },
+    {
+      "objectId": "ZTF21abtszei",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 1.9740045997314155,
+      "UTC": "2022-06-19 09:26:06"
+    },
+    {
+      "objectId": "ZTF22aaoippk",
+      "sherlock_z": 0.02,
+      "days_since_first_det": 1.9977893140166998,
+      "UTC": "2022-06-19 07:50:53"
+    },
+    {
+      "objectId": "ZTF22aaojclr",
+      "sherlock_z": 0.04,
+      "days_since_first_det": 1.9371296507306397,
+      "UTC": "2022-06-19 06:52:10"
+    },
+    {
+      "objectId": "ZTF21aanrtgv",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 1.9847800740972161,
+      "UTC": "2022-06-19 06:19:49"
+    },
+    {
+      "objectId": "ZTF22aaoiddx",
+      "sherlock_z": 0.03,
+      "days_since_first_det": 1.9699768400751054,
+      "UTC": "2022-06-19 06:09:37"
+    },
+    {
+      "objectId": "ZTF22aaoihwo",
+      "sherlock_z": 0.08,
+      "days_since_first_det": 1.958425940014422,
+      "UTC": "2022-06-19 06:09:37"
+    },
+    {
+      "objectId": "ZTF22aaohudn",
+      "sherlock_z": 0.08,
+      "days_since_first_det": 1.9904861142858863,
+      "UTC": "2022-06-19 05:55:14"
+    },
+    {
+      "objectId": "ZTF22aaoiddx",
+      "sherlock_z": 0.03,
+      "days_since_first_det": 1.9462731373496354,
+      "UTC": "2022-06-19 05:35:29"
+    },
+    {
+      "objectId": "ZTF22aaomlyj",
+      "sherlock_z": 0.11,
+      "days_since_first_det": 1.9479976883158088,
+      "UTC": "2022-06-19 04:54:03"
+    },
+    {
+      "objectId": "ZTF22aaokiud",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 1.129131925292313,
+      "UTC": "2022-06-18 14:22:38"
+    },
+    {
+      "objectId": "ZTF22aaokiwd",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 1.1272453251294792,
+      "UTC": "2022-06-18 14:22:38"
+    },
+    {
+      "objectId": "ZTF22aaokjea",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 1.1243981253355742,
+      "UTC": "2022-06-18 14:22:38"
+    },
+    {
+      "objectId": "ZTF22aaomcxl",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 1.119664324913174,
+      "UTC": "2022-06-18 14:22:38"
+    },
+    {
+      "objectId": "ZTF22aaokiud",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 1.1235995180904865,
+      "UTC": "2022-06-18 14:14:40"
+    },
+    {
+      "objectId": "ZTF22aaolwsd",
+      "sherlock_z": 0.01,
+      "days_since_first_det": 0.18052081810310483,
+      "UTC": "2022-06-18 14:14:40"
+    },
+    {
+      "objectId": "ZTF22aaokiud",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 1.121458314359188,
+      "UTC": "2022-06-18 14:11:35"
+    },
+    {
+      "objectId": "ZTF22aaomcpn",
+      "sherlock_z": 0.08,
+      "days_since_first_det": 1.121458314359188,
+      "UTC": "2022-06-18 14:11:35"
+    },
+    {
+      "objectId": "ZTF21achtbyu",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 1.051469951402396,
+      "UTC": "2022-06-18 12:21:34"
+    },
+    {
+      "objectId": "ZTF22aaoliqf",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 0.1279166699387133,
+      "UTC": "2022-06-18 11:07:26"
+    },
+    {
+      "objectId": "ZTF22aaoliqf",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 0.1264351881109178,
+      "UTC": "2022-06-18 11:05:18"
+    },
+    {
+      "objectId": "ZTF22aaoleva",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 0.12077549239620566,
+      "UTC": "2022-06-18 09:42:53"
+    },
+    {
+      "objectId": "ZTF22aaokdtm",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 0.11571760009974241,
+      "UTC": "2022-06-18 09:31:30"
+    },
+    {
+      "objectId": "ZTF22aaokuhj",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 0.08000001078471541,
+      "UTC": "2022-06-18 07:58:09"
+    },
+    {
+      "objectId": "ZTF22aaolbbe",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 0.06189817003905773,
+      "UTC": "2022-06-18 07:32:47"
+    },
+    {
+      "objectId": "ZTF22aaokiud",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 0.1328472034074366,
+      "UTC": "2022-06-17 14:27:59"
+    },
+    {
+      "objectId": "ZTF22aaojmdn",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 0.2254050918854773,
+      "UTC": "2022-06-17 14:21:26"
+    },
+    {
+      "objectId": "ZTF22aaokiud",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 0.12180553702637553,
+      "UTC": "2022-06-17 14:12:05"
+    },
+    {
+      "objectId": "ZTF22aaokiwd",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 0.1199189368635416,
+      "UTC": "2022-06-17 14:12:05"
+    },
+    {
+      "objectId": "ZTF22aaokiwd",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 0.11517356615513563,
+      "UTC": "2022-06-17 14:05:15"
+    },
+    {
+      "objectId": "ZTF22aaokiud",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 0.08945600036531687,
+      "UTC": "2022-06-17 13:25:30"
+    },
+    {
+      "objectId": "ZTF22aaokiud",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 0.07520831422880292,
+      "UTC": "2022-06-17 13:04:59"
+    },
+    {
+      "objectId": "ZTF22aaokiwd",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 0.07332171406596899,
+      "UTC": "2022-06-17 13:04:59"
+    },
+    {
+      "objectId": "ZTF22aaokiwd",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 0.0673494921065867,
+      "UTC": "2022-06-17 12:56:23"
+    },
+    {
+      "objectId": "ZTF22aaohzok",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 0.20590276224538684,
+      "UTC": "2022-06-17 11:29:10"
+    },
+    {
+      "objectId": "ZTF22aaohzok",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 0.15223378082737327,
+      "UTC": "2022-06-17 10:11:53"
+    },
+    {
+      "objectId": "ZTF21abegcwj",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 0.0847106659784913,
+      "UTC": "2022-06-17 09:39:18"
+    },
+    {
+      "objectId": "ZTF22aaogwbd",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 0.13498841784894466,
+      "UTC": "2022-06-17 08:10:37"
+    },
+    {
+      "objectId": "ZTF22aaogvsn",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 0.11668982496485114,
+      "UTC": "2022-06-17 07:42:08"
+    },
+    {
+      "objectId": "ZTF22aaogojr",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 0.1298611401580274,
+      "UTC": "2022-06-17 07:39:10"
+    },
+    {
+      "objectId": "ZTF22aaogycc",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 0.10908564040437341,
+      "UTC": "2022-06-17 07:39:10"
+    },
+    {
+      "objectId": "ZTF22aaoelte",
+      "sherlock_z": 0.07,
+      "days_since_first_det": 0.10435183998197317,
+      "UTC": "2022-06-17 07:39:10"
+    },
+    {
+      "objectId": "ZTF22aaohmcv",
+      "sherlock_z": 0.05,
+      "days_since_first_det": 0.08517364040017128,
+      "UTC": "2022-06-17 07:39:10"
+    },
+    {
+      "objectId": "ZTF22aaofsmt",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 1.0237499852664769,
+      "UTC": "2022-06-14 11:50:22"
+    },
+    {
+      "objectId": "ZTF22aaofsmt",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 1.0190161881037056,
+      "UTC": "2022-06-14 11:43:33"
+    },
+    {
+      "objectId": "ZTF22aabldhz",
+      "sherlock_z": 0.03,
+      "days_since_first_det": 1.014236087910831,
+      "UTC": "2022-06-14 11:43:33"
+    },
+    {
+      "objectId": "ZTF22aaofsmt",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 1.0146759110502899,
+      "UTC": "2022-06-14 11:37:18"
+    },
+    {
+      "objectId": "ZTF22aabldhz",
+      "sherlock_z": 0.03,
+      "days_since_first_det": 1.0098958108574152,
+      "UTC": "2022-06-14 11:37:18"
+    },
+    {
+      "objectId": "ZTF22aaofrvs",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 1.0214583771303296,
+      "UTC": "2022-06-14 11:32:57"
+    },
+    {
+      "objectId": "ZTF22aaofsmt",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 0.040185170248150826,
+      "UTC": "2022-06-13 12:14:02"
+    },
+    {
+      "objectId": "ZTF22aaofsmt",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 0.03949072491377592,
+      "UTC": "2022-06-13 12:13:02"
+    },
+    {
+      "objectId": "ZTF22aaofsmt",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 0.031168966088443995,
+      "UTC": "2022-06-13 12:01:03"
+    },
+    {
+      "objectId": "ZTF22aaofsmt",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 0.02999998489394784,
+      "UTC": "2022-06-13 11:59:22"
+    },
+    {
+      "objectId": "ZTF22aaofrvs",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 0.03696763701736927,
+      "UTC": "2022-06-13 11:55:17"
+    },
+    {
+      "objectId": "ZTF22aaofmkr",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 0.04601849988102913,
+      "UTC": "2022-06-13 11:26:15"
+    },
+    {
+      "objectId": "ZTF22aanzrlh",
+      "sherlock_z": 0.02,
+      "days_since_first_det": 1.9282986288890243,
+      "UTC": "2022-06-13 08:09:31"
+    },
+    {
+      "objectId": "ZTF22aaoemhs",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 0.05718745896592736,
+      "UTC": "2022-06-13 06:52:56"
+    },
+    {
+      "objectId": "ZTF22aaodvli",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 0.0574306002818048,
+      "UTC": "2022-06-12 11:04:12"
+    },
+    {
+      "objectId": "ZTF21abwpxks",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 0.07515045534819365,
+      "UTC": "2022-06-12 10:31:42"
+    },
+    {
+      "objectId": "ZTF22aaodcyq",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 1.9872801401652396,
+      "UTC": "2022-06-12 05:56:34"
+    },
+    {
+      "objectId": "ZTF22aaoaxlp",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 0.29306713305413723,
+      "UTC": "2022-06-11 15:39:54"
+    },
+    {
+      "objectId": "ZTF22aanvtjd",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 1.9572916398756206,
+      "UTC": "2022-06-11 09:53:43"
+    },
+    {
+      "objectId": "ZTF22aansgra",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 1.9707060288637877,
+      "UTC": "2022-06-11 05:55:52"
+    },
+    {
+      "objectId": "ZTF22aantrtp",
+      "sherlock_z": 0.03,
+      "days_since_first_det": 1.8807754288427532,
+      "UTC": "2022-06-11 05:55:52"
+    },
+    {
+      "objectId": "ZTF22aanygke",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 0.11756944842636585,
+      "UTC": "2022-06-10 13:03:02"
+    },
+    {
+      "objectId": "ZTF22aanzbru",
+      "sherlock_z": 0.02,
+      "days_since_first_det": 0.10297454008832574,
+      "UTC": "2022-06-10 12:42:01"
+    },
+    {
+      "objectId": "ZTF22aanxwqk",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 0.0818634289316833,
+      "UTC": "2022-06-10 11:35:37"
+    },
+    {
+      "objectId": "ZTF22aanwibf",
+      "sherlock_z": 0.04,
+      "days_since_first_det": 0.1838657851330936,
+      "UTC": "2022-06-10 09:30:25"
+    },
+    {
+      "objectId": "ZTF22aamwznx",
+      "sherlock_z": 0.02,
+      "days_since_first_det": 1.3619212810881436,
+      "UTC": "2022-06-09 20:01:23"
+    },
+    {
+      "objectId": "ZTF22aanvtya",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 0.37552088126540184,
+      "UTC": "2022-06-09 20:01:23"
+    },
+    {
+      "objectId": "ZTF22aanvtya",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 0.3609259743243456,
+      "UTC": "2022-06-09 19:40:22"
+    },
+    {
+      "objectId": "ZTF22aanvumu",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 0.3609259743243456,
+      "UTC": "2022-06-09 19:40:22"
+    },
+    {
+      "objectId": "ZTF22aanvuvq",
+      "sherlock_z": 0.06,
+      "days_since_first_det": 0.3609259743243456,
+      "UTC": "2022-06-09 19:40:22"
+    },
+    {
+      "objectId": "ZTF22aamwznx",
+      "sherlock_z": 0.02,
+      "days_since_first_det": 1.3429282251745462,
+      "UTC": "2022-06-09 19:34:02"
+    },
+    {
+      "objectId": "ZTF22aanvtya",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 0.3409028253518045,
+      "UTC": "2022-06-09 19:11:32"
+    },
+    {
+      "objectId": "ZTF22aanvumu",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 0.3409028253518045,
+      "UTC": "2022-06-09 19:11:32"
+    },
+    {
+      "objectId": "ZTF22aanvumu",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 0.33751162234693766,
+      "UTC": "2022-06-09 19:06:39"
+    },
+    {
+      "objectId": "ZTF22aanvuvq",
+      "sherlock_z": 0.06,
+      "days_since_first_det": 0.3296875483356416,
+      "UTC": "2022-06-09 18:55:23"
+    },
+    {
+      "objectId": "ZTF22aanvuvq",
+      "sherlock_z": 0.06,
+      "days_since_first_det": 0.3261227332986891,
+      "UTC": "2022-06-09 18:50:15"
+    },
+    {
+      "objectId": "ZTF22aanvxwm",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 1.3125231331214309,
+      "UTC": "2022-06-09 18:50:15"
+    },
+    {
+      "objectId": "ZTF22aanvtya",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 0.26460652938112617,
+      "UTC": "2022-06-09 17:21:40"
+    },
+    {
+      "objectId": "ZTF22aamwznx",
+      "sherlock_z": 0.02,
+      "days_since_first_det": 1.2472800770774484,
+      "UTC": "2022-06-09 17:16:18"
+    },
+    {
+      "objectId": "ZTF22aanvvkn",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 0.25679402938112617,
+      "UTC": "2022-06-09 17:10:25"
+    },
+    {
+      "objectId": "ZTF22aanvvkn",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 0.24887736234813929,
+      "UTC": "2022-06-09 16:59:01"
+    },
+    {
+      "objectId": "ZTF22aanumko",
+      "sherlock_z": 0.03,
+      "days_since_first_det": 0.2926272852346301,
+      "UTC": "2022-06-09 16:54:07"
+    },
+    {
+      "objectId": "ZTF22aanvvkn",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 0.2454745853319764,
+      "UTC": "2022-06-09 16:54:07"
+    },
+    {
+      "objectId": "ZTF22aamwznx",
+      "sherlock_z": 0.02,
+      "days_since_first_det": 1.2280671140179038,
+      "UTC": "2022-06-09 16:48:38"
+    },
+    {
+      "objectId": "ZTF22aanvuvq",
+      "sherlock_z": 0.06,
+      "days_since_first_det": 0.24166671419516206,
+      "UTC": "2022-06-09 16:48:38"
+    },
+    {
+      "objectId": "ZTF22aanvumu",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 0.22549773333594203,
+      "UTC": "2022-06-09 16:25:21"
+    },
+    {
+      "objectId": "ZTF22aanshdw",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 0.10457180719822645,
+      "UTC": "2022-06-09 09:11:34"
+    },
+    {
+      "objectId": "ZTF22aankbvp",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 1.992754628881812,
+      "UTC": "2022-06-09 07:25:52"
+    },
+    {
+      "objectId": "ZTF21aadaxch",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 0.05519679980352521,
+      "UTC": "2022-06-09 05:51:54"
+    },
+    {
+      "objectId": "ZTF22aanmbrl",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 1.1221875478513539,
+      "UTC": "2022-06-08 14:18:38"
+    },
+    {
+      "objectId": "ZTF22aanmbrz",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 1.1221875478513539,
+      "UTC": "2022-06-08 14:18:38"
+    },
+    {
+      "objectId": "ZTF22aanmbsd",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 1.1221875478513539,
+      "UTC": "2022-06-08 14:18:38"
+    },
+    {
+      "objectId": "ZTF22aanqwwg",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 0.12390044797211885,
+      "UTC": "2022-06-08 14:18:38"
+    },
+    {
+      "objectId": "ZTF22aanmbsd",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 1.1191551396623254,
+      "UTC": "2022-06-08 14:14:16"
+    },
+    {
+      "objectId": "ZTF22aanmbsd",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 1.11520838085562,
+      "UTC": "2022-06-08 14:08:35"
+    },
+    {
+      "objectId": "ZTF22aanmbrl",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 1.1107407878153026,
+      "UTC": "2022-06-08 14:02:09"
+    },
+    {
+      "objectId": "ZTF22aanmbrz",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 1.1107407878153026,
+      "UTC": "2022-06-08 14:02:09"
+    },
+    {
+      "objectId": "ZTF22aajjojx",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 0.15806712210178375,
+      "UTC": "2022-06-08 13:38:36"
+    },
+    {
+      "objectId": "ZTF22aanmbrl",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 1.0907870847731829,
+      "UTC": "2022-06-08 13:33:25"
+    },
+    {
+      "objectId": "ZTF22aanmbsd",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 1.0907870847731829,
+      "UTC": "2022-06-08 13:33:25"
+    },
+    {
+      "objectId": "ZTF22aamwznx",
+      "sherlock_z": 0.02,
+      "days_since_first_det": 0.0885995221324265,
+      "UTC": "2022-06-08 13:27:48"
+    },
+    {
+      "objectId": "ZTF22aamwznx",
+      "sherlock_z": 0.02,
+      "days_since_first_det": 0.08005785522982478,
+      "UTC": "2022-06-08 13:15:30"
+    },
+    {
+      "objectId": "ZTF22aanmbrl",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 1.074513936880976,
+      "UTC": "2022-06-08 13:09:59"
+    },
+    {
+      "objectId": "ZTF22aanmbsd",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 1.0668171769939363,
+      "UTC": "2022-06-08 12:58:54"
+    },
+    {
+      "objectId": "ZTF22aanmbrz",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 1.0628356956876814,
+      "UTC": "2022-06-08 12:53:10"
+    },
+    {
+      "objectId": "ZTF22aaikall",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 0.11622685519978404,
+      "UTC": "2022-06-08 12:40:24"
+    },
+    {
+      "objectId": "ZTF22aanmbrl",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 1.0397454178892076,
+      "UTC": "2022-06-08 12:19:55"
+    },
+    {
+      "objectId": "ZTF22aangixh",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 1.9912963109090924,
+      "UTC": "2022-06-08 09:57:24"
+    },
+    {
+      "objectId": "ZTF22aangixh",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 1.9738078848458827,
+      "UTC": "2022-06-08 09:32:13"
+    },
+    {
+      "objectId": "ZTF22aangixh",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 1.89452547673136,
+      "UTC": "2022-06-08 07:38:03"
+    },
+    {
+      "objectId": "ZTF22aanmikh",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 0.073113395832479,
+      "UTC": "2022-06-08 06:47:19"
+    },
+    {
+      "objectId": "ZTF22aanddqr",
+      "sherlock_z": 0.01,
+      "days_since_first_det": 1.957199087832123,
+      "UTC": "2022-06-08 05:12:30"
+    },
+    {
+      "objectId": "ZTF22aanczjk",
+      "sherlock_z": 0.07,
+      "days_since_first_det": 1.9519676328636706,
+      "UTC": "2022-06-08 04:37:30"
+    },
+    {
+      "objectId": "ZTF22aanmbsd",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 0.29519680701196194,
+      "UTC": "2022-06-07 18:27:46"
+    },
+    {
+      "objectId": "ZTF22aanmbrl",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 0.2835880108177662,
+      "UTC": "2022-06-07 18:11:03"
+    },
+    {
+      "objectId": "ZTF22aanmbrz",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 0.28206023294478655,
+      "UTC": "2022-06-07 18:08:51"
+    },
+    {
+      "objectId": "ZTF22aanmbrl",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 0.24552088091149926,
+      "UTC": "2022-06-07 17:16:14"
+    },
+    {
+      "objectId": "ZTF22aakselz",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 0.2877315180376172,
+      "UTC": "2022-06-07 17:11:04"
+    },
+    {
+      "objectId": "ZTF22aanlkfg",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 0.26995375100523233,
+      "UTC": "2022-06-07 17:05:58"
+    },
+    {
+      "objectId": "ZTF22aankxmt",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 0.28011577716097236,
+      "UTC": "2022-06-07 17:01:27"
+    },
+    {
+      "objectId": "ZTF22aaksnrm",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 0.26989587023854256,
+      "UTC": "2022-06-07 16:45:23"
+    },
+    {
+      "objectId": "ZTF22aankwmp",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 0.2674421137198806,
+      "UTC": "2022-06-07 16:30:38"
+    },
+    {
+      "objectId": "ZTF22aanmbsd",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 0.15223384369164705,
+      "UTC": "2022-06-07 15:01:54"
+    },
+    {
+      "objectId": "ZTF22aajfxrx",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 0.14424772188067436,
+      "UTC": "2022-06-07 13:45:48"
+    },
+    {
+      "objectId": "ZTF21abvevwh",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 1.9283912372775376,
+      "UTC": "2022-06-07 07:39:14"
+    },
+    {
+      "objectId": "ZTF22aanbmvf",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 1.0679860999807715,
+      "UTC": "2022-06-06 12:57:36"
+    },
+    {
+      "objectId": "ZTF22aanbmvf",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 1.0616319328546524,
+      "UTC": "2022-06-06 12:48:27"
+    },
+    {
+      "objectId": "ZTF22aanbmvf",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 1.0569791551679373,
+      "UTC": "2022-06-06 12:41:45"
+    },
+    {
+      "objectId": "ZTF22aanbmvf",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 1.056319432798773,
+      "UTC": "2022-06-06 12:40:48"
+    },
+    {
+      "objectId": "ZTF22aanbmvf",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 1.0459143398329616,
+      "UTC": "2022-06-06 12:25:49"
+    },
+    {
+      "objectId": "ZTF22aandlod",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 0.06759258499369025,
+      "UTC": "2022-06-06 08:32:49"
+    },
+    {
+      "objectId": "ZTF22aanbmvf",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 0.35715276608243585,
+      "UTC": "2022-06-05 19:54:00"
+    },
+    {
+      "objectId": "ZTF22aamwznx",
+      "sherlock_z": 0.02,
+      "days_since_first_det": 1.3557638442143798,
+      "UTC": "2022-06-05 19:49:00"
+    },
+    {
+      "objectId": "ZTF22aanbmvf",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 0.3346759141422808,
+      "UTC": "2022-06-05 19:21:38"
+    },
+    {
+      "objectId": "ZTF22aamwznx",
+      "sherlock_z": 0.02,
+      "days_since_first_det": 1.330578659195453,
+      "UTC": "2022-06-05 19:12:44"
+    },
+    {
+      "objectId": "ZTF22aanbmvf",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 0.31791665498167276,
+      "UTC": "2022-06-05 18:57:30"
+    },
+    {
+      "objectId": "ZTF22aamwznx",
+      "sherlock_z": 0.02,
+      "days_since_first_det": 1.2197337509132922,
+      "UTC": "2022-06-05 16:33:07"
+    },
+    {
+      "objectId": "ZTF22aanbmvf",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 0.1968865618109703,
+      "UTC": "2022-06-05 16:03:13"
+    },
+    {
+      "objectId": "ZTF21abvevwh",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 0.22938660718500614,
+      "UTC": "2022-06-05 14:52:40"
+    },
+    {
+      "objectId": "ZTF22aamwznx",
+      "sherlock_z": 0.02,
+      "days_since_first_det": 0.097199029289186,
+      "UTC": "2022-06-04 13:36:40"
+    },
+    {
+      "objectId": "ZTF22aamwznx",
+      "sherlock_z": 0.02,
+      "days_since_first_det": 0.09215273289009929,
+      "UTC": "2022-06-04 13:29:24"
+    },
+    {
+      "objectId": "ZTF22aamxcxv",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 0.06947919214144349,
+      "UTC": "2022-06-04 13:03:35"
+    },
+    {
+      "objectId": "ZTF22aamwznx",
+      "sherlock_z": 0.02,
+      "days_since_first_det": 0.060601807199418545,
+      "UTC": "2022-06-04 12:43:58"
+    },
+    {
+      "objectId": "ZTF22aamwznx",
+      "sherlock_z": 0.02,
+      "days_since_first_det": 0.05296291830018163,
+      "UTC": "2022-06-04 12:32:58"
+    },
+    {
+      "objectId": "ZTF22aalywea",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 1.9470949140377343,
+      "UTC": "2022-06-03 06:22:41"
+    },
+    {
+      "objectId": "ZTF22aalywea",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 1.946979173924774,
+      "UTC": "2022-06-03 06:22:31"
+    },
+    {
+      "objectId": "ZTF22aamnpxi",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 1.990069436840713,
+      "UTC": "2022-06-03 05:23:47"
+    },
+    {
+      "objectId": "ZTF22aamnpxi",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 1.989930547773838,
+      "UTC": "2022-06-03 05:23:35"
+    },
+    {
+      "objectId": "ZTF22aamewfd",
+      "sherlock_z": 0.01,
+      "days_since_first_det": 1.9885763553902507,
+      "UTC": "2022-06-03 05:23:00"
+    },
+    {
+      "objectId": "ZTF22aamewfd",
+      "sherlock_z": 0.01,
+      "days_since_first_det": 1.9883680222555995,
+      "UTC": "2022-06-03 05:22:42"
+    },
+    {
+      "objectId": "ZTF22aamhens",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 1.2008217400871217,
+      "UTC": "2022-06-02 15:52:22"
+    },
+    {
+      "objectId": "ZTF22aamhens",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 1.2006597029976547,
+      "UTC": "2022-06-02 15:52:08"
+    },
+    {
+      "objectId": "ZTF22aamnlsp",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 0.1748264180496335,
+      "UTC": "2022-06-02 15:40:10"
+    },
+    {
+      "objectId": "ZTF22aamnlsp",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 0.17466438096016645,
+      "UTC": "2022-06-02 15:39:56"
+    },
+    {
+      "objectId": "ZTF22aamhdwr",
+      "sherlock_z": 0.06,
+      "days_since_first_det": 1.188541647978127,
+      "UTC": "2022-06-02 15:34:41"
+    },
+    {
+      "objectId": "ZTF22aamhdwr",
+      "sherlock_z": 0.06,
+      "days_since_first_det": 1.1883448879234493,
+      "UTC": "2022-06-02 15:34:24"
+    },
+    {
+      "objectId": "ZTF22aamhens",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 1.1832754439674318,
+      "UTC": "2022-06-02 15:27:06"
+    },
+    {
+      "objectId": "ZTF22aamhens",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 1.1831134068779647,
+      "UTC": "2022-06-02 15:26:52"
+    },
+    {
+      "objectId": "ZTF22aammscg",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 0.2069791811518371,
+      "UTC": "2022-06-02 15:21:29"
+    },
+    {
+      "objectId": "ZTF22aammscg",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 0.20684029208496213,
+      "UTC": "2022-06-02 15:21:17"
+    },
+    {
+      "objectId": "ZTF22aamhdwr",
+      "sherlock_z": 0.06,
+      "days_since_first_det": 1.1784259071573615,
+      "UTC": "2022-06-02 15:20:07"
+    },
+    {
+      "objectId": "ZTF22aamhdwr",
+      "sherlock_z": 0.06,
+      "days_since_first_det": 1.1782754440791905,
+      "UTC": "2022-06-02 15:19:54"
+    },
+    {
+      "objectId": "ZTF22aamhdwr",
+      "sherlock_z": 0.06,
+      "days_since_first_det": 1.1684490549378097,
+      "UTC": "2022-06-02 15:05:45"
+    },
+    {
+      "objectId": "ZTF22aamhdwr",
+      "sherlock_z": 0.06,
+      "days_since_first_det": 1.1683333138935268,
+      "UTC": "2022-06-02 15:05:35"
+    },
+    {
+      "objectId": "ZTF22aamcwwm",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 1.2270602290518582,
+      "UTC": "2022-06-02 14:59:28"
+    },
+    {
+      "objectId": "ZTF22aamcwwm",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 1.2268981924280524,
+      "UTC": "2022-06-02 14:59:14"
+    },
+    {
+      "objectId": "ZTF22aamcwwm",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 1.1925579141825438,
+      "UTC": "2022-06-02 14:09:47"
+    },
+    {
+      "objectId": "ZTF22aamhens",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 1.1295833140611649,
+      "UTC": "2022-06-02 14:09:47"
+    },
+    {
+      "objectId": "ZTF22aamcwwm",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 1.1923495810478926,
+      "UTC": "2022-06-02 14:09:29"
+    },
+    {
+      "objectId": "ZTF22aamhens",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 1.1293749809265137,
+      "UTC": "2022-06-02 14:09:29"
+    },
+    {
+      "objectId": "ZTF22aamhens",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 1.1183101660571992,
+      "UTC": "2022-06-02 13:53:33"
+    },
+    {
+      "objectId": "ZTF22aamhens",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 1.1181712769903243,
+      "UTC": "2022-06-02 13:53:21"
+    },
+    {
+      "objectId": "ZTF22aammepu",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 0.1527546369470656,
+      "UTC": "2022-06-02 13:15:50"
+    },
+    {
+      "objectId": "ZTF22aammepu",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 0.15258102491497993,
+      "UTC": "2022-06-02 13:15:35"
+    },
+    {
+      "objectId": "ZTF22aalzxpg",
+      "sherlock_z": 0.08,
+      "days_since_first_det": 1.9721759660169482,
+      "UTC": "2022-06-02 06:33:00"
+    },
+    {
+      "objectId": "ZTF22aalzxpg",
+      "sherlock_z": 0.08,
+      "days_since_first_det": 1.971979206893593,
+      "UTC": "2022-06-02 06:32:43"
+    },
+    {
+      "objectId": "ZTF22aalyumh",
+      "sherlock_z": 0.08,
+      "days_since_first_det": 1.9706481397151947,
+      "UTC": "2022-06-02 06:28:04"
+    },
+    {
+      "objectId": "ZTF22aalyumh",
+      "sherlock_z": 0.08,
+      "days_since_first_det": 1.9704282330349088,
+      "UTC": "2022-06-02 06:27:45"
+    },
+    {
+      "objectId": "ZTF22aalzeui",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 1.9924884070642292,
+      "UTC": "2022-06-02 06:21:01"
+    },
+    {
+      "objectId": "ZTF22aalzeui",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 1.9923147959634662,
+      "UTC": "2022-06-02 06:20:46"
+    },
+    {
+      "objectId": "ZTF22aalzxpg",
+      "sherlock_z": 0.08,
+      "days_since_first_det": 1.9251620769500732,
+      "UTC": "2022-06-02 05:25:18"
+    },
+    {
+      "objectId": "ZTF22aalzxpg",
+      "sherlock_z": 0.08,
+      "days_since_first_det": 1.924942169804126,
+      "UTC": "2022-06-02 05:24:59"
+    },
+    {
+      "objectId": "ZTF22aalzeui",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 1.9498263699933887,
+      "UTC": "2022-06-02 05:19:35"
+    },
+    {
+      "objectId": "ZTF22aalzeui",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 1.9496180373243988,
+      "UTC": "2022-06-02 05:19:17"
+    },
+    {
+      "objectId": "ZTF22aalyumh",
+      "sherlock_z": 0.08,
+      "days_since_first_det": 1.9190972140058875,
+      "UTC": "2022-06-02 05:13:50"
+    },
+    {
+      "objectId": "ZTF22aalyumh",
+      "sherlock_z": 0.08,
+      "days_since_first_det": 1.9189120288938284,
+      "UTC": "2022-06-02 05:13:34"
+    },
+    {
+      "objectId": "ZTF22aamhens",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 0.25700229592621326,
+      "UTC": "2022-06-01 17:13:16"
+    },
+    {
+      "objectId": "ZTF22aamhens",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 0.2568055372685194,
+      "UTC": "2022-06-01 17:12:59"
+    },
+    {
+      "objectId": "ZTF22aamhdwr",
+      "sherlock_z": 0.06,
+      "days_since_first_det": 0.2497106292285025,
+      "UTC": "2022-06-01 17:02:46"
+    },
+    {
+      "objectId": "ZTF22aamhdwr",
+      "sherlock_z": 0.06,
+      "days_since_first_det": 0.24958331417292356,
+      "UTC": "2022-06-01 17:02:35"
+    },
+    {
+      "objectId": "ZTF22aamhfyu",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 1.2363773328252137,
+      "UTC": "2022-06-01 17:00:54"
+    },
+    {
+      "objectId": "ZTF22aamhfyu",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 1.2362037217244506,
+      "UTC": "2022-06-01 17:00:39"
+    },
+    {
+      "objectId": "ZTF22aamhdwr",
+      "sherlock_z": 0.06,
+      "days_since_first_det": 0.24570599989965558,
+      "UTC": "2022-06-01 16:57:00"
+    },
+    {
+      "objectId": "ZTF22aamhens",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 0.24570599989965558,
+      "UTC": "2022-06-01 16:57:00"
+    },
+    {
+      "objectId": "ZTF22aamhdwr",
+      "sherlock_z": 0.06,
+      "days_since_first_det": 0.24548609228804708,
+      "UTC": "2022-06-01 16:56:41"
+    },
+    {
+      "objectId": "ZTF22aamhens",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 0.24548609228804708,
+      "UTC": "2022-06-01 16:56:41"
+    },
+    {
+      "objectId": "ZTF22aamhdwr",
+      "sherlock_z": 0.06,
+      "days_since_first_det": 0.2323495182208717,
+      "UTC": "2022-06-01 16:37:46"
+    },
+    {
+      "objectId": "ZTF22aamhens",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 0.2323495182208717,
+      "UTC": "2022-06-01 16:37:46"
+    },
+    {
+      "objectId": "ZTF22aamhdwr",
+      "sherlock_z": 0.06,
+      "days_since_first_det": 0.23218748113140464,
+      "UTC": "2022-06-01 16:37:32"
+    },
+    {
+      "objectId": "ZTF22aamhens",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 0.23218748113140464,
+      "UTC": "2022-06-01 16:37:32"
+    },
+    {
+      "objectId": "ZTF22aamgjeh",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 0.2812384287826717,
+      "UTC": "2022-06-01 16:05:37"
+    },
+    {
+      "objectId": "ZTF22aamglev",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 0.2720602289773524,
+      "UTC": "2022-06-01 16:05:37"
+    },
+    {
+      "objectId": "ZTF22aamgjeh",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 0.28108796617016196,
+      "UTC": "2022-06-01 16:05:24"
+    },
+    {
+      "objectId": "ZTF22aamglev",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 0.27190976636484265,
+      "UTC": "2022-06-01 16:05:24"
+    },
+    {
+      "objectId": "ZTF22aamgkdw",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 0.25851856218650937,
+      "UTC": "2022-06-01 15:44:46"
+    },
+    {
+      "objectId": "ZTF22aamgkdw",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 0.25837967405095696,
+      "UTC": "2022-06-01 15:44:34"
+    },
+    {
+      "objectId": "ZTF22aamgsvg",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 0.30063662165775895,
+      "UTC": "2022-06-01 15:30:39"
+    },
+    {
+      "objectId": "ZTF22aamgsvg",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 0.3004745850339532,
+      "UTC": "2022-06-01 15:30:25"
+    },
+    {
+      "objectId": "ZTF22aamgltk",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 0.2431250442750752,
+      "UTC": "2022-06-01 15:23:57"
+    },
+    {
+      "objectId": "ZTF22aamgltk",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 0.24298615520820022,
+      "UTC": "2022-06-01 15:23:45"
+    },
+    {
+      "objectId": "ZTF22aamcwwm",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 0.22494217427447438,
+      "UTC": "2022-06-01 14:56:25"
+    },
+    {
+      "objectId": "ZTF22aamhdwr",
+      "sherlock_z": 0.06,
+      "days_since_first_det": 0.16196757415309548,
+      "UTC": "2022-06-01 14:56:25"
+    },
+    {
+      "objectId": "ZTF22aamcwwm",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 0.22479171119630337,
+      "UTC": "2022-06-01 14:56:12"
+    },
+    {
+      "objectId": "ZTF22aamhdwr",
+      "sherlock_z": 0.06,
+      "days_since_first_det": 0.16181711107492447,
+      "UTC": "2022-06-01 14:56:12"
+    },
+    {
+      "objectId": "ZTF22aamgltk",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 0.18128476617857814,
+      "UTC": "2022-06-01 13:54:54"
+    },
+    {
+      "objectId": "ZTF22aamgltk",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 0.1811227290891111,
+      "UTC": "2022-06-01 13:54:40"
+    },
+    {
+      "objectId": "ZTF22aamfvrs",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 0.22961801383644342,
+      "UTC": "2022-06-01 13:45:29"
+    },
+    {
+      "objectId": "ZTF22aamfvrs",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 0.22950227418914437,
+      "UTC": "2022-06-01 13:45:19"
+    },
+    {
+      "objectId": "ZTF22aamgjba",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 0.14557872200384736,
+      "UTC": "2022-06-01 12:54:30"
+    },
+    {
+      "objectId": "ZTF22aamgjba",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 0.14542825939133763,
+      "UTC": "2022-06-01 12:54:17"
+    },
+    {
+      "objectId": "ZTF22aamgltk",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 0.09129634033888578,
+      "UTC": "2022-06-01 11:45:19"
+    },
+    {
+      "objectId": "ZTF22aamgltk",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 0.0911574512720108,
+      "UTC": "2022-06-01 11:45:07"
+    },
+    {
+      "objectId": "ZTF21aaobjuh",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 0.058969933073967695,
+      "UTC": "2022-06-01 10:25:21"
+    },
+    {
+      "objectId": "ZTF21aaobjuh",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 0.05884261801838875,
+      "UTC": "2022-06-01 10:25:10"
+    },
+    {
+      "objectId": "ZTF22aamdxkj",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 0.06712959194555879,
+      "UTC": "2022-06-01 09:58:11"
+    },
+    {
+      "objectId": "ZTF22aamdxkj",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 0.06702542491257191,
+      "UTC": "2022-06-01 09:58:02"
+    },
+    {
+      "objectId": "ZTF22aamftjb",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 0.05627314792945981,
+      "UTC": "2022-06-01 09:23:26"
+    },
+    {
+      "objectId": "ZTF22aamftjb",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 0.05620370293036103,
+      "UTC": "2022-06-01 09:23:20"
+    },
+    {
+      "objectId": "ZTF22aalwamk",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 1.9528009220957756,
+      "UTC": "2022-06-01 07:50:18"
+    },
+    {
+      "objectId": "ZTF22aalwamk",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 1.9526388850063086,
+      "UTC": "2022-06-01 07:50:04"
+    },
+    {
+      "objectId": "ZTF22aalyevy",
+      "sherlock_z": 0.03,
+      "days_since_first_det": 0.044201417826116085,
+      "UTC": "2022-06-01 06:01:55"
+    },
+    {
+      "objectId": "ZTF22aalyfii",
+      "sherlock_z": 0.05,
+      "days_since_first_det": 0.044201417826116085,
+      "UTC": "2022-06-01 06:01:55"
+    },
+    {
+      "objectId": "ZTF22aalyevy",
+      "sherlock_z": 0.03,
+      "days_since_first_det": 0.04405095521360636,
+      "UTC": "2022-06-01 06:01:42"
+    },
+    {
+      "objectId": "ZTF22aalyfii",
+      "sherlock_z": 0.05,
+      "days_since_first_det": 0.04405095521360636,
+      "UTC": "2022-06-01 06:01:42"
+    },
+    {
+      "objectId": "ZTF22aameotz",
+      "sherlock_z": 0.08,
+      "days_since_first_det": 0.05454856576398015,
+      "UTC": "2022-06-01 05:57:00"
+    },
+    {
+      "objectId": "ZTF22aameotz",
+      "sherlock_z": 0.08,
+      "days_since_first_det": 0.054374955128878355,
+      "UTC": "2022-06-01 05:56:45"
+    },
+    {
+      "objectId": "ZTF22aamewfd",
+      "sherlock_z": 0.01,
+      "days_since_first_det": 0.010798577219247818,
+      "UTC": "2022-06-01 05:55:00"
+    },
+    {
+      "objectId": "ZTF22aamewfd",
+      "sherlock_z": 0.01,
+      "days_since_first_det": 0.010590244084596634,
+      "UTC": "2022-06-01 05:54:42"
+    },
+    {
+      "objectId": "ZTF22aameejb",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 0.07127317693084478,
+      "UTC": "2022-05-31 12:54:51"
+    },
+    {
+      "objectId": "ZTF22aameejb",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 0.0711342878639698,
+      "UTC": "2022-05-31 12:54:39"
+    },
+    {
+      "objectId": "ZTF22aameejb",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 0.0533565110526979,
+      "UTC": "2022-05-31 12:29:03"
+    },
+    {
+      "objectId": "ZTF22aameejb",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 0.05322919599711895,
+      "UTC": "2022-05-31 12:28:52"
+    },
+    {
+      "objectId": "ZTF22aalzeui",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 0.03648146195337176,
+      "UTC": "2022-05-31 07:24:22"
+    },
+    {
+      "objectId": "ZTF22aalzeui",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 0.036296277306973934,
+      "UTC": "2022-05-31 07:24:06"
+    },
+    {
+      "objectId": "ZTF22aalxsmp",
+      "sherlock_z": 0.09,
+      "days_since_first_det": 0.03143516601994634,
+      "UTC": "2022-05-31 05:29:06"
+    },
+    {
+      "objectId": "ZTF22aalxsmp",
+      "sherlock_z": 0.09,
+      "days_since_first_det": 0.03130785096436739,
+      "UTC": "2022-05-31 05:28:55"
+    },
+    {
+      "objectId": "ZTF22aalxbpo",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 0.1125810369849205,
+      "UTC": "2022-05-30 14:04:26"
+    },
+    {
+      "objectId": "ZTF22aalxbpo",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 0.11243057437241077,
+      "UTC": "2022-05-30 14:04:13"
+    },
+    {
+      "objectId": "ZTF22aalxbpo",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 0.057106500025838614,
+      "UTC": "2022-05-30 12:44:33"
+    },
+    {
+      "objectId": "ZTF22aalxbpo",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 0.05694446200504899,
+      "UTC": "2022-05-30 12:44:19"
+    },
+    {
+      "objectId": "ZTF21acinswz",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 0.04787038825452328,
+      "UTC": "2022-05-30 12:31:15"
+    },
+    {
+      "objectId": "ZTF21acinswz",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 0.047743074130266905,
+      "UTC": "2022-05-30 12:31:04"
+    },
+    {
+      "objectId": "ZTF22aalsigh",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 1.272673584986478,
+      "UTC": "2022-05-28 17:54:52"
+    },
+    {
+      "objectId": "ZTF22aalsigh",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 1.272534695919603,
+      "UTC": "2022-05-28 17:54:40"
+    },
+    {
+      "objectId": "ZTF22aalsigh",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 1.2706596958450973,
+      "UTC": "2022-05-28 17:51:58"
+    },
+    {
+      "objectId": "ZTF22aalsigh",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 1.2704976592212915,
+      "UTC": "2022-05-28 17:51:44"
+    },
+    {
+      "objectId": "ZTF22aalvcpc",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 0.3201620480976999,
+      "UTC": "2022-05-28 17:28:59"
+    },
+    {
+      "objectId": "ZTF22aalvcpc",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 0.32001158501952887,
+      "UTC": "2022-05-28 17:28:46"
+    },
+    {
+      "objectId": "ZTF21abbxnbm",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 0.3117477176710963,
+      "UTC": "2022-05-28 17:08:22"
+    },
+    {
+      "objectId": "ZTF21abbxnbm",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 0.3116204026155174,
+      "UTC": "2022-05-28 17:08:11"
+    },
+    {
+      "objectId": "ZTF22aalsigh",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 1.1688309921883047,
+      "UTC": "2022-05-28 15:25:20"
+    },
+    {
+      "objectId": "ZTF22aalsigh",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 1.1686458070762455,
+      "UTC": "2022-05-28 15:25:04"
+    },
+    {
+      "objectId": "ZTF21aarjnea",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 0.18923606630414724,
+      "UTC": "2022-05-28 14:00:18"
+    },
+    {
+      "objectId": "ZTF22aaluyte",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 0.188287066295743,
+      "UTC": "2022-05-28 14:00:18"
+    },
+    {
+      "objectId": "ZTF21abixkyz",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 0.1835300661623478,
+      "UTC": "2022-05-28 14:00:18"
+    },
+    {
+      "objectId": "ZTF21aarjnea",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 0.18906245520338416,
+      "UTC": "2022-05-28 14:00:03"
+    },
+    {
+      "objectId": "ZTF22aaluyte",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 0.1881134551949799,
+      "UTC": "2022-05-28 14:00:03"
+    },
+    {
+      "objectId": "ZTF21abixkyz",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 0.1833564550615847,
+      "UTC": "2022-05-28 14:00:03"
+    },
+    {
+      "objectId": "ZTF21aaotqfk",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 0.07222218532115221,
+      "UTC": "2022-05-28 08:13:01"
+    },
+    {
+      "objectId": "ZTF21aaotqfk",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 0.0720717222429812,
+      "UTC": "2022-05-28 08:12:48"
+    },
+    {
+      "objectId": "ZTF22aaljyqw",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 1.9701273329555988,
+      "UTC": "2022-05-28 08:02:42"
+    },
+    {
+      "objectId": "ZTF22aaljyqw",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 1.9699884438887239,
+      "UTC": "2022-05-28 08:02:30"
+    },
+    {
+      "objectId": "ZTF22aalsigh",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 0.0829397882334888,
+      "UTC": "2022-05-27 13:21:39"
+    },
+    {
+      "objectId": "ZTF22aalsigh",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 0.08280090009793639,
+      "UTC": "2022-05-27 13:21:27"
+    },
+    {
+      "objectId": "ZTF22aalrdft",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 0.09342589182779193,
+      "UTC": "2022-05-27 12:13:38"
+    },
+    {
+      "objectId": "ZTF22aalsigh",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 0.0357059920206666,
+      "UTC": "2022-05-27 12:13:38"
+    },
+    {
+      "objectId": "ZTF22aalrdft",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 0.09326385473832488,
+      "UTC": "2022-05-27 12:13:24"
+    },
+    {
+      "objectId": "ZTF22aalsigh",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 0.03554395493119955,
+      "UTC": "2022-05-27 12:13:24"
+    },
+    {
+      "objectId": "ZTF22aaldrem",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 1.9471990480087698,
+      "UTC": "2022-05-27 06:53:35"
+    },
+    {
+      "objectId": "ZTF22aaldrem",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 1.9470254369080067,
+      "UTC": "2022-05-27 06:53:20"
+    },
+    {
+      "objectId": "ZTF22aalbxzn",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 1.9663657215423882,
+      "UTC": "2022-05-27 05:16:51"
+    },
+    {
+      "objectId": "ZTF22aalbxzn",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 1.9662036849185824,
+      "UTC": "2022-05-27 05:16:37"
+    },
+    {
+      "objectId": "ZTF22aalbwin",
+      "sherlock_z": 0.05,
+      "days_since_first_det": 1.9607869959436357,
+      "UTC": "2022-05-27 05:07:25"
+    },
+    {
+      "objectId": "ZTF22aalbwin",
+      "sherlock_z": 0.05,
+      "days_since_first_det": 1.9606133848428726,
+      "UTC": "2022-05-27 05:07:10"
+    },
+    {
+      "objectId": "ZTF22aalayjb",
+      "sherlock_z": 0.08,
+      "days_since_first_det": 1.9924653181806207,
+      "UTC": "2022-05-27 04:48:34"
+    },
+    {
+      "objectId": "ZTF22aalayjb",
+      "sherlock_z": 0.08,
+      "days_since_first_det": 1.9923495771363378,
+      "UTC": "2022-05-27 04:48:24"
+    },
+    {
+      "objectId": "ZTF22aallkid",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 0.35837959218770266,
+      "UTC": "2022-05-26 20:07:56"
+    },
+    {
+      "objectId": "ZTF22aallkid",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 0.35822912910953164,
+      "UTC": "2022-05-26 20:07:43"
+    },
+    {
+      "objectId": "ZTF22aallkha",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 0.3451388510875404,
+      "UTC": "2022-05-26 19:48:52"
+    },
+    {
+      "objectId": "ZTF22aallkha",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 0.345011536963284,
+      "UTC": "2022-05-26 19:48:41"
+    },
+    {
+      "objectId": "ZTF22aalllhc",
+      "sherlock_z": 0.01,
+      "days_since_first_det": 0.22383098118007183,
+      "UTC": "2022-05-26 16:54:11"
+    },
+    {
+      "objectId": "ZTF22aalllhc",
+      "sherlock_z": 0.01,
+      "days_since_first_det": 0.22366894409060478,
+      "UTC": "2022-05-26 16:53:57"
+    },
+    {
+      "objectId": "ZTF22aakrxho",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 1.9646643958985806,
+      "UTC": "2022-05-26 08:56:01"
+    },
+    {
+      "objectId": "ZTF22aakrxho",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 1.9644676367752254,
+      "UTC": "2022-05-26 08:55:44"
+    },
+    {
+      "objectId": "ZTF22aakyrye",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 1.9763078247196972,
+      "UTC": "2022-05-26 07:59:41"
+    },
+    {
+      "objectId": "ZTF22aakyrye",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 1.9761573616415262,
+      "UTC": "2022-05-26 07:59:28"
+    },
+    {
+      "objectId": "ZTF22aalaaji",
+      "sherlock_z": 0.04,
+      "days_since_first_det": 1.0829976368695498,
+      "UTC": "2022-05-25 13:08:38"
+    },
+    {
+      "objectId": "ZTF22aalaaji",
+      "sherlock_z": 0.04,
+      "days_since_first_det": 1.0828471737913787,
+      "UTC": "2022-05-25 13:08:25"
+    },
+    {
+      "objectId": "ZTF22aalaajn",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 1.081817080732435,
+      "UTC": "2022-05-25 13:06:56"
+    },
+    {
+      "objectId": "ZTF22aalaajn",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 1.0816434700973332,
+      "UTC": "2022-05-25 13:06:41"
+    },
+    {
+      "objectId": "ZTF22aalaajn",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 1.0765393027104437,
+      "UTC": "2022-05-25 12:59:20"
+    },
+    {
+      "objectId": "ZTF22aalaajn",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 1.076388840097934,
+      "UTC": "2022-05-25 12:59:07"
+    },
+    {
+      "objectId": "ZTF22aalaaji",
+      "sherlock_z": 0.04,
+      "days_since_first_det": 1.0723494878038764,
+      "UTC": "2022-05-25 12:53:18"
+    },
+    {
+      "objectId": "ZTF22aalaaji",
+      "sherlock_z": 0.04,
+      "days_since_first_det": 1.0721874507144094,
+      "UTC": "2022-05-25 12:53:04"
+    },
+    {
+      "objectId": "ZTF22aalaajn",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 1.06715272879228,
+      "UTC": "2022-05-25 12:45:49"
+    },
+    {
+      "objectId": "ZTF22aalaajn",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 1.067002265714109,
+      "UTC": "2022-05-25 12:45:36"
+    },
+    {
+      "objectId": "ZTF22aalaajn",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 1.0525693958625197,
+      "UTC": "2022-05-25 12:24:49"
+    },
+    {
+      "objectId": "ZTF22aalaajn",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 1.0523957847617567,
+      "UTC": "2022-05-25 12:24:34"
+    },
+    {
+      "objectId": "ZTF22aalaaji",
+      "sherlock_z": 0.04,
+      "days_since_first_det": 1.044699024874717,
+      "UTC": "2022-05-25 12:13:29"
+    },
+    {
+      "objectId": "ZTF22aalaaji",
+      "sherlock_z": 0.04,
+      "days_since_first_det": 1.044548561796546,
+      "UTC": "2022-05-25 12:13:16"
+    },
+    {
+      "objectId": "ZTF22aalaaji",
+      "sherlock_z": 0.04,
+      "days_since_first_det": 1.0382522661238909,
+      "UTC": "2022-05-25 12:04:12"
+    },
+    {
+      "objectId": "ZTF22aalaaji",
+      "sherlock_z": 0.04,
+      "days_since_first_det": 1.038136525079608,
+      "UTC": "2022-05-25 12:04:02"
+    },
+    {
+      "objectId": "ZTF22aalfhfv",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 0.06849538814276457,
+      "UTC": "2022-05-25 11:42:39"
+    },
+    {
+      "objectId": "ZTF22aalfhfv",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 0.06839122204110026,
+      "UTC": "2022-05-25 11:42:30"
+    },
+    {
+      "objectId": "ZTF22aalfjze",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 0.053784740157425404,
+      "UTC": "2022-05-25 11:21:28"
+    },
+    {
+      "objectId": "ZTF22aalfjze",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 0.053669000044465065,
+      "UTC": "2022-05-25 11:21:18"
+    },
+    {
+      "objectId": "ZTF22aalexbb",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 1.995544025208801,
+      "UTC": "2022-05-25 09:52:38"
+    },
+    {
+      "objectId": "ZTF22aalexbb",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 1.9954630071297288,
+      "UTC": "2022-05-25 09:52:31"
+    },
+    {
+      "objectId": "ZTF22aakrnjw",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 1.9751968001946807,
+      "UTC": "2022-05-25 09:13:03"
+    },
+    {
+      "objectId": "ZTF22aakrnjw",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 1.9750463371165097,
+      "UTC": "2022-05-25 09:12:50"
+    },
+    {
+      "objectId": "ZTF22aakquvw",
+      "sherlock_z": 0.03,
+      "days_since_first_det": 1.9726504920981824,
+      "UTC": "2022-05-25 06:53:41"
+    },
+    {
+      "objectId": "ZTF22aakquvw",
+      "sherlock_z": 0.03,
+      "days_since_first_det": 1.9724768809974194,
+      "UTC": "2022-05-25 06:53:26"
+    },
+    {
+      "objectId": "ZTF22aalbuig",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 0.052372673992067575,
+      "UTC": "2022-05-25 06:19:49"
+    },
+    {
+      "objectId": "ZTF22aalbuig",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 0.05221063690260053,
+      "UTC": "2022-05-25 06:19:35"
+    },
+    {
+      "objectId": "ZTF22aalaaji",
+      "sherlock_z": 0.04,
+      "days_since_first_det": 0.28989578504115343,
+      "UTC": "2022-05-24 18:06:34"
+    },
+    {
+      "objectId": "ZTF22aalaaji",
+      "sherlock_z": 0.04,
+      "days_since_first_det": 0.2897684699855745,
+      "UTC": "2022-05-24 18:06:23"
+    },
+    {
+      "objectId": "ZTF22aalaajn",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 0.2855555070564151,
+      "UTC": "2022-05-24 18:00:19"
+    },
+    {
+      "objectId": "ZTF22aalaajn",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 0.2854513400234282,
+      "UTC": "2022-05-24 18:00:10"
+    },
+    {
+      "objectId": "ZTF22aalaajn",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 0.2617707848548889,
+      "UTC": "2022-05-24 17:26:04"
+    },
+    {
+      "objectId": "ZTF22aalaajn",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 0.26166661782190204,
+      "UTC": "2022-05-24 17:25:55"
+    },
+    {
+      "objectId": "ZTF22aalaaji",
+      "sherlock_z": 0.04,
+      "days_since_first_det": 0.2551735620945692,
+      "UTC": "2022-05-24 17:16:34"
+    },
+    {
+      "objectId": "ZTF22aalaaji",
+      "sherlock_z": 0.04,
+      "days_since_first_det": 0.255104118026793,
+      "UTC": "2022-05-24 17:16:28"
+    },
+    {
+      "objectId": "ZTF22aalaalv",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 0.25335643300786614,
+      "UTC": "2022-05-24 17:13:57"
+    },
+    {
+      "objectId": "ZTF22aalaalv",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 0.2532638399861753,
+      "UTC": "2022-05-24 17:13:49"
+    },
+    {
+      "objectId": "ZTF22aalaajn",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 0.25055550690740347,
+      "UTC": "2022-05-24 17:09:55"
+    },
+    {
+      "objectId": "ZTF22aalaajn",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 0.2504629138857126,
+      "UTC": "2022-05-24 17:09:47"
+    },
+    {
+      "objectId": "ZTF22aakzsrj",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 0.2678124587982893,
+      "UTC": "2022-05-24 16:54:35"
+    },
+    {
+      "objectId": "ZTF22aakzsrj",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 0.26768514374271035,
+      "UTC": "2022-05-24 16:54:24"
+    },
+    {
+      "objectId": "ZTF22aalaaji",
+      "sherlock_z": 0.04,
+      "days_since_first_det": 0.21714115468785167,
+      "UTC": "2022-05-24 16:21:48"
+    },
+    {
+      "objectId": "ZTF22aalaaji",
+      "sherlock_z": 0.04,
+      "days_since_first_det": 0.217013840097934,
+      "UTC": "2022-05-24 16:21:37"
+    },
+    {
+      "objectId": "ZTF22aaksdvi",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 1.2101273071020842,
+      "UTC": "2022-05-24 15:06:10"
+    },
+    {
+      "objectId": "ZTF22aaksdvi",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 1.2100231400690973,
+      "UTC": "2022-05-24 15:06:01"
+    },
+    {
+      "objectId": "ZTF22aalaajn",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 0.16021985886618495,
+      "UTC": "2022-05-24 14:59:50"
+    },
+    {
+      "objectId": "ZTF22aalaajn",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 0.16006939578801394,
+      "UTC": "2022-05-24 14:59:37"
+    },
+    {
+      "objectId": "ZTF22aaksdvi",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 1.185694437008351,
+      "UTC": "2022-05-24 14:30:59"
+    },
+    {
+      "objectId": "ZTF22aaksdvi",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 1.185555547941476,
+      "UTC": "2022-05-24 14:30:47"
+    },
+    {
+      "objectId": "ZTF22aakmtrc",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 0.05093754408881068,
+      "UTC": "2022-05-24 07:20:12"
+    },
+    {
+      "objectId": "ZTF22aakmtrc",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 0.050775506999343634,
+      "UTC": "2022-05-24 07:19:58"
+    },
+    {
+      "objectId": "ZTF22aakmpsa",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 1.296145843807608,
+      "UTC": "2022-05-22 18:33:24"
+    },
+    {
+      "objectId": "ZTF22aakmpsa",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 1.296018528752029,
+      "UTC": "2022-05-22 18:33:13"
+    },
+    {
+      "objectId": "ZTF22aakmpsa",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 1.286585658788681,
+      "UTC": "2022-05-22 18:19:38"
+    },
+    {
+      "objectId": "ZTF22aakmpsa",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 1.286458343733102,
+      "UTC": "2022-05-22 18:19:27"
+    },
+    {
+      "objectId": "ZTF22aakmpsa",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 1.2602314921095967,
+      "UTC": "2022-05-22 17:41:41"
+    },
+    {
+      "objectId": "ZTF22aakmpsa",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 1.2601273250766098,
+      "UTC": "2022-05-22 17:41:32"
+    },
+    {
+      "objectId": "ZTF22aaknliz",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 0.1511689769104123,
+      "UTC": "2022-05-22 11:40:09"
+    },
+    {
+      "objectId": "ZTF22aaknliz",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 0.151064810808748,
+      "UTC": "2022-05-22 11:40:00"
+    },
+    {
+      "objectId": "ZTF22aakmpou",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 0.0256712744012475,
+      "UTC": "2022-05-21 12:00:28"
+    },
+    {
+      "objectId": "ZTF22aakmpsa",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 0.023275474086403847,
+      "UTC": "2022-05-21 12:00:28"
+    },
+    {
+      "objectId": "ZTF22aakmpou",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 0.025520811323076487,
+      "UTC": "2022-05-21 12:00:15"
+    },
+    {
+      "objectId": "ZTF22aakmpsa",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 0.023125011008232832,
+      "UTC": "2022-05-21 12:00:15"
+    },
+    {
+      "objectId": "ZTF22aakmpou",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 0.021840255241841078,
+      "UTC": "2022-05-21 11:54:57"
+    },
+    {
+      "objectId": "ZTF22aakmpsa",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 0.019444454926997423,
+      "UTC": "2022-05-21 11:54:57"
+    },
+    {
+      "objectId": "ZTF22aakmpou",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 0.021689792163670063,
+      "UTC": "2022-05-21 11:54:44"
+    },
+    {
+      "objectId": "ZTF22aakmpsa",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 0.01929399184882641,
+      "UTC": "2022-05-21 11:54:44"
+    },
+    {
+      "objectId": "ZTF22aakmpou",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 0.020312477368861437,
+      "UTC": "2022-05-21 11:52:45"
+    },
+    {
+      "objectId": "ZTF22aakmpsa",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 0.017916677054017782,
+      "UTC": "2022-05-21 11:52:45"
+    },
+    {
+      "objectId": "ZTF22aakmpou",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 0.020162014290690422,
+      "UTC": "2022-05-21 11:52:32"
+    },
+    {
+      "objectId": "ZTF22aakmpsa",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 0.017766213975846767,
+      "UTC": "2022-05-21 11:52:32"
+    },
+    {
+      "objectId": "ZTF21aaobvfd",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 0.012407422065734863,
+      "UTC": "2022-05-20 11:42:03"
+    },
+    {
+      "objectId": "ZTF21aaobvfd",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 0.012268532998859882,
+      "UTC": "2022-05-20 11:41:51"
+    },
+    {
+      "objectId": "ZTF22aaketce",
+      "sherlock_z": 0.07,
+      "days_since_first_det": 0.08729166584089398,
+      "UTC": "2022-05-20 10:17:33"
+    },
+    {
+      "objectId": "ZTF22aaketce",
+      "sherlock_z": 0.07,
+      "days_since_first_det": 0.08714120276272297,
+      "UTC": "2022-05-20 10:17:20"
+    },
+    {
+      "objectId": "ZTF22aakmbfy",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 0.04861110681667924,
+      "UTC": "2022-05-20 09:42:10"
+    },
+    {
+      "objectId": "ZTF22aakmbfy",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 0.04854166181758046,
+      "UTC": "2022-05-20 09:42:04"
+    },
+    {
+      "objectId": "ZTF22aakdnme",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 0.029363451059907675,
+      "UTC": "2022-05-20 07:39:25"
+    },
+    {
+      "objectId": "ZTF22aakdnme",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 0.029201414436101913,
+      "UTC": "2022-05-20 07:39:11"
+    },
+    {
+      "objectId": "ZTF22aakfeuk",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 1.9654398001730442,
+      "UTC": "2022-05-20 05:50:33"
+    },
+    {
+      "objectId": "ZTF22aakfeuk",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 1.9651967440731823,
+      "UTC": "2022-05-20 05:50:12"
+    },
+    {
+      "objectId": "ZTF22aakjlau",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 1.9433101806789637,
+      "UTC": "2022-05-20 05:24:20"
+    },
+    {
+      "objectId": "ZTF22aakjlau",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 1.943148144055158,
+      "UTC": "2022-05-20 05:24:06"
+    },
+    {
+      "objectId": "ZTF22aakexqn",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 1.9721180112101138,
+      "UTC": "2022-05-20 05:22:27"
+    },
+    {
+      "objectId": "ZTF22aakexqn",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 1.971921251155436,
+      "UTC": "2022-05-20 05:22:10"
+    },
+    {
+      "objectId": "ZTF22aakfeuk",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 1.942060169763863,
+      "UTC": "2022-05-20 05:16:53"
+    },
+    {
+      "objectId": "ZTF22aakfeuk",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 1.9419097071513534,
+      "UTC": "2022-05-20 05:16:40"
+    },
+    {
+      "objectId": "ZTF22aakexqn",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 1.971863396000117,
+      "UTC": "2022-05-20 04:51:13"
+    },
+    {
+      "objectId": "ZTF22aakexqn",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 1.971666636876762,
+      "UTC": "2022-05-20 04:50:56"
+    },
+    {
+      "objectId": "ZTF22aakejxf",
+      "sherlock_z": 0.07,
+      "days_since_first_det": 1.9798264331184328,
+      "UTC": "2022-05-20 04:33:54"
+    },
+    {
+      "objectId": "ZTF22aakjlau",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 1.9082870329730213,
+      "UTC": "2022-05-20 04:33:54"
+    },
+    {
+      "objectId": "ZTF22aakejxf",
+      "sherlock_z": 0.07,
+      "days_since_first_det": 1.9796296739950776,
+      "UTC": "2022-05-20 04:33:37"
+    },
+    {
+      "objectId": "ZTF22aakjlau",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 1.9080902738496661,
+      "UTC": "2022-05-20 04:33:37"
+    },
+    {
+      "objectId": "ZTF22aakirtl",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 0.17758098803460598,
+      "UTC": "2022-05-19 14:30:03"
+    },
+    {
+      "objectId": "ZTF22aakirtl",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 0.17741895094513893,
+      "UTC": "2022-05-19 14:29:49"
+    },
+    {
+      "objectId": "ZTF22aakitdm",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 0.12121530715376139,
+      "UTC": "2022-05-19 13:17:43"
+    },
+    {
+      "objectId": "ZTF22aakitdm",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 0.1210764180868864,
+      "UTC": "2022-05-19 13:17:31"
+    },
+    {
+      "objectId": "ZTF22aakiqpr",
+      "sherlock_z": 0.09,
+      "days_since_first_det": 0.10228007705882192,
+      "UTC": "2022-05-19 12:32:48"
+    },
+    {
+      "objectId": "ZTF22aakiqpr",
+      "sherlock_z": 0.09,
+      "days_since_first_det": 0.10219905897974968,
+      "UTC": "2022-05-19 12:32:41"
+    },
+    {
+      "objectId": "ZTF22aakicol",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 0.10226853704079986,
+      "UTC": "2022-05-19 11:18:50"
+    },
+    {
+      "objectId": "ZTF22aakicol",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 0.10216437000781298,
+      "UTC": "2022-05-19 11:18:41"
+    },
+    {
+      "objectId": "ZTF22aakhqrd",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 0.08196763973683119,
+      "UTC": "2022-05-19 09:50:34"
+    },
+    {
+      "objectId": "ZTF22aakhqrd",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 0.08181717712432146,
+      "UTC": "2022-05-19 09:50:21"
+    },
+    {
+      "objectId": "ZTF22aakethm",
+      "sherlock_z": 0.05,
+      "days_since_first_det": 0.0879514180123806,
+      "UTC": "2022-05-19 07:16:37"
+    },
+    {
+      "objectId": "ZTF22aakethm",
+      "sherlock_z": 0.05,
+      "days_since_first_det": 0.08775465888902545,
+      "UTC": "2022-05-19 07:16:20"
+    },
+    {
+      "objectId": "ZTF22aakejxf",
+      "sherlock_z": 0.07,
+      "days_since_first_det": 0.3587963399477303,
+      "UTC": "2022-05-18 13:39:37"
+    },
+    {
+      "objectId": "ZTF22aakejxf",
+      "sherlock_z": 0.07,
+      "days_since_first_det": 0.35859958082437515,
+      "UTC": "2022-05-18 13:39:20"
+    },
+    {
+      "objectId": "ZTF21abxowzx",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 1.3051157291047275,
+      "UTC": "2022-05-16 17:28:25"
+    },
+    {
+      "objectId": "ZTF21abxowzx",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 1.3046527663245797,
+      "UTC": "2022-05-16 17:27:45"
+    },
+    {
+      "objectId": "ZTF22aakcpfg",
+      "sherlock_z": 0.11,
+      "days_since_first_det": 0.5191897703334689,
+      "UTC": "2022-05-16 16:48:59"
+    },
+    {
+      "objectId": "ZTF22aakdbia",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 0.49648147029802203,
+      "UTC": "2022-05-16 16:48:59"
+    },
+    {
+      "objectId": "ZTF22aakcpfg",
+      "sherlock_z": 0.11,
+      "days_since_first_det": 0.5186573620885611,
+      "UTC": "2022-05-16 16:48:13"
+    },
+    {
+      "objectId": "ZTF22aakdbia",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 0.4959490620531142,
+      "UTC": "2022-05-16 16:48:13"
+    },
+    {
+      "objectId": "ZTF22aakayoi",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 1.2965278252959251,
+      "UTC": "2022-05-16 14:36:35"
+    },
+    {
+      "objectId": "ZTF22aakayoi",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 1.2961111590266228,
+      "UTC": "2022-05-16 14:35:59"
+    },
+    {
+      "objectId": "ZTF22aakayoi",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 0.045555603224784136,
+      "UTC": "2022-05-15 08:35:11"
+    },
+    {
+      "objectId": "ZTF22aakayoi",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 0.04543986218050122,
+      "UTC": "2022-05-15 08:35:01"
+    },
+    {
+      "objectId": "ZTF22aajzkwn",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 0.13130782498046756,
+      "UTC": "2022-05-14 14:25:47"
+    },
+    {
+      "objectId": "ZTF22aajzkwn",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 0.1312152328900993,
+      "UTC": "2022-05-14 14:25:39"
+    },
+    {
+      "objectId": "ZTF22aajzkwn",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 0.12930551124736667,
+      "UTC": "2022-05-14 14:22:54"
+    },
+    {
+      "objectId": "ZTF22aajzkwn",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 0.12921291822567582,
+      "UTC": "2022-05-14 14:22:46"
+    },
+    {
+      "objectId": "ZTF22aajzkwn",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 0.12598375091329217,
+      "UTC": "2022-05-14 14:18:07"
+    },
+    {
+      "objectId": "ZTF22aajzkwn",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 0.12587958527728915,
+      "UTC": "2022-05-14 14:17:58"
+    },
+    {
+      "objectId": "ZTF22aajxbkq",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 1.1209838180802763,
+      "UTC": "2022-05-14 14:13:19"
+    },
+    {
+      "objectId": "ZTF22aajxbkq",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 1.1208333550021052,
+      "UTC": "2022-05-14 14:13:06"
+    },
+    {
+      "objectId": "ZTF22aajzkwn",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 0.11618051119148731,
+      "UTC": "2022-05-14 14:04:00"
+    },
+    {
+      "objectId": "ZTF22aajzkwn",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 0.11604162212461233,
+      "UTC": "2022-05-14 14:03:48"
+    },
+    {
+      "objectId": "ZTF22aajxbkq",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 1.0742708551697433,
+      "UTC": "2022-05-14 13:06:03"
+    },
+    {
+      "objectId": "ZTF22aajxbkq",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 1.0741203920915723,
+      "UTC": "2022-05-14 13:05:50"
+    },
+    {
+      "objectId": "ZTF22aajxbkq",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 1.0710648372769356,
+      "UTC": "2022-05-14 13:01:26"
+    },
+    {
+      "objectId": "ZTF22aajxbkq",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 1.0709028001874685,
+      "UTC": "2022-05-14 13:01:12"
+    },
+    {
+      "objectId": "ZTF22aajxcjd",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 1.0457870000973344,
+      "UTC": "2022-05-14 12:40:30"
+    },
+    {
+      "objectId": "ZTF22aajxcjd",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 1.0456712590530515,
+      "UTC": "2022-05-14 12:40:20"
+    },
+    {
+      "objectId": "ZTF22aajuufc",
+      "sherlock_z": 0.03,
+      "days_since_first_det": 1.1667360770516098,
+      "UTC": "2022-05-14 08:26:39"
+    },
+    {
+      "objectId": "ZTF22aajuufc",
+      "sherlock_z": 0.03,
+      "days_since_first_det": 1.1665740399621427,
+      "UTC": "2022-05-14 08:26:25"
+    },
+    {
+      "objectId": "ZTF22aajuufc",
+      "sherlock_z": 0.03,
+      "days_since_first_det": 1.0013078367337584,
+      "UTC": "2022-05-14 04:28:26"
+    },
+    {
+      "objectId": "ZTF22aajuufc",
+      "sherlock_z": 0.03,
+      "days_since_first_det": 1.0012036697007716,
+      "UTC": "2022-05-14 04:28:17"
+    },
+    {
+      "objectId": "ZTF22aajuldx",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 1.0995833217166364,
+      "UTC": "2022-05-13 13:57:03"
+    },
+    {
+      "objectId": "ZTF22aajxbkq",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 0.10968752205371857,
+      "UTC": "2022-05-13 13:57:03"
+    },
+    {
+      "objectId": "ZTF22aajuldx",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 1.0994907286949456,
+      "UTC": "2022-05-13 13:56:55"
+    },
+    {
+      "objectId": "ZTF22aajxbkq",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 0.10959492903202772,
+      "UTC": "2022-05-13 13:56:55"
+    },
+    {
+      "objectId": "ZTF22aajuigz",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 1.1105902916751802,
+      "UTC": "2022-05-13 13:55:47"
+    },
+    {
+      "objectId": "ZTF22aajuldx",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 1.0987036917358637,
+      "UTC": "2022-05-13 13:55:47"
+    },
+    {
+      "objectId": "ZTF22aajuigz",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 1.1104861246421933,
+      "UTC": "2022-05-13 13:55:38"
+    },
+    {
+      "objectId": "ZTF22aajuldx",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 1.0985995247028768,
+      "UTC": "2022-05-13 13:55:38"
+    },
+    {
+      "objectId": "ZTF22aajuigz",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 1.1083217738196254,
+      "UTC": "2022-05-13 13:52:31"
+    },
+    {
+      "objectId": "ZTF22aajuigz",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 1.1082407548092306,
+      "UTC": "2022-05-13 13:52:24"
+    },
+    {
+      "objectId": "ZTF22aajxbkq",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 0.10574076231569052,
+      "UTC": "2022-05-13 13:51:22"
+    },
+    {
+      "objectId": "ZTF22aajxbkq",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 0.10563659621402621,
+      "UTC": "2022-05-13 13:51:13"
+    },
+    {
+      "objectId": "ZTF22aajuldx",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 1.0944444327615201,
+      "UTC": "2022-05-13 13:49:39"
+    },
+    {
+      "objectId": "ZTF22aajuldx",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 1.0942939696833491,
+      "UTC": "2022-05-13 13:49:26"
+    },
+    {
+      "objectId": "ZTF22aajuigz",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 1.103182884864509,
+      "UTC": "2022-05-13 13:45:07"
+    },
+    {
+      "objectId": "ZTF22aajuigz",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 1.1030555698089302,
+      "UTC": "2022-05-13 13:44:56"
+    },
+    {
+      "objectId": "ZTF22aajwjhe",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 0.16259260661900043,
+      "UTC": "2022-05-13 13:01:58"
+    },
+    {
+      "objectId": "ZTF22aajwjhe",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 0.1624652915634215,
+      "UTC": "2022-05-13 13:01:47"
+    },
+    {
+      "objectId": "ZTF22aajuldx",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 1.0387268397025764,
+      "UTC": "2022-05-13 12:29:25"
+    },
+    {
+      "objectId": "ZTF22aajxbkq",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 0.048831040039658546,
+      "UTC": "2022-05-13 12:29:25"
+    },
+    {
+      "objectId": "ZTF22aajuldx",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 1.0385879511013627,
+      "UTC": "2022-05-13 12:29:13"
+    },
+    {
+      "objectId": "ZTF22aajxbkq",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 0.04869215143844485,
+      "UTC": "2022-05-13 12:29:13"
+    },
+    {
+      "objectId": "ZTF22aajuldx",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 1.034293970093131,
+      "UTC": "2022-05-13 12:23:02"
+    },
+    {
+      "objectId": "ZTF22aajxcjd",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 0.0336573701351881,
+      "UTC": "2022-05-13 12:23:02"
+    },
+    {
+      "objectId": "ZTF22aajuldx",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 1.03414350701496,
+      "UTC": "2022-05-13 12:22:49"
+    },
+    {
+      "objectId": "ZTF22aajxcjd",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 0.03350690705701709,
+      "UTC": "2022-05-13 12:22:49"
+    },
+    {
+      "objectId": "ZTF22aajuigz",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 1.0375578845851123,
+      "UTC": "2022-05-13 12:10:37"
+    },
+    {
+      "objectId": "ZTF22aajuigz",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 1.0373958479613066,
+      "UTC": "2022-05-13 12:10:23"
+    },
+    {
+      "objectId": "ZTF22aajtsxd",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 1.1270370767451823,
+      "UTC": "2022-05-13 11:33:24"
+    },
+    {
+      "objectId": "ZTF22aajtsxd",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 1.1269097616896033,
+      "UTC": "2022-05-13 11:33:13"
+    },
+    {
+      "objectId": "ZTF22aajtsxd",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 1.0574074476025999,
+      "UTC": "2022-05-13 09:53:08"
+    },
+    {
+      "objectId": "ZTF22aajtsxd",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 1.0572569849900901,
+      "UTC": "2022-05-13 09:52:55"
+    },
+    {
+      "objectId": "ZTF22aajryew",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 1.9545485661365092,
+      "UTC": "2022-05-13 09:44:15"
+    },
+    {
+      "objectId": "ZTF22aajryew",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 1.9544096770696342,
+      "UTC": "2022-05-13 09:44:03"
+    },
+    {
+      "objectId": "ZTF22aajpdbs",
+      "sherlock_z": 0.07,
+      "days_since_first_det": 1.9885184741578996,
+      "UTC": "2022-05-13 06:55:22"
+    },
+    {
+      "objectId": "ZTF22aajpdbs",
+      "sherlock_z": 0.07,
+      "days_since_first_det": 1.9883680110797286,
+      "UTC": "2022-05-13 06:55:09"
+    },
+    {
+      "objectId": "ZTF22aajutqu",
+      "sherlock_z": 0.03,
+      "days_since_first_det": 0.03950227005407214,
+      "UTC": "2022-05-13 05:21:23"
+    },
+    {
+      "objectId": "ZTF22aajuufc",
+      "sherlock_z": 0.03,
+      "days_since_first_det": 0.03807866992428899,
+      "UTC": "2022-05-13 05:21:23"
+    },
+    {
+      "objectId": "ZTF22aajutqu",
+      "sherlock_z": 0.03,
+      "days_since_first_det": 0.039317084942013025,
+      "UTC": "2022-05-13 05:21:07"
+    },
+    {
+      "objectId": "ZTF22aajuufc",
+      "sherlock_z": 0.03,
+      "days_since_first_det": 0.03789348481222987,
+      "UTC": "2022-05-13 05:21:07"
+    },
+    {
+      "objectId": "ZTF22aajujif",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 1.165416703093797,
+      "UTC": "2022-05-12 15:35:56"
+    },
+    {
+      "objectId": "ZTF22aajujig",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 1.165416703093797,
+      "UTC": "2022-05-12 15:35:56"
+    },
+    {
+      "objectId": "ZTF22aajukyk",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 1.1634606029838324,
+      "UTC": "2022-05-12 15:35:56"
+    },
+    {
+      "objectId": "ZTF22aajujif",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 1.1653125369921327,
+      "UTC": "2022-05-12 15:35:47"
+    },
+    {
+      "objectId": "ZTF22aajujig",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 1.1653125369921327,
+      "UTC": "2022-05-12 15:35:47"
+    },
+    {
+      "objectId": "ZTF22aajukyk",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 1.163356436882168,
+      "UTC": "2022-05-12 15:35:47"
+    },
+    {
+      "objectId": "ZTF22aajuldx",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 0.16379628470167518,
+      "UTC": "2022-05-12 15:29:31"
+    },
+    {
+      "objectId": "ZTF22aajuldx",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 0.16371526569128036,
+      "UTC": "2022-05-12 15:29:24"
+    },
+    {
+      "objectId": "ZTF22aajujed",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 1.1554051032289863,
+      "UTC": "2022-05-12 15:27:50"
+    },
+    {
+      "objectId": "ZTF22aajujed",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 1.1552546401508152,
+      "UTC": "2022-05-12 15:27:37"
+    },
+    {
+      "objectId": "ZTF22aajuigz",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 0.16925927391275764,
+      "UTC": "2022-05-12 15:20:16"
+    },
+    {
+      "objectId": "ZTF22aajuigz",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 0.1691319588571787,
+      "UTC": "2022-05-12 15:20:05"
+    },
+    {
+      "objectId": "ZTF21aanqhok",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 1.1509490921162069,
+      "UTC": "2022-05-12 15:12:17"
+    },
+    {
+      "objectId": "ZTF21aanqhok",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 1.150821777060628,
+      "UTC": "2022-05-12 15:12:06"
+    },
+    {
+      "objectId": "ZTF22aajuigz",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 0.15436343988403678,
+      "UTC": "2022-05-12 14:58:49"
+    },
+    {
+      "objectId": "ZTF22aajuigz",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 0.15423612482845783,
+      "UTC": "2022-05-12 14:58:38"
+    },
+    {
+      "objectId": "ZTF21abilubd",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 1.1680440069176257,
+      "UTC": "2022-05-12 13:38:52"
+    },
+    {
+      "objectId": "ZTF21abilubd",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 1.1678819698281586,
+      "UTC": "2022-05-12 13:38:38"
+    },
+    {
+      "objectId": "ZTF22aajuddj",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 0.1577893514186144,
+      "UTC": "2022-05-12 13:25:28"
+    },
+    {
+      "objectId": "ZTF22aajuddj",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 0.15766203729435802,
+      "UTC": "2022-05-12 13:25:17"
+    },
+    {
+      "objectId": "ZTF21abilubd",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 1.1222685440443456,
+      "UTC": "2022-05-12 12:32:57"
+    },
+    {
+      "objectId": "ZTF21abilubd",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 1.1221412289887667,
+      "UTC": "2022-05-12 12:32:46"
+    },
+    {
+      "objectId": "ZTF22aajtsnn",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 1.9741782848723233,
+      "UTC": "2022-05-12 08:53:58"
+    },
+    {
+      "objectId": "ZTF22aajtsnn",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 1.9740856918506324,
+      "UTC": "2022-05-12 08:53:50"
+    },
+    {
+      "objectId": "ZTF22aajnfmd",
+      "sherlock_z": 0.08,
+      "days_since_first_det": 0.1049073999747634,
+      "UTC": "2022-05-12 07:24:09"
+    },
+    {
+      "objectId": "ZTF22aajnfmd",
+      "sherlock_z": 0.08,
+      "days_since_first_det": 0.10474536195397377,
+      "UTC": "2022-05-12 07:23:55"
+    },
+    {
+      "objectId": "ZTF22aajsxsh",
+      "sherlock_z": 0.1,
+      "days_since_first_det": 0.09793982189148664,
+      "UTC": "2022-05-12 06:28:51"
+    },
+    {
+      "objectId": "ZTF22aajsxsh",
+      "sherlock_z": 0.1,
+      "days_since_first_det": 0.0977777848020196,
+      "UTC": "2022-05-12 06:28:37"
+    },
+    {
+      "objectId": "ZTF22aajlruz",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 1.9123726659454405,
+      "UTC": "2022-05-12 06:14:33"
+    },
+    {
+      "objectId": "ZTF22aajlruz",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 1.9121990548446774,
+      "UTC": "2022-05-12 06:14:18"
+    },
+    {
+      "objectId": "ZTF22aajiuar",
+      "sherlock_z": 0.03,
+      "days_since_first_det": 1.9573727031238377,
+      "UTC": "2022-05-12 05:52:17"
+    },
+    {
+      "objectId": "ZTF22aajiuar",
+      "sherlock_z": 0.03,
+      "days_since_first_det": 1.9571875180117786,
+      "UTC": "2022-05-12 05:52:01"
+    },
+    {
+      "objectId": "ZTF22aajnffd",
+      "sherlock_z": 0.06,
+      "days_since_first_det": 1.9601620477624238,
+      "UTC": "2022-05-12 05:07:23"
+    },
+    {
+      "objectId": "ZTF22aajnffd",
+      "sherlock_z": 0.06,
+      "days_since_first_det": 1.9600115846842527,
+      "UTC": "2022-05-12 05:07:10"
+    },
+    {
+      "objectId": "ZTF22aajsqug",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 0.10824070265516639,
+      "UTC": "2022-05-11 13:56:56"
+    },
+    {
+      "objectId": "ZTF22aajsqug",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 0.10802079597488046,
+      "UTC": "2022-05-11 13:56:37"
+    },
+    {
+      "objectId": "ZTF22aajsqug",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 0.09561338787898421,
+      "UTC": "2022-05-11 13:38:45"
+    },
+    {
+      "objectId": "ZTF22aajsqug",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 0.095393480733037,
+      "UTC": "2022-05-11 13:38:26"
+    },
+    {
+      "objectId": "ZTF22aajsdkt",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 0.17571760015562177,
+      "UTC": "2022-05-11 13:20:33"
+    },
+    {
+      "objectId": "ZTF22aajsdkt",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 0.175509266089648,
+      "UTC": "2022-05-11 13:20:15"
+    },
+    {
+      "objectId": "ZTF21abilubd",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 0.13070604391396046,
+      "UTC": "2022-05-11 12:45:06"
+    },
+    {
+      "objectId": "ZTF21abilubd",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 0.13045141380280256,
+      "UTC": "2022-05-11 12:44:44"
+    },
+    {
+      "objectId": "ZTF22aajsgxk",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 0.06168983969837427,
+      "UTC": "2022-05-11 11:04:22"
+    },
+    {
+      "objectId": "ZTF22aajsgxk",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 0.061539377085864544,
+      "UTC": "2022-05-11 11:04:09"
+    },
+    {
+      "objectId": "ZTF22aajjawt",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 1.9518287400715053,
+      "UTC": "2022-05-11 09:19:31"
+    },
+    {
+      "objectId": "ZTF22aajjawt",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 1.9516435554251075,
+      "UTC": "2022-05-11 09:19:15"
+    },
+    {
+      "objectId": "ZTF22aajpdbs",
+      "sherlock_z": 0.07,
+      "days_since_first_det": 0.08269671397283673,
+      "UTC": "2022-05-11 09:10:59"
+    },
+    {
+      "objectId": "ZTF22aajpdbs",
+      "sherlock_z": 0.07,
+      "days_since_first_det": 0.08248838083818555,
+      "UTC": "2022-05-11 09:10:41"
+    },
+    {
+      "objectId": "ZTF22aajjasl",
+      "sherlock_z": 0.04,
+      "days_since_first_det": 1.9977083588019013,
+      "UTC": "2022-05-11 07:35:41"
+    },
+    {
+      "objectId": "ZTF22aajjasl",
+      "sherlock_z": 0.04,
+      "days_since_first_det": 1.9975463221780956,
+      "UTC": "2022-05-11 07:35:27"
+    },
+    {
+      "objectId": "ZTF22aajiynq",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 1.9676851956173778,
+      "UTC": "2022-05-11 07:28:16"
+    },
+    {
+      "objectId": "ZTF22aajiynq",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 1.967523158993572,
+      "UTC": "2022-05-11 07:28:02"
+    },
+    {
+      "objectId": "ZTF22aajpgof",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 0.9268055553548038,
+      "UTC": "2022-05-11 07:19:06"
+    },
+    {
+      "objectId": "ZTF22aajpgof",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 0.9266782402992249,
+      "UTC": "2022-05-11 07:18:55"
+    },
+    {
+      "objectId": "ZTF22aajrfqn",
+      "sherlock_z": 0.09,
+      "days_since_first_det": 0.027430506888777018,
+      "UTC": "2022-05-11 05:39:37"
+    },
+    {
+      "objectId": "ZTF22aajrfqn",
+      "sherlock_z": 0.09,
+      "days_since_first_det": 0.027349487878382206,
+      "UTC": "2022-05-11 05:39:30"
+    },
+    {
+      "objectId": "ZTF22aajrdad",
+      "sherlock_z": 0.07,
+      "days_since_first_det": 0.054826388135552406,
+      "UTC": "2022-05-11 05:34:06"
+    },
+    {
+      "objectId": "ZTF22aajrdad",
+      "sherlock_z": 0.07,
+      "days_since_first_det": 0.054699074011296034,
+      "UTC": "2022-05-11 05:33:55"
+    },
+    {
+      "objectId": "ZTF22aajrcuw",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 0.04796292493119836,
+      "UTC": "2022-05-11 05:23:32"
+    },
+    {
+      "objectId": "ZTF22aajrcuw",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 0.04780088784173131,
+      "UTC": "2022-05-11 05:23:18"
+    },
+    {
+      "objectId": "ZTF22aajkwaq",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 1.9725578292272985,
+      "UTC": "2022-05-11 05:09:04"
+    },
+    {
+      "objectId": "ZTF22aajkwaq",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 1.9724305141717196,
+      "UTC": "2022-05-11 05:08:53"
+    },
+    {
+      "objectId": "ZTF22aajrdyz",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 1.976006903219968,
+      "UTC": "2022-05-11 04:41:38"
+    },
+    {
+      "objectId": "ZTF22aajrdyz",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 1.975844866130501,
+      "UTC": "2022-05-11 04:41:24"
+    },
+    {
+      "objectId": "ZTF22aajkouq",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 1.9793402659706771,
+      "UTC": "2022-05-11 04:25:39"
+    },
+    {
+      "objectId": "ZTF22aajkpen",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 1.9793402659706771,
+      "UTC": "2022-05-11 04:25:39"
+    },
+    {
+      "objectId": "ZTF22aajkouq",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 1.9791782293468714,
+      "UTC": "2022-05-11 04:25:25"
+    },
+    {
+      "objectId": "ZTF22aajkpen",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 1.9791782293468714,
+      "UTC": "2022-05-11 04:25:25"
+    },
+    {
+      "objectId": "ZTF22aajquvs",
+      "sherlock_z": 0.02,
+      "days_since_first_det": 0.1852662512101233,
+      "UTC": "2022-05-10 16:01:37"
+    },
+    {
+      "objectId": "ZTF22aajquxe",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 0.18133105104789138,
+      "UTC": "2022-05-10 16:01:37"
+    },
+    {
+      "objectId": "ZTF22aajquvs",
+      "sherlock_z": 0.02,
+      "days_since_first_det": 0.18518523313105106,
+      "UTC": "2022-05-10 16:01:30"
+    },
+    {
+      "objectId": "ZTF22aajquxe",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 0.18125003296881914,
+      "UTC": "2022-05-10 16:01:30"
+    },
+    {
+      "objectId": "ZTF22aajqpim",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 0.10218752920627594,
+      "UTC": "2022-05-10 13:48:49"
+    },
+    {
+      "objectId": "ZTF22aajqpim",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 0.10209493711590767,
+      "UTC": "2022-05-10 13:48:41"
+    },
+    {
+      "objectId": "ZTF22aajpvts",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 0.14579865103587508,
+      "UTC": "2022-05-10 13:38:31"
+    },
+    {
+      "objectId": "ZTF22aajpvts",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 0.14568291092291474,
+      "UTC": "2022-05-10 13:38:21"
+    },
+    {
+      "objectId": "ZTF22aajjscu",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 1.9727545999921858,
+      "UTC": "2022-05-10 09:54:00"
+    },
+    {
+      "objectId": "ZTF22aajjscu",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 1.9725925619713962,
+      "UTC": "2022-05-10 09:53:46"
+    },
+    {
+      "objectId": "ZTF22aajiuar",
+      "sherlock_z": 0.03,
+      "days_since_first_det": 0.05582177732139826,
+      "UTC": "2022-05-10 08:14:03"
+    },
+    {
+      "objectId": "ZTF22aajiuar",
+      "sherlock_z": 0.03,
+      "days_since_first_det": 0.05568288825452328,
+      "UTC": "2022-05-10 08:13:51"
+    },
+    {
+      "objectId": "ZTF22aajnffd",
+      "sherlock_z": 0.06,
+      "days_since_first_det": 0.0813194545917213,
+      "UTC": "2022-05-10 08:01:51"
+    },
+    {
+      "objectId": "ZTF22aajnffd",
+      "sherlock_z": 0.06,
+      "days_since_first_det": 0.08113426994532347,
+      "UTC": "2022-05-10 08:01:35"
+    },
+    {
+      "objectId": "ZTF22aajingj",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 1.9881133809685707,
+      "UTC": "2022-05-10 07:16:23"
+    },
+    {
+      "objectId": "ZTF22aajingj",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 1.9879397698678076,
+      "UTC": "2022-05-10 07:16:08"
+    },
+    {
+      "objectId": "ZTF22aajodur",
+      "sherlock_z": 0.08,
+      "days_since_first_det": 1.978310211095959,
+      "UTC": "2022-05-10 07:10:27"
+    },
+    {
+      "objectId": "ZTF22aajodur",
+      "sherlock_z": 0.08,
+      "days_since_first_det": 1.9781365999951959,
+      "UTC": "2022-05-10 07:10:12"
+    },
+    {
+      "objectId": "ZTF22aajhyin",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 1.9804514334537089,
+      "UTC": "2022-05-10 05:35:33"
+    },
+    {
+      "objectId": "ZTF22aajhyin",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 1.9802546743303537,
+      "UTC": "2022-05-10 05:35:16"
+    },
+    {
+      "objectId": "ZTF22aajkhan",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 1.2771643586456776,
+      "UTC": "2022-05-09 18:13:20"
+    },
+    {
+      "objectId": "ZTF22aajkifc",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 1.275706058833748,
+      "UTC": "2022-05-09 18:13:20"
+    },
+    {
+      "objectId": "ZTF22aajkhan",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 1.2770486176013947,
+      "UTC": "2022-05-09 18:13:10"
+    },
+    {
+      "objectId": "ZTF22aajkifc",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 1.2755903177894652,
+      "UTC": "2022-05-09 18:13:10"
+    },
+    {
+      "objectId": "ZTF22aajkhan",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 1.273750006686896,
+      "UTC": "2022-05-09 18:08:25"
+    },
+    {
+      "objectId": "ZTF22aajkhan",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 1.2736689876765013,
+      "UTC": "2022-05-09 18:08:18"
+    },
+    {
+      "objectId": "ZTF22aajmnru",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 0.2696064440533519,
+      "UTC": "2022-05-09 18:02:48"
+    },
+    {
+      "objectId": "ZTF22aajmnru",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 0.269502277020365,
+      "UTC": "2022-05-09 18:02:39"
+    },
+    {
+      "objectId": "ZTF21aacvkhh",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 1.2603240506723523,
+      "UTC": "2022-05-09 17:58:10"
+    },
+    {
+      "objectId": "ZTF21aacvkhh",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 1.2601967370137572,
+      "UTC": "2022-05-09 17:57:59"
+    },
+    {
+      "objectId": "ZTF22aajkhan",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 1.259629637002945,
+      "UTC": "2022-05-09 17:48:05"
+    },
+    {
+      "objectId": "ZTF22aajkhan",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 1.2595486179925501,
+      "UTC": "2022-05-09 17:47:58"
+    },
+    {
+      "objectId": "ZTF22aabhfzy",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 1.2522685397416353,
+      "UTC": "2022-05-09 17:43:04"
+    },
+    {
+      "objectId": "ZTF22aajkhan",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 1.2561458395794034,
+      "UTC": "2022-05-09 17:43:04"
+    },
+    {
+      "objectId": "ZTF22aabhfzy",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 1.2521412251517177,
+      "UTC": "2022-05-09 17:42:53"
+    },
+    {
+      "objectId": "ZTF22aajkhan",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 1.2560185249894857,
+      "UTC": "2022-05-09 17:42:53"
+    },
+    {
+      "objectId": "ZTF22aajkjdr",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 1.2518981881439686,
+      "UTC": "2022-05-09 17:39:03"
+    },
+    {
+      "objectId": "ZTF22aajmnru",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 0.2531133880838752,
+      "UTC": "2022-05-09 17:39:03"
+    },
+    {
+      "objectId": "ZTF22aajkjdr",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 1.2517708740197122,
+      "UTC": "2022-05-09 17:38:52"
+    },
+    {
+      "objectId": "ZTF22aajmnru",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 0.2529860739596188,
+      "UTC": "2022-05-09 17:38:52"
+    },
+    {
+      "objectId": "ZTF22aajkjdr",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 1.2505440218374133,
+      "UTC": "2022-05-09 17:37:06"
+    },
+    {
+      "objectId": "ZTF22aajkjdr",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 1.2504398548044264,
+      "UTC": "2022-05-09 17:36:57"
+    },
+    {
+      "objectId": "ZTF22aajkifc",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 1.2494792067445815,
+      "UTC": "2022-05-09 17:35:34"
+    },
+    {
+      "objectId": "ZTF22aajkifc",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 1.2493518921546638,
+      "UTC": "2022-05-09 17:35:23"
+    },
+    {
+      "objectId": "ZTF22aajkhan",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 1.2479282477870584,
+      "UTC": "2022-05-09 17:31:14"
+    },
+    {
+      "objectId": "ZTF22aajkhan",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 1.2478240807540715,
+      "UTC": "2022-05-09 17:31:05"
+    },
+    {
+      "objectId": "ZTF22aabhfzy",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 1.2430324289016426,
+      "UTC": "2022-05-09 17:29:46"
+    },
+    {
+      "objectId": "ZTF22aajkifc",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 1.2454514289274812,
+      "UTC": "2022-05-09 17:29:46"
+    },
+    {
+      "objectId": "ZTF22aajmnru",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 0.24666662886738777,
+      "UTC": "2022-05-09 17:29:46"
+    },
+    {
+      "objectId": "ZTF22aabhfzy",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 1.2429282618686557,
+      "UTC": "2022-05-09 17:29:37"
+    },
+    {
+      "objectId": "ZTF22aajkifc",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 1.2453472618944943,
+      "UTC": "2022-05-09 17:29:37"
+    },
+    {
+      "objectId": "ZTF22aajmnru",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 0.2465624618344009,
+      "UTC": "2022-05-09 17:29:37"
+    },
+    {
+      "objectId": "ZTF22aajkjdr",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 1.2439583740197122,
+      "UTC": "2022-05-09 17:27:37"
+    },
+    {
+      "objectId": "ZTF22aajkjdr",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 1.2438426329754293,
+      "UTC": "2022-05-09 17:27:27"
+    },
+    {
+      "objectId": "ZTF22aajkifc",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 1.2417477248236537,
+      "UTC": "2022-05-09 17:24:26"
+    },
+    {
+      "objectId": "ZTF22aajkjbi",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 1.2373727248050272,
+      "UTC": "2022-05-09 17:24:26"
+    },
+    {
+      "objectId": "ZTF22aajkifc",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 1.2416204111650586,
+      "UTC": "2022-05-09 17:24:15"
+    },
+    {
+      "objectId": "ZTF22aajkjbi",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 1.2372454111464322,
+      "UTC": "2022-05-09 17:24:15"
+    },
+    {
+      "objectId": "ZTF22aajmmkn",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 1.222303254995495,
+      "UTC": "2022-05-09 16:41:09"
+    },
+    {
+      "objectId": "ZTF22aajmmkn",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 1.2222106619738042,
+      "UTC": "2022-05-09 16:41:01"
+    },
+    {
+      "objectId": "ZTF22aajkifc",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 1.1662731878459454,
+      "UTC": "2022-05-09 15:35:45"
+    },
+    {
+      "objectId": "ZTF22aajkifc",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 1.1661111507564783,
+      "UTC": "2022-05-09 15:35:31"
+    },
+    {
+      "objectId": "ZTF22aajkjdr",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 1.1603819848969579,
+      "UTC": "2022-05-09 15:27:16"
+    },
+    {
+      "objectId": "ZTF22aajmnth",
+      "sherlock_z": 1.14,
+      "days_since_first_det": 0.16159718483686447,
+      "UTC": "2022-05-09 15:27:16"
+    },
+    {
+      "objectId": "ZTF22aajkjdr",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 1.1602083737961948,
+      "UTC": "2022-05-09 15:27:01"
+    },
+    {
+      "objectId": "ZTF22aajmnth",
+      "sherlock_z": 1.14,
+      "days_since_first_det": 0.1614235737361014,
+      "UTC": "2022-05-09 15:27:01"
+    },
+    {
+      "objectId": "ZTF22aajlpug",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 0.2490972219966352,
+      "UTC": "2022-05-09 14:41:09"
+    },
+    {
+      "objectId": "ZTF22aajlpug",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 0.24896990694105625,
+      "UTC": "2022-05-09 14:40:58"
+    },
+    {
+      "objectId": "ZTF22aajlpug",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 0.2040509250946343,
+      "UTC": "2022-05-09 13:36:17"
+    },
+    {
+      "objectId": "ZTF22aajlsrh",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 0.18876152485609055,
+      "UTC": "2022-05-09 13:36:17"
+    },
+    {
+      "objectId": "ZTF22aajlpug",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 0.2039120369590819,
+      "UTC": "2022-05-09 13:36:05"
+    },
+    {
+      "objectId": "ZTF22aajlsrh",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 0.18862263672053814,
+      "UTC": "2022-05-09 13:36:05"
+    },
+    {
+      "objectId": "ZTF22aajlpug",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 0.12193287024274468,
+      "UTC": "2022-05-09 11:38:02"
+    },
+    {
+      "objectId": "ZTF22aajlpug",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 0.12181712919846177,
+      "UTC": "2022-05-09 11:37:52"
+    },
+    {
+      "objectId": "ZTF22aajlbxu",
+      "sherlock_z": 0.1,
+      "days_since_first_det": 1.0479051289148629,
+      "UTC": "2022-05-09 08:33:49"
+    },
+    {
+      "objectId": "ZTF22aajlbxu",
+      "sherlock_z": 0.1,
+      "days_since_first_det": 1.0477430918253958,
+      "UTC": "2022-05-09 08:33:35"
+    },
+    {
+      "objectId": "ZTF22aajkwaq",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 0.05094903288409114,
+      "UTC": "2022-05-09 07:01:57"
+    },
+    {
+      "objectId": "ZTF22aajkwaq",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 0.05085643986240029,
+      "UTC": "2022-05-09 07:01:49"
+    },
+    {
+      "objectId": "ZTF22aajhkpo",
+      "sherlock_z": 0.03,
+      "days_since_first_det": 0.03596068499609828,
+      "UTC": "2022-05-09 06:35:22"
+    },
+    {
+      "objectId": "ZTF22aajhkpo",
+      "sherlock_z": 0.03,
+      "days_since_first_det": 0.03583336994051933,
+      "UTC": "2022-05-09 06:35:11"
+    },
+    {
+      "objectId": "ZTF22aajkpen",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 0.024675914086401463,
+      "UTC": "2022-05-09 05:30:56"
+    },
+    {
+      "objectId": "ZTF22aajkpen",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 0.024490728974342346,
+      "UTC": "2022-05-09 05:30:40"
+    },
+    {
+      "objectId": "ZTF22aajkouq",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 0.017118044197559357,
+      "UTC": "2022-05-09 05:20:03"
+    },
+    {
+      "objectId": "ZTF22aajkouq",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 0.016956007108092308,
+      "UTC": "2022-05-09 05:19:49"
+    },
+    {
+      "objectId": "ZTF22aajkhan",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 0.30840278463438153,
+      "UTC": "2022-05-08 18:58:19"
+    },
+    {
+      "objectId": "ZTF22aajkhan",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 0.3083101916126907,
+      "UTC": "2022-05-08 18:58:11"
+    },
+    {
+      "objectId": "ZTF21aaaadty",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 0.3007292109541595,
+      "UTC": "2022-05-08 18:38:57"
+    },
+    {
+      "objectId": "ZTF21aaaadty",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 0.3006250439211726,
+      "UTC": "2022-05-08 18:38:48"
+    },
+    {
+      "objectId": "ZTF22aajkjdr",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 0.28472226206213236,
+      "UTC": "2022-05-08 18:26:19"
+    },
+    {
+      "objectId": "ZTF22aajkjdr",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 0.28465281799435616,
+      "UTC": "2022-05-08 18:26:13"
+    },
+    {
+      "objectId": "ZTF22aajkisx",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 0.2825810248032212,
+      "UTC": "2022-05-08 18:21:08"
+    },
+    {
+      "objectId": "ZTF22aajkisx",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 0.2824652846902609,
+      "UTC": "2022-05-08 18:20:58"
+    },
+    {
+      "objectId": "ZTF22aajkhan",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 0.2787963026203215,
+      "UTC": "2022-05-08 18:15:41"
+    },
+    {
+      "objectId": "ZTF22aajkhan",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 0.27866898756474257,
+      "UTC": "2022-05-08 18:15:30"
+    },
+    {
+      "objectId": "ZTF21abrmdem",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 0.27394674392417073,
+      "UTC": "2022-05-08 18:13:36"
+    },
+    {
+      "objectId": "ZTF21abrmdem",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 0.2738310028798878,
+      "UTC": "2022-05-08 18:13:26"
+    },
+    {
+      "objectId": "ZTF22aajkifc",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 0.26196763291954994,
+      "UTC": "2022-05-08 17:53:33"
+    },
+    {
+      "objectId": "ZTF22aajkjbi",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 0.2575926329009235,
+      "UTC": "2022-05-08 17:53:33"
+    },
+    {
+      "objectId": "ZTF22aajkifc",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 0.2618171698413789,
+      "UTC": "2022-05-08 17:53:20"
+    },
+    {
+      "objectId": "ZTF22aajkjbi",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 0.2574421698227525,
+      "UTC": "2022-05-08 17:53:20"
+    },
+    {
+      "objectId": "ZTF22aajjmqy",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 0.31715275906026363,
+      "UTC": "2022-05-08 17:47:14"
+    },
+    {
+      "objectId": "ZTF22aajjmqy",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 0.31704859202727675,
+      "UTC": "2022-05-08 17:47:05"
+    },
+    {
+      "objectId": "ZTF22aajjncg",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 0.2843402591533959,
+      "UTC": "2022-05-08 16:59:59"
+    },
+    {
+      "objectId": "ZTF22aajkiqv",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 0.22282405896112323,
+      "UTC": "2022-05-08 16:59:59"
+    },
+    {
+      "objectId": "ZTF22aajjncg",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 0.28421294409781694,
+      "UTC": "2022-05-08 16:59:48"
+    },
+    {
+      "objectId": "ZTF22aajkiqv",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 0.22269674390554428,
+      "UTC": "2022-05-08 16:59:48"
+    },
+    {
+      "objectId": "ZTF22aajjmqy",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 0.27535877702757716,
+      "UTC": "2022-05-08 16:47:03"
+    },
+    {
+      "objectId": "ZTF22aajjmqy",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 0.2752198879607022,
+      "UTC": "2022-05-08 16:46:51"
+    },
+    {
+      "objectId": "ZTF21abrauhm",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 0.24629631824791431,
+      "UTC": "2022-05-08 16:01:46"
+    },
+    {
+      "objectId": "ZTF22aajjzln",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 0.24629631824791431,
+      "UTC": "2022-05-08 16:01:46"
+    },
+    {
+      "objectId": "ZTF22aajkacz",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 0.24582171812653542,
+      "UTC": "2022-05-08 16:01:46"
+    },
+    {
+      "objectId": "ZTF21abrauhm",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 0.24616900319233537,
+      "UTC": "2022-05-08 16:01:35"
+    },
+    {
+      "objectId": "ZTF22aajjzln",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 0.24616900319233537,
+      "UTC": "2022-05-08 16:01:35"
+    },
+    {
+      "objectId": "ZTF22aajkacz",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 0.24569440307095647,
+      "UTC": "2022-05-08 16:01:35"
+    },
+    {
+      "objectId": "ZTF22aajjmqy",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 0.14188655512407422,
+      "UTC": "2022-05-08 13:34:51"
+    },
+    {
+      "objectId": "ZTF22aajjmqy",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 0.1417708140797913,
+      "UTC": "2022-05-08 13:34:41"
+    },
+    {
+      "objectId": "ZTF22aajijjf",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 0.05254626180976629,
+      "UTC": "2022-05-08 08:24:13"
+    },
+    {
+      "objectId": "ZTF22aajijjf",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 0.05238422518596053,
+      "UTC": "2022-05-08 08:23:59"
+    },
+    {
+      "objectId": "ZTF22aajigho",
+      "sherlock_z": 0.07,
+      "days_since_first_det": 0.03578702500090003,
+      "UTC": "2022-05-08 08:22:11"
+    },
+    {
+      "objectId": "ZTF22aajigho",
+      "sherlock_z": 0.07,
+      "days_since_first_det": 0.03561341390013695,
+      "UTC": "2022-05-08 08:21:56"
+    },
+    {
+      "objectId": "ZTF22aajidyk",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 0.05561343301087618,
+      "UTC": "2022-05-08 07:52:48"
+    },
+    {
+      "objectId": "ZTF22aajipum",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 0.05561343301087618,
+      "UTC": "2022-05-08 07:52:48"
+    },
+    {
+      "objectId": "ZTF22aaheurd",
+      "sherlock_z": 0.02,
+      "days_since_first_det": 0.03025463316589594,
+      "UTC": "2022-05-08 07:52:48"
+    },
+    {
+      "objectId": "ZTF22aajidyk",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 0.05538195092231035,
+      "UTC": "2022-05-08 07:52:28"
+    },
+    {
+      "objectId": "ZTF22aajipum",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 0.05538195092231035,
+      "UTC": "2022-05-08 07:52:28"
+    },
+    {
+      "objectId": "ZTF22aaheurd",
+      "sherlock_z": 0.02,
+      "days_since_first_det": 0.030023151077330112,
+      "UTC": "2022-05-08 07:52:28"
+    },
+    {
+      "objectId": "ZTF22aajhlaj",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 0.11833336623385549,
+      "UTC": "2022-05-08 07:05:24"
+    },
+    {
+      "objectId": "ZTF22aajhlaj",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 0.1181597551330924,
+      "UTC": "2022-05-08 07:05:09"
+    },
+    {
+      "objectId": "ZTF22aajhlaj",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 0.07537040300667286,
+      "UTC": "2022-05-08 06:03:32"
+    },
+    {
+      "objectId": "ZTF22aajhlaj",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 0.07524308795109391,
+      "UTC": "2022-05-08 06:03:21"
+    },
+    {
+      "objectId": "ZTF22aajhlaj",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 0.0739815142005682,
+      "UTC": "2022-05-08 06:01:32"
+    },
+    {
+      "objectId": "ZTF22aajhlaj",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 0.07386577408760786,
+      "UTC": "2022-05-08 06:01:22"
+    },
+    {
+      "objectId": "ZTF22aajhlat",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 0.0270717884413898,
+      "UTC": "2022-05-08 04:55:24"
+    },
+    {
+      "objectId": "ZTF22aajhlat",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 0.026886603329330683,
+      "UTC": "2022-05-08 04:55:08"
+    },
+    {
+      "objectId": "ZTF22aajbpzc",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 1.077939806971699,
+      "UTC": "2022-05-03 13:19:04"
+    },
+    {
+      "objectId": "ZTF22aajbqel",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 1.077939806971699,
+      "UTC": "2022-05-03 13:19:04"
+    },
+    {
+      "objectId": "ZTF22aajfxrx",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 1.077939806971699,
+      "UTC": "2022-05-03 13:19:04"
+    },
+    {
+      "objectId": "ZTF22aajfybs",
+      "sherlock_z": 0.01,
+      "days_since_first_det": 1.0718866069801152,
+      "UTC": "2022-05-03 13:19:04"
+    },
+    {
+      "objectId": "ZTF22aajbpzc",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 1.0777430478483438,
+      "UTC": "2022-05-03 13:18:47"
+    },
+    {
+      "objectId": "ZTF22aajbqel",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 1.0777430478483438,
+      "UTC": "2022-05-03 13:18:47"
+    },
+    {
+      "objectId": "ZTF22aajfxrx",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 1.0777430478483438,
+      "UTC": "2022-05-03 13:18:47"
+    },
+    {
+      "objectId": "ZTF22aajfybs",
+      "sherlock_z": 0.01,
+      "days_since_first_det": 1.07168984785676,
+      "UTC": "2022-05-03 13:18:47"
+    },
+    {
+      "objectId": "ZTF22aajbpzc",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 1.0674884179607034,
+      "UTC": "2022-05-03 13:04:01"
+    },
+    {
+      "objectId": "ZTF22aajbqel",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 1.0674884179607034,
+      "UTC": "2022-05-03 13:04:01"
+    },
+    {
+      "objectId": "ZTF22aajfxrx",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 1.0674884179607034,
+      "UTC": "2022-05-03 13:04:01"
+    },
+    {
+      "objectId": "ZTF22aajfybs",
+      "sherlock_z": 0.01,
+      "days_since_first_det": 1.0614352179691195,
+      "UTC": "2022-05-03 13:04:01"
+    },
+    {
+      "objectId": "ZTF22aajbpzc",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 1.0672569368034601,
+      "UTC": "2022-05-03 13:03:41"
+    },
+    {
+      "objectId": "ZTF22aajbqel",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 1.0672569368034601,
+      "UTC": "2022-05-03 13:03:41"
+    },
+    {
+      "objectId": "ZTF22aajfxrx",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 1.0672569368034601,
+      "UTC": "2022-05-03 13:03:41"
+    },
+    {
+      "objectId": "ZTF22aajfybs",
+      "sherlock_z": 0.01,
+      "days_since_first_det": 1.0612037368118763,
+      "UTC": "2022-05-03 13:03:41"
+    },
+    {
+      "objectId": "ZTF22aajbpzc",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 1.054745361674577,
+      "UTC": "2022-05-03 12:45:40"
+    },
+    {
+      "objectId": "ZTF22aajfxrx",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 1.054745361674577,
+      "UTC": "2022-05-03 12:45:40"
+    },
+    {
+      "objectId": "ZTF22aajbpzc",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 1.054513880982995,
+      "UTC": "2022-05-03 12:45:20"
+    },
+    {
+      "objectId": "ZTF22aajfxrx",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 1.054513880982995,
+      "UTC": "2022-05-03 12:45:20"
+    },
+    {
+      "objectId": "ZTF22aajfige",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 1.983055585063994,
+      "UTC": "2022-05-03 10:56:49"
+    },
+    {
+      "objectId": "ZTF22aajfige",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 1.9828588250093162,
+      "UTC": "2022-05-03 10:56:32"
+    },
+    {
+      "objectId": "ZTF22aajbpzc",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 0.01973378797993064,
+      "UTC": "2022-05-02 11:55:15"
+    },
+    {
+      "objectId": "ZTF22aajbpzc",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 0.019594899844378233,
+      "UTC": "2022-05-02 11:55:03"
+    },
+    {
+      "objectId": "ZTF22aajbpzc",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 0.017569436691701412,
+      "UTC": "2022-05-02 11:52:08"
+    },
+    {
+      "objectId": "ZTF22aajbqel",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 0.017569436691701412,
+      "UTC": "2022-05-02 11:52:08"
+    },
+    {
+      "objectId": "ZTF22aajbpzc",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 0.017442121636122465,
+      "UTC": "2022-05-02 11:51:57"
+    },
+    {
+      "objectId": "ZTF22aajbqel",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 0.017442121636122465,
+      "UTC": "2022-05-02 11:51:57"
+    },
+    {
+      "objectId": "ZTF22aaiprcz",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 1.9629166699014604,
+      "UTC": "2022-05-02 08:26:20"
+    },
+    {
+      "objectId": "ZTF22aaiprcz",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 1.9627546328119934,
+      "UTC": "2022-05-02 08:26:06"
+    },
+    {
+      "objectId": "ZTF22aaiprcz",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 1.9279166697524488,
+      "UTC": "2022-05-02 07:35:56"
+    },
+    {
+      "objectId": "ZTF22aaiprcz",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 1.9277199106290936,
+      "UTC": "2022-05-02 07:35:39"
+    },
+    {
+      "objectId": "ZTF22aaiwzpl",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 0.04151624394580722,
+      "UTC": "2022-05-02 05:00:15"
+    },
+    {
+      "objectId": "ZTF22aaiwzpl",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 0.04137735487893224,
+      "UTC": "2022-05-02 05:00:03"
+    },
+    {
+      "objectId": "ZTF22aaiwpht",
+      "sherlock_z": 0.12,
+      "days_since_first_det": 1.0884722396731377,
+      "UTC": "2022-05-01 13:55:49"
+    },
+    {
+      "objectId": "ZTF22aaiwpht",
+      "sherlock_z": 0.12,
+      "days_since_first_det": 1.0883102025836706,
+      "UTC": "2022-05-01 13:55:35"
+    },
+    {
+      "objectId": "ZTF22aaipocw",
+      "sherlock_z": 0.03,
+      "days_since_first_det": 0.09601848479360342,
+      "UTC": "2022-05-01 08:40:01"
+    },
+    {
+      "objectId": "ZTF22aaipocw",
+      "sherlock_z": 0.03,
+      "days_since_first_det": 0.0958217247389257,
+      "UTC": "2022-05-01 08:39:44"
+    },
+    {
+      "objectId": "ZTF22aaitzvr",
+      "sherlock_z": 0.04,
+      "days_since_first_det": 0.051157400012016296,
+      "UTC": "2022-05-01 08:21:45"
+    },
+    {
+      "objectId": "ZTF22aaitzvr",
+      "sherlock_z": 0.04,
+      "days_since_first_det": 0.051018510945141315,
+      "UTC": "2022-05-01 08:21:33"
+    },
+    {
+      "objectId": "ZTF22aaipocw",
+      "sherlock_z": 0.03,
+      "days_since_first_det": 0.052766169887036085,
+      "UTC": "2022-05-01 07:37:44"
+    },
+    {
+      "objectId": "ZTF22aaipocw",
+      "sherlock_z": 0.03,
+      "days_since_first_det": 0.052569410763680935,
+      "UTC": "2022-05-01 07:37:27"
+    },
+    {
+      "objectId": "ZTF22aahxaiv",
+      "sherlock_z": 0.07,
+      "days_since_first_det": 1.9677083548158407,
+      "UTC": "2022-05-01 07:11:00"
+    },
+    {
+      "objectId": "ZTF22aahxaiv",
+      "sherlock_z": 0.07,
+      "days_since_first_det": 1.9675115956924856,
+      "UTC": "2022-05-01 07:10:43"
+    },
+    {
+      "objectId": "ZTF22aahxaiv",
+      "sherlock_z": 0.07,
+      "days_since_first_det": 1.9364004847593606,
+      "UTC": "2022-05-01 06:25:55"
+    },
+    {
+      "objectId": "ZTF22aahxaiv",
+      "sherlock_z": 0.07,
+      "days_since_first_det": 1.9362731697037816,
+      "UTC": "2022-05-01 06:25:44"
+    },
+    {
+      "objectId": "ZTF22aaipalx",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 0.09511578781530261,
+      "UTC": "2022-04-30 10:48:39"
+    },
+    {
+      "objectId": "ZTF22aaipalx",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 0.0949768996797502,
+      "UTC": "2022-04-30 10:48:27"
+    },
+    {
+      "objectId": "ZTF22aaibhya",
+      "sherlock_z": 0.09,
+      "days_since_first_det": 1.9989468068815768,
+      "UTC": "2022-04-30 05:13:58"
+    },
+    {
+      "objectId": "ZTF22aaibhya",
+      "sherlock_z": 0.09,
+      "days_since_first_det": 1.9987731957808137,
+      "UTC": "2022-04-30 05:13:43"
+    },
+    {
+      "objectId": "ZTF22aailads",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 0.027384239714592695,
+      "UTC": "2022-04-30 05:02:07"
+    },
+    {
+      "objectId": "ZTF22aailads",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 0.027222202625125647,
+      "UTC": "2022-04-30 05:01:53"
+    },
+    {
+      "objectId": "ZTF22aaijigw",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 0.013587918132543564,
+      "UTC": "2022-04-29 10:07:10"
+    },
+    {
+      "objectId": "ZTF22aaijigw",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 0.013414307031780481,
+      "UTC": "2022-04-29 10:06:55"
+    },
+    {
+      "objectId": "ZTF22aahxaiv",
+      "sherlock_z": 0.07,
+      "days_since_first_det": 0.0687963180243969,
+      "UTC": "2022-04-29 09:36:34"
+    },
+    {
+      "objectId": "ZTF22aahxaiv",
+      "sherlock_z": 0.07,
+      "days_since_first_det": 0.06862270692363381,
+      "UTC": "2022-04-29 09:36:19"
+    },
+    {
+      "objectId": "ZTF22aaiiqnt",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 1.0220717443153262,
+      "UTC": "2022-04-28 12:25:18"
+    },
+    {
+      "objectId": "ZTF22aaiiqnt",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 1.0219328552484512,
+      "UTC": "2022-04-28 12:25:06"
+    },
+    {
+      "objectId": "ZTF22aaiiqnt",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 1.0189698920585215,
+      "UTC": "2022-04-28 12:20:50"
+    },
+    {
+      "objectId": "ZTF22aaiiqnt",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 1.0187615593895316,
+      "UTC": "2022-04-28 12:20:32"
+    },
+    {
+      "objectId": "ZTF22aaihebl",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 0.0873032002709806,
+      "UTC": "2022-04-28 12:02:42"
+    },
+    {
+      "objectId": "ZTF22aaihebl",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 0.08712958823889494,
+      "UTC": "2022-04-28 12:02:27"
+    },
+    {
+      "objectId": "ZTF22aaigdgf",
+      "sherlock_z": 0.06,
+      "days_since_first_det": 1.9897800809703767,
+      "UTC": "2022-04-28 09:22:50"
+    },
+    {
+      "objectId": "ZTF22aaigdgf",
+      "sherlock_z": 0.06,
+      "days_since_first_det": 1.9896643399260938,
+      "UTC": "2022-04-28 09:22:40"
+    },
+    {
+      "objectId": "ZTF22aahukep",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 1.9431944703683257,
+      "UTC": "2022-04-28 09:05:29"
+    },
+    {
+      "objectId": "ZTF22aahukep",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 1.9431018773466349,
+      "UTC": "2022-04-28 09:05:21"
+    },
+    {
+      "objectId": "ZTF22aahndul",
+      "sherlock_z": 0.08,
+      "days_since_first_det": 0.05767356185242534,
+      "UTC": "2022-04-28 08:15:40"
+    },
+    {
+      "objectId": "ZTF22aahndul",
+      "sherlock_z": 0.08,
+      "days_since_first_det": 0.057511525228619576,
+      "UTC": "2022-04-28 08:15:26"
+    },
+    {
+      "objectId": "ZTF22aaialae",
+      "sherlock_z": 0.03,
+      "days_since_first_det": 0.05131948459893465,
+      "UTC": "2022-04-28 05:31:55"
+    },
+    {
+      "objectId": "ZTF22aaialae",
+      "sherlock_z": 0.03,
+      "days_since_first_det": 0.05115744797512889,
+      "UTC": "2022-04-28 05:31:41"
+    },
+    {
+      "objectId": "ZTF22aahymal",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 0.14848376996815205,
+      "UTC": "2022-04-27 13:44:02"
+    },
+    {
+      "objectId": "ZTF22aahymal",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 0.14824071386829019,
+      "UTC": "2022-04-27 13:43:41"
+    },
+    {
+      "objectId": "ZTF22aahznpc",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 0.05375004792585969,
+      "UTC": "2022-04-27 13:10:14"
+    },
+    {
+      "objectId": "ZTF22aahznpc",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 0.05354171385988593,
+      "UTC": "2022-04-27 13:09:56"
+    },
+    {
+      "objectId": "ZTF22aahyqkz",
+      "sherlock_z": 0.03,
+      "days_since_first_det": 0.08163197385147214,
+      "UTC": "2022-04-27 12:19:49"
+    },
+    {
+      "objectId": "ZTF22aahyqkz",
+      "sherlock_z": 0.03,
+      "days_since_first_det": 0.08141206577420235,
+      "UTC": "2022-04-27 12:19:30"
+    },
+    {
+      "objectId": "ZTF22aahnkdv",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 1.9306018771603703,
+      "UTC": "2022-04-27 08:36:33"
+    },
+    {
+      "objectId": "ZTF22aahnkdv",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 1.9304051180370152,
+      "UTC": "2022-04-27 08:36:16"
+    },
+    {
+      "objectId": "ZTF21aazoibe",
+      "sherlock_z": 0.28,
+      "days_since_first_det": 0.06630787020549178,
+      "UTC": "2022-04-27 06:14:56"
+    },
+    {
+      "objectId": "ZTF21aazoibe",
+      "sherlock_z": 0.28,
+      "days_since_first_det": 0.06615740712732077,
+      "UTC": "2022-04-27 06:14:43"
+    },
+    {
+      "objectId": "ZTF22aahwmww",
+      "sherlock_z": 0.01,
+      "days_since_first_det": 0.05017360299825668,
+      "UTC": "2022-04-27 06:07:35"
+    },
+    {
+      "objectId": "ZTF22aahwmww",
+      "sherlock_z": 0.01,
+      "days_since_first_det": 0.04998841788619757,
+      "UTC": "2022-04-27 06:07:19"
+    },
+    {
+      "objectId": "ZTF22aahhgjh",
+      "sherlock_z": 0.03,
+      "days_since_first_det": 1.9359606807120144,
+      "UTC": "2022-04-27 05:27:02"
+    },
+    {
+      "objectId": "ZTF22aahhgfx",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 1.8548147808760405,
+      "UTC": "2022-04-27 05:27:02"
+    },
+    {
+      "objectId": "ZTF22aahwvhu",
+      "sherlock_z": 0.09,
+      "days_since_first_det": 1.8322337809950113,
+      "UTC": "2022-04-27 05:27:02"
+    },
+    {
+      "objectId": "ZTF22aahhgjh",
+      "sherlock_z": 0.03,
+      "days_since_first_det": 1.9357986436225474,
+      "UTC": "2022-04-27 05:26:48"
+    },
+    {
+      "objectId": "ZTF22aahhgfx",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 1.8546527437865734,
+      "UTC": "2022-04-27 05:26:48"
+    },
+    {
+      "objectId": "ZTF22aahwvhu",
+      "sherlock_z": 0.09,
+      "days_since_first_det": 1.8320717439055443,
+      "UTC": "2022-04-27 05:26:48"
+    },
+    {
+      "objectId": "ZTF22aahhgfx",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 1.829953688196838,
+      "UTC": "2022-04-27 05:23:45"
+    },
+    {
+      "objectId": "ZTF22aahhgfx",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 1.8298032251186669,
+      "UTC": "2022-04-27 05:23:32"
+    },
+    {
+      "objectId": "ZTF22aahmbwn",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 1.9295370285399258,
+      "UTC": "2022-04-27 05:00:31"
+    },
+    {
+      "objectId": "ZTF22aahmbwn",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 1.9294560109265149,
+      "UTC": "2022-04-27 05:00:24"
+    },
+    {
+      "objectId": "ZTF22aahvzzh",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 1.9213657220825553,
+      "UTC": "2022-04-27 04:30:30"
+    },
+    {
+      "objectId": "ZTF22aahvzzh",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 1.9211573880165815,
+      "UTC": "2022-04-27 04:30:12"
+    },
+    {
+      "objectId": "ZTF22aahjayr",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 1.9619560660794377,
+      "UTC": "2022-04-26 09:46:03"
+    },
+    {
+      "objectId": "ZTF22aahjayr",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 1.9618171770125628,
+      "UTC": "2022-04-26 09:45:51"
+    },
+    {
+      "objectId": "ZTF22aahoeum",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 0.7864120001904666,
+      "UTC": "2022-04-26 06:44:06"
+    },
+    {
+      "objectId": "ZTF22aahoeum",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 0.7862152401357889,
+      "UTC": "2022-04-26 06:43:49"
+    },
+    {
+      "objectId": "ZTF22aahoetj",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 1.7752430811524391,
+      "UTC": "2022-04-26 06:34:59"
+    },
+    {
+      "objectId": "ZTF22aahoetj",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 1.775034748017788,
+      "UTC": "2022-04-26 06:34:41"
+    },
+    {
+      "objectId": "ZTF22aahoakh",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 1.7814582851715386,
+      "UTC": "2022-04-26 06:27:43"
+    },
+    {
+      "objectId": "ZTF22aahodnb",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 1.7749999850057065,
+      "UTC": "2022-04-26 06:27:43"
+    },
+    {
+      "objectId": "ZTF22aahocvy",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 0.7875925851985812,
+      "UTC": "2022-04-26 06:27:43"
+    },
+    {
+      "objectId": "ZTF22aahoakh",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 1.7812383770942688,
+      "UTC": "2022-04-26 06:27:24"
+    },
+    {
+      "objectId": "ZTF22aahodnb",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 1.7747800769284368,
+      "UTC": "2022-04-26 06:27:24"
+    },
+    {
+      "objectId": "ZTF22aahocvy",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 0.7873726771213114,
+      "UTC": "2022-04-26 06:27:24"
+    },
+    {
+      "objectId": "ZTF22aahoftk",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 0.797835651319474,
+      "UTC": "2022-04-26 06:08:58"
+    },
+    {
+      "objectId": "ZTF21acblequ",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 0.7745717512443662,
+      "UTC": "2022-04-26 06:08:58"
+    },
+    {
+      "objectId": "ZTF22aahoftk",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 0.7976157441735268,
+      "UTC": "2022-04-26 06:08:39"
+    },
+    {
+      "objectId": "ZTF21acblequ",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 0.774351844098419,
+      "UTC": "2022-04-26 06:08:39"
+    },
+    {
+      "objectId": "ZTF22aahoavn",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 0.789722225163132,
+      "UTC": "2022-04-26 05:55:56"
+    },
+    {
+      "objectId": "ZTF22aahocqo",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 0.7655208250507712,
+      "UTC": "2022-04-26 05:55:56"
+    },
+    {
+      "objectId": "ZTF22aahoavn",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 0.7895138920284808,
+      "UTC": "2022-04-26 05:55:38"
+    },
+    {
+      "objectId": "ZTF22aahocqo",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 0.76531249191612,
+      "UTC": "2022-04-26 05:55:38"
+    },
+    {
+      "objectId": "ZTF22aahoeko",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 1.735104147810489,
+      "UTC": "2022-04-26 05:40:41"
+    },
+    {
+      "objectId": "ZTF22aahoeko",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 1.7348958142101765,
+      "UTC": "2022-04-26 05:40:23"
+    },
+    {
+      "objectId": "ZTF22aahnwvk",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 0.7837615329772234,
+      "UTC": "2022-04-26 05:08:33"
+    },
+    {
+      "objectId": "ZTF22aahobar",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 0.7563426331616938,
+      "UTC": "2022-04-26 05:08:33"
+    },
+    {
+      "objectId": "ZTF22aahnwvk",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 0.7835879218764603,
+      "UTC": "2022-04-26 05:08:18"
+    },
+    {
+      "objectId": "ZTF22aahobar",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 0.7561690220609307,
+      "UTC": "2022-04-26 05:08:18"
+    },
+    {
+      "objectId": "ZTF22aahmrhz",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 0.888113428838551,
+      "UTC": "2022-04-26 04:51:58"
+    },
+    {
+      "objectId": "ZTF22aahmrhz",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 0.8879282441921532,
+      "UTC": "2022-04-26 04:51:42"
+    },
+    {
+      "objectId": "ZTF22aahmrhz",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 0.8764120400883257,
+      "UTC": "2022-04-26 04:35:07"
+    },
+    {
+      "objectId": "ZTF22aahmrhz",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 0.8762152809649706,
+      "UTC": "2022-04-26 04:34:50"
+    },
+    {
+      "objectId": "ZTF22aahiabh",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 0.8537731217220426,
+      "UTC": "2022-04-26 03:44:36"
+    },
+    {
+      "objectId": "ZTF22aahiabh",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 0.853518492076546,
+      "UTC": "2022-04-26 03:44:14"
+    },
+    {
+      "objectId": "ZTF22aahhgjh",
+      "sherlock_z": 0.03,
+      "days_since_first_det": 0.8533565136604011,
+      "UTC": "2022-04-26 03:28:05"
+    },
+    {
+      "objectId": "ZTF22aahiabh",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 0.8423032136633992,
+      "UTC": "2022-04-26 03:28:05"
+    },
+    {
+      "objectId": "ZTF22aahmrhz",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 0.8298611138015985,
+      "UTC": "2022-04-26 03:28:05"
+    },
+    {
+      "objectId": "ZTF22aahnjty",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 0.8275000136345625,
+      "UTC": "2022-04-26 03:28:05"
+    },
+    {
+      "objectId": "ZTF22aahhgjh",
+      "sherlock_z": 0.03,
+      "days_since_first_det": 0.8530555879697204,
+      "UTC": "2022-04-26 03:27:39"
+    },
+    {
+      "objectId": "ZTF22aahiabh",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 0.8420022879727185,
+      "UTC": "2022-04-26 03:27:39"
+    },
+    {
+      "objectId": "ZTF22aahmrhz",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 0.8295601881109178,
+      "UTC": "2022-04-26 03:27:39"
+    },
+    {
+      "objectId": "ZTF22aahnjty",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 0.8271990879438818,
+      "UTC": "2022-04-26 03:27:39"
+    },
+    {
+      "objectId": "ZTF22aahitmg",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 1.7198611330240965,
+      "UTC": "2022-04-26 02:58:03"
+    },
+    {
+      "objectId": "ZTF22aahitmg",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 1.7195370588451624,
+      "UTC": "2022-04-26 02:57:35"
+    },
+    {
+      "objectId": "ZTF22aahhvta",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 1.8037731479853392,
+      "UTC": "2022-04-26 02:15:29"
+    },
+    {
+      "objectId": "ZTF22aahhvta",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 1.8035416658967733,
+      "UTC": "2022-04-26 02:15:09"
+    },
+    {
+      "objectId": "ZTF22aahibvx",
+      "sherlock_z": 0.03,
+      "days_since_first_det": 1.7673379853367805,
+      "UTC": "2022-04-26 01:59:04"
+    },
+    {
+      "objectId": "ZTF22aahfqhw",
+      "sherlock_z": 0.06,
+      "days_since_first_det": 1.6794096850790083,
+      "UTC": "2022-04-26 01:59:04"
+    },
+    {
+      "objectId": "ZTF22aahibvx",
+      "sherlock_z": 0.03,
+      "days_since_first_det": 1.7670833552256227,
+      "UTC": "2022-04-26 01:58:42"
+    },
+    {
+      "objectId": "ZTF22aahfqhw",
+      "sherlock_z": 0.06,
+      "days_since_first_det": 1.6791550549678504,
+      "UTC": "2022-04-26 01:58:42"
+    },
+    {
+      "objectId": "ZTF22aahhzqi",
+      "sherlock_z": 0.07,
+      "days_since_first_det": 1.7640624810010195,
+      "UTC": "2022-04-26 01:42:29"
+    },
+    {
+      "objectId": "ZTF22aahhzqi",
+      "sherlock_z": 0.07,
+      "days_since_first_det": 1.7638194249011576,
+      "UTC": "2022-04-26 01:42:08"
+    },
+    {
+      "objectId": "ZTF22aahiesx",
+      "sherlock_z": 0.05,
+      "days_since_first_det": 1.787303258664906,
+      "UTC": "2022-04-26 01:25:47"
+    },
+    {
+      "objectId": "ZTF22aahecwj",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 1.7854050588794053,
+      "UTC": "2022-04-26 01:25:47"
+    },
+    {
+      "objectId": "ZTF22aahhvqj",
+      "sherlock_z": 0.01,
+      "days_since_first_det": 1.7692592586390674,
+      "UTC": "2022-04-26 01:25:47"
+    },
+    {
+      "objectId": "ZTF22aahibvx",
+      "sherlock_z": 0.03,
+      "days_since_first_det": 1.7442245590500534,
+      "UTC": "2022-04-26 01:25:47"
+    },
+    {
+      "objectId": "ZTF22aahieds",
+      "sherlock_z": 0.05,
+      "days_since_first_det": 1.7273148586973548,
+      "UTC": "2022-04-26 01:25:47"
+    },
+    {
+      "objectId": "ZTF22aahiesx",
+      "sherlock_z": 0.05,
+      "days_since_first_det": 1.7870139069855213,
+      "UTC": "2022-04-26 01:25:22"
+    },
+    {
+      "objectId": "ZTF22aahecwj",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 1.7851157072000206,
+      "UTC": "2022-04-26 01:25:22"
+    },
+    {
+      "objectId": "ZTF22aahhvqj",
+      "sherlock_z": 0.01,
+      "days_since_first_det": 1.7689699069596827,
+      "UTC": "2022-04-26 01:25:22"
+    },
+    {
+      "objectId": "ZTF22aahibvx",
+      "sherlock_z": 0.03,
+      "days_since_first_det": 1.7439352073706686,
+      "UTC": "2022-04-26 01:25:22"
+    },
+    {
+      "objectId": "ZTF22aahieds",
+      "sherlock_z": 0.05,
+      "days_since_first_det": 1.72702550701797,
+      "UTC": "2022-04-26 01:25:22"
+    },
+    {
+      "objectId": "ZTF22aahhlnd",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 1.7951967110857368,
+      "UTC": "2022-04-26 01:10:27"
+    },
+    {
+      "objectId": "ZTF22aahhlnd",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 1.7949073589406908,
+      "UTC": "2022-04-26 01:10:02"
+    },
+    {
+      "objectId": "ZTF22aahhdem",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 1.8492477219551802,
+      "UTC": "2022-04-26 00:55:24"
+    },
+    {
+      "objectId": "ZTF22aahgubb",
+      "sherlock_z": 0.02,
+      "days_since_first_det": 1.8468866222538054,
+      "UTC": "2022-04-26 00:55:24"
+    },
+    {
+      "objectId": "ZTF22aahieds",
+      "sherlock_z": 0.05,
+      "days_since_first_det": 1.7062153220176697,
+      "UTC": "2022-04-26 00:55:24"
+    },
+    {
+      "objectId": "ZTF22aahhdem",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 1.848923647776246,
+      "UTC": "2022-04-26 00:54:56"
+    },
+    {
+      "objectId": "ZTF22aahgubb",
+      "sherlock_z": 0.02,
+      "days_since_first_det": 1.8465625480748713,
+      "UTC": "2022-04-26 00:54:56"
+    },
+    {
+      "objectId": "ZTF22aahieds",
+      "sherlock_z": 0.05,
+      "days_since_first_det": 1.7058912478387356,
+      "UTC": "2022-04-26 00:54:56"
+    },
+    {
+      "objectId": "ZTF22aahgvlx",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 1.8253819551318884,
+      "UTC": "2022-04-26 00:26:27"
+    },
+    {
+      "objectId": "ZTF22aahgvlx",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 1.8251041769981384,
+      "UTC": "2022-04-26 00:26:03"
+    },
+    {
+      "objectId": "ZTF22aahiabh",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 0.0426157140173018,
+      "UTC": "2022-04-25 08:16:32"
+    },
+    {
+      "objectId": "ZTF22aahiabh",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 0.04249997390434146,
+      "UTC": "2022-04-25 08:16:22"
+    },
+    {
+      "objectId": "ZTF22aahmrhz",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 0.020081021822988987,
+      "UTC": "2022-04-25 08:02:00"
+    },
+    {
+      "objectId": "ZTF22aahmrhz",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 0.01995370676741004,
+      "UTC": "2022-04-25 08:01:49"
+    },
+    {
+      "objectId": "ZTF22aahfqhw",
+      "sherlock_z": 0.06,
+      "days_since_first_det": 0.06694440683349967,
+      "UTC": "2022-04-24 11:17:07"
+    },
+    {
+      "objectId": "ZTF22aahfqhw",
+      "sherlock_z": 0.06,
+      "days_since_first_det": 0.06679394375532866,
+      "UTC": "2022-04-24 11:16:54"
+    },
+    {
+      "objectId": "ZTF22aahieds",
+      "sherlock_z": 0.05,
+      "days_since_first_det": 0.13398152496665716,
+      "UTC": "2022-04-24 11:11:23"
+    },
+    {
+      "objectId": "ZTF22aahieds",
+      "sherlock_z": 0.05,
+      "days_since_first_det": 0.13384263683110476,
+      "UTC": "2022-04-24 11:11:11"
+    },
+    {
+      "objectId": "ZTF22aahitmg",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 0.06049770675599575,
+      "UTC": "2022-04-24 11:08:34"
+    },
+    {
+      "objectId": "ZTF22aahitmg",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 0.06032409565523267,
+      "UTC": "2022-04-24 11:08:19"
+    },
+    {
+      "objectId": "ZTF22aahibvx",
+      "sherlock_z": 0.03,
+      "days_since_first_det": 0.13444446632638574,
+      "UTC": "2022-04-24 10:47:42"
+    },
+    {
+      "objectId": "ZTF22aahieds",
+      "sherlock_z": 0.05,
+      "days_since_first_det": 0.11753476597368717,
+      "UTC": "2022-04-24 10:47:42"
+    },
+    {
+      "objectId": "ZTF22aahibvx",
+      "sherlock_z": 0.03,
+      "days_since_first_det": 0.13429400324821472,
+      "UTC": "2022-04-24 10:47:29"
+    },
+    {
+      "objectId": "ZTF22aahieds",
+      "sherlock_z": 0.05,
+      "days_since_first_det": 0.11738430289551616,
+      "UTC": "2022-04-24 10:47:29"
+    },
+    {
+      "objectId": "ZTF22aahhzqi",
+      "sherlock_z": 0.07,
+      "days_since_first_det": 0.1384606291539967,
+      "UTC": "2022-04-24 10:41:37"
+    },
+    {
+      "objectId": "ZTF22aahhzqi",
+      "sherlock_z": 0.07,
+      "days_since_first_det": 0.1382754440419376,
+      "UTC": "2022-04-24 10:41:21"
+    },
+    {
+      "objectId": "ZTF22aahibvx",
+      "sherlock_z": 0.03,
+      "days_since_first_det": 0.1238889112137258,
+      "UTC": "2022-04-24 10:32:30"
+    },
+    {
+      "objectId": "ZTF22aahibvx",
+      "sherlock_z": 0.03,
+      "days_since_first_det": 0.12375002214685082,
+      "UTC": "2022-04-24 10:32:18"
+    },
+    {
+      "objectId": "ZTF22aahecwj",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 0.09063654020428658,
+      "UTC": "2022-04-24 08:45:19"
+    },
+    {
+      "objectId": "ZTF22aahecwj",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 0.09048607712611556,
+      "UTC": "2022-04-24 08:45:06"
+    },
+    {
+      "objectId": "ZTF22aahhlnd",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 0.09361106203868985,
+      "UTC": "2022-04-24 08:20:10"
+    },
+    {
+      "objectId": "ZTF22aahhlnd",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 0.09350689593702555,
+      "UTC": "2022-04-24 08:20:01"
+    },
+    {
+      "objectId": "ZTF22aahiesx",
+      "sherlock_z": 0.05,
+      "days_since_first_det": 0.0740162217989564,
+      "UTC": "2022-04-24 08:18:39"
+    },
+    {
+      "objectId": "ZTF22aahhvqj",
+      "sherlock_z": 0.01,
+      "days_since_first_det": 0.05597222177311778,
+      "UTC": "2022-04-24 08:18:39"
+    },
+    {
+      "objectId": "ZTF22aahhvta",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 0.05597222177311778,
+      "UTC": "2022-04-24 08:18:39"
+    },
+    {
+      "objectId": "ZTF22aahiesx",
+      "sherlock_z": 0.05,
+      "days_since_first_det": 0.07386575872078538,
+      "UTC": "2022-04-24 08:18:26"
+    },
+    {
+      "objectId": "ZTF22aahhvqj",
+      "sherlock_z": 0.01,
+      "days_since_first_det": 0.055821758694946766,
+      "UTC": "2022-04-24 08:18:26"
+    },
+    {
+      "objectId": "ZTF22aahhvta",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 0.055821758694946766,
+      "UTC": "2022-04-24 08:18:26"
+    },
+    {
+      "objectId": "ZTF22aahgubb",
+      "sherlock_z": 0.02,
+      "days_since_first_det": 0.06682875100523233,
+      "UTC": "2022-04-24 06:12:07"
+    },
+    {
+      "objectId": "ZTF22aahgubb",
+      "sherlock_z": 0.02,
+      "days_since_first_det": 0.06667828792706132,
+      "UTC": "2022-04-24 06:11:54"
+    },
+    {
+      "objectId": "ZTF22aahgvlx",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 0.037997696083039045,
+      "UTC": "2022-04-24 05:32:37"
+    },
+    {
+      "objectId": "ZTF22aahgvlx",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 0.037835658993572,
+      "UTC": "2022-04-24 05:32:23"
+    },
+    {
+      "objectId": "ZTF22aahhdem",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 0.0402778135612607,
+      "UTC": "2022-04-24 05:30:29"
+    },
+    {
+      "objectId": "ZTF22aahhdem",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 0.04011577693745494,
+      "UTC": "2022-04-24 05:30:15"
+    },
+    {
+      "objectId": "ZTF22aahfzfd",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 0.02265047375112772,
+      "UTC": "2022-04-21 12:28:22"
+    },
+    {
+      "objectId": "ZTF22aahfzfd",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 0.02251158468425274,
+      "UTC": "2022-04-21 12:28:10"
+    },
+    {
+      "objectId": "ZTF22aahfylu",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 0.03296297695487738,
+      "UTC": "2022-04-21 12:25:36"
+    },
+    {
+      "objectId": "ZTF22aahfzfd",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 0.020729176700115204,
+      "UTC": "2022-04-21 12:25:36"
+    },
+    {
+      "objectId": "ZTF22aahfylu",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 0.03278936631977558,
+      "UTC": "2022-04-21 12:25:21"
+    },
+    {
+      "objectId": "ZTF22aahfzfd",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 0.02055556606501341,
+      "UTC": "2022-04-21 12:25:21"
+    },
+    {
+      "objectId": "ZTF22aahfykn",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 0.02844908833503723,
+      "UTC": "2022-04-21 12:19:06"
+    },
+    {
+      "objectId": "ZTF22aahfylu",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 0.02844908833503723,
+      "UTC": "2022-04-21 12:19:06"
+    },
+    {
+      "objectId": "ZTF22aahfykn",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 0.028287051245570183,
+      "UTC": "2022-04-21 12:18:52"
+    },
+    {
+      "objectId": "ZTF22aahfylu",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 0.028287051245570183,
+      "UTC": "2022-04-21 12:18:52"
+    },
+    {
+      "objectId": "ZTF22aahfylu",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 0.024050940293818712,
+      "UTC": "2022-04-21 12:12:46"
+    },
+    {
+      "objectId": "ZTF22aahfylu",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 0.023888903204351664,
+      "UTC": "2022-04-21 12:12:32"
+    },
+    {
+      "objectId": "ZTF22aahfuaa",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 0.034942132886499166,
+      "UTC": "2022-04-21 11:48:09"
+    },
+    {
+      "objectId": "ZTF22aahfuaa",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 0.03479167027398944,
+      "UTC": "2022-04-21 11:47:56"
+    },
+    {
+      "objectId": "ZTF22aaheuam",
+      "sherlock_z": 0.09,
+      "days_since_first_det": 0.09628476994112134,
+      "UTC": "2022-04-21 10:44:02"
+    },
+    {
+      "objectId": "ZTF22aaheuam",
+      "sherlock_z": 0.09,
+      "days_since_first_det": 0.09613430686295033,
+      "UTC": "2022-04-21 10:43:49"
+    },
+    {
+      "objectId": "ZTF22aagyuao",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 1.995705987792462,
+      "UTC": "2022-04-21 06:37:06"
+    },
+    {
+      "objectId": "ZTF22aagzcai",
+      "sherlock_z": 0.07,
+      "days_since_first_det": 1.952766187954694,
+      "UTC": "2022-04-21 06:37:06"
+    },
+    {
+      "objectId": "ZTF22aagyuao",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 1.9954860811121762,
+      "UTC": "2022-04-21 06:36:47"
+    },
+    {
+      "objectId": "ZTF22aagzcai",
+      "sherlock_z": 0.07,
+      "days_since_first_det": 1.952546281274408,
+      "UTC": "2022-04-21 06:36:47"
+    },
+    {
+      "objectId": "ZTF22aahbtqp",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 0.0524073769338429,
+      "UTC": "2022-04-20 13:13:45"
+    },
+    {
+      "objectId": "ZTF22aahbtwg",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 0.05052087688818574,
+      "UTC": "2022-04-20 13:13:45"
+    },
+    {
+      "objectId": "ZTF22aahbtqp",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 0.05224533984437585,
+      "UTC": "2022-04-20 13:13:31"
+    },
+    {
+      "objectId": "ZTF22aahbtwg",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 0.05035883979871869,
+      "UTC": "2022-04-20 13:13:31"
+    },
+    {
+      "objectId": "ZTF22aahbtam",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 0.05594908492639661,
+      "UTC": "2022-04-20 13:01:28"
+    },
+    {
+      "objectId": "ZTF22aahbtam",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 0.05582176987081766,
+      "UTC": "2022-04-20 13:01:17"
+    },
+    {
+      "objectId": "ZTF22aahbtam",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 0.04344908474013209,
+      "UTC": "2022-04-20 12:43:28"
+    },
+    {
+      "objectId": "ZTF22aahbtam",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 0.043287047650665045,
+      "UTC": "2022-04-20 12:43:14"
+    },
+    {
+      "objectId": "ZTF22aahbtam",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 0.035243066027760506,
+      "UTC": "2022-04-20 12:31:39"
+    },
+    {
+      "objectId": "ZTF22aahbtam",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 0.03509260294958949,
+      "UTC": "2022-04-20 12:31:26"
+    },
+    {
+      "objectId": "ZTF22aabxnje",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 0.03572917031124234,
+      "UTC": "2022-04-20 11:30:23"
+    },
+    {
+      "objectId": "ZTF22aabxnje",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 0.03559028124436736,
+      "UTC": "2022-04-20 11:30:11"
+    },
+    {
+      "objectId": "ZTF22aagvgwl",
+      "sherlock_z": 0.03,
+      "days_since_first_det": 1.974004658870399,
+      "UTC": "2022-04-20 07:58:38"
+    },
+    {
+      "objectId": "ZTF22aagvgwl",
+      "sherlock_z": 0.03,
+      "days_since_first_det": 1.9739236398600042,
+      "UTC": "2022-04-20 07:58:31"
+    },
+    {
+      "objectId": "ZTF22aahazvh",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 1.970648129004985,
+      "UTC": "2022-04-20 07:49:43"
+    },
+    {
+      "objectId": "ZTF22aahazvh",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 1.9705092399381101,
+      "UTC": "2022-04-20 07:49:31"
+    },
+    {
+      "objectId": "ZTF22aagzcwe",
+      "sherlock_z": 0.07,
+      "days_since_first_det": 1.945752321742475,
+      "UTC": "2022-04-20 07:30:57"
+    },
+    {
+      "objectId": "ZTF22aagzcwe",
+      "sherlock_z": 0.07,
+      "days_since_first_det": 1.945601858664304,
+      "UTC": "2022-04-20 07:30:44"
+    },
+    {
+      "objectId": "ZTF22aagviok",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 1.9410879695788026,
+      "UTC": "2022-04-20 07:25:35"
+    },
+    {
+      "objectId": "ZTF22aagvkld",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 1.9396759700030088,
+      "UTC": "2022-04-20 07:25:35"
+    },
+    {
+      "objectId": "ZTF22aagviok",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 1.9409375069662929,
+      "UTC": "2022-04-20 07:25:22"
+    },
+    {
+      "objectId": "ZTF22aagvkld",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 1.9395255073904991,
+      "UTC": "2022-04-20 07:25:22"
+    },
+    {
+      "objectId": "ZTF22aahawnk",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 0.1164005110040307,
+      "UTC": "2022-04-20 07:03:15"
+    },
+    {
+      "objectId": "ZTF22aahawnk",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 0.11625004839152098,
+      "UTC": "2022-04-20 07:03:02"
+    },
+    {
+      "objectId": "ZTF22aahavya",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 1.9425115371122956,
+      "UTC": "2022-04-20 06:57:23"
+    },
+    {
+      "objectId": "ZTF22aahavya",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 1.9423495000228286,
+      "UTC": "2022-04-20 06:57:09"
+    },
+    {
+      "objectId": "ZTF22aahaasc",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 0.10839125094935298,
+      "UTC": "2022-04-20 06:25:10"
+    },
+    {
+      "objectId": "ZTF22aahaasc",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 0.1082176398485899,
+      "UTC": "2022-04-20 06:24:55"
+    },
+    {
+      "objectId": "ZTF22aahaaro",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 0.037326402962207794,
+      "UTC": "2022-04-20 04:44:20"
+    },
+    {
+      "objectId": "ZTF22aahaaro",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 0.037141218315809965,
+      "UTC": "2022-04-20 04:44:04"
+    },
+    {
+      "objectId": "ZTF22aahaekt",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 0.022199111059308052,
+      "UTC": "2022-04-20 04:29:21"
+    },
+    {
+      "objectId": "ZTF22aahaeqg",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 0.021226811222732067,
+      "UTC": "2022-04-20 04:29:21"
+    },
+    {
+      "objectId": "ZTF22aahaekr",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 0.02026621112599969,
+      "UTC": "2022-04-20 04:29:21"
+    },
+    {
+      "objectId": "ZTF22aahaekt",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 0.02202549995854497,
+      "UTC": "2022-04-20 04:29:06"
+    },
+    {
+      "objectId": "ZTF22aahaeqg",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 0.021053200121968985,
+      "UTC": "2022-04-20 04:29:06"
+    },
+    {
+      "objectId": "ZTF22aahaekr",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 0.020092600025236607,
+      "UTC": "2022-04-20 04:29:06"
+    },
+    {
+      "objectId": "ZTF22aagyvpp",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 0.07244211807847023,
+      "UTC": "2022-04-19 08:34:55"
+    },
+    {
+      "objectId": "ZTF22aagyvpp",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 0.072361099999398,
+      "UTC": "2022-04-19 08:34:48"
+    },
+    {
+      "objectId": "ZTF22aagyuao",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 0.07039348781108856,
+      "UTC": "2022-04-19 08:24:39"
+    },
+    {
+      "objectId": "ZTF22aagyuao",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 0.07026617368683219,
+      "UTC": "2022-04-19 08:24:28"
+    },
+    {
+      "objectId": "ZTF22aagyrlp",
+      "sherlock_z": 0.04,
+      "days_since_first_det": 0.08725693263113499,
+      "UTC": "2022-04-19 08:15:45"
+    },
+    {
+      "objectId": "ZTF22aagyrlp",
+      "sherlock_z": 0.04,
+      "days_since_first_det": 0.08712961757555604,
+      "UTC": "2022-04-19 08:15:34"
+    },
+    {
+      "objectId": "ZTF22aagxoqe",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 0.03383100312203169,
+      "UTC": "2022-04-19 04:37:08"
+    },
+    {
+      "objectId": "ZTF22aagxoqe",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 0.03366896603256464,
+      "UTC": "2022-04-19 04:36:54"
+    },
+    {
+      "objectId": "ZTF22aagwane",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 0.017291688360273838,
+      "UTC": "2022-04-18 12:24:03"
+    },
+    {
+      "objectId": "ZTF22aagwaik",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 0.015868088230490685,
+      "UTC": "2022-04-18 12:24:03"
+    },
+    {
+      "objectId": "ZTF22aagwane",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 0.017141225282102823,
+      "UTC": "2022-04-18 12:23:50"
+    },
+    {
+      "objectId": "ZTF22aagwaik",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 0.01571762515231967,
+      "UTC": "2022-04-18 12:23:50"
+    },
+    {
+      "objectId": "ZTF22aagtsrv",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 0.026585602667182684,
+      "UTC": "2022-04-18 04:29:29"
+    },
+    {
+      "objectId": "ZTF22aagtsrv",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 0.026423566043376923,
+      "UTC": "2022-04-18 04:29:15"
+    },
+    {
+      "objectId": "ZTF22aagtrsh",
+      "sherlock_z": 0.09,
+      "days_since_first_det": 0.024710639845579863,
+      "UTC": "2022-04-18 04:27:28"
+    },
+    {
+      "objectId": "ZTF22aagtrsh",
+      "sherlock_z": 0.09,
+      "days_since_first_det": 0.024548602756112814,
+      "UTC": "2022-04-18 04:27:14"
+    },
+    {
+      "objectId": "ZTF22aagsxkj",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 1.970289396122098,
+      "UTC": "2022-04-17 09:13:34"
+    },
+    {
+      "objectId": "ZTF22aagsxkj",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 1.970173655077815,
+      "UTC": "2022-04-17 09:13:24"
+    },
+    {
+      "objectId": "ZTF21aanrujo",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 1.8999537071213126,
+      "UTC": "2022-04-17 09:03:55"
+    },
+    {
+      "objectId": "ZTF21aanrujo",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 1.8998726881109178,
+      "UTC": "2022-04-17 09:03:48"
+    },
+    {
+      "objectId": "ZTF22aafrjnw",
+      "sherlock_z": 0.02,
+      "days_since_first_det": 1.9575925883837044,
+      "UTC": "2022-04-16 06:02:54"
+    },
+    {
+      "objectId": "ZTF22aafrjnw",
+      "sherlock_z": 0.02,
+      "days_since_first_det": 1.9574421253055334,
+      "UTC": "2022-04-16 06:02:41"
+    },
+    {
+      "objectId": "ZTF22aagrnhf",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 0.05812500696629286,
+      "UTC": "2022-04-16 05:35:07"
+    },
+    {
+      "objectId": "ZTF22aagrnhf",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 0.05796296987682581,
+      "UTC": "2022-04-16 05:34:53"
+    },
+    {
+      "objectId": "ZTF22aafsqud",
+      "sherlock_z": 0.02,
+      "days_since_first_det": 0.05119217000901699,
+      "UTC": "2022-04-15 08:23:11"
+    },
+    {
+      "objectId": "ZTF22aafsqud",
+      "sherlock_z": 0.02,
+      "days_since_first_det": 0.0510532814078033,
+      "UTC": "2022-04-15 08:22:59"
+    },
+    {
+      "objectId": "ZTF22aafrjnw",
+      "sherlock_z": 0.02,
+      "days_since_first_det": 1.0409606443718076,
+      "UTC": "2022-04-15 08:02:57"
+    },
+    {
+      "objectId": "ZTF22aafrjnw",
+      "sherlock_z": 0.02,
+      "days_since_first_det": 1.0407870332710445,
+      "UTC": "2022-04-15 08:02:42"
+    },
+    {
+      "objectId": "ZTF22aafncmd",
+      "sherlock_z": 0.07,
+      "days_since_first_det": 0.05319445859640837,
+      "UTC": "2022-04-15 07:56:50"
+    },
+    {
+      "objectId": "ZTF22aafncmd",
+      "sherlock_z": 0.07,
+      "days_since_first_det": 0.05304399598389864,
+      "UTC": "2022-04-15 07:56:37"
+    },
+    {
+      "objectId": "ZTF22aageuft",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 0.05055559612810612,
+      "UTC": "2022-04-15 07:51:40"
+    },
+    {
+      "objectId": "ZTF22aageuft",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 0.05042828107252717,
+      "UTC": "2022-04-15 07:51:29"
+    },
+    {
+      "objectId": "ZTF22aafrjnw",
+      "sherlock_z": 0.02,
+      "days_since_first_det": 0.9993171249516308,
+      "UTC": "2022-04-15 07:02:59"
+    },
+    {
+      "objectId": "ZTF22aafrjnw",
+      "sherlock_z": 0.02,
+      "days_since_first_det": 0.9991550883278251,
+      "UTC": "2022-04-15 07:02:45"
+    },
+    {
+      "objectId": "ZTF22aafracj",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 1.0284027620218694,
+      "UTC": "2022-04-15 06:18:13"
+    },
+    {
+      "objectId": "ZTF22aafracj",
+      "sherlock_z": 0.0,
+      "days_since_first_det": 1.0282638743519783,
+      "UTC": "2022-04-15 06:18:01"
+    },
+    {
+      "objectId": "ZTF22aafokgy",
+      "sherlock_z": 0.06,
+      "days_since_first_det": 1.9698264030739665,
+      "UTC": "2022-04-15 06:12:32"
+    },
+    {
+      "objectId": "ZTF22aafokgy",
+      "sherlock_z": 0.06,
+      "days_since_first_det": 1.9696643659844995,
+      "UTC": "2022-04-15 06:12:18"
+    }
+  ]
+}

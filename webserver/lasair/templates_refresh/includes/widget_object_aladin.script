@@ -141,18 +141,23 @@ var surveys = [
 
 var aladin = A.aladin('#aladin-lite-div', {showControl: false, survey: "P/PanSTARRS/DR1/color-z-zg-g", fov:0.025, target: "{{ data.objectData.ramean }}, {{ data.objectData.decmean }}", cooFrame: "J2000", showFullscreenControl: false, showFrame: false, showGotoControl: false});
 
-var alertcat = A.catalog({name: 'Alert', sourceSize: 18});
-var alert = A.source({{ data.objectData.ramean }}, {{ data.objectData.decmean }});
-alertcat.addSources([alert]);
-aladin.addCatalog(alertcat);
 
 {% if data.sherlock.eastSeparationArcsec %}
-    var sherlockcat = A.catalog({name: 'Sherlock', sourceSize: 18});
+    var sherlockcat = A.catalog({name: "Sherlock's predicted association", sourceSize: 18, color: "#32CD32"});
     var sherlock = A.source(
         {{ data.objectData.ramean }} + {{ data.sherlock.eastSeparationArcsec }}/3600,
         {{ data.objectData.decmean }} + {{ data.sherlock.northSeparationArcsec }}/3600);
     sherlockcat.addSources([sherlock]);
     aladin.addCatalog(sherlockcat);
+{% endif %}
+
+{% if data.objectId %}
+    var objectcat = A.catalog({name: "{{ data.objectId }}", sourceSize: 10, color: "red", shape:"circle"});
+    var thisobject = A.source(
+        {{ data.objectData.ramean }},
+        {{ data.objectData.decmean }});
+    objectcat.addSources([thisobject]);
+    aladin.addCatalog(objectcat);
 {% endif %}
 
 

@@ -25,30 +25,44 @@
                 {% include "includes/widget_object_id.html" %}
             </div>
 
-            <div class="col-12 col-sm-8 mb-4">
+            <div class="col-12 col-sm-8 mb-4 col-xl-8">
                 {% include "includes/widget_object_sherlock.html" %}
             </div>
+
+            <div class="col-12 col-sm-8 mb-4 col-xl-6">
+                {% include "includes/widget_object_tns.html" %}
+            </div>
+
+            <div class="col-12 col-sm-6 col-xl-6 mb-4">
+                {% include "includes/widget_object_external_links.html" %}
+            </div>
+
+
+
+
 
             <div class="col-12 mb-4">
                 {% include "includes/widget_object_lightcurve.html" %}
             </div>
 
-
-            <div class="col-12 col-sm-6 col-xl-4 mb-4">
-                {% include "includes/widget_object_external_links.html" %}
+            <div class="col-9 mb-4">
+                {% include "includes/widget_object_stamps.html" %}
             </div>
+
+            <div class="col-3 mb-4">
+                {% include "includes/widget_object_aladin.html" %}
+            </div>
+
+
+
 
             <div class="col-12 mb-4">
                 {% include "includes/widget_object_detection_table.html" %}
             </div>
 
-            <div class="col-4 mb-4">
-                {% include "includes/widget_object_aladin.html" %}
-            </div>
 
-            <div class="col-12 mb-4">
-                {% include "includes/widget_object_stamps.html" %}
-            </div>
+
+
 
             {% if not data.objectData.ramean %}
                 This object is not in the Lasair database.
@@ -65,47 +79,38 @@
 
                     <div class="w-50">
                         <ul>
-                            <li>Object has {{ data.objectData.ncand }} candidates between {{ data.objectData.mjdmin_ago|floatformat:0 }} and {{ data.objectData.mjdmax_ago|floatformat:0 }} days ago
 
 
-                                {% if data.count_isdiffpos %}
-                                    <li>NOTE: There are {{ data.count_isdiffpos }} of {{ data.count_all_candidates }} candidates (below) where the detected brightness is less than the reference brightness (where the magnitude is followed by "f"), also indicated by an open circle in the light curve above.</li>
-                                {% endif %}
-
-
-                                {% if data.objectData.MPCname %}
-                                    <li><form method="post" id="JPLsearch" action="https://ssd.jpl.nasa.gov/sbdb.cgi">
-                                        <input type="hidden" name="sstr" value="{{ data.objectData.MPCname }}"></form>
-                                        Moving object, MPC name is <a href="#" onclick="document.forms[1].submit();">{{ data.objectData.MPCname }}</a></li>
-                                {% else %}
-                                    {% if data.annotation %}
-                                        <li>{{ data.annotation|safe }}{% endif %}</li>
-                                {% endif %}
-
-                                <!--<li>Information on this webpage also&nbsp; <a href="/object/{{ data.objectId }}/json/">available as JSON.</a></li> -->
-
-
-                            </ul>
-
-                            {% if data.TNS.tns_name %}
-                                <h4>TNS</h4>
-                                <ul>
-                                    <li>TNS name is {{ data.TNS.tns_prefix }} <a href=https://www.wis-tns.org/object/{{ data.TNS.tns_name }}>{{ data.TNS.tns_name }}</a><br/>
-                                        {% if data.TNS.type %}
-                                            <li> type {{ data.TNS.type }}, z={{ data.TNS.z }}, host is {{ data.TNS.host_name }} {% endif %}
-                                        {% if data.TNS.source_group %}
-                                            <li>discovered by {{ data.TNS.source_group }} {% endif %}
-                                        {% if data.TNS.disc_mag %}
-                                            <li>discovery magnitude {{ data.TNS.disc_mag }} {% endif %}
-                                    </ul>
-                                    <p>
+                            {% if data.count_isdiffpos %}
+                                <li>NOTE: There are {{ data.count_isdiffpos }} of {{ data.count_all_candidates }} candidates (below) where the detected brightness is less than the reference brightness (where the magnitude is followed by "f"), also indicated by an open circle in the light curve above.</li>
                             {% endif %}
-                        </div>
 
 
-                        <hr/>
+                            {% if data.objectData.MPCname %}
+                                <li><form method="post" id="JPLsearch" action="https://ssd.jpl.nasa.gov/sbdb.cgi">
+                                    <input type="hidden" name="sstr" value="{{ data.objectData.MPCname }}"></form>
+                                    Moving object, MPC name is <a href="#" onclick="document.forms[1].submit();">{{ data.objectData.MPCname }}</a></li>
+                            {% else %}
+                                {% if data.annotation %}
+                                    <li>{{ data.annotation|safe }}{% endif %}</li>
+                            {% endif %}
+
+                            <!--<li>Information on this webpage also&nbsp; <a href="/object/{{ data.objectId }}/json/">available as JSON.</a></li> -->
+
+
+                        </ul>
+
+
+                    </div>
+                </div>
+
+
+
 
             {% endif %}
+        </div>
+    </div>
+    <hr/>
 
 {% endblock content %}
 

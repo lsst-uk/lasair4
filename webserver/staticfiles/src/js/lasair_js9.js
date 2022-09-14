@@ -1,6 +1,7 @@
 document.addEventListener('DOMContentLoaded', function() {
 
     JS9.globalOpts.alerts = false;
+    JS9.globalOpts.updateTitlebar = false;
 
     JS9.imageOpts = {
         inherit: false, // inherit props from previous image?
@@ -47,6 +48,49 @@ document.addEventListener('DOMContentLoaded', function() {
         whichonchange: "selected" // which to list ("all" or "selected")
     };
 
+    let fns = [loadFitsImages, fixJS9ExtraStyles, collapseJS9Extras];
+    // chain function will call the supplied function
+    // and recursively call the chain function with the
+    // the next element in the array
+    function chain(fn) {
+        if (fn) {
+            fn(() => chain(fns.shift()));
+        }
+    }
+    chain(fns.shift());
+
+});
+
+function fixJS9ExtraStyles(next) {
+    // MAKE SQUARE
+    let fitsImgs = document.querySelectorAll(".JS9");
+    fitsImgs.forEach(function(fits) {
+        var checkExist = setInterval(function() {
+            if ($(`#${fits.id}`).length) {
+                clearInterval(checkExist);
+                var im = JS9.LookupDisplay(fits.id);
+                JS9.ResizeDisplay(fits.id, im.width, im.width);
+            }
+        }, 100); // check every 100ms
+
+    });
+    // MAKE SQUARE
+    var checkExist = setInterval(function() {
+        if (document.querySelectorAll(".ImExamRadialProj").length) {
+            clearInterval(checkExist);
+            let plugins = document.querySelectorAll(".ImExamRadialProj");
+
+            plugins.forEach(function(plugin) {
+                plugin.style.height = plugin.offsetWidth + 'px';
+            });
+        }
+    }, 100); // check every 100ms
+    setTimeout(() => {
+        next()
+    }, 2000);
+}
+
+function loadFitsImages(next) {
     let allFits = document.querySelectorAll(".fitsStamp");
     allFits.forEach(function(fits) {
         let fitsScr = fits.getAttribute("src");
@@ -71,31 +115,17 @@ document.addEventListener('DOMContentLoaded', function() {
             display: uuid
         });
     });
-    // MAKE SQUARE
-    let fitsImgs = document.querySelectorAll(".JS9");
-    fitsImgs.forEach(function(fits) {
-        var checkExist = setInterval(function() {
-            if ($(`#${fits.id}`).length) {
-                clearInterval(checkExist);
-                var im = JS9.LookupDisplay(fits.id);
-                JS9.ResizeDisplay(fits.id, im.width, im.width);
-            }
-        }, 100); // check every 100ms
+    next();
+};
 
-    });
-    // MAKE SQUARE
-    var checkExist = setInterval(function() {
-        if (document.querySelectorAll(".ImExamRadialProj").length) {
-            clearInterval(checkExist);
-            let plugins = document.querySelectorAll(".ImExamRadialProj");
-            console.log(plugins.length);
-            plugins.forEach(function(plugin) {
-                plugin.style.height = plugin.offsetWidth + 'px';
-            });
-        }
-    }, 100); // check every 100ms
+function collapseJS9Extras(next) {
 
-});
+    var myCollapse = document.getElementById('collapseJS9Extras');
+    if (typeof myCollapse !== 'undefined' && myCollapse !== null) {
+        myCollapse.classList.add("collapse");
+        next();
+    }
+}
 
 function setDefaultParams(display) {
 

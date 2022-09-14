@@ -31,10 +31,30 @@ def watchlist_new(request):
                    })
 
 
-def get_numbers(watchlists):
-    for wl in watchlists:
-        wl['number'] = WatchlistCones.objects.filter(wl_id=wl['wl_id']).count()
-    return watchlists
+def add_watchlist_metadata(
+        watchlists):
+    """*add extra metadata to the watchlists and return a list of watchlist dictionaries*
+
+    **Key Arguments:**
+
+    - `watchlists` -- a list of watchlist objects
+
+    **Usage:**
+
+    ```python
+    watchlistDicts = add_watchlist_metadata(watchlists)
+    ```           
+    """
+    updatedWatchlists = []
+    for wlDict, wl in zip(watchlists.values(), watchlists):
+        # ADD LIST COUNT
+        wlDict['count'] = WatchlistCones.objects.filter(wl_id=wlDict['wl_id']).count()
+
+        # ADD LIST USER
+        wlDict['user'] = f"{wl.user.first_name} {wl.user.last_name}"
+        wlDict['profile_image'] = wl.user.profile.image.url
+        updatedWatchlists.append(wlDict)
+    return updatedWatchlists
 
 
 @csrf_exempt
@@ -119,13 +139,13 @@ def watchlists_home(request):
             else:
                 message = 'Must be owner to delete watchlist'
 
-# public watchlists belong to the anonymous user
-    other_watchlists = Watchlists.objects.filter(public=1).values()
-    other_watchlists = get_numbers(other_watchlists)
+    # public watchlists belong to the anonymous user
+    other_watchlists = Watchlists.objects.filter(public=1)
+    other_watchlists = add_watchlist_metadata(other_watchlists)
 
     if request.user.is_authenticated:
-        my_watchlists = Watchlists.objects.filter(user=request.user).values()
-        my_watchlists = get_numbers(my_watchlists)
+        my_watchlists = Watchlists.objects.filter(user=request.user)
+        my_watchlists = add_watchlist_metadata(my_watchlists)
     else:
         my_watchlists = None
 

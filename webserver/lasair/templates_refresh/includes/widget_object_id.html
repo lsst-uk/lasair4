@@ -1,7 +1,21 @@
-<div class="card border-0 shadow">
+<div class="card border-0 shadow h-100">
     <div class="card-body">
-        <div class="row d-block d-xl-flex align-items-center">
-            <div class="col-12  px-xl-1">
+        <div class="row d-block d-xl-flex">
+
+            <div class="col-3 text-xl-center mb-3 mb-xl-0 d-flex justify-content-xl-start">
+                <div class="icon-shape icon-shape-primary rounded me-4 me-sm-0">
+
+                    <svg class="w-6 h-6" fill="currentColor" stroke="currentColor" stroke-width="4"  viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+                        <g>
+                            <path d="m61.434 50c0 6.3125-5.1211 11.434-11.434 11.434s-11.434-5.1211-11.434-11.434 5.1211-11.434 11.434-11.434 11.434 5.1211 11.434 11.434"/>
+                            <path d="m90.797 48.438h-5.5078c-0.80078-18.238-15.488-32.926-33.727-33.727v-5.5078c0-0.86328-0.69922-1.5625-1.5625-1.5625s-1.5625 0.69922-1.5625 1.5625v5.5078c-18.238 0.80078-32.926 15.488-33.727 33.727h-5.5078c-0.86328 0-1.5625 0.69922-1.5625 1.5625s0.69922 1.5625 1.5625 1.5625h5.5078c0.80078 18.238 15.488 32.926 33.727 33.727v5.5078c0 0.86328 0.69922 1.5625 1.5625 1.5625s1.5625-0.69922 1.5625-1.5625v-5.5078c18.238-0.80078 32.926-15.488 33.727-33.727h5.5078c0.86328 0 1.5625-0.69922 1.5625-1.5625s-0.69922-1.5625-1.5625-1.5625zm-39.234 33.688v-5.8281c0-0.86328-0.69922-1.5625-1.5625-1.5625s-1.5625 0.69922-1.5625 1.5625v5.8281c-16.508-0.80078-29.762-14.055-30.562-30.562h5.8281c0.86328 0 1.5625-0.69922 1.5625-1.5625s-0.69922-1.5625-1.5625-1.5625h-5.8281c0.80078-16.508 14.055-29.762 30.562-30.562v5.8281c0 0.86328 0.69922 1.5625 1.5625 1.5625s1.5625-0.69922 1.5625-1.5625v-5.8281c16.508 0.80078 29.762 14.055 30.562 30.562h-5.8281c-0.86328 0-1.5625 0.69922-1.5625 1.5625s0.69922 1.5625 1.5625 1.5625h5.8281c-0.80078 16.508-14.055 29.762-30.562 30.562z"/>
+                        </g>
+                    </svg>
+
+                </div>
+            </div>
+
+            <div class="col-9  px-xl-1">
                 <div class="d-block">
                     <h2 class="h3 fw-extrabold mb-0">{{data.objectId}}</h2>
                     <div class="accordion accordion-flush" id="accordionExample">
@@ -12,27 +26,20 @@
                                 </button>
                             </h2>
                             <div id="collapseOne" class="accordion-collapse collapse" aria-labelledby="headinOne" data-bs-parent="#accordionExample">
-                                <div class="accordion-body">
-                                    <p><strong class="fw-bold">EQU</strong> <span class="fw-bold text-gray-400">{{ data.objectData.rasex }}, {{ data.objectData.decsex }}</span></p>
+                                <div class="accordion-body p-0 ">
+                                    <p><strong class="fw-bold text-gray-900">EQU</strong> <span class="fw-bold text-gray-400">{{ data.objectData.rasex }}, {{ data.objectData.decsex }}</span></p>
                                     {% if data.objectData.glonmean %}
-                                        <p><strong class="fw-bold">GAL</strong> <span class="fw-bold text-gray-400">{{ data.objectData.glonmean|floatformat:6 }}, {{ data.objectData.glatmean|floatformat:6 }}</span></p>
+                                        <p><strong class="fw-bold text-gray-900">GAL</strong> <span class="fw-bold text-gray-400">{{ data.objectData.glonmean|floatformat:6 }}, {{ data.objectData.glatmean|floatformat:6 }}</span></p>
                                     {% endif %}
                                     {% if data.objectData.ec_lon %}
-                                        <p><strong class="fw-bold">ECL</strong> <span class="fw-bold text-gray-400">{{ data.objectData.ec_lon|floatformat:6 }}, {{ data.objectData.ec_lat|floatformat:6 }}</span></p>
+                                        <p><strong class="fw-bold text-gray-900">ECL</strong> <span class="fw-bold text-gray-400">{{ data.objectData.ec_lon|floatformat:6 }}, {{ data.objectData.ec_lat|floatformat:6 }}</span></p>
                                     {% endif %}
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
-                <small class="d-flex align-items-center text-gray-500">
-                    <!-- Feb 1 - Apr 1,
-                                    <svg class="icon icon-xxs text-gray-500 ms-2 me-1" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM4.332 8.027a6.012 6.012 0 011.912-2.706C6.512 5.73 6.974 6 7.5 6A1.5 1.5 0 019 7.5V8a2 2 0 004 0 2 2 0 011.523-1.943A5.977 5.977 0 0116 10c0 .34-.028.675-.083 1H15a2 2 0 00-2 2v2.197A5.973 5.973 0 0110 16v-2a2 2 0 00-2-2 2 2 0 01-2-2 2 2 0 00-1.668-1.973z" clip-rule="evenodd"></path></svg>
-                                    USA -->
-                </small>
-                <div class="small d-flex mt-1">
-                    <!-- <div>Since last month <svg class="icon icon-xs text-success" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M14.707 12.707a1 1 0 01-1.414 0L10 9.414l-3.293 3.293a1 1 0 01-1.414-1.414l4-4a1 1 0 011.414 0l4 4a1 1 0 010 1.414z" clip-rule="evenodd"></path></svg><span class="text-success fw-bolder">22%</span></div> -->
-                </div>
+
             </div>
         </div>
     </div>
