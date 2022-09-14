@@ -2,11 +2,6 @@
 
 Requires a functional Kafka running on localhost and Sherlock."""
 
-#import unittest, unittest.mock
-#import logging
-#import sys
-#import json
-
 import unittest.main
 from unittest import TestCase, expectedFailure
 import json
@@ -15,7 +10,7 @@ from time import sleep
 import subprocess
 
 import context
-from sherlock_wrapper import wrapper
+import wrapper
 
 from confluent_kafka import Producer, Consumer, KafkaException, KafkaError
 from confluent_kafka.admin import AdminClient
@@ -58,11 +53,11 @@ class IntegrationTest(TestCase):
     @classmethod
     def setUpClass(cls):
 
-        subprocess.Popen(["bin/zookeeper-server-start.sh", "config/zookeeper.properties"], cwd="/opt/kafka")
-        subprocess.run(["sudo", "service", "mysql", "start"])        
-        sleep(4)
-        subprocess.Popen(["bin/kafka-server-start.sh", "config/server.properties"], cwd="/opt/kafka")
-        sleep(20)
+        #subprocess.Popen(["bin/zookeeper-server-start.sh", "config/zookeeper.properties"], cwd="/opt/kafka")
+        #subprocess.run(["sudo", "service", "mysql", "start"])        
+        #sleep(4)
+        #subprocess.Popen(["bin/kafka-server-start.sh", "config/server.properties"], cwd="/opt/kafka")
+        #sleep(20)
 
         with open("example_ingested.json", 'r') as f:
             # load example data
