@@ -13,4 +13,4 @@ def annotators(request):
         }
         annotators.append(d)
 
-    return render(request, 'annotators.html', {'annotators': annotators})
+    return render(request, 'annotator/annotator_index.html', {'annotators': annotators})

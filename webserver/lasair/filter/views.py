@@ -7,7 +7,7 @@ from lasair.annotator.models import Annotators
 from lasair.watchlist_region.models import Areas
 from lasair.watchlist_catalogue.models import Watchlists
 from confluent_kafka import Producer, KafkaError, admin
-from lasair.db_schema.views import get_schema, get_schema_dict, get_schema_for_query_selected
+from lasair.db_schema import get_schema, get_schema_dict, get_schema_for_query_selected
 from .models import Myqueries
 from lasair.query_builder import check_query, build_query
 import settings
