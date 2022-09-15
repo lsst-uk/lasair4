@@ -1,12 +1,13 @@
 from django.db import models
 from django.contrib.auth.models import User
 
+# ANNOTATORS BELONG TO A USER
+
 
 class Annotators(models.Model):
     topic = models.CharField(primary_key=True, max_length=32)
     description = models.TextField(blank=True, null=True)
     user = models.ForeignKey(User, models.DO_NOTHING, db_column='user', blank=True, null=True)
-#    owner = models.IntegerField()
     username = models.CharField(max_length=32, blank=True, null=True)
     password = models.CharField(max_length=32, blank=True, null=True)
     url = models.CharField(max_length=1024, blank=True, null=True)
