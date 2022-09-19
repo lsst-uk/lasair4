@@ -34,15 +34,17 @@
 
         </div>
 
-        <div class="col-12 mb-4">
-            {% include "includes/widget_watchlist_catalogues_table.html" with type="public" position="auto" %}
-        </div>
-
         {% if user.is_authenticated %}
             <div class="col-12 mb-4">
-                {% include "includes/widget_watchlist_catalogues_table.html" with type="my" position="auto" %}
+                {% include "includes/widget_watchlist_catalogue_table.html" with type="my" position="auto" %}
             </div>
         {% endif %}
+
+        <div class="col-12 mb-4">
+            {% include "includes/widget_watchlist_catalogue_table.html" with type="public" position="auto" %}
+        </div>
+
+
 
     </div>
 

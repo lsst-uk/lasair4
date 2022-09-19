@@ -2,7 +2,7 @@ from django import forms
 from django.contrib import admin
 
 
-class MyqueriesModelForm(forms.ModelForm):
+class filter_query_ModelForm(forms.ModelForm):
     description = forms.CharField(widget=forms.Textarea)
     selected = forms.CharField(widget=forms.Textarea)
     conditions = forms.CharField(widget=forms.Textarea)
@@ -13,5 +13,5 @@ class MyqueriesModelForm(forms.ModelForm):
         fields = '__all__'
 
 
-class Myqueries_Admin(admin.ModelAdmin):
+class filter_query_Admin(admin.ModelAdmin):
     form = MyqueriesModelForm

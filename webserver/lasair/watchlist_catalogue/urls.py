@@ -2,9 +2,8 @@ from . import views
 from django.urls import path
 
 urlpatterns = [
-    path('watchlist-catalogues/', views.watchlists_home, name='watchlist_catalogues'),
-    path('watchlist-catalogues/create/', views.watchlist_new, name='watchlist_catalogues_create'),
-    path('watchlist-catalogues/<int:wl_id>/', views.show_watchlist, name='watchlist_catalogues_detail'),
-    path('watchlist-catalogues/<int:wl_id>/txt/', views.show_watchlist_txt, name='show_watchlist_txt'),
-
+    path('watchlist-catalogues/', views.watchlist_catalogue_index, name='watchlist_catalogue_index'),
+    path('watchlist-catalogues/create/', views.watchlist_catalogue_create, name='watchlist_catalogue_create'),
+    path('watchlist-catalogues/<int:wl_id>/', views.watchlist_catalogue_detail, name='watchlist_catalogue_detail'),
+    path('watchlist-catalogues/<int:wl_id>/cat/', views.watchlist_catalogue_download, name='watchlist_catalogue_download'),
 ]

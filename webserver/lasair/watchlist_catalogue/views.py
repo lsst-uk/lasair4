@@ -12,157 +12,27 @@ import src.run_crossmatch as run_crossmatch
 import settings
 from src import db_connect
 import sys
+from . import handle_uploaded_file, add_watchlist_metadata
 sys.path.append('../common')
 
 
-def handle_uploaded_file(f):
-    """handle_uploaded_file.
-
-    Args:
-        f:
-    """
-    return f.read().decode('utf-8')
-
-
-def watchlist_new(request):
-    return render(request, 'watchlist_catalogues_create.html',
-                  {'random': '%d' % random.randrange(1000),
-                   'authenticated': request.user.is_authenticated
-                   })
-
-
-def add_watchlist_metadata(
-        watchlists):
-    """*add extra metadata to the watchlists and return a list of watchlist dictionaries*
+def watchlist_catalogue_download(request, wl_id):
+    """*download the original watchlist*
 
     **Key Arguments:**
 
-    - `watchlists` -- a list of watchlist objects
+    - `request` -- the original request
+    - `wl_id` -- the watchlist catlaogue UUID
 
     **Usage:**
 
     ```python
-    watchlistDicts = add_watchlist_metadata(watchlists)
+    urlpatterns = [
+        ...
+        path('watchlist-catalogues/create/', views.watchlist_catalogue_create, name='watchlist_catalogue_create'),
+        ...
+    ]
     ```           
-    """
-    updatedWatchlists = []
-    for wlDict, wl in zip(watchlists.values(), watchlists):
-        # ADD LIST COUNT
-        wlDict['count'] = WatchlistCones.objects.filter(wl_id=wlDict['wl_id']).count()
-
-        # ADD LIST USER
-        wlDict['user'] = f"{wl.user.first_name} {wl.user.last_name}"
-        wlDict['profile_image'] = wl.user.profile.image.url
-        updatedWatchlists.append(wlDict)
-    return updatedWatchlists
-
-
-@csrf_exempt
-def watchlists_home(request):
-    """watchlists_home.
-
-    Args:
-        request:
-    """
-    message = ''
-    if request.method == 'POST' and request.user.is_authenticated:
-        delete = request.POST.get('delete')
-
-        if delete == None:   # create new watchlist
-
-            t = time.time()
-            name = request.POST.get('name')
-            description = request.POST.get('description')
-            d_radius = request.POST.get('radius')
-
-            cones = request.POST.get('cones_textarea')
-            if 'cones_file' in request.FILES:
-                cones = handle_uploaded_file(request.FILES['cones_file'])
-
-            try:
-                default_radius = float(d_radius)
-            except:
-                message += 'Cannot parse default radius %s\n' % d_radius
-
-            cone_list = []
-            for line in cones.split('\n'):
-                if len(line) == 0:
-                    continue
-                if line[0] == '#':
-                    continue
-                line = line.replace('|', ',')
-                tok = line.split(',')
-                if len(tok) < 2:
-                    continue
-                try:
-                    if len(tok) >= 3:
-                        ra = float(tok[0])
-                        dec = float(tok[1])
-                        objectId = tok[2].strip()
-                        if len(tok) >= 4:
-                            radius = float(tok[3])
-                        else:
-                            radius = None
-                        cone_list.append([objectId, ra, dec, radius])
-                except Exception as e:
-                    message += "Bad line %d: %s<br/>" % (len(cone_list), line)
-                    message += str(e)
-            wl = Watchlists(user=request.user, name=name, description=description, active=0, radius=default_radius)
-            wl.save()
-            cones = []
-            for cone in cone_list:
-                name = cone[0].encode('ascii', 'ignore').decode()
-                if name != cone[0]:
-                    message += 'Non-ascii characters removed from name %s --> %s<br/>' % (cone[0], name)
-                wlc = WatchlistCones(wl=wl, name=name, ra=cone[1], decl=cone[2], radius=cone[3])
-                cones.append(wlc)
-            chunks = 1 + int(len(cones) / 50000)
-            for i in range(chunks):
-                WatchlistCones.objects.bulk_create(cones[(i * 50000): ((i + 1) * 50000)])
-#            wlc.save()
-            message += 'Watchlist created successfully with %d sources in %d chunks in %.1f sec' % (len(cone_list), chunks, time.time() - t)
-        else:
-            wl_id = int(delete)
-            watchlist = get_object_or_404(Watchlists, wl_id=wl_id)
-            if request.user == watchlist.user:
-                # delete all the cones of this watchlist
-                WatchlistCones.objects.filter(wl_id=wl_id).delete()
-                # delete all the hits of this watchlist
-                query = 'DELETE from watchlist_hits WHERE wl_id=%d' % wl_id
-                msl = db_connect.remote()
-                cursor = msl.cursor(buffered=True, dictionary=True)
-                cursor.execute(query)
-                msl.commit()
-                # delete the watchlist
-                watchlist.delete()
-                message = 'Watchlist %s deleted successfully' % watchlist.name
-            else:
-                message = 'Must be owner to delete watchlist'
-
-    # public watchlists belong to the anonymous user
-    other_watchlists = Watchlists.objects.filter(public=1)
-    other_watchlists = add_watchlist_metadata(other_watchlists)
-
-    if request.user.is_authenticated:
-        my_watchlists = Watchlists.objects.filter(user=request.user)
-        my_watchlists = add_watchlist_metadata(my_watchlists)
-    else:
-        my_watchlists = None
-
-    return render(request, 'watchlist_catalogues.html',
-                  {'my_watchlists': my_watchlists,
-                   'random': '%d' % random.randrange(1000),
-                   'other_watchlists': other_watchlists,
-                   'authenticated': request.user.is_authenticated,
-                   'message': message})
-
-
-def show_watchlist_txt(request, wl_id):
-    """show_watchlist_txt.
-
-    Args:
-        request:
-        wl_id:
     """
     message = ''
     watchlist = get_object_or_404(Watchlists, wl_id=wl_id)
@@ -186,12 +56,23 @@ def show_watchlist_txt(request, wl_id):
     return HttpResponse(s, content_type="text/plain")
 
 
-def show_watchlist(request, wl_id):
-    """show_watchlist.
+def watchlist_catalogue_detail(request, wl_id):
+    """*return the resulting matches of a watchlist catalogue*
 
-    Args:
-        request:
-        wl_id:
+    **Key Arguments:**
+
+    - `request` -- the original request
+    - `wl_id` -- the watchlist catlaogue UUID
+
+    **Usage:**
+
+    ```python
+    urlpatterns = [
+        ...
+        path('watchlist-catalogues/<int:wl_id>/', views.watchlist_catalogue_detail, name='watchlist_catalogue_detail'),
+        ...
+    ]
+    ```           
     """
     message = ''
     watchlist = get_object_or_404(Watchlists, wl_id=wl_id)
@@ -308,7 +189,7 @@ WHERE c.wl_id=%d LIMIT 100
 
     count = len(conelist)
 
-    return render(request, 'watchlist_catalogues_detail.html', {
+    return render(request, 'watchlist_catalogue/watchlist_catalogue_detail.html', {
         'watchlist': watchlist,
         'conelist': conelist,
         'count': len(conelist),
@@ -316,3 +197,137 @@ WHERE c.wl_id=%d LIMIT 100
         'number_hits': number_hits,
         'is_owner': is_owner,
         'message': message})
+
+
+@csrf_exempt
+def watchlist_catalogue_index(request):
+    """*Return list of all watchlist catalogues viewable by user*
+
+    **Key Arguments:**
+
+    - `request` -- the original request
+
+    **Usage:**
+
+    ```python
+    urlpatterns = [
+        ... 
+        path('watchlist-catalogues/', views.watchlist_catalogue_index, name='watchlist_catalogue_index'),
+        ...
+    ]    
+    ```           
+    """
+    message = ''
+    if request.method == 'POST' and request.user.is_authenticated:
+        delete = request.POST.get('delete')
+
+        if delete == None:   # create new watchlist
+
+            t = time.time()
+            name = request.POST.get('name')
+            description = request.POST.get('description')
+            d_radius = request.POST.get('radius')
+
+            cones = request.POST.get('cones_textarea')
+            if 'cones_file' in request.FILES:
+                cones = handle_uploaded_file(request.FILES['cones_file'])
+
+            try:
+                default_radius = float(d_radius)
+            except:
+                message += 'Cannot parse default radius %s\n' % d_radius
+
+            cone_list = []
+            for line in cones.split('\n'):
+                if len(line) == 0:
+                    continue
+                if line[0] == '#':
+                    continue
+                line = line.replace('|', ',')
+                tok = line.split(',')
+                if len(tok) < 2:
+                    continue
+                try:
+                    if len(tok) >= 3:
+                        ra = float(tok[0])
+                        dec = float(tok[1])
+                        objectId = tok[2].strip()
+                        if len(tok) >= 4:
+                            radius = float(tok[3])
+                        else:
+                            radius = None
+                        cone_list.append([objectId, ra, dec, radius])
+                except Exception as e:
+                    message += "Bad line %d: %s<br/>" % (len(cone_list), line)
+                    message += str(e)
+            wl = Watchlists(user=request.user, name=name, description=description, active=0, radius=default_radius)
+            wl.save()
+            cones = []
+            for cone in cone_list:
+                name = cone[0].encode('ascii', 'ignore').decode()
+                if name != cone[0]:
+                    message += 'Non-ascii characters removed from name %s --> %s<br/>' % (cone[0], name)
+                wlc = WatchlistCones(wl=wl, name=name, ra=cone[1], decl=cone[2], radius=cone[3])
+                cones.append(wlc)
+            chunks = 1 + int(len(cones) / 50000)
+            for i in range(chunks):
+                WatchlistCones.objects.bulk_create(cones[(i * 50000): ((i + 1) * 50000)])
+#            wlc.save()
+            message += 'Watchlist created successfully with %d sources in %d chunks in %.1f sec' % (len(cone_list), chunks, time.time() - t)
+        else:
+            wl_id = int(delete)
+            watchlist = get_object_or_404(Watchlists, wl_id=wl_id)
+            if request.user == watchlist.user:
+                # delete all the cones of this watchlist
+                WatchlistCones.objects.filter(wl_id=wl_id).delete()
+                # delete all the hits of this watchlist
+                query = 'DELETE from watchlist_hits WHERE wl_id=%d' % wl_id
+                msl = db_connect.remote()
+                cursor = msl.cursor(buffered=True, dictionary=True)
+                cursor.execute(query)
+                msl.commit()
+                # delete the watchlist
+                watchlist.delete()
+                message = 'Watchlist %s deleted successfully' % watchlist.name
+            else:
+                message = 'Must be owner to delete watchlist'
+
+    # public watchlists belong to the anonymous user
+    other_watchlists = Watchlists.objects.filter(public=1)
+    other_watchlists = add_watchlist_metadata(other_watchlists)
+
+    if request.user.is_authenticated:
+        my_watchlists = Watchlists.objects.filter(user=request.user)
+        my_watchlists = add_watchlist_metadata(my_watchlists)
+    else:
+        my_watchlists = None
+
+    return render(request, 'watchlist_catalogue/watchlist_catalogue_index.html',
+                  {'my_watchlists': my_watchlists,
+                   'random': '%d' % random.randrange(1000),
+                   'other_watchlists': other_watchlists,
+                   'authenticated': request.user.is_authenticated,
+                   'message': message})
+
+
+def watchlist_catalogue_create(request):
+    """*create a new watchlist catalogue*
+
+    **Key Arguments:**
+
+    - `request` -- the original request
+
+    **Usage:**
+
+    ```python
+    urlpatterns = [
+        ...
+        path('watchlist-catalogues/create/', views.watchlist_catalogue_create, name='watchlist_catalogue_create'),
+        ...
+    ]
+    ```           
+    """
+    return render(request, 'watchlist_catalogue/watchlist_catalogue_create.html',
+                  {'random': '%d' % random.randrange(1000),
+                   'authenticated': request.user.is_authenticated
+                   })

@@ -8,7 +8,7 @@
             An "Active" area is one that is run against all incoming alerts.
             latest objects.
         </p> <p>
-            If you are logged in, you can <a href="{% url 'watchlist_regions_create' %}">create an area</a>.
+            If you are logged in, you can <a href="{% url 'watchlist_region_create' %}">create an area</a>.
         </p>
 
         <div class="col-xs-12">
@@ -59,7 +59,7 @@
                     </tr>
                 </thead>
                 {% for ar in other_areas %}
-                    <tr><td><b><a href="{% url 'watchlist_regions_detail' ar.ar_id %}">{{ ar.name }}</a></b></td>
+                    <tr><td><b><a href="{% url 'watchlist_region_detail' ar.ar_id %}">{{ ar.name }}</a></b></td>
                         <td>{{ ar.user.first_name }} {{ ar.user.last_name }}</td>
                         <td>{{ ar.description }}</td>
                         <td> {% if ar.active == 1 %}&#x2714;{% endif %} </td>
