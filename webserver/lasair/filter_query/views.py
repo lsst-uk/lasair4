@@ -8,7 +8,7 @@ from lasair.watchlist_region.models import Areas
 from lasair.watchlist_catalogue.models import Watchlists
 from confluent_kafka import Producer, KafkaError, admin
 from lasair.db_schema import get_schema, get_schema_dict, get_schema_for_query_selected
-from .models import Myqueries
+from .models import filter_query
 from lasair.query_builder import check_query, build_query
 import settings
 import json
@@ -52,7 +52,7 @@ def filter_log(request, topic):
         if k not in tableSchema:
             tableSchema[k] = "custom column"
 
-    return render(request, 'filter/filter_detail.html', {'topic': topic, 'nalert': nalert, 'table': table, 'mq_id': mq_id, 'title': title, "schema": tableSchema})
+    return render(request, 'filter_query/filter_query_detail.html', {'topic': topic, 'nalert': nalert, 'table': table, 'mq_id': mq_id, 'title': title, "schema": tableSchema})
 
 
 def handle_myquery(request, mq_id=None):
@@ -113,11 +113,11 @@ def handle_myquery(request, mq_id=None):
 
             tn = topic_name(request.user.id, name)
 
-            myquery = Myqueries(user=request.user,
-                                name=name, description=description,
-                                public=public, active=active,
-                                selected=selected, conditions=conditions, tables=tables,
-                                real_sql=sqlquery_real, topic_name=tn)
+            myquery = filter_query(user=request.user,
+                                   name=name, description=description,
+                                   public=public, active=active,
+                                   selected=selected, conditions=conditions, tables=tables,
+                                   real_sql=sqlquery_real, topic_name=tn)
             myquery.save()
 
             # after saving, delete the topic and push some records from the database
@@ -157,7 +157,7 @@ def handle_myquery(request, mq_id=None):
             })
 
     # Existing query
-    myquery = get_object_or_404(Myqueries, mq_id=mq_id)
+    myquery = get_object_or_404(filter_query, mq_id=mq_id)
     is_owner = logged_in and (request.user == myquery.user)
 
     if not is_owner and myquery.public == 0:
@@ -183,12 +183,12 @@ def handle_myquery(request, mq_id=None):
             letters = string.ascii_lowercase
             newname += ''.join(random.choice(letters) for i in range(6))
             tn = topic_name(request.user.id, newname)
-            mq = Myqueries(user=request.user, name=newname,
-                           description=myquery.description,
-                           public=0, active=0,
-                           selected=myquery.selected,
-                           conditions=myquery.conditions, tables=myquery.tables,
-                           real_sql=myquery.real_sql, topic_name=tn)
+            mq = filter_query(user=request.user, name=newname,
+                              description=myquery.description,
+                              public=0, active=0,
+                              selected=myquery.selected,
+                              conditions=myquery.conditions, tables=myquery.tables,
+                              real_sql=myquery.real_sql, topic_name=tn)
             mq.save()
 
             # after saving, delete the topic and push some records from the database
@@ -275,7 +275,7 @@ def querylist(request, which):
     """
     # shows the list of queries
     if request.user.is_authenticated:
-        myqueries = Myqueries.objects.filter(user=request.user)
+        myqueries = filter_query.objects.filter(user=request.user)
     else:
         myqueries = None
 
@@ -288,8 +288,8 @@ def querylist(request, which):
         areas = Areas.objects.filter(public__gte=1)
         annotators = Annotators.objects.filter(public__gte=1)
 
-    promoted_queries = Myqueries.objects.filter(public=2)
-    public_queries = Myqueries.objects.filter(public__gte=1)
+    promoted_queries = filter_query.objects.filter(public=2)
+    public_queries = filter_query.objects.filter(public__gte=1)
 
     return render(request, 'querylist.html', {
         'which': which,
@@ -427,7 +427,7 @@ def runquery(request, mq_id, query_name, selected, tables, conditions, limit, of
     if json_checked:
         return HttpResponse(json.dumps(table, indent=2), content_type="application/json")
     else:
-        return render(request, 'filter/filter_detail.html',
+        return render(request, 'filter_query/filter_query_detail.html',
                       {'table': table, 'nalert': nalert,
                        'topic': topic,
                        'title': query_name,

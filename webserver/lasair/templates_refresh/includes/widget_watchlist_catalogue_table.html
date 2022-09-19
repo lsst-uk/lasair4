@@ -98,7 +98,7 @@
                                     {% endif %}
 
 
-                                    <b><a href="{% url 'watchlist_catalogues_detail' wl.wl_id %}">{{ wl.name }}</a></b></td>
+                                    <b><a href="{% url 'watchlist_catalogue_detail' wl.wl_id %}">{{ wl.name }}</a></b></td>
                                     <td  style="white-space: normal;">{% if wl.description|length > 60 %}
                                         {{ wl.description|slice:"0:60" }} ...
 
@@ -120,7 +120,7 @@
                                 <tr><td class="align-middle">
 
 
-                                    <b><a href="{% url 'watchlist_catalogues_detail' wl.wl_id %}">{{ wl.name }}</a></b></td>
+                                    <b><a href="{% url 'watchlist_catalogue_detail' wl.wl_id %}">{{ wl.name }}</a></b></td>
                                     <td><img alt="Image placeholder" src="{{ wl.profile_image }}" class="mb-1 me-1 avatar rounded-circle"> {{ wl.user }}</td>
                                     <td  style="white-space: normal;">{% if wl.description|length > 60 %}
                                         {{ wl.description|slice:"0:60" }} ...

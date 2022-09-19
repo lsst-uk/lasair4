@@ -1,3 +1,4 @@
+from . import jd_from_iso
 import time
 import math
 import dateutil.parser as dp
@@ -13,46 +14,23 @@ import sys
 sys.path.append('../../../common')
 
 
-def skymap(request):
-    """skymap.
+def mm_map_detail(request, skymap_id_version):
+    """*return details of the multimesseneger map*
 
-    Args:
-        request:
-    """
-    message = ''
-    p = Popen(['ls', '-lrt', '/mnt/cephfs-head-data/ztf/skymap/'], stdout=PIPE)
-    skymap_list = []
-    result = p.communicate()[0].decode("utf-8")
-    for line in result.split('\n'):
-        tok = line.split()
-        if len(tok) > 7:
-            name = tok[8]
-            t = name.split('.')
-            if len(t) > 1 and t[1] == 'json':
-                skymap_list.append(t[0])
-    return render(request, 'skymap.html', {'skymap_list': skymap_list, 'message': message})
+    **Key Arguments:**
 
+    - `request` -- the original request
+    - `skymap_id_version` -- UUID of the multimessenger map
 
-def jd_from_iso(date):
-    """jd_from_iso.
+    **Usage:**
 
-    Args:
-        date:
-    """
-    if not date.endswith('Z'):
-        date += 'Z'
-    parsed_t = dp.parse(date)
-    unix = int(parsed_t.strftime('%s'))
-    jd = unix / 86400 + 2440587.5
-    return jd
-
-
-def show_skymap(request, skymap_id_version):
-    """show_skymap.
-
-    Args:
-        request:
-        skymap_id_version:
+    ```python
+    urlpatterns = [
+        ...
+        path('mm_maps/<skymap_id_version>/', views.mm_map_detail, name='mm_map_detail'),
+        ...
+    ]
+    ```           
     """
     json_text = open("/mnt/lasair-head-data/ztf/skymap/%s.json" % skymap_id_version).read()
     skymap_data = json.loads(json_text)
@@ -150,7 +128,7 @@ def show_skymap(request, skymap_id_version):
                 'dec': row['decl'],
                 'n': int(row['sum'])})
     tok = skymap_id_version.split('_')
-    return render(request, 'show_skymap.html',
+    return render(request, 'multimessenger_map/multimessenger_map_detail.html',
                   {'skymap_id': tok[0], 'skymap_id_version': skymap_id_version, 'isodate': isodate,
                    'niddate1': niddate1, 'niddate2': niddate2,
                    'skymap_distance': skymap_distance,
@@ -163,3 +141,34 @@ def show_skymap(request, skymap_id_version):
                    'ztfquery': ztfquery,
                    'nztf': len(ztf_data), 'ztf_data': json.dumps(ztf_data),
                    'galaxies_wanted': galaxies_wanted})
+
+
+def mm_map_index(request):
+    """*return a list of all multimessenger maps*
+
+    **Key Arguments:**
+
+    - `request` -- the original request
+
+    **Usage:**
+
+    ```python
+    urlpatterns = [
+        ...
+        path('mm_maps/', views.mm_map_index, name='mm_map_index'),
+        ...
+    ]
+    ```           
+    """
+    message = ''
+    p = Popen(['ls', '-lrt', '/mnt/cephfs-head-data/ztf/skymap/'], stdout=PIPE)
+    skymap_list = []
+    result = p.communicate()[0].decode("utf-8")
+    for line in result.split('\n'):
+        tok = line.split()
+        if len(tok) > 7:
+            name = tok[8]
+            t = name.split('.')
+            if len(t) > 1 and t[1] == 'json':
+                skymap_list.append(t[0])
+    return render(request, 'multimessenger_map/multimessenger_map_index.html', {'skymap_list': skymap_list, 'message': message})

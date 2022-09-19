@@ -2,7 +2,7 @@ from django.db import models
 from django.contrib.auth.models import User
 
 
-class Myqueries(models.Model):
+class filter_query(models.Model):
     """The filter/query model. Filters are owned by a 'User'
     """
 

@@ -8,7 +8,7 @@
 
             {% if is_owner %}
 
-                <form method="POST"  action="{% url 'watchlist_catalogues_detail' watchlist.wl_id %}">
+                <form method="POST"  action="{% url 'watchlist_catalogue_detail' watchlist.wl_id %}">
                     <table>
                         {% csrf_token %}
                         <tr><td>Name</td><td><h2><input name="name" value="{{ watchlist.name }}"></h2></td></tr>

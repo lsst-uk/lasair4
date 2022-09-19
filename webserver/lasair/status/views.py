@@ -4,11 +4,44 @@ import settings
 
 
 def status_today(request):
+    """*return staus report for today*
+
+    **Key Arguments:**
+
+    - `request` -- the original request
+
+    **Usage:**
+
+    ```python
+    urlpatterns = [
+        ...
+        path('status/<int:nid>/', views.status, name='status'),
+        ...
+    ]
+    ```           
+    """
     nid = date_nid.nid_now()
     return status(request, nid)
 
 
 def status(request, nid):
+    """*return staus report for a specific night*
+
+    **Key Arguments:**
+
+    - `request` -- the original request
+    - `nid` -- the night ID to return status for (days since 2017-01-01)
+
+    **Usage:**
+
+    ```python
+    urlpatterns = [
+        ...
+        path('status/<int:nid>/', views.status, name='status'),
+        ...
+    ]
+    ```           
+    """
     message = ''
     web_domain = settings.WEB_DOMAIN
     try:
@@ -29,5 +62,5 @@ def status(request, nid):
             status['today_filter'] - status['today_filter_out'] - status['today_filter_ss']
 
     date = date_nid.nid_to_date(nid)
-    return render(request, 'status.html',
+    return render(request, 'status/status.html',
                   {'web_domain': web_domain, 'status': status, 'date': date, 'message': message})
