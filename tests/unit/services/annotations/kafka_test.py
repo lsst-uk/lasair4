@@ -1,5 +1,6 @@
 import os, sys, json
 import unittest
+import context
 python_path = '../../../../services/annotations/kafkaPush'
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), python_path)))
 from kafka2annotation import process_annotations
