@@ -5,25 +5,6 @@ Lasair ingestion pipeline, Lasair website, and Lasair API.
 
 # Unit and Integration Tests
 
-### Sherlock integration
-`integration_test_sherlock_wrapper.py`
-
-This test gets some alerts from Kafka, annotates them with the Sherlock classifier,
-then pushes them back into Kafka. It requires a functional Kafka and database
-running on localhost and Sherlock. 
-It also uese the database to check the cache capability.
-It uses the following auxiliary files and directories:
-* sherlock_test.yaml
-
-### Unit tests for Sherlock wrapper
-`test_sherlock_wrapper.py`
-
-Multiple tests grouped into categories: consumer, producer, classifier.
-It uses the following auxiliary files and directories:
-
-  * example_ingested.json
-  * sherlock_cache.sql
-
 ### Building INSERT query
 `query_test.py`
 
