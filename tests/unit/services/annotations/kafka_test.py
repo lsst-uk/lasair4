@@ -4,7 +4,7 @@ python_path = '../../../../services/annotations/kafkaPush'
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), python_path)))
 from kafka2annotation import process_annotations
 
-class TestAnnotations(unittest.TestCase):
+class AnnotationsTest(unittest.TestCase):
     def test_process_annotations(self):
         f = open('sample_annotations.json')
         annotations = json.loads(f.read())
