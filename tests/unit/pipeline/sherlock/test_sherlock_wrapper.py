@@ -218,7 +218,7 @@ class SherlockWrapperClassifierTest(unittest.TestCase):
             alerts = [ example_alert.copy() ]
             classifications = { "ZTF18aapubnx": "Q" }
             #crossmatches = [ { 'transient_object_id':"ZTF18aapubnx", 'rank':1, 'z':1.2, 'catalogue_object_type':'thing', 'separationArcsec':0.1} ]
-            crossmatches = TestClassifier.crossmatches
+            crossmatches = SherlockWrapperClassifierTest.crossmatches
             mock_classifier.return_value.classify.return_value = (classifications, crossmatches)
             # should report classifying 1 alert
             self.assertEqual(wrapper.classify(conf, log, alerts), 1)
@@ -250,7 +250,7 @@ class SherlockWrapperClassifierTest(unittest.TestCase):
         with unittest.mock.patch('wrapper.transient_classifier') as mock_classifier:
             alerts = [ example_alert_no_ss.copy() ]
             classifications = { "ZTF18aapubnx": "Q" }
-            crossmatches = TestClassifier.crossmatches
+            crossmatches = SherlockWrapperClassifierTest.crossmatches
             mock_classifier.return_value.classify.return_value = (classifications, crossmatches)
             # should report classifying 1 alert
             self.assertEqual(wrapper.classify(conf, log, alerts), 1)
@@ -281,7 +281,7 @@ class SherlockWrapperClassifierTest(unittest.TestCase):
         with unittest.mock.patch('wrapper.transient_classifier') as mock_classifier:
             alerts = [ example_alert_ss.copy() ]
             classifications = { "ZTF18aapubnx": "Q" }
-            crossmatches = TestClassifier.crossmatches
+            crossmatches = SherlockWrapperClassifierTest.crossmatches
             mock_classifier.return_value.classify.return_value = (classifications, crossmatches)
             # should report classifying 0 alerts
             self.assertEqual(wrapper.classify(conf, log, alerts), 0)
@@ -307,7 +307,7 @@ class SherlockWrapperClassifierTest(unittest.TestCase):
         with unittest.mock.patch('wrapper.transient_classifier') as mock_classifier:
             alerts = [ example_alert.copy() ]
             classifications = { "ZTF18aapubnx": ["Q", "Descr"] }
-            crossmatches = TestClassifier.crossmatches
+            crossmatches = SherlockWrapperClassifierTest.crossmatches
             mock_classifier.return_value.classify.return_value = (classifications, crossmatches)
             # should report classifying 1 alert
             self.assertEqual(wrapper.classify(conf, log, alerts), 1)
@@ -332,7 +332,7 @@ class SherlockWrapperClassifierTest(unittest.TestCase):
                 classifications = { "ZTF18aapubnx": "Q" }
                 crossmatches = [ { 'transient_object_id':"ZTF18aapubnx", 'thing':'foo' } ]
                 mock_classifier.return_value.classify.return_value = (classifications, crossmatches)
-                cache = [{'name': 'ZTF18aapubnx', 'class': 'T', 'crossmatch': json.dumps(TestClassifier.crossmatches[0])}]
+                cache = [{'name': 'ZTF18aapubnx', 'class': 'T', 'crossmatch': json.dumps(SherlockWrapperClassifierTest.crossmatches[0])}]
                 mock_pymysql.return_value.cursor.return_value.__enter__.return_value.fetchall.return_value = cache
                 # should report classifying 1 alert
                 self.assertEqual(wrapper.classify(conf, log, alerts), 1)
@@ -342,7 +342,7 @@ class SherlockWrapperClassifierTest(unittest.TestCase):
                 self.assertEqual(alerts[0]['annotations']['sherlock'][0]['classification'], 'T')
                 self.assertRegexpMatches(alerts[0]['annotations']['sherlock'][0]['annotator'], "^https://github.com/thespacedoctor/sherlock")
                 self.assertEqual(alerts[0]['annotations']['sherlock'][0]['additional_output'], "http://lasair.lsst.ac.uk/api/sherlock/object/ZTF18aapubnx")
-                for key, value in TestClassifier.crossmatches[0].items():
+                for key, value in SherlockWrapperClassifierTest.crossmatches[0].items():
                     if key != 'rank':
                         self.assertEqual(alerts[0]['annotations']['sherlock'][0][key], value)
                 # classify should not have been called
@@ -392,7 +392,7 @@ class SherlockWrapperClassifierTest(unittest.TestCase):
             with unittest.mock.patch('wrapper.pymysql.connect') as mock_pymysql:
                 alerts = [ example_alert.copy() ]
                 classifications = { "ZTF18aapubnx": "Q" }
-                crossmatches = TestClassifier.crossmatches
+                crossmatches = SherlockWrapperClassifierTest.crossmatches
                 mock_classifier.return_value.classify.return_value = (classifications, crossmatches)
                 mock_pymysql.return_value.cursor.return_value.__enter__.return_value.fetchall.return_value = []
                 # should report classifying 1 alert
@@ -403,7 +403,7 @@ class SherlockWrapperClassifierTest(unittest.TestCase):
                 self.assertEqual(alerts[0]['annotations']['sherlock'][0]['classification'], 'Q')
                 self.assertRegexpMatches(alerts[0]['annotations']['sherlock'][0]['annotator'], "^https://github.com/thespacedoctor/sherlock")
                 self.assertEqual(alerts[0]['annotations']['sherlock'][0]['additional_output'], "http://lasair.lsst.ac.uk/api/sherlock/object/ZTF18aapubnx")
-                for key, value in TestClassifier.crossmatches[0].items():
+                for key, value in SherlockWrapperClassifierTest.crossmatches[0].items():
                     if key != 'rank':
                         self.assertEqual(alerts[0]['annotations']['sherlock'][0][key], value)
                 # classify should have been called once
