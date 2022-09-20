@@ -48,7 +48,7 @@ def del_topic(topic):
             else:
                 raise e
 
-class IntegrationTest(TestCase):
+class SherlockWrapperIntegrationTest(TestCase):
 
     @classmethod
     def setUpClass(cls):

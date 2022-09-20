@@ -48,7 +48,7 @@ def non_fatal_error_on_1st_call(timeout):
         e = KafkaError(KafkaError._APPLICATION, "Test Error", fatal=False, retriable=True)
         return MockMessage(e)
 
-class TestConsumer(unittest.TestCase):
+class SherlockWrapperConsumerTest(unittest.TestCase):
 
     conf = {
         'broker':'',
@@ -178,7 +178,7 @@ class TestConsumer(unittest.TestCase):
                     # content of alerts should be as expected
                     self.assertEqual(alerts[0]['candidate']['jd'], 2458943.9334606)
 
-class TestClassifier(unittest.TestCase):
+class SherlockWrapperClassifierTest(unittest.TestCase):
     crossmatches = [ {
                     'rank':1,
                     'transient_object_id':"ZTF18aapubnx",
@@ -413,7 +413,7 @@ class TestClassifier(unittest.TestCase):
                 # fetchall should have been called once
                 mock_pymysql.return_value.cursor.return_value.__enter__.return_value.fetchall.assert_called_once()
 
-class TestProducer(unittest.TestCase):
+class SherlockWrapperProducerTest(unittest.TestCase):
     conf = {
         'broker':'',
         'group':'',

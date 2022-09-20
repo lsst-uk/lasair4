@@ -60,7 +60,7 @@ def test_alerts():
     hits = check_alerts_against_watchlists(alertlist, watchlistlist, chunk_size)
     return hits
 
-class WatchlistTest(TestCase):
+class FilterWatchlistTest(TestCase):
 
     @classmethod
     def setUpClass(cls):
