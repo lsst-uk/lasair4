@@ -38,16 +38,16 @@
         <div class="d-flex ms-4">
             <div class="row d-block d-xl-flex align-items-start">
                 <h3 class="fw-extrabold mb-2">{% if type == "my" %}
-                    My Catalogue Watchlists
+                    My Region Watchlists
                 {% else %}
                     Public Gallery
                 {% endif %} </h3>
 
                 <small class="text-gray-500">
                     {% if type == "my" %}
-                        Your saved catalogue based watchlists.
+                        Your saved region based watchlists.
                     {% else %}
-                        Catalogue based watchlists submitted to the public gallery by other Lasair users. You can view matches or copy individual watchlists into your own collection.
+                        Region based watchlists submitted to the public gallery by other Lasair users. You can view matches or copy individual watchlists into your own collection.
                     {% endif %}
                 </small>
             </div>
@@ -69,10 +69,10 @@
                             <th>Created</th>
                         </tr></thead>
                         <tbody>
-                            {% for wl in my_watchlists %}
+                            {% for region in my_regions %}
                                 <tr><td>
 
-                                    {% if wl.public %}
+                                    {% if region.public %}
                                         <div class="icon-shape me-0 me-sm-0 text-gray-400" data-bs-toggle="tooltip" data-bs-title="public list">
 
                                             <svg class="w-1 h-1 pt-1"  fill="currentColor" stroke="currentColor" stroke-width="1"  viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
@@ -99,15 +99,15 @@
                                     {% endif %}
 
 
-                                    <b><a href="{% url 'watchlist_catalogue_detail' wl.wl_id %}">{{ wl.name }}</a></b></td>
-                                    <td  style="white-space: normal;">{% if wl.description|length > 60 %}
-                                        {{ wl.description|slice:"0:60" }} ...
+                                    <b><a href="{% url 'watchlist_region_detail' region.ar_id %}">{{ region.name }}</a></b></td>
+                                    <td  style="white-space: normal;">{% if region.description|length > 60 %}
+                                        {{ region.description|slice:"0:60" }} ...
 
-                                        <a href="#" class="link-primary disable" data-bs-container="body" data-bs-toggle="popover" data-bs-trigger="focus" data-bs-placement="top" data-bs-content="{{wl.description}}">more</a>
+                                        <a href="#" class="link-primary disable" data-bs-container="body" data-bs-toggle="popover" data-bs-trigger="focus" data-bs-placement="top" data-bs-content="{{region.description}}">more</a>
 
-                                    {% else %} {{ wl.description|slice:"0:100" }}{% endif %} </td>
-                                    <td>{{wl.count|intcomma}}</td>
-                                    <td data-type="date" data-format="YYYY-MMM-DD hh:mm:ss">{{wl.date_created|date:"Y-m-d"}} {{wl.date_created|time:"H:i:s"}}</td>
+                                    {% else %} {{ region.description|slice:"0:100" }}{% endif %} </td>
+                                    <td>{{region.count|intcomma}}</td>
+                                    <td data-type="date" data-format="YYYY-MMM-DD hh:mm:ss">{{region.date_created|date:"Y-m-d"}} {{region.date_created|time:"H:i:s"}}</td>
                                 </tr>
                             {% endfor %}
                     {% else %}
@@ -119,20 +119,20 @@
                             <th>Created</th>
                         </tr></thead>
                         <tbody>
-                            {% for wl in other_watchlists %}
+                            {% for region in other_regions %}
                                 <tr><td class="align-middle">
 
 
-                                    <b><a href="{% url 'watchlist_catalogue_detail' wl.wl_id %}">{{ wl.name }}</a></b></td>
-                                    <td><img alt="Image placeholder" src="{{ wl.profile_image }}" class="mb-1 me-1 avatar rounded-circle"> {{ wl.user }}</td>
-                                    <td  style="white-space: normal;">{% if wl.description|length > 60 %}
-                                        {{ wl.description|slice:"0:60" }} ...
+                                    <b><a href="{% url 'watchlist_region_detail' region.ar_id %}">{{ region.name }}</a></b></td>
+                                    <td><img alt="Image placeholder" src="{{ region.profile_image }}" class="mb-1 me-1 avatar rounded-circle"> {{ region.user }}</td>
+                                    <td  style="white-space: normal;">{% if region.description|length > 60 %}
+                                        {{ region.description|slice:"0:60" }} ...
 
-                                        <a href="#" class="link-primary disable" data-bs-container="body" data-bs-toggle="popover" data-bs-trigger="focus" data-bs-placement="top" data-bs-content="{{wl.description}}">more</a>
+                                        <a href="#" class="link-primary disable" data-bs-container="body" data-bs-toggle="popover" data-bs-trigger="focus" data-bs-placement="top" data-bs-content="{{region.description}}">more</a>
 
-                                    {% else %} {{ wl.description|slice:"0:100" }}{% endif %} </td>
-                                    <td>{{wl.count|intcomma}}</td>
-                                    <td data-type="date" data-format="YYYY-MMM-DD hh:mm:ss">{{wl.date_created|date:"Y-m-d"}} {{wl.date_created|time:"H:i:s"}}</td>
+                                    {% else %} {{ region.description|slice:"0:100" }}{% endif %} </td>
+                                    <td>{{region.count|intcomma}}</td>
+                                    <td data-type="date" data-format="YYYY-MMM-DD hh:mm:ss">{{region.date_created|date:"Y-m-d"}} {{region.date_created|time:"H:i:s"}}</td>
                                 </tr>
                             {% endfor %}
                     {% endif %}

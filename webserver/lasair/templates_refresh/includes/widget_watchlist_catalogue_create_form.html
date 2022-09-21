@@ -1,0 +1,184 @@
+
+{% load humanize %}
+{% load widget_tweaks %}
+
+
+
+
+<div class="card border-0 shadow h-100">
+
+
+    <div class="card-body p-2 pt-4">
+
+        <div class="row justify-content-center">
+
+            <div class="col-12 d-flex align-items-center justify-content-center">
+
+                <div class="bg-white border-0 rounded border-light p-4 p-lg-5 w-100 fmxw-500">
+                    <div class="text-center text-md-center mb-4 mt-md-0">
+                        <h1 class="mb-0 h3">
+                            Lasair Sign Up
+                        </h1>
+                        <br />
+                        <p>
+                            {% if msg %}
+                                {% if success %}
+                                    <span class="text-success">{{ msg | safe }}</span>
+                                {% else %}
+                                    <span class="text-danger">{{ msg | safe }}</span>
+                                {% endif %}
+                            {% else %}
+                                Add your credentials
+                            {% endif %}
+                        </p>
+                    </div>
+
+                    {% if success %}
+
+                        <div class="d-flex justify-content-center align-items-center mt-4">
+                            <a type="button" href="{% url 'login' %}" class="btn btn-gray-800">Sign UP</a>
+                        </div>
+
+                    {% else %}
+
+                        <form method="post" action="" class="mt-4">
+
+                            {% csrf_token %}
+
+                            <div class="form-group mb-4">
+                                <label for="name">Catalogue Watchlist Name</label>
+                                <div class="input-group">
+                                    {{ form.name|add_class:"form-control" }}
+                                </div>
+                                <span class="text-error">{{ form.name.errors }}</span>
+                            </div>
+
+                            <div class="form-group mb-4">
+                                <label for="description">Description</label>
+                                <div class="input-group">
+                                    {{ form.description|add_class:"form-control" }}
+                                </div>
+                                <span class="text-error">{{ form.description.errors }}</span>
+                            </div>
+
+
+
+                            <div class="form-group mb-4">
+                                <label for="radius">Association radius (arcsec)</label>
+                                <div class="input-group">
+                                    {{ form.radius|add_class:"form-control" }}
+                                </div>
+                                <span class="text-error">{{ form.usernradiusame.errors }}</span>
+                            </div>
+
+                            <!-- Form -->
+                            <div class="form-group mb-4">
+                                <label for="cones_textarea">Your Email</label>
+                                <div class="input-group">
+                                    <span class="input-group-text" id="basic-addon1">
+                                        <span class="fas fa-envelope"></span>
+                                    </span>
+                                    {{ form.cones_textarea|add_class:"form-control" }}
+                                </div>
+                                <span class="text-error">{{ form.cones_textarea.errors }}</span>
+                            </div>
+                            <!-- End of Form -->
+                            <div class="form-group">
+
+                                <!-- Form -->
+                                <div class="form-group mb-4">
+                                    <label for="password1">Your Password</label>
+                                    <div class="input-group">
+                                        <span class="input-group-text" id="basic-addon2">
+                                            <span class="fas fa-unlock-alt"></span>
+                                        </span>
+                                        {{ form.password1|add_class:"form-control" }}
+                                    </div>
+                                    <span class="text-error">{{ form.password1.errors }}</span>
+                                </div>
+                                <div class="form-group mb-4">
+                                    <label for="password2">Password Confirmation</label>
+                                    <div class="input-group">
+                                        <span class="input-group-text" id="basic-addon2">
+                                            <span class="fas fa-unlock-alt"></span>
+                                        </span>
+                                        {{ form.password2|add_class:"form-control" }}
+                                    </div>
+                                    <span class="text-error">{{ form.password2.errors }}</span>
+                                </div>
+
+                                <!-- End of Form -->
+                                <!--
+                                        {# <div class="mb-4">
+                                            <div class="form-check">
+                                                <input class="form-check-input" type="checkbox" value="" id="remember">
+                                                <label class="form-check-label fw-normal mb-0" for="remember">
+                                                    I agree to the <a href="#" class="fw-bold">terms and conditions</a>
+                                                </label>
+                                            </div>
+                                        </div>  
+                                        -->
+                            </div>
+                            <div class="d-grid">
+                                <button type="submit" name="register" class="btn btn-gray-800">Sign Up</button>
+                            </div>
+                        </form>
+                        <br />
+                        <div class="d-flex justify-content-center align-items-center mt-4">
+                            <span class="fw-normal">
+                                Already have an account?
+                                <a href="{% url 'login' %}" class="fw-bold">Sign In</a>
+                            </span>
+                        </div>
+
+                    {% endif %}
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+<div class="card border-0 shadow h-100">
+
+
+    <div class="card-body p-2 pt-4">
+
+        <div class="mb-3">
+            <label for="exampleFormControlInput1" class="form-label">Email address</label>
+            <input type="email" class="form-control" id="exampleFormControlInput1" placeholder="name@example.com">
+        </div>
+        <div class="mb-3">
+            <label for="exampleFormControlTextarea1" class="form-label">Example textarea</label>
+            <textarea class="form-control" id="exampleFormControlTextarea1" rows="3"></textarea>
+        </div>
+
+        <form method="POST"  action="/watchlists/" enctype="multipart/form-data">
+            <table>
+                <tr>
+                    <th width="40%"></th>
+                    <th width="60%"></th>
+                </tr>
+
+                <tr><td>Name:</td><td> <input name="name" width=50 value='Change_Me_{{ random }}'></td></tr>
+
+                <tr><td>Description:</td><td> <textarea name="description" rows=3 cols=40>Change_Me_{{ random }}</textarea></td></tr>
+
+                <tr><td>default radius (arcsec), max 360:</td><td> <input name="radius" value="2"></td></tr>
+
+                <tr><td> <font size=-1>Paste here the list of sources to be watched, as comma-separated values <br/>
+                    <b>RA, Dec, ID &lt;,radius&gt;</b> with RA and Dec in decimal degrees, and radius in arcseconds:</font></td> <td> <textarea name="cones_textarea" rows="5" cols="50"></textarea></td></tr>
+
+                <tr><td>Or upload a file with the same information:</td> <td><input type="file" name="cones_file"></td>
+                </tr>
+            </table>
+
+            <input type="submit" class="button" style="color: blue; background-color: #EEEEFF;" value="Submit form">
+        </form>
+    </div>
+
+    <div class="row"> {{ message|safe }} </div>
+
+</div>

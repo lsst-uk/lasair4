@@ -16,28 +16,34 @@ def handle_uploaded_file(f):
     return f.read().decode('utf-8')
 
 
-def add_watchlist_metadata(
-        watchlists):
+def add_watchlist_catalogue_metadata(
+        watchlists,
+        remove_duplicates=False):
     """*add extra metadata to the watchlists and return a list of watchlist dictionaries*
 
     **Key Arguments:**
 
     - `watchlists` -- a list of watchlist objects
+    - `remove_duplicates` -- remove duplicate watchlists. Default *False*
 
     **Usage:**
 
     ```python
-    watchlistDicts = add_watchlist_metadata(watchlists)
+    watchlistDicts = add_watchlist_catalogue_metadata(watchlists)
     ```           
     """
     from lasair.watchlist_catalogue.models import Watchlists, WatchlistCones
     updatedWatchlists = []
+    dupCheck = []
     for wlDict, wl in zip(watchlists.values(), watchlists):
-        # ADD LIST COUNT
-        wlDict['count'] = WatchlistCones.objects.filter(wl_id=wlDict['wl_id']).count()
+        uuid = f"{wlDict['name']},{wlDict['description']},{wlDict['radius']}"
+        if uuid not in dupCheck or not remove_duplicates:
+            # ADD LIST COUNT
+            wlDict['count'] = WatchlistCones.objects.filter(wl_id=wlDict['wl_id']).count()
 
-        # ADD LIST USER
-        wlDict['user'] = f"{wl.user.first_name} {wl.user.last_name}"
-        wlDict['profile_image'] = wl.user.profile.image.url
-        updatedWatchlists.append(wlDict)
+            # ADD LIST USER
+            wlDict['user'] = f"{wl.user.first_name} {wl.user.last_name}"
+            wlDict['profile_image'] = wl.user.profile.image.url
+            updatedWatchlists.append(wlDict)
+            dupCheck.append(uuid)
     return updatedWatchlists

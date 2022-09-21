@@ -2,6 +2,46 @@ import io
 import base64
 from mocpy import MOC, World2ScreenMPL
 import matplotlib.pyplot as plt
+from src import db_connect
+
+
+def add_watchlist_region_metadata(
+        watchlists,
+        remove_duplicates=False):
+    """*add extra metadata to the watchlists and return a list of watchlist dictionaries*
+
+    **Key Arguments:**
+
+    - `watchlists` -- a list of watchlist objects
+    - `remove_duplicates` -- remove duplicate watchlists. Default *False*
+
+    **Usage:**
+
+    ```python
+    watchlistDicts = add_watchlist_region_metadata(watchlists)
+    ```           
+    """
+
+    msl = db_connect.readonly()
+    cursor = msl.cursor()
+
+    updatedWatchlists = []
+    mocFiles = []
+    for wlDict, wl in zip(watchlists.values(), watchlists):
+        if wlDict["moc"] not in mocFiles or not remove_duplicates:
+            # ADD LIST COUNT
+            # wlDict['count'] = WatchlistCones.objects.filter(wl_id=wlDict['wl_id']).count()
+
+            # ADD LIST USER
+            wlDict['user'] = f"{wl.user.first_name} {wl.user.last_name}"
+            wlDict['profile_image'] = wl.user.profile.image.url
+            updatedWatchlists.append(wlDict)
+            mocFiles.append(wlDict["moc"])
+
+            cursor.execute(f'SELECT count(*) AS count FROM area_hits WHERE ar_id={wlDict["ar_id"]}')
+            for row in cursor:
+                wlDict['count'] = row[0]
+    return updatedWatchlists
 
 
 def bytes2string(bytes):
