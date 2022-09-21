@@ -23,7 +23,8 @@ RUN apt-get update && apt-get -yq dist-upgrade && apt-get install -yq --no-insta
   mysql-server \
   openjdk-11-jre-headless \
   wget \
-  sudo
+  sudo \
+  swig
 
 # Required for filter
 RUN pip3 install \
