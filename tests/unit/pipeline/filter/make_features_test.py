@@ -6,6 +6,7 @@ Input:  name.json
 Output: name.sql
 """
 import unittest.main
+from unittest import TestCase, expectedFailure
 import json
 import os
 import sys
