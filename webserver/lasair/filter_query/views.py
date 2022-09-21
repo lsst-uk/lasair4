@@ -1,12 +1,14 @@
+from . import add_filter_query_metadata
 import random
 from src import date_nid, db_connect
 from django.shortcuts import render
 from django.shortcuts import render, get_object_or_404, redirect
 from django.db.models import Q
 from lasair.annotator.models import Annotators
-from lasair.watchlist_region.models import Areas
+from lasair.watchlist_region.models import Region
 from lasair.watchlist_catalogue.models import Watchlists
 from confluent_kafka import Producer, KafkaError, admin
+from django.views.decorators.csrf import csrf_exempt
 from lasair.db_schema import get_schema, get_schema_dict, get_schema_for_query_selected
 from .models import filter_query
 from lasair.query_builder import check_query, build_query
@@ -18,6 +20,44 @@ from datetime import datetime
 import os
 import sys
 sys.path.append('../common')
+
+
+@csrf_exempt
+def filter_query_index(request):
+    """*Return list of all filter queries viewable by user*
+
+    **Key Arguments:**
+
+    - `request` -- the original request
+
+    **Usage:**
+
+    ```python
+    urlpatterns = [
+        ... 
+        path('filters/', views.filter_query_index, name='filter_query_index'),
+        ...
+    ]    
+    ```           
+    """
+    message = ''
+
+    # public watchlists belong to the anonymous user
+    other_filter_queries = filter_query.objects.filter(public__gte=1)
+    other_filter_queries = add_filter_query_metadata(other_filter_queries, remove_duplicates=True)
+
+    if request.user.is_authenticated:
+        my_filter_queries = filter_query.objects.filter(user=request.user)
+        my_filter_queries = add_filter_query_metadata(my_filter_queries)
+    else:
+        my_filter_queries = None
+
+    return render(request, 'filter_query/filter_query_index.html',
+                  {'my_filter_queries': my_filter_queries,
+                   'random': '%d' % random.randrange(1000),
+                   'other_filter_queries': other_filter_queries,
+                   'authenticated': request.user.is_authenticated,
+                   'message': message})
 
 
 def filter_log(request, topic):
@@ -75,12 +115,12 @@ def handle_myquery(request, mq_id=None):
     if logged_in:
         email = request.user.email
         watchlists = Watchlists.objects.filter(Q(user=request.user) | Q(public__gte=1))
-        areas = Areas.objects.filter(Q(user=request.user) | Q(public__gte=1))
+        regions = Region.objects.filter(Q(user=request.user) | Q(public__gte=1))
         annotators = Annotators.objects.filter(Q(user=request.user) | Q(public__gte=1))
     else:
         email = ''
         watchlists = Watchlists.objects.filter(public__gte=1)
-        areas = Areas.objects.filter(public__gte=1)
+        regions = Region.objects.filter(public__gte=1)
         annotators = Annotators.objects.filter(public__gte=1)
 
     if mq_id is None:
@@ -128,7 +168,7 @@ def handle_myquery(request, mq_id=None):
             return render(request, 'queryform.html', {
                 'myquery': myquery,
                 'watchlists': watchlists,
-                'areas': areas,
+                'regions': regions,
                 'annotators': annotators,
                 'topic': tn,
                 'is_owner': True,
@@ -143,7 +183,7 @@ def handle_myquery(request, mq_id=None):
             message += 'New query'
             return render(request, 'queryform.html', {
                 'watchlists': watchlists,
-                'areas': areas,
+                'regions': regions,
                 'annotators': annotators,
                 'random': '%d' % random.randrange(1000),
                 'email': email,
@@ -239,7 +279,7 @@ def handle_myquery(request, mq_id=None):
         return render(request, 'queryform.html', {
             'myquery': myquery,
             'watchlists': watchlists,
-            'areas': areas,
+            'regions': regions,
             'annotators': annotators,
             'topic': tn,
             'is_owner': is_owner,
@@ -254,7 +294,7 @@ def handle_myquery(request, mq_id=None):
     return render(request, 'queryform.html', {
         'myquery': myquery,
         'watchlists': watchlists,
-        'areas': areas,
+        'regions': regions,
         'annotators': annotators,
         'topic': myquery.topic_name,
         'is_owner': is_owner,
@@ -281,11 +321,11 @@ def querylist(request, which):
 
     if request.user.is_authenticated:
         watchlists = Watchlists.objects.filter(Q(user=request.user) | Q(public__gte=1))
-        areas = Areas.objects.filter(Q(user=request.user) | Q(public__gte=1))
+        regions = Region.objects.filter(Q(user=request.user) | Q(public__gte=1))
         annotators = Annotators.objects.filter(Q(user=request.user) | Q(public__gte=1))
     else:
         watchlists = Watchlists.objects.filter(public__gte=1)
-        areas = Areas.objects.filter(public__gte=1)
+        regions = Region.objects.filter(public__gte=1)
         annotators = Annotators.objects.filter(public__gte=1)
 
     promoted_queries = filter_query.objects.filter(public=2)
@@ -297,7 +337,7 @@ def querylist(request, which):
         'is_authenticated': request.user.is_authenticated,
         'myqueries': query_list(myqueries),
         'watchlists': watchlists,
-        'areas': areas,
+        'regions': regions,
         'annotators': annotators,
         'public_queries': query_list(public_queries)
     })
@@ -333,7 +373,24 @@ def query_list(qs):
     return list
 
 
-def runquery_db(request, mq_id):
+def filter_query_detail(request, mq_id):
+    """*return the result of a filter query*
+
+    **Key Arguments:**
+
+    - `request` -- the original request
+    - `mq_id` -- the filter UUID
+
+    **Usage:**
+
+    ```python
+    urlpatterns = [
+        ...
+        path('filters/<int:mq_id>/', views.filter_query_detail, name='filter_query_detail'),
+        ...
+    ]
+    ```           
+    """
     msl = db_connect.readonly()
     cursor = msl.cursor(buffered=True, dictionary=True)
     cursor.execute('SELECT name, selected, tables, conditions FROM myqueries WHERE mq_id=%d' % mq_id)
@@ -420,9 +477,10 @@ def runquery(request, mq_id, query_name, selected, tables, conditions, limit, of
         nalert += 1
 
     tableSchema = get_schema_for_query_selected(selected)
-    for k in table[0].keys():
-        if k not in tableSchema:
-            tableSchema[k] = "custom column"
+    if len(table):
+        for k in table[0].keys():
+            if k not in tableSchema:
+                tableSchema[k] = "custom column"
 
     if json_checked:
         return HttpResponse(json.dumps(table, indent=2), content_type="application/json")

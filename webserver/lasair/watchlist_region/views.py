@@ -1,4 +1,4 @@
-from .models import Areas
+from .models import Region
 import tempfile
 import io
 import base64
@@ -19,7 +19,7 @@ from django.template.context_processors import csrf
 from django.shortcuts import render, get_object_or_404
 from src import db_connect
 import sys
-from . import bytes2string, string2bytes, make_image_of_MOC
+from . import bytes2string, string2bytes, make_image_of_MOC, add_watchlist_region_metadata
 sys.path.append('../common')
 
 
@@ -42,18 +42,18 @@ def watchlist_region_download(request, ar_id):
     ```           
     """
     message = ''
-    area = get_object_or_404(Areas, ar_id=ar_id)
+    region = get_object_or_404(Region, ar_id=ar_id)
 
-    is_owner = (request.user.is_authenticated) and (request.user == area.user)
-    is_public = (area.public == 1)
+    is_owner = (request.user.is_authenticated) and (request.user == region.user)
+    is_public = (region.public == 1)
     is_visible = is_owner or is_public
     if not is_visible:
         return render(request, 'error.html', {
-            'message': "This area is private and not visible to you"})
+            'message': "This region is private and not visible to you"})
 
-    moc = string2bytes(area.moc)
+    moc = string2bytes(region.moc)
 
-    filename = slugify(area.name) + '.fits'
+    filename = slugify(region.name) + '.fits'
     tmpfilename = tempfile.NamedTemporaryFile().name + '.fits'
     f = open(tmpfilename, 'wb')
     f.write(moc)
@@ -84,32 +84,32 @@ def watchlist_region_detail(request, ar_id):
     ```           
     """
     message = ''
-    area = get_object_or_404(Areas, ar_id=ar_id)
+    region = get_object_or_404(Region, ar_id=ar_id)
 
-    is_owner = (request.user.is_authenticated) and (request.user == area.user)
-    is_public = (area.public == 1)
+    is_owner = (request.user.is_authenticated) and (request.user == region.user)
+    is_public = (region.public == 1)
     is_visible = is_owner or is_public
     if not is_visible:
         return render(request, 'error.html', {
-            'message': "This area is private and not visible to you"})
+            'message': "This region is private and not visible to you"})
 
     if request.method == 'POST' and is_owner:
         if 'name' in request.POST:
-            area.name = request.POST.get('name')
-            area.description = request.POST.get('description')
+            region.name = request.POST.get('name')
+            region.description = request.POST.get('description')
 
             if request.POST.get('active'):
-                area.active = 1
+                region.active = 1
             else:
-                area.active = 0
+                region.active = 0
 
             if request.POST.get('public'):
-                area.public = 1
+                region.public = 1
             else:
-                area.public = 0
+                region.public = 0
 
-            area.save()
-            message += 'area updated'
+            region.save()
+            message += 'region updated'
 
     msl = db_connect.readonly()
     cursor = msl.cursor()
@@ -123,9 +123,9 @@ def watchlist_region_detail(request, ar_id):
         objIds.append(row[0])
 
     return render(request, 'watchlist_region/watchlist_region_detail.html', {
-        'area': area,
+        'region': region,
         'objIds': objIds,
-        'mocimage': area.mocimage,
+        'mocimage': region.mocimage,
         'count': count,
         'is_owner': is_owner,
         'message': message})
@@ -153,41 +153,43 @@ def watchlist_region_index(request):
     if request.method == 'POST' and request.user.is_authenticated:
         delete = request.POST.get('delete')
 
-        if delete == None:   # create new area
+        if delete == None:   # create new region
 
             t = time.time()
             name = request.POST.get('name')
             description = request.POST.get('description')
 
-            if 'area_file' in request.FILES:
-                fits_bytes = (request.FILES['area_file']).read()
+            if 'region_file' in request.FILES:
+                fits_bytes = (request.FILES['region_file']).read()
                 fits_string = bytes2string(fits_bytes)
                 png_bytes = make_image_of_MOC(fits_bytes)
                 png_string = bytes2string(png_bytes)
 
-                area = Areas(user=request.user, name=name, description=description,
-                             moc=fits_string, mocimage=png_string, active=0)
-                area.save()
-                message += '\nArea created successfully in %.1f sec' % (time.time() - t)
+                region = Region(user=request.user, name=name, description=description,
+                                moc=fits_string, mocimage=png_string, active=0)
+                region.save()
+                message += '\nRegion created successfully in %.1f sec' % (time.time() - t)
             else:
                 message = '\nNo file in upload'
         else:
             ar_id = int(delete)
-            area = get_object_or_404(Areas, ar_id=ar_id)
-            if request.user == area.user:
-                area.delete()
-                message = 'Area %s deleted successfully' % area.name
+            region = get_object_or_404(Region, ar_id=ar_id)
+            if request.user == region.user:
+                region.delete()
+                message = 'Region %s deleted successfully' % region.name
 
-    other_areas = Areas.objects.filter(public=1)
+    other_regions = Region.objects.filter(public__gte=1)
+    other_regions = add_watchlist_region_metadata(other_regions, remove_duplicates=True)
     if request.user.is_authenticated:
-        my_areas = Areas.objects.filter(user=request.user)
+        my_regions = Region.objects.filter(user=request.user)
+        my_regions = add_watchlist_region_metadata(my_regions)
     else:
-        my_areas = []
+        my_regions = []
 
     return render(request, 'watchlist_region/watchlist_region_index.html',
-                  {'my_areas': my_areas,
+                  {'my_regions': my_regions,
                    'random': '%d' % randrange(1000),
-                   'other_areas': other_areas,
+                   'other_regions': other_regions,
                    'authenticated': request.user.is_authenticated,
                    'message': message})
 

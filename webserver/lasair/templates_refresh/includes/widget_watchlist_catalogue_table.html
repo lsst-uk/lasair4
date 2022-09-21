@@ -66,6 +66,7 @@
                             <th>Name</th>
                             <th>Description</th>
                             <th>Count</th>
+                            <th>Created</th>
                         </tr></thead>
                         <tbody>
                             {% for wl in my_watchlists %}
@@ -102,10 +103,11 @@
                                     <td  style="white-space: normal;">{% if wl.description|length > 60 %}
                                         {{ wl.description|slice:"0:60" }} ...
 
-                                        <a href="#" class="link-primary" data-bs-container="body" data-bs-toggle="popover" data-bs-trigger="focus" data-bs-placement="top" data-bs-content="{{wl.description}}">more</a>
+                                        <a href="#" class="link-primary disable" data-bs-container="body" data-bs-toggle="popover" data-bs-trigger="focus" data-bs-placement="top" data-bs-content="{{wl.description}}">more</a>
 
                                     {% else %} {{ wl.description|slice:"0:100" }}{% endif %} </td>
                                     <td>{{wl.count|intcomma}}</td>
+                                    <td data-type="date" data-format="YYYY-MMM-DD hh:mm:ss">{{wl.date_created|date:"Y-m-d"}} {{wl.date_created|time:"H:i:s"}}</td>
                                 </tr>
                             {% endfor %}
                     {% else %}
@@ -114,6 +116,7 @@
                             <th>Owner</th>
                             <th>Description</th>
                             <th>Count</th>
+                            <th>Created</th>
                         </tr></thead>
                         <tbody>
                             {% for wl in other_watchlists %}
@@ -125,10 +128,11 @@
                                     <td  style="white-space: normal;">{% if wl.description|length > 60 %}
                                         {{ wl.description|slice:"0:60" }} ...
 
-                                        <a href="#" class="link-primary" data-bs-container="body" data-bs-toggle="popover" data-bs-trigger="focus" data-bs-placement="top" data-bs-content="{{wl.description}}">more</a>
+                                        <a href="#" class="link-primary disable" data-bs-container="body" data-bs-toggle="popover" data-bs-trigger="focus" data-bs-placement="top" data-bs-content="{{wl.description}}">more</a>
 
                                     {% else %} {{ wl.description|slice:"0:100" }}{% endif %} </td>
                                     <td>{{wl.count|intcomma}}</td>
+                                    <td data-type="date" data-format="YYYY-MMM-DD hh:mm:ss">{{wl.date_created|date:"Y-m-d"}} {{wl.date_created|time:"H:i:s"}}</td>
                                 </tr>
                             {% endfor %}
                     {% endif %}

@@ -3,14 +3,8 @@ document.addEventListener('DOMContentLoaded', function() {
     let dataTableEls = d.querySelectorAll('.datatable');
     dataTableEls.forEach(function(dataTableEl) {
         if (dataTableEl) {
+
             const dataTable = new simpleDatatables.DataTable(dataTableEl, {
-                columns: [
-                    // Sort the second column in ascending order
-                    {
-                        select: 0,
-                        sort: "desc"
-                    }
-                ],
                 labels: {
                     placeholder: "Search table...",
                     perPage: "{select} rows per page",
@@ -24,6 +18,17 @@ document.addEventListener('DOMContentLoaded', function() {
                 perPage: 100,
                 perPageSelect: [10, 50, 100, 500, 10000]
             });
+
+            const headings = dataTable.columns().dt.labels;
+
+            if (headings.includes("objectId")) {
+                const idx = headings.indexOf("objectId");
+                dataTable.columns().sort(idx, "desc")
+            } else if (headings.includes("Created")) {
+                const idx = headings.indexOf("Created");
+                dataTable.columns().sort(idx, "desc")
+            }
+            // console.log(dataTable.columns().dt.labels);
 
             document.querySelectorAll(".export").forEach(function(el) {
                 el.addEventListener("click", function(e) {

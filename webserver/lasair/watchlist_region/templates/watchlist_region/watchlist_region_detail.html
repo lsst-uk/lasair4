@@ -6,25 +6,25 @@
 
             {% if is_owner %}
 
-                <form method="POST"  action="/area/{{ area.ar_id }}/">
+                <form method="POST"  action="/area/{{ region.ar_id }}/">
                     <table>
                         {% csrf_token %}
-                        <tr><td>Name</td><td><h2><input name="name" value="{{ area.name }}"></h2></td></tr>
-                        <tr><td>Description</td><td><textarea name="description" rows=4 cols=40>{{ area.description }}</textarea></td></tr>
-                        <tr><td>Active</td><td><h3><input type="checkbox" name="active" {% if area.active == 1 %}checked{% endif %}></h3></td></tr>
-                        <tr><td>Public</td><td><h3><input type="checkbox" name="public" {% if area.public == 1 %}checked{% endif %}></h3></td></tr>
+                        <tr><td>Name</td><td><h2><input name="name" value="{{ region.name }}"></h2></td></tr>
+                        <tr><td>Description</td><td><textarea name="description" rows=4 cols=40>{{ region.description }}</textarea></td></tr>
+                        <tr><td>Active</td><td><h3><input type="checkbox" name="active" {% if region.active == 1 %}checked{% endif %}></h3></td></tr>
+                        <tr><td>Public</td><td><h3><input type="checkbox" name="public" {% if region.public == 1 %}checked{% endif %}></h3></td></tr>
                     </table>
 
-                    <input type="submit" class="button" style="color: blue; background-color: #EEEEFF;" value=" Update area"></td>
+                    <input type="submit" class="button" style="color: blue; background-color: #EEEEFF;" value=" Update region"></td>
                 </form>
 
             {% else %}
 
                 <table border=1>
-                    <tr><td>Name</td><td><h2>{{ area.name }}</h2></td></tr>
-                    <tr><td>Description</td><td>{{ area.description }}</td></tr>
-                    <tr><td>Active</td><td>{% if area.active == 1 %}yes{% else %}no{% endif %}</td></tr>
-                    <tr><td>Public</td><td>{% if area.public == 1 %}yes{% else %}no{% endif %}</td></tr>
+                    <tr><td>Name</td><td><h2>{{ region.name }}</h2></td></tr>
+                    <tr><td>Description</td><td>{{ region.description }}</td></tr>
+                    <tr><td>Active</td><td>{% if region.active == 1 %}yes{% else %}no{% endif %}</td></tr>
+                    <tr><td>Public</td><td>{% if region.public == 1 %}yes{% else %}no{% endif %}</td></tr>
                 </table>
 
             {% endif %}
@@ -32,8 +32,8 @@
             <img src="data:image/png;base64,{{ mocimage }}" width=500 /><br/>
 
 
-            Area has {{ count }} objects, shown below..
-            To download the original input MOC file, click <a href=/area/{{ area.ar_id }}/file/>here</a>.
+            Region has {{ count }} objects, shown below..
+            To download the original input MOC file, click <a href=/area/{{ region.ar_id }}/file/>here</a>.
         <hr/>
         {{ message }}
         <hr/>

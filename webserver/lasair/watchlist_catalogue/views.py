@@ -1,3 +1,4 @@
+from .forms import CatalogueWatchlistForm
 import time
 import random
 import json
@@ -12,7 +13,7 @@ import src.run_crossmatch as run_crossmatch
 import settings
 from src import db_connect
 import sys
-from . import handle_uploaded_file, add_watchlist_metadata
+from . import handle_uploaded_file, add_watchlist_catalogue_metadata
 sys.path.append('../common')
 
 
@@ -293,12 +294,12 @@ def watchlist_catalogue_index(request):
                 message = 'Must be owner to delete watchlist'
 
     # public watchlists belong to the anonymous user
-    other_watchlists = Watchlists.objects.filter(public=1)
-    other_watchlists = add_watchlist_metadata(other_watchlists)
+    other_watchlists = Watchlists.objects.filter(public__gte=1)
+    other_watchlists = add_watchlist_catalogue_metadata(other_watchlists, remove_duplicates=True)
 
     if request.user.is_authenticated:
         my_watchlists = Watchlists.objects.filter(user=request.user)
-        my_watchlists = add_watchlist_metadata(my_watchlists)
+        my_watchlists = add_watchlist_catalogue_metadata(my_watchlists)
     else:
         my_watchlists = None
 
@@ -327,7 +328,18 @@ def watchlist_catalogue_create(request):
     ]
     ```           
     """
-    return render(request, 'watchlist_catalogue/watchlist_catalogue_create.html',
-                  {'random': '%d' % random.randrange(1000),
-                   'authenticated': request.user.is_authenticated
-                   })
+    if request.method == "POST":
+        form = CatalogueWatchlistForm(request.POST)
+        if form.is_valid():
+            form.save()
+            watchlistname = form.cleaned_data.get('name')
+            messages.success(request, f'The {watchlistname} catalogue watchlist has been successfully created')
+            return redirect('watchlist_catlogue_index')
+    else:
+        form = CatalogueWatchlistForm()
+    return render(request, 'watchlist_catalogue/watchlist_catalogue_create.html', {'form': form})
+
+    # return render(request, 'watchlist_catalogue/watchlist_catalogue_create.html',
+    #               {'random': '%d' % random.randrange(1000),
+    #                'authenticated': request.user.is_authenticated
+    #                })

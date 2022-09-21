@@ -23,8 +23,8 @@
                 these attributes can be searched. For example 'WHERE crossmatch_tns.type = "SN Ia"'.
                 <li> <b>watchlists</b>: Select one of the watchlists available to you to restrict searching to
                     ZTF objects cross-matched with the watchlist.
-                    <li> <b>areas</b>: Select one of the areas available to you to restrict searching to
-                        ZTF objects within the area.
+                    <li> <b>regions</b>: Select one of the regions available to you to restrict searching to
+                        ZTF objects within the region.
                         <li> <b>annotators</b>: Select one of the external annotators available to you to restrict searching to
                             ZTF objects annotated by that.
                         </ul>
@@ -121,7 +121,7 @@ is_owner means 2.1
                                                     </div>
                                                 </td>
 
-                                                <td><input type="checkbox" name="put" id="area"    onclick="showarearadiolist();puttext();"> Area
+                                                <td><input type="checkbox" name="put" id="area"    onclick="showarearadiolist();puttext();"> Region
                                                     <div id="arearadios">
                                                         {% for ar in areas %}
                                                             &nbsp;&nbsp;&nbsp;<input type="radio" name="ar" value="{{ ar.ar_id }}" onclick="puttext();"> {{ ar.name }}, ID={{ ar.ar_id }}
