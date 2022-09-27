@@ -116,7 +116,7 @@ def insertTNS(conn, tnsEntry):
 #       ext_catalogs,
 
 # This may be an update of an existing record, so make sure we zap that first
-        query = 'DELETE FROM crossmatch_tns WHERE tns_name="%s"' % e['name']
+        query = "DELETE FROM crossmatch_tns WHERE tns_name=%s" % e['name']
         cursor.execute (query)
 
 # This section exposes the names that we have for attributes
