@@ -9,9 +9,8 @@ cmd = 'echo "\\n-- mysql backup at %s" >> %s'
 cmd = cmd % (today, logfile)
 os.system(cmd)
 
-cmd = 'ssh %s sudo mysqldump -u root -p%s --port=%s ztf > %s/mysqlbackup.sql'
-cmd = cmd % (settings.DB_HOST, settings.DB_ROOT_PASS, settings.DB_PORT, settings.MYSQL_BACKUP_DIR)
-print(cmd)
+cmd = 'mysqldump -u %s -p%s --port=%s --host=%s ztf > %s/mysqlbackup.sql'
+cmd = cmd % (settings.DB_USER_READWRITE, settings.DB_PASS_READWRITE, settings.BACKUP_DATABASE_PORT, settings.BACKUP_DATABASE_HOST, settings.MYSQL_BACKUP_DIR)
 os.system(cmd)
 
 cmd = 'ls -l %s >> %s'
