@@ -47,13 +47,7 @@ If you share code that uses the Lasair API, please put the token in a separate, 
 <a name=auth_token><h5>Authorisation Token</h5></a>
 Request authentication is via authentication tokens. For GET queries, the token can go in 
 the parameter string, and for POST queries, the token goes in the headers.
-An example of a token is:
-<pre class="literal-block">
-4b762569bb349bd8d60f1bc7da3f39dbfaefff9a
-</pre>
-This "starter" token can be used for experiments with the API.
-However, this key is throttled and restricted, and should only be used
-for discovery and play, not serious use.
+ In the following, the string of xxxxxxxxxxxxxx characters should be replaced by your own token.
 
 <a name=auth_token><h5>Get Your Token</h5></a>
 We recommend that users request their own key by running the following script:
@@ -98,14 +92,14 @@ The arguments are:<ul>
 </dd>
 <dt class="url-label">GET URL Example</dt> <dd>
 <pre class="literal-block">
-https://lasair-iris.roe.ac.uk/api/cone/?&ra=194.494&dec=48.851&radius=240.0&requestType=all&token=4b762569bb349bd8d60f1bc7da3f39dbfaefff9a&format=json
+https://lasair-iris.roe.ac.uk/api/cone/?&ra=194.494&dec=48.851&radius=240.0&requestType=all&token=xxxxxxxxxxxxxxxxxxxxxxxx&format=json
 </pre>
 </dd>
 
 <dt class="url-label">Curl Example</dt> <dd>
 <p> The authorization token goes in the header of the request, and the data in the data section.  </p>
 <pre class="literal-block">
-curl --header "Authorization: Token 4b762569bb349bd8d60f1bc7da3f39dbfaefff9a" \
+curl --header "Authorization: Token xxxxxxxxxxxxxxxxxxxxxxxx" \
 --data "ra=194.494&dec=48.851&radius=240.0&requestType=all" \
 https://lasair-iris.roe.ac.uk/api/cone/
 </pre>
@@ -115,7 +109,7 @@ https://lasair-iris.roe.ac.uk/api/cone/
 <p> This code requires the <code>lasair</code> library.
 <pre class="literal-block">
 import lasair
-token = '4b762569bb349bd8d60f1bc7da3f39dbfaefff9a'
+token = 'xxxxxxxxxxxxxxxxxxxxxxxx'
 L = lasair.lasair_client(token)
 c = L.cone(ra, dec, radius=240.0, requestType='all')
 print(c)
@@ -153,14 +147,14 @@ The arguments are:<ul>
 
 <dt class="url-label">GET URL Example</dt> <dd>
 <pre class="literal-block">
-https://lasair-iris.roe.ac.uk/api/query/?selected=objectId%2Cgmag&tables=objects&conditions=gmag%3C12.0&token=4b762569bb349bd8d60f1bc7da3f39dbfaefff9a&format=json
+https://lasair-iris.roe.ac.uk/api/query/?selected=objectId%2Cgmag&tables=objects&conditions=gmag%3C12.0&token=xxxxxxxxxxxxxxxxxxxxxxxx&format=json
 </pre>
 </dd>
 
 <dt class="url-label">Curl Example</dt> <dd>
 <p> The authorization token goes in the header of the request, and the data in the data section.  </p>
 <pre class="literal-block">
-curl --header "Authorization: Token 4b762569bb349bd8d60f1bc7da3f39dbfaefff9a" \
+curl --header "Authorization: Token xxxxxxxxxxxxxxxxxxxxxxxx" \
 --data "selected=objectId,gmag&tables=objects&conditions=gmag&lt;12.0&limit=3" \
 https://lasair-iris.roe.ac.uk/api/query/
 </pre>
@@ -170,7 +164,7 @@ https://lasair-iris.roe.ac.uk/api/query/
 <p> This code requires the <code>lasair</code> library.
 <pre class="literal-block">
 import lasair
-token = '4b762569bb349bd8d60f1bc7da3f39dbfaefff9a'
+token = 'xxxxxxxxxxxxxxxxxxxxxxxx'
 L = lasair.lasair_client(token)
 selected    = 'objectId, gmag'
 tables      = 'objects'
@@ -217,7 +211,7 @@ The arguments are:<ul>
 
 <dt class="url-label">GET URL Example with Regex</dt> <dd>
 <pre class="literal-block">
-https://lasair-iris.roe.ac.uk/api/streams/?regex=.%2ASN.%2A&token=4b762569bb349bd8d60f1bc7da3f39dbfaefff9a&format=json
+https://lasair-iris.roe.ac.uk/api/streams/?regex=.%2ASN.%2A&token=xxxxxxxxxxxxxxxxxxxxxxxx&format=json
 </pre>
 </dd>
 
@@ -225,7 +219,7 @@ https://lasair-iris.roe.ac.uk/api/streams/?regex=.%2ASN.%2A&token=4b762569bb349b
 <p> The authorization token goes in the header of the request, and the data in the data section.  
 </p>
 <pre class="literal-block">
-curl --header "Authorization: Token 4b762569bb349bd8d60f1bc7da3f39dbfaefff9a" \
+curl --header "Authorization: Token xxxxxxxxxxxxxxxxxxxxxxxx" \
 --data "regex=.*SN.*" \
 https://lasair-iris.roe.ac.uk/api/streams/
 </pre>
@@ -243,7 +237,7 @@ status= 200
 
 <dt class="url-label">GET URL Example with Topic</dt> <dd>
 <pre class="literal-block">
-https://lasair-iris.roe.ac.uk/api/streams/2SN-likecandidates/?limit=1&token=4b762569bb349bd8d60f1bc7da3f39dbfaefff9a&format=json
+https://lasair-iris.roe.ac.uk/api/streams/2SN-likecandidates/?limit=1&token=xxxxxxxxxxxxxxxxxxxxxxxx&format=json
 </pre>
 </dd>
 
@@ -252,7 +246,7 @@ https://lasair-iris.roe.ac.uk/api/streams/2SN-likecandidates/?limit=1&token=4b76
 For more information about this stream, see <a href=https://lasair-iris.roe.ac.uk/query/2/>here</a>.
 </p>
 <pre class="literal-block">
-curl --header "Authorization: Token 4b762569bb349bd8d60f1bc7da3f39dbfaefff9a" \
+curl --header "Authorization: Token xxxxxxxxxxxxxxxxxxxxxxxx" \
 --data "2SN-likecandidates&limit=1" \
 https://lasair-iris.roe.ac.uk/api/streams/
 </pre>
@@ -280,7 +274,7 @@ status= 200
 <p> This code requires the <code>lasair</code> library.
 <pre class="literal-block">
 import lasair
-token = '4b762569bb349bd8d60f1bc7da3f39dbfaefff9a'
+token = 'xxxxxxxxxxxxxxxxxxxxxxxx'
 L = lasair.lasair_client(token)
 print(L.streams_topics())
 c = L.streams('2SN-likecandidates', limit=10)
@@ -303,14 +297,14 @@ The arguments are:<ul>
 
 <dt class="url-label">GET URL Example</dt> <dd>
 <pre class="literal-block">
-https://lasair-iris.roe.ac.uk/api/objects/?objectIds=ZTF18abdphvf,ZTF21aapzzgf&token=4b762569bb349bd8d60f1bc7da3f39dbfaefff9a&format=json
+https://lasair-iris.roe.ac.uk/api/objects/?objectIds=ZTF18abdphvf,ZTF21aapzzgf&token=xxxxxxxxxxxxxxxxxxxxxxxx&format=json
 </pre>
 </dd>
 
 <dt class="url-label">Curl Example</dt> <dd>
 <p> The authorization token goes in the header of the request, and the data in the data section.  </p>
 <pre class="literal-block">
-curl --header "Authorization: Token 4b762569bb349bd8d60f1bc7da3f39dbfaefff9a" \
+curl --header "Authorization: Token xxxxxxxxxxxxxxxxxxxxxxxx" \
 --data "objectIds=ZTF18abdphvf,ZTF21aapzzgf" \
 https://lasair-iris.roe.ac.uk/api/objects/
 </pre>
@@ -320,7 +314,7 @@ https://lasair-iris.roe.ac.uk/api/objects/
 <p> This code requires the <code>lasair</code> library.
 <pre class="literal-block">
 import lasair
-token = '4b762569bb349bd8d60f1bc7da3f39dbfaefff9a'
+token = 'xxxxxxxxxxxxxxxxxxxxxxxx'
 L = lasair.lasair_client(token)
 c = L.objects(objectIds)
 print(c)
@@ -376,7 +370,7 @@ The arguments are:<ul>
 
 <dt class="url-label">GET URL Example</dt> <dd>
 <pre class="literal-block">
-https://lasair-iris.roe.ac.uk/api/lightcurves/?objectIds=ZTF20acgrvqo%2CZTF19acylwtd%2CZTF18acmziob&token=4b762569bb349bd8d60f1bc7da3f39dbfaefff9a&format=json
+https://lasair-iris.roe.ac.uk/api/lightcurves/?objectIds=ZTF20acgrvqo%2CZTF19acylwtd%2CZTF18acmziob&token=xxxxxxxxxxxxxxxxxxxxxxxx&format=json
 </pre>
 </dd>
 
@@ -384,7 +378,7 @@ https://lasair-iris.roe.ac.uk/api/lightcurves/?objectIds=ZTF20acgrvqo%2CZTF19acy
 <p> The authorization token goes in the header of the request, and the data in the data section.  
 </p>
 <pre class="literal-block">
-curl --header "Authorization: Token 4b762569bb349bd8d60f1bc7da3f39dbfaefff9a" \
+curl --header "Authorization: Token xxxxxxxxxxxxxxxxxxxxxxxx" \
 --data "objectIds=ZTF20acgrvqo,ZTF19acylwtd,ZTF18acmziob" \
 https://lasair-iris.roe.ac.uk/api/lightcurves/
 </pre>
@@ -394,7 +388,7 @@ https://lasair-iris.roe.ac.uk/api/lightcurves/
 <p> This code requires the <code>lasair</code> library.
 <pre class="literal-block">
 import lasair
-token = '4b762569bb349bd8d60f1bc7da3f39dbfaefff9a'
+token = 'xxxxxxxxxxxxxxxxxxxxxxxx'
 L = lasair.lasair_client(token)
 c = L.lightcurves(['ZTF20acgrvqo','ZTF19acylwtd','ZTF18acmziob'])
 print(c)
@@ -441,7 +435,7 @@ The arguments are:
 
 <dt class="url-label">GET URL Example with objects</dt> <dd>
 <pre class="literal-block">
-https://lasair-iris.roe.ac.uk/api/sherlock/objects/?objectIds=ZTF20acpwljl%2CZTF20acqqbkl%2CZTF20acplggt&token=4b762569bb349bd8d60f1bc7da3f39dbfaefff9a&lite=true&format=json
+https://lasair-iris.roe.ac.uk/api/sherlock/objects/?objectIds=ZTF20acpwljl%2CZTF20acqqbkl%2CZTF20acplggt&token=xxxxxxxxxxxxxxxxxxxxxxxx&lite=true&format=json
 </pre>
 </dd>
 
@@ -449,7 +443,7 @@ https://lasair-iris.roe.ac.uk/api/sherlock/objects/?objectIds=ZTF20acpwljl%2CZTF
 <p> The authorization token goes in the header of the request, and the data in the data section.  
 </p>
 <pre class="literal-block">
-curl --header "Authorization: Token 4b762569bb349bd8d60f1bc7da3f39dbfaefff9a" \
+curl --header "Authorization: Token xxxxxxxxxxxxxxxxxxxxxxxx" \
 --data "objectIds=ZTF20acpwljl,ZTF20acqqbkl,ZTF20acplggt&lite=True" \
 https://lasair-iris.roe.ac.uk/api/sherlock/objects/
 </pre>
@@ -459,7 +453,7 @@ https://lasair-iris.roe.ac.uk/api/sherlock/objects/
 <p> This code requires the <code>lasair</code> library.
 <pre class="literal-block">
 import lasair
-token = '4b762569bb349bd8d60f1bc7da3f39dbfaefff9a'
+token = 'xxxxxxxxxxxxxxxxxxxxxxxx'
 L = lasair.lasair_client(token)
 c = L.sherlock_objects(['ZTF20acgrvqo','ZTF19acylwtd','ZTF18acmziob'])
 print(c)
@@ -508,7 +502,7 @@ The arguments are:
 
 <dt class="url-label">GET URL Example</dt> <dd>
 <pre class="literal-block">
-https://lasair-iris.roe.ac.uk/api/sherlock/position/?ra=16.851866&dec=34.53307&token=4b762569bb349bd8d60f1bc7da3f39dbfaefff9a&format=json
+https://lasair-iris.roe.ac.uk/api/sherlock/position/?ra=16.851866&dec=34.53307&token=xxxxxxxxxxxxxxxxxxxxxxxx&format=json
 </pre>
 </dd>
 
@@ -516,7 +510,7 @@ https://lasair-iris.roe.ac.uk/api/sherlock/position/?ra=16.851866&dec=34.53307&t
 <p> The authorization token goes in the header of the request, and the data in the data section.  
 </p>
 <pre class="literal-block">
-curl --header "Authorization: Token 4b762569bb349bd8d60f1bc7da3f39dbfaefff9a" \
+curl --header "Authorization: Token xxxxxxxxxxxxxxxxxxxxxxxx" \
 --data "ra=16.851866&dec=34.53307" \
 https://lasair-iris.roe.ac.uk/api/sherlock/position/
 </pre>
@@ -526,7 +520,7 @@ https://lasair-iris.roe.ac.uk/api/sherlock/position/
 <p> This code requires the <code>lasair</code> library.
 <pre class="literal-block">
 import lasair
-token = '4b762569bb349bd8d60f1bc7da3f39dbfaefff9a'
+token = 'xxxxxxxxxxxxxxxxxxxxxxxx'
 L = lasair.lasair_client(token)
 c = L.sherlock_position(['ZTF20acgrvqo','ZTF19acylwtd','ZTF18acmziob'])
 print(c)
