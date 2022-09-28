@@ -14,17 +14,16 @@ where cone_id is the id of the cone in the database, at the given position and r
 "Multi-Order Coverage maps", https://cds-astro.github.io/mocpy/. The union of all the 
 files is the same as the list of cones associated with the watchlist.
 """
-import os, sys
-sys.path.append('../common')
-from src import db_connect
+import os, sys, math, time, stat
 from mocpy import MOC
+from cmd import execute_cmd
+sys.path.append('../common')
 import astropy.units as u
-import math
-import time
 from datetime import datetime
-import stat
+from src import db_connect, slack_webhook
 
-logfile = sys.stdout
+logfile = ''
+logf = None
 
 def moc_watchlist(watchlist, max_depth):
     """
@@ -135,7 +134,7 @@ def fetch_active_watchlists(msl, cache_dir):
         d = {'wl_id':row['wl_id'], 'name':row['name'],'radius':row['radius']}
         if newer > 0:
             get.append(d)
-            logfile.write('Make %s\n' % d['name'])
+            logf.write('Make %s\n' % d['name'])
         else:
             keep.append(d)
 #            print('Keep', d['name'])
@@ -175,7 +174,7 @@ def rebuild_cache(wl_id, name, cones, max_depth, cache_dir, chk):
     # now write the moc files
     for i in range(len(moclist)):
         moclist[i].write(watchlist_dir + 'moc%03d.fits'%i)
-    logfile.write('Watchlist "%s" with %d cones rebuilt in %.2f seconds\n' 
+    logf.write('Watchlist "%s" with %d cones rebuilt in %.2f seconds\n' 
             % (name, len(ralist), time.time() - t))
 
 if __name__ == "__main__":
@@ -185,32 +184,33 @@ if __name__ == "__main__":
     from src import date_nid
     nid  = date_nid.nid_now()
     date = date_nid.nid_to_date(nid)
-    logfile = open(settings.SERVICES_LOG +'/'+ date + '.log', 'a')
+    logfile = settings.SERVICES_LOG +'/'+ date + '.log'
+    logf    = open(logfile, 'a')
     now = datetime.now()
     message = '\n-- make_watchlist_files at %s\n' % now.strftime("%d/%m/%Y %H:%M:%S")
-    logfile.write(message)
-
-    msl = db_connect.readonly()
+    logf.write(message)
 
     max_depth = settings.WATCHLIST_MAX_DEPTH
     chk       = settings.WATCHLIST_CHUNK
 
     cache_dir = settings.WATCHLIST_MOCS
     new_cache_dir = cache_dir + '_new'
-    if os.system('mkdir %s' % new_cache_dir) > 0:
-        print('Cannot connect to shared file system')
-        sys.exit(256)
+    cmd = 'mkdir %s' % new_cache_dir
+    execute_cmd(cmd, logfile)
 
     # who needs to be recomputed
-    try:
-        watchlists = fetch_active_watchlists(msl, cache_dir)
-    except:
-        print('Cannot connect to database')
-        sys.exit(256)
+#    try:
+    msl = db_connect.readonly()
+    watchlists = fetch_active_watchlists(msl, cache_dir)
+#    except:
+#        s = 'make_watchlist_files: Cannot fetch watchlists from database'
+#        slack_webhook.send(settings.SLACK_URL, s)
+#        sys.exit(1)
 
     for watchlist in watchlists['keep']:
         wl_id = watchlist['wl_id']
-        os.system('mv %s/wl_%d %s' % (cache_dir, wl_id, new_cache_dir))
+        cmd = 'mv %s/wl_%d %s' % (cache_dir, wl_id, new_cache_dir)
+        execute_cmd(cmd, logfile)
 
     for watchlist in watchlists['get']:
         # get the data from the database
@@ -218,6 +218,6 @@ if __name__ == "__main__":
         rebuild_cache(watchlist['wl_id'], watchlist['name'], \
             cones, max_depth, new_cache_dir, chk)
 
-    os.system('rm -r %s'  % (cache_dir))
-    os.system('mv %s %s' % (new_cache_dir, cache_dir))
+    execute_cmd('rm -r %s'  % cache_dir, logfile)
+    execute_cmd('mv %s %s' % (new_cache_dir, cache_dir), logfile)
     sys.exit(0)
