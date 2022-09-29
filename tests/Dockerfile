@@ -28,6 +28,7 @@ RUN apt-get update && apt-get -yq dist-upgrade && apt-get install -yq --no-insta
 
 # Required for filter
 RUN pip3 install \
+  numpy \
   mocpy \
   mysql-connector-python \
   ephem \
