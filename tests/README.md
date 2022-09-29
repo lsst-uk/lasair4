@@ -13,16 +13,6 @@ It runs the [insert_query.py](https://github.com/lsst-uk/lasair-lsst/blob/master
 It uses the following auxiliary files and directories:
 * sample_alerts *
 
-### Building watchlist files
-`watchlist_test.py`
-
-This test uses a small watchlist to build a MOC file. Several mock alerts are run against 
-the MOC file, and the number of hits asserted. The watchlist and the mock alerts are
-in the same csv file, which also includes a program that generates such a csv file.
-It uses the following auxiliary files and directories:
-* watchlist_sample.csv
-* watchlist_cache
-
 # Deployment Tests
 These tests require a deployed Lasair pipeline or webserver to run correctly.
 
@@ -41,7 +31,3 @@ including the ordering of attributes, then it will not work.
 To check that every entry of the table crossmatch_tns has a corresponding entry in the table watchlist_cones.
 This means that real-time crossmatch is happening between incoming alerts and the TNS objects.
 
-### Lasair API
-`api/runemall.py`
-
-This is a battery of 3 access methods (curl, get, python),each with 7 tests (cone, lightcurves, query, sherlockobjects, sherlockposition, streamsregex, streamstopic). It requires a `settings.py` file that has the API token to run successfully.
