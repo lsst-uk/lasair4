@@ -21,9 +21,7 @@
 
 
 
-                    <svg class="w-6 h-6" style="height: 3rem;" fill="currentColor" stroke="currentColor" stroke-width="1"  viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
-                        <path d="m56.25 75c3.4531 0 6.25 2.7969 6.25 6.25s-2.7969 6.25-6.25 6.25h-12.5c-3.4531 0-6.25-2.7969-6.25-6.25s2.7969-6.25 6.25-6.25zm18.75-31.25c3.4531 0 6.25 2.7969 6.25 6.25s-2.7969 6.25-6.25 6.25h-50c-3.4531 0-6.25-2.7969-6.25-6.25s2.7969-6.25 6.25-6.25zm18.75-31.25c3.4531 0 6.25 2.7969 6.25 6.25s-2.7969 6.25-6.25 6.25h-87.5c-3.4531 0-6.25-2.7969-6.25-6.25s2.7969-6.25 6.25-6.25z"/>
-                    </svg>
+                    {% include "includes/icon_filter_query.html" %}
 
                 </div>
             </div>
@@ -49,16 +47,12 @@
                         {# <div class="btn-group" role="group" aria-label="Basic button group"> #}
 
                         <a class="btn btn-sm btn-tertiary me-1" href='{% url "filter_query_detail" mq_id %}' data-bs-toggle="tooltip" data-bs-placement="auto" data-bs-title="run the filter to give live results">
-                            <svg class="w-1 h-1 pe-1" style="height: 1.1rem;" fill="currentColor" stroke="currentColor" stroke-width="1"  viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
-                                <path d="m50 9c-22.621 0-41 18.379-41 41s18.379 41 41 41 41-18.379 41-41-18.379-41-41-41zm0 4c20.457 0 37 16.543 37 37s-16.543 37-37 37-37-16.543-37-37 16.543-37 37-37zm-10.656 15.969c-1.1172 0.023438-2.1914 0.32031-3.125 0.875-1.8633 1.1055-3.1641 3.1953-3.2188 5.625v28.938c0.054688 2.4297 1.3555 4.543 3.2188 5.6562s4.3242 1.2266 6.4688 0.0625c8.3438-4.8242 16.688-9.668 25.031-14.5 1.9375-1.125 3.2812-3.2656 3.2812-5.6875s-1.3438-4.5312-3.2812-5.6562c-8.3047-4.8984-16.758-9.5625-25.031-14.5-1.1406-0.61719-2.3047-0.82422-3.3438-0.8125zm0.15625 3.9688c0.40625 0.007812 0.80859 0.13281 1.2188 0.34375 8.3281 4.8125 16.668 9.6445 25 14.469 0.78125 0.45312 1.2812 1.2148 1.2812 2.1875s-0.5 1.7656-1.2812 2.2188c-8.3477 4.8086-16.645 9.707-25 14.5-0.93359 0.48047-1.7773 0.38281-2.4688-0.03125-0.69922-0.41797-1.2148-1.1602-1.25-2.25v-28.844c0.035156-1.0898 0.55078-1.8359 1.25-2.25 0.4375-0.24609 0.84375-0.35156 1.25-0.34375z"/>
-                            </svg><span class="align-middle">Run Filter</span></a>
+                            {% include "includes/icon_run.html" %}<span class="align-middle">Run Filter</span></a>
 
                         {% if "filter/log/" not in request.path %}
                             <a class="btn btn-sm btn-gray-600 me-1 align-middle" href='{% url "filter_log" topic %}' data-bs-toggle="tooltip" data-bs-placement="auto" data-bs-title="listing all transients passing filter since its creation"><?xml version="1.0" encoding="UTF-8"?>
 
-                                <svg class="w-1 h-1" style="height: 1.4rem;" fill="currentColor" stroke="currentColor" stroke-width="1"  viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
-                                    <path d="m53.113 18.758c-14.355 0-26.477 9.7305-30.121 22.945h-5.5195c-0.69922 0.003906-1.3359 0.39844-1.6484 1.0195-0.31641 0.62109-0.25391 1.3672 0.15234 1.9336l7.9102 10.82c0.35156 0.48047 0.91016 0.76563 1.5039 0.76563 0.59766 0 1.1562-0.28516 1.5039-0.76563l7.8945-10.82h0.003907c0.41016-0.56641 0.46875-1.3125 0.15234-1.9375-0.31641-0.62109-0.95312-1.0156-1.6523-1.0156h-5.0938c3.4609-10.441 13.285-17.945 24.91-17.945 14.527 0 26.262 11.715 26.262 26.242s-11.734 26.246-26.262 26.246c-8.6562 0-16.75-4.2656-21.645-11.406v-0.003906c-0.78125-1.1328-2.332-1.4219-3.4688-0.64453-0.55078 0.375-0.92578 0.95703-1.0469 1.6094-0.12109 0.65625 0.023437 1.332 0.40234 1.8789 5.8242 8.4961 15.461 13.562 25.762 13.562 17.23 0 31.266-14.016 31.266-31.246 0-17.23-14.035-31.238-31.266-31.238zm-1.7344 15.41c-0.66406 0.003906-1.2969 0.26953-1.7656 0.73828-0.46484 0.47266-0.72656 1.1094-0.72656 1.7695v15.465c0 0.82812 0.41016 1.5977 1.0898 2.0664l8.4141 5.7422c1.1367 0.77734 2.6914 0.48828 3.4727-0.64844 0.77344-1.1406 0.48438-2.6875-0.65234-3.4688l-7.3242-5.0195v-14.137c0.003906-0.66406-0.25781-1.3047-0.73047-1.7773-0.47266-0.46875-1.1094-0.73438-1.7773-0.73047z" fill-rule="evenodd"/>
-                                </svg>
+                                {% include "includes/icon_history.html" %}
                                 <span class="align-middle">History</span></a>
                         {% else %}
 
@@ -73,8 +67,8 @@
                             export<svg class="icon icon-xs" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd"></path></svg>
                         </button>
                         <ul class="dropdown-menu" aria-labelledby="exportDropdown">
-                            <li><a class="dropdown-item  export" href="#" data-type="csv" data-filename="{{topic}}">csv</a></li>
-                            <li><a class="dropdown-item  export" href="#" data-type="json" data-filename="{{topic}}">json</a></li>
+                            <li><a class="dropdown-item export" data-table="filter-results" href="#" data-type="csv" data-filename="{{topic}}">csv</a></li>
+                            <li><a class="dropdown-item export" data-table="filter-results" href="#" data-type="json" data-filename="{{topic}}">json</a></li>
                         </ul>
                     </div>
                 </div>

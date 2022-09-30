@@ -636,8 +636,8 @@ $accordion-button-padding-y   : $accordion-padding-y !default;
 $accordion-button-padding-x   : $accordion-padding-x !default;
 $accordion-button-color       : $accordion-color !default;
 $accordion-button-bg          : $accordion-bg !default;
-$accordion-button-active-bg   : $light !default;
-$accordion-button-active-color: shade-color($primary, 10%) !default;
+$accordion-button-active-bg   : $soft !default;
+$accordion-button-active-color: shade-color($dark, 10%) !default;
 
 
 $accordion-icon-width       : 1.25rem !default !default;
@@ -788,7 +788,7 @@ $input-focus-color       : $input-color !default;
 $input-focus-width       : $input-btn-focus-width !default;
 $input-focus-box-shadow  : $input-btn-focus-box-shadow !default;
 
-$input-placeholder-color: $gray-600 !default;
+$input-placeholder-color: $gray-400 !default;
 $input-plaintext-color  : $body-color !default;
 
 $input-height-border: $input-border-width * 2 !default;

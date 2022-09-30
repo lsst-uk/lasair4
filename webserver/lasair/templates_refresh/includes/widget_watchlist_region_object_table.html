@@ -1,15 +1,16 @@
 {% load customtags %}
-{% if table|length > 0 %}
+{% if conelist|length > 0 %}
     <div class="card border-0 shadow h-100">
         <div class="card-body">
 
             <div class="card-body p-2 pt-4">
+
                 <div class="table-responsive p-4 pt-0">
                     <table  class="table table-flush datatable" id="filter-results">
                         <thead class="thead-light">
                             <tr>
 
-                                {% for key in table.0.keys %}
+                                {% for key in conelist.0.keys %}
 
                                     {% if key == "UTC" %}
                                         <th data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="{{schema|keyvalue:key}}" >Alert Time</th>
@@ -21,7 +22,7 @@
 
                             </tr></thead>
                         <tbody>
-                            {% for object in table %}
+                            {% for object in conelist %}
 
                                 <tr>
                                     {% for key in object.keys %}
@@ -37,6 +38,8 @@
                                             <td>{{object|keyvalue:key|floatformat:4 }}</td>
                                         {% elif 'mag' in key %}
                                             <td>{{object|keyvalue:key|floatformat:3 }}</td>
+                                        {% elif 'last detected' in key %}
+                                            <td>{{object|keyvalue:key|floatformat:1 }}</td>
                                         {% elif key in 'UTC' %}
                                             <td data-type="date" data-format="YYYY-MMM-DD hh:mm:ss">{{object|keyvalue:key }} UTC</td>
                                         {%else%}
@@ -51,9 +54,10 @@
                         </tbody>
                     </table>
                 </div>
+
+
             </div>
         </div>
-    </div>
 {% else %}
-    {% include "includes/widget_inbox_zero_card.html" with info="Zero objects have been matched against this filter so far" %}
+    {% include "includes/widget_inbox_zero_card.html" with info="Zero objects have been associated with this region watchlist so far" %}
 {% endif %}

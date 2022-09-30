@@ -33,6 +33,8 @@ btn:not(.collapsed), a.btn:not(.collapsed) {
     height: 2.7rem !important;
 }
 
+
+
 .icon-shape  {
     .image-xs {
         height: 2.0rem;
@@ -51,6 +53,37 @@ td .icon-shape  {
 }
 
 
+.icon, .icon > svg {
+    height: $icon-size !important;
+
+    &.icon-xxs, &.icon-xxs > svg {
+        height: $icon-size-xxs  !important;
+    }
+
+    &.icon-xs,&.icon-xs> svg {
+        height: $icon-size-xs  !important;
+    }
+    &.icon-sm,&.icon-sm> svg {
+        height: $icon-size-sm  !important;
+    }
+    &.icon-lg,&.icon-lg> svg {
+        height: $icon-size-lg  !important;
+    }
+    &.icon-xl,&.icon-xl> svg {
+        height: $icon-size-xl  !important;
+    }
+    &.icon-xxl,&.icon-xxl> svg {
+        height: $icon-size-xxl  !important;
+    }
+
+    &.active-dot {
+        svg {
+            height: 0.7rem;
+        }
+    }
+}
+
+
 @media (min-width: 1600px) {
     .container, .container-lg, .container-md, .container-sm, .container-xl {
         max-width: 1400px !important;
@@ -62,3 +95,10 @@ td .icon-shape  {
 .datatable thead th {
     text-transform: none !important;
 }
+
+
+ul.errorlist li {
+    font-size: inherit;
+}
+
+
