@@ -4,6 +4,11 @@ document.addEventListener('DOMContentLoaded', function() {
     dataTableEls.forEach(function(dataTableEl) {
         if (dataTableEl) {
 
+            let tableId = null;
+            if (dataTableEl.hasAttribute('id')) {
+                tableId = dataTableEl.id;
+            }
+
             const dataTable = new simpleDatatables.DataTable(dataTableEl, {
                 labels: {
                     placeholder: "Search table...",
@@ -30,32 +35,37 @@ document.addEventListener('DOMContentLoaded', function() {
             }
             // console.log(dataTable.columns().dt.labels);
 
-            document.querySelectorAll(".export").forEach(function(el) {
-                el.addEventListener("click", function(e) {
-                    var type = el.dataset.type;
+            if (tableId !== null) {
+                document.querySelectorAll(`a[data-table=${CSS.escape(tableId)}]`).forEach(function(el) {
+                    el.addEventListener("click", function(e) {
 
-                    var filename = el.dataset.filename;
+                        var type = el.dataset.type;
+                        var filename = el.dataset.filename;
 
-                    if (filename == null) {
-                        filename = "lasair-export";
-                    }
+                        if (filename == null) {
+                            filename = "lasair-export";
+                        }
 
-                    console.log("HERE:", filename);
+                        var data = {
+                            type: type,
+                            filename: filename,
+                        };
 
-                    var data = {
-                        type: type,
-                        filename: filename,
-                    };
+                        if (type === "csv") {
+                            data.columnDelimiter = ",";
+                        }
 
-                    if (type === "csv") {
-                        data.columnDelimiter = ",";
-                    }
+                        if (type === "json") {
+                            data.replacer = null;
+                            data.space = 4;
+                        }
 
-                    dataTable.export(data);
+                        dataTable.export(data);
+                    });
                 });
-            });
-
+            }
         }
+
     });
 
 });

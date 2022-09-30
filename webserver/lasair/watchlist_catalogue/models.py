@@ -19,7 +19,6 @@ class WatchlistCones(models.Model):
     class Meta:
         """Meta.
         """
-
         managed = True
         db_table = 'watchlist_cones'
 
