@@ -1,5 +1,5 @@
 {% load customtags %}
-{% if conelist|length > 0 %}
+{% if objIds|length > 0 %}
     <div class="card border-0 shadow h-100">
         <div class="card-body">
 
@@ -10,7 +10,7 @@
                         <thead class="thead-light">
                             <tr>
 
-                                {% for key in conelist.0.keys %}
+                                {% for key in objIds.0.keys %}
 
                                     {% if key == "UTC" %}
                                         <th data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="{{schema|keyvalue:key}}" >Alert Time</th>
@@ -22,7 +22,7 @@
 
                             </tr></thead>
                         <tbody>
-                            {% for object in conelist %}
+                            {% for object in objIds %}
 
                                 <tr>
                                     {% for key in object.keys %}

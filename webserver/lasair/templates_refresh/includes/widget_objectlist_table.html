@@ -1,5 +1,5 @@
 {% load customtags %}
-{% if conelist|length > 0 %}
+{% if table|length > 0 %}
     <div class="card border-0 shadow h-100">
         <div class="card-body">
 
@@ -10,7 +10,7 @@
                         <thead class="thead-light">
                             <tr>
 
-                                {% for key in conelist.0.keys %}
+                                {% for key in table.0.keys %}
 
                                     {% if key == "UTC" %}
                                         <th data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="{{schema|keyvalue:key}}" >Alert Time</th>
@@ -22,7 +22,7 @@
 
                             </tr></thead>
                         <tbody>
-                            {% for object in conelist %}
+                            {% for object in table %}
 
                                 <tr>
                                     {% for key in object.keys %}
@@ -57,7 +57,8 @@
 
 
             </div>
+
         </div>
 {% else %}
-    {% include "includes/widget_inbox_zero_card.html" with info="Zero objects have been associated with this catalogue watchlist so far" %}
+    {% include "includes/widget_inbox_zero_card.html" with info=zerotext %}
 {% endif %}
