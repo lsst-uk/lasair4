@@ -12,22 +12,29 @@
             hh mm ss and dd mm ss. If the radius is not specified, it defaults to 5 arcsec.
             You can enter an object name, beginning with the string 'ZTF'.
             You can also enter a TNS object, beginning with 'SN' or 'AT' to be resolved to a ZTF object.
-            <form method="POST"  action="/conesearch/">
+            <form method="POST"  action="/search/">
                 <table class="table" style="width:80%">
                     {% csrf_token %}
-                    <tr><td> <input size=40 name="cone" value="{{ data.cone }}"></td>
+                    <tr><td> <input size=40 name="query" value="{{ data.cone }}"></td>
                         <td class="w-30"><font size=-2>(check this box for JSON output <input type="checkbox" name="json">)</font></td></tr>
                     <tr><td><input type="submit" class="button" style="color: blue; background-color: #EEEEFF;" value="Run Cone Search"></td></tr>
                 </td></tr>
         </form>
     </table>
 
+    <ul>
+        {% for h in results %}
+            <li><a href=/object/{{ h }}>{{ h }}</a></li>
+        {% endfor %}
+    </ul>
+
+
     {% if data.message %}
         {{ data.message|safe }}
-        {% if data.hitlist %}
+        {% if data %}
 
             <ul>
-                {% for h in data.hitlist %}
+                {% for h in data %}
                     <li><a href=/object/{{ h }}>{{ h }}</a></li>
                 {% endfor %}
             </ul>
