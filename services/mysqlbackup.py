@@ -2,7 +2,7 @@ import sys, os
 sys.path.append('../common/')
 import settings
 from datetime import datetime
-from cmd import execute_cmd
+from my_cmd import execute_cmd
 today = datetime.today().strftime('%Y%m%d')
 now   = datetime.today().strftime('%Y%m%d %H:%M:%S')
 

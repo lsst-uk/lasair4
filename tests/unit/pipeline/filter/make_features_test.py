@@ -50,18 +50,20 @@ class FilterMakeFeaturesTest(TestCase):
     def test_make_features(self):
         for filename in os.listdir('sample_alerts'):
             filename = filename.split('.')[0]
-            print('\n' + filename)
+#            print('\n' + filename)
             alert = json.loads(open('sample_alerts/%s.json' % filename).read())
             objectId = alert['objectId']
 
-            # write the queries here
-            queryfile = open('sample_queries/%s.sql' % filename, 'w')
-
+            computed_output = ''
             querydict = create_insert_query(alert)
             if querydict and 'query' in querydict:
-                queryfile.write(querydict['query'] + ';\n\n')
+                query = querydict['query']
+                computed_output += query + ';\n\n'
+#                queryfile = open('sample_queries/%s.sql' % filename, 'w')
+#                queryfile.write(computed_output)
             else:
-                print('No query created')
+                print('%s: No query created' % filename)
+                break
 
             # look for any queries labelled 'sherlock'
             if 'annotations' in alert:
@@ -73,9 +75,12 @@ class FilterMakeFeaturesTest(TestCase):
 
                     query = create_insert_annotation(objectId, annClass, ann,
                         sherlock_attributes, 'sherlock_classifications', replace=True)
-                    queryfile.write(query +';\n\n')
+                    computed_output += query + ';\n\n'
+#                    queryfile.write(query +';\n\n')
 
-            queryfile.close()
+#            queryfile.close()
+            stored_output = open('sample_queries/%s.sql' % filename, 'r').read()
+            self.assertTrue(computed_output == stored_output)
 
 
 if __name__ == '__main__':
