@@ -6,7 +6,7 @@ named ar_<nn>.fits where nn is the area id from the database. These files are
 "Multi-Order Coverage maps", https://cds-astro.github.io/mocpy/. 
 """
 import os, sys, stat, time, base64
-from cmd import execute_cmd
+from my_cmd import execute_cmd
 sys.path.append('../common')
 from datetime import datetime
 from src import date_nid, db_connect, slack_webhook

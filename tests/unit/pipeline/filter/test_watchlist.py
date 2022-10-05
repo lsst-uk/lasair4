@@ -8,6 +8,9 @@ import json
 from time import sleep
 import context
 
+sys.path.append('../../../../services')
+import my_cmd
+
 from services.make_watchlist_files import rebuild_cache
 from pipeline.filter.check_alerts_watchlists import check_alerts_against_watchlists
 from pipeline.filter.check_alerts_watchlists import read_watchlist_cache_files

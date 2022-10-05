@@ -16,14 +16,14 @@ files is the same as the list of cones associated with the watchlist.
 """
 import os, sys, math, time, stat
 from mocpy import MOC
-from cmd import execute_cmd
+from my_cmd import execute_cmd
 sys.path.append('../common')
 import astropy.units as u
 from datetime import datetime
 from src import db_connect, slack_webhook
 
 logfile = ''
-logf = None
+logf = sys.stdout
 
 def moc_watchlist(watchlist, max_depth):
     """
