@@ -31,3 +31,6 @@ admin/
 
 # Swap files
 *.swp
+/static
+/lasair.sublime-workspace
+/lasair.sublime-project

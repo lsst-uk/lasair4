@@ -109,6 +109,9 @@ class SherlockObjectsSerializer(serializers.Serializer):
         if request and hasattr(request, "user"):
             userId = request.user
 
+        if not lasair_settings.SHERLOCK_SERVICE:
+            return {"error": "This Lasair cluster does not have a Sherlock service"}
+
         datadict = {}
 #        url = 'http://%s/object/%s' % (lasair_settings.SHERLOCK_SERVICE, objectIds)
 #        if lite: url += '?lite=true'
@@ -146,9 +149,9 @@ class SherlockPositionSerializer(serializers.Serializer):
 # can also send multiples, but not yet implemented
 # http://192.41.108.29/query?ra=115.811388,97.486925&dec=-25.76404,-26.975506
 
-#        url = 'http://%s/query?ra=%f&dec=%f' % (lasair_settings.SHERLOCK_SERVICE, ra, dec)
-#        if lite: url += '&lite=true'
-#        r = requests.get(url)
+        if not lasair_settings.SHERLOCK_SERVICE:
+            return {"error": "This Lasair cluster does not have a Sherlock service"}
+
         data = { 'lite': lite, 'ra': '%.7f'%ra, 'dec': '%.7f'%dec }
         r = requests.post(
             'http://%s/query' % lasair_settings.SHERLOCK_SERVICE,
