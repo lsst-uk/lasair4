@@ -191,8 +191,8 @@ def create_features(objectId, candlist):
         ncand += 1
 
     # if non-solar-system and one-night stand then reject
-    if not ssnamenr and ncand <= 1:
-        return None
+#    if not ssnamenr and ncand <= 1:
+#        return None
 
     if len(jdg) > 0: jdgmax = max(jdg)
     else:            jdgmax = None

@@ -6,21 +6,36 @@ import settings
 from datetime import datetime
 from subprocess import Popen, PIPE
 from src import slack_webhook
+import signal
+
+# If we catch a SIGTERM, set a flag
+sigterm_raised = False
+
+def sigterm_handler(signum, frame):
+    global sigterm_raised
+    sigterm_raised = True
+
+signal.signal(signal.SIGTERM, sigterm_handler)
 
 def now():
     # current UTC as string
     return datetime.utcnow().strftime("%Y/%m/%dT%H:%M:%S")
 
 # if there is an argument, use it on the filter instances
-while 1:
-    arg = None
-    if len(sys.argv) > 1: arg = sys.argv[1]
+arg = None
+if len(sys.argv) > 1: arg = sys.argv[1]
 
-    # where the log files go
-    if arg:
-        log = open('/home/ubuntu/logs/' + arg + '.log', 'a')
-    else:
-        log = open('/home/ubuntu/logs/ingest.log', 'a')
+# where the log files go
+if arg:
+    log = open('/home/ubuntu/logs/' + arg + '.log', 'a')
+else:
+    log = open('/home/ubuntu/logs/ingest.log', 'a')
+
+while 1:
+    if sigterm_raised:
+        log.write("Caught SIGTERM, exiting.\n")
+        log.flush()
+        sys.exit(0)
 
     if os.path.isfile(settings.LOCKFILE):
         args = ['python3', 'filter.py']
@@ -36,6 +51,7 @@ while 1:
             # if the worher uses 'print', there will be at least the newline
             rtxt = rbin.decode('utf-8').rstrip()
             log.write(rtxt + '\n')
+            log.flush()
             print(rtxt)
 
             # scream to the humans if ERROR
@@ -50,6 +66,7 @@ while 1:
             # if the worher uses 'print', there will be at least the newline
             rtxt = 'stderr:' + rbin.decode('utf-8').rstrip()
             log.write(rtxt + '\n')
+            log.flush()
             print(rtxt)
 
 
@@ -63,16 +80,22 @@ while 1:
         # else just go ahead immediately
         elif rc == 0:
             log.write("END waiting %d seconds ...\n\n" % settings.WAIT_TIME)
-            time.sleep(settings.WAIT_TIME)
+            for i in range(settings.WAIT_TIME):
+                if sigterm_raised:
+                    log.write("Caught SIGTERM, exiting.\n")
+                    log.flush()
+                    sys.exit(0)
+                time.sleep(1)
         else:   # rc < 0
             log.write("STOP on error!")
+            log.flush()
             sys.exit(1)
 
-        log.close()
     else:
         # wait until the lockfile reappears
         rtxt = 'Waiting for lockfile ' + now()
         print(rtxt)
         log.write(rtxt + '\n')
+        log.flush()
         time.sleep(settings.WAIT_TIME)
 
