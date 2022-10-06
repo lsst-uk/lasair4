@@ -39,9 +39,10 @@ def rebuild_features(d):
         return None
     jdmax = clist[0]['jd']
     candidates = []
-    for c in clist:
-        if (jdmax - c['jd']) < 30:    # ZTF alerts have at most 30 days of candidates
-            candidates.append(c)
+#    for c in clist:
+#        if (jdmax - c['jd']) < 30:    # ZTF alerts have at most 30 days of candidates
+#            candidates.append(c)
+    candidates = clist    # changed our minds! will use all the candidates
 
     attrs = create_features(objectId, candidates)
     if not attrs:
