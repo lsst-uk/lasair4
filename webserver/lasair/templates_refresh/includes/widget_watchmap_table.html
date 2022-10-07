@@ -1,0 +1,120 @@
+
+{% load humanize %}
+
+
+<div class="card border-0 shadow h-100">
+
+
+
+    <div class="card-header d-sm-flex flex-row align-items-start flex-0 mb-0 pb-0 border-0">
+        <div class="d-block mb-sm-0">
+            {% if type == "my" and user.is_authenticated %}
+                <img class="avatar rounded" style="width:3.8rem;height:3.8rem; "  alt="Image placeholder" src="{{ request.user.profile.image.url }}">
+
+            {% else %}
+
+                <div class="icon-shape icon-shape-primary rounded me-4 me-sm-0">
+                    {% include "includes/icon_public_gallery.html" %}
+
+                </div>
+            {% endif %}
+
+
+
+
+        </div>
+        <div class="d-flex ms-4">
+            <div class="row d-block d-xl-flex align-items-start">
+                <h3 class="fw-extrabold mb-2">{% if type == "my" %}
+                    My Watchmaps
+                {% else %}
+                    Public Gallery
+                {% endif %} </h3>
+
+                <small class="text-gray-500">
+                    {% if type == "my" %}
+                        Your saved watchmaps.
+                    {% else %}
+                        Watchmaps submitted to the public gallery by other Lasair users. You can view matches or copy individual watchlists into your own collection.
+                    {% endif %}
+                </small>
+            </div>
+        </div>
+
+    </div>
+
+
+
+    <div class="card-body p-2 pt-4">
+        <div class="table-responsive p-4 pt-0">
+            <table  class="table table-flush datatable" id="{{type}}_datatable">
+                <thead class="thead-light">
+                    {% if type == "my" %}
+                        <tr>
+                            <th>Name</th>
+                            <th>Description</th>
+                            <th>Count</th>
+                            <th>Created</th>
+                        </tr></thead>
+                        <tbody>
+                            {% for watchmap in my_watchmaps %}
+                                <tr><td>
+
+                                    {% if watchmap.public %}
+                                        <div class="icon-shape me-0 me-sm-0 text-gray-400" data-bs-toggle="tooltip" data-bs-title="public list">
+                                            {% include "includes/icon_padlock_open.html" %}
+                                        </div>
+
+                                    {% else %}
+                                        <div class="icon-shape me-0 me-sm-0 text-gray-400" data-bs-toggle="tooltip" data-bs-title="private list">
+
+                                            {% include "includes/icon_padlock_closed.html" %}
+                                        </div>
+
+                                    {% endif %}
+
+
+                                    <b><a href="{% url 'watchmap_detail' watchmap.ar_id %}">{{ watchmap.name }}</a></b></td>
+                                    <td  style="white-space: normal;">{% if watchmap.description|length > 60 %}
+                                        {{ watchmap.description|slice:"0:60" }} ...
+
+                                        <a href="#" class="link-primary disable" data-bs-container="body" data-bs-toggle="popover" data-bs-trigger="focus" data-bs-placement="top" data-bs-content="{{watchmap.description}}">more</a>
+
+                                    {% else %} {{ watchmap.description|slice:"0:100" }}{% endif %} </td>
+                                    <td>{{watchmap.count|intcomma}}</td>
+                                    <td data-type="date" data-format="YYYY-MMM-DD hh:mm:ss">{{watchmap.date_created|date:"Y-m-d"}} {{watchmap.date_created|time:"H:i:s"}}</td>
+                                </tr>
+                            {% endfor %}
+                    {% else %}
+                        <tr>
+                            <th>Name</th>
+                            <th>Owner</th>
+                            <th>Description</th>
+                            <th>Count</th>
+                            <th>Created</th>
+                        </tr></thead>
+                        <tbody>
+                            {% for watchmap in other_watchmaps %}
+                                <tr><td class="align-middle">
+
+
+                                    <b><a href="{% url 'watchmap_detail' watchmap.ar_id %}">{{ watchmap.name }}</a></b></td>
+                                    <td><img alt="Image placeholder" src="{{ watchmap.profile_image }}" class="mb-1 me-1 avatar rounded-circle"> {{ watchmap.user }}</td>
+                                    <td  style="white-space: normal;">{% if watchmap.description|length > 60 %}
+                                        {{ watchmap.description|slice:"0:60" }} ...
+
+                                        <a href="#" class="link-primary disable" data-bs-container="body" data-bs-toggle="popover" data-bs-trigger="focus" data-bs-placement="top" data-bs-content="{{watchmap.description}}">more</a>
+
+                                    {% else %} {{ watchmap.description|slice:"0:100" }}{% endif %} </td>
+                                    <td>{{watchmap.count|intcomma}}</td>
+                                    <td data-type="date" data-format="YYYY-MMM-DD hh:mm:ss">{{watchmap.date_created|date:"Y-m-d"}} {{watchmap.date_created|time:"H:i:s"}}</td>
+                                </tr>
+                            {% endfor %}
+                    {% endif %}
+
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+

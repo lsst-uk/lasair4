@@ -14,7 +14,7 @@ def add_filter_query_metadata(
     filterQueryDicts = add_filter_query_metadata(filter_queries)
     ```           
     """
-    # from lasair.watchlist_catalogue.models import Watchlists, WatchlistCones
+    # from lasair.watchlist.models import Watchlists, WatchlistCones
     updatedFilterQueryLists = []
     real_sql = []
     for fqDict, fq in zip(filter_queries.values(), filter_queries):
