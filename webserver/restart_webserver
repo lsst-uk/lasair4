@@ -10,7 +10,7 @@ mod_wsgi-express setup-server \
 --working-directory /home/ubuntu/lasair4/webserver/ \
 --python-path       /home/ubuntu/lasair4/webserver/ \
 --url-alias /lasair/static static \
---url-alias /media media \
+--url-alias /media /home/ubuntu/lasair4/webserver/lasair/media \
 --application-type module lasair.wsgi \
 --server-root $APACHEPATH \
 --port $PORT \
