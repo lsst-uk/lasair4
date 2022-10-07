@@ -5,8 +5,8 @@ from django.shortcuts import render
 from django.shortcuts import render, get_object_or_404, redirect
 from django.db.models import Q
 from lasair.annotator.models import Annotators
-from lasair.watchlist_region.models import Region
-from lasair.watchlist_catalogue.models import Watchlists
+from lasair.watchmap.models import Watchmap
+from lasair.watchlist.models import Watchlists
 from confluent_kafka import Producer, KafkaError, admin
 from django.views.decorators.csrf import csrf_exempt
 from lasair.db_schema import get_schema, get_schema_dict, get_schema_for_query_selected
@@ -115,12 +115,12 @@ def handle_myquery(request, mq_id=None):
     if logged_in:
         email = request.user.email
         watchlists = Watchlists.objects.filter(Q(user=request.user) | Q(public__gte=1))
-        regions = Region.objects.filter(Q(user=request.user) | Q(public__gte=1))
+        watchmaps = Watchmap.objects.filter(Q(user=request.user) | Q(public__gte=1))
         annotators = Annotators.objects.filter(Q(user=request.user) | Q(public__gte=1))
     else:
         email = ''
         watchlists = Watchlists.objects.filter(public__gte=1)
-        regions = Region.objects.filter(public__gte=1)
+        watchmaps = Watchmap.objects.filter(public__gte=1)
         annotators = Annotators.objects.filter(public__gte=1)
 
     if mq_id is None:
@@ -168,7 +168,7 @@ def handle_myquery(request, mq_id=None):
             return render(request, 'queryform.html', {
                 'myquery': myquery,
                 'watchlists': watchlists,
-                'regions': regions,
+                'watchmaps': watchmaps,
                 'annotators': annotators,
                 'topic': tn,
                 'is_owner': True,
@@ -183,7 +183,7 @@ def handle_myquery(request, mq_id=None):
             message += 'New query'
             return render(request, 'queryform.html', {
                 'watchlists': watchlists,
-                'regions': regions,
+                'watchmaps': watchmaps,
                 'annotators': annotators,
                 'random': '%d' % random.randrange(1000),
                 'email': email,
@@ -279,7 +279,7 @@ def handle_myquery(request, mq_id=None):
         return render(request, 'queryform.html', {
             'myquery': myquery,
             'watchlists': watchlists,
-            'regions': regions,
+            'watchmaps': watchmaps,
             'annotators': annotators,
             'topic': tn,
             'is_owner': is_owner,
@@ -294,7 +294,7 @@ def handle_myquery(request, mq_id=None):
     return render(request, 'queryform.html', {
         'myquery': myquery,
         'watchlists': watchlists,
-        'regions': regions,
+        'watchmaps': watchmaps,
         'annotators': annotators,
         'topic': myquery.topic_name,
         'is_owner': is_owner,
@@ -321,11 +321,11 @@ def querylist(request, which):
 
     if request.user.is_authenticated:
         watchlists = Watchlists.objects.filter(Q(user=request.user) | Q(public__gte=1))
-        regions = Region.objects.filter(Q(user=request.user) | Q(public__gte=1))
+        watchmaps = Watchmap.objects.filter(Q(user=request.user) | Q(public__gte=1))
         annotators = Annotators.objects.filter(Q(user=request.user) | Q(public__gte=1))
     else:
         watchlists = Watchlists.objects.filter(public__gte=1)
-        regions = Region.objects.filter(public__gte=1)
+        watchmaps = Watchmap.objects.filter(public__gte=1)
         annotators = Annotators.objects.filter(public__gte=1)
 
     promoted_queries = filter_query.objects.filter(public=2)
@@ -337,7 +337,7 @@ def querylist(request, which):
         'is_authenticated': request.user.is_authenticated,
         'myqueries': query_list(myqueries),
         'watchlists': watchlists,
-        'regions': regions,
+        'watchmaps': watchmaps,
         'annotators': annotators,
         'public_queries': query_list(public_queries)
     })

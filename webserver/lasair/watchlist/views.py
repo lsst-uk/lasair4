@@ -1,9 +1,9 @@
-from .forms import CatalogueWatchlistForm, UpdateCatalogueWatchlistForm
+from .forms import WatchlistForm, UpdateWatchlistForm
 import time
 import random
 import json
 from subprocess import Popen, PIPE
-from lasair.watchlist_catalogue.models import Watchlists, WatchlistCones
+from lasair.watchlist.models import Watchlists, WatchlistCones
 from django.http import HttpResponse
 from django.contrib.auth.models import User
 from django.views.decorators.csrf import csrf_exempt
@@ -15,11 +15,11 @@ from django.contrib import messages
 from src import db_connect
 import sys
 from lasair.db_schema import get_schema_dict
-from . import handle_uploaded_file, add_watchlist_catalogue_metadata
+from . import handle_uploaded_file, add_watchlist_metadata
 sys.path.append('../common')
 
 
-def watchlist_catalogue_download(request, wl_id):
+def watchlist_download(request, wl_id):
     """*download the original watchlist*
 
     **Key Arguments:**
@@ -32,7 +32,7 @@ def watchlist_catalogue_download(request, wl_id):
     ```python
     urlpatterns = [
         ...
-        path('watchlist-catalogues/create/', views.watchlist_catalogue_create, name='watchlist_catalogue_create'),
+        path('watchlists/create/', views.watchlist_create, name='watchlist_create'),
         ...
     ]
     ```
@@ -64,8 +64,8 @@ def watchlist_catalogue_download(request, wl_id):
     return response
 
 
-def watchlist_catalogue_detail(request, wl_id):
-    """*return the resulting matches of a watchlist catalogue*
+def watchlist_detail(request, wl_id):
+    """*return the resulting matches of a watchlist*
 
     **Key Arguments:**
 
@@ -77,7 +77,7 @@ def watchlist_catalogue_detail(request, wl_id):
     ```python
     urlpatterns = [
         ...
-        path('watchlist-catalogues/<int:wl_id>/', views.watchlist_catalogue_detail, name='watchlist_catalogue_detail'),
+        path('watchlists/<int:wl_id>/', views.watchlist_detail, name='watchlist_detail'),
         ...
     ]
     ```
@@ -177,9 +177,9 @@ WHERE c.wl_id=%d LIMIT 100
             if k not in schema:
                 schema[k] = "custom column"
 
-    form = UpdateCatalogueWatchlistForm(instance=watchlist)
+    form = UpdateWatchlistForm(instance=watchlist)
 
-    return render(request, 'watchlist_catalogue/watchlist_catalogue_detail.html', {
+    return render(request, 'watchlist/watchlist_detail.html', {
         'watchlist': watchlist,
         'conelist': conelist,
         'count': len(conelist),
@@ -192,8 +192,8 @@ WHERE c.wl_id=%d LIMIT 100
 
 
 @ csrf_exempt
-def watchlist_catalogue_index(request):
-    """*Return list of all watchlist catalogues viewable by user*
+def watchlist_index(request):
+    """*Return list of all watchlists viewable by user*
 
     **Key Arguments:**
 
@@ -204,7 +204,7 @@ def watchlist_catalogue_index(request):
     ```python
     urlpatterns = [
         ...
-        path('watchlist-catalogues/', views.watchlist_catalogue_index, name='watchlist_catalogue_index'),
+        path('watchlists/', views.watchlist_index, name='watchlist_index'),
         ...
     ]
     ```
@@ -236,15 +236,15 @@ def watchlist_catalogue_index(request):
 
     # public watchlists belong to the anonymous user
     other_watchlists = Watchlists.objects.filter(public__gte=1)
-    other_watchlists = add_watchlist_catalogue_metadata(other_watchlists, remove_duplicates=True)
+    other_watchlists = add_watchlist_metadata(other_watchlists, remove_duplicates=True)
 
     if request.user.is_authenticated:
         my_watchlists = Watchlists.objects.filter(user=request.user)
-        my_watchlists = add_watchlist_catalogue_metadata(my_watchlists)
+        my_watchlists = add_watchlist_metadata(my_watchlists)
     else:
         my_watchlists = None
 
-    return render(request, 'watchlist_catalogue/watchlist_catalogue_index.html',
+    return render(request, 'watchlist/watchlist_index.html',
                   {'my_watchlists': my_watchlists,
                    'random': '%d' % random.randrange(1000),
                    'other_watchlists': other_watchlists,
@@ -252,8 +252,8 @@ def watchlist_catalogue_index(request):
                    'message': message})
 
 
-def watchlist_catalogue_create(request):
-    """*create a new watchlist catalogue*
+def watchlist_create(request):
+    """*create a new watchlist*
 
     **Key Arguments:**
 
@@ -264,7 +264,7 @@ def watchlist_catalogue_create(request):
     ```python
     urlpatterns = [
         ...
-        path('watchlist-catalogues/create/', views.watchlist_catalogue_create, name='watchlist_catalogue_create'),
+        path('watchlists/create/', views.watchlist_create, name='watchlist_create'),
         ...
     ]
     ```
@@ -273,7 +273,7 @@ def watchlist_catalogue_create(request):
     # SUBMISSION OF NEW WATCHLIST
     message = ""
     if request.method == "POST" and request.user.is_authenticated:
-        form = CatalogueWatchlistForm(request.POST, request.FILES)
+        form = WatchlistForm(request.POST, request.FILES)
         if form.is_valid():
             form.save()
 
@@ -328,12 +328,12 @@ def watchlist_catalogue_create(request):
 
             watchlistname = form.cleaned_data.get('name')
             messages.success(request, f'The {watchlistname} catalogue watchlist has been successfully created')
-            return redirect('watchlist_catalogue_index')
+            return redirect('watchlist_index')
     else:
-        form = CatalogueWatchlistForm()
-    return render(request, 'watchlist_catalogue/watchlist_catalogue_create.html', {'form': form})
+        form = WatchlistForm()
+    return render(request, 'watchlist/watchlist_create.html', {'form': form})
 
-    # return render(request, 'watchlist_catalogue/watchlist_catalogue_create.html',
+    # return render(request, 'watchlist/watchlist_create.html',
     #               {'random': '%d' % random.randrange(1000),
     #                'authenticated': request.user.is_authenticated
     #                })

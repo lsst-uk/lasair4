@@ -1,6 +1,6 @@
 from django.apps import AppConfig
 
 
-class WatchlistCatalogueConfig(AppConfig):
+class WatchmapConfig(AppConfig):
     default_auto_field = 'django.db.models.BigAutoField'
-    name = 'lasair.watchlist_catalogue'
+    name = 'lasair.watchmap'

@@ -3,7 +3,7 @@ from .models import Watchlists
 from crispy_forms.helper import FormHelper
 
 
-class CatalogueWatchlistForm(forms.ModelForm):
+class WatchlistForm(forms.ModelForm):
 
     cones_textarea = forms.CharField(widget=forms.Textarea(attrs={'rows': 7, 'placeholder': 'Paste a source list. RA and Dec in decimal degrees, a unique source ID and an optional source-specific association radius in arcsec\n\nRA, Dec, ID <,radius>\nRA, Dec, ID <,radius>\n...'}))
     cones_file = forms.FileField()
@@ -23,7 +23,7 @@ class CatalogueWatchlistForm(forms.ModelForm):
         fields = ['name', 'description', 'active', 'public', 'radius', 'cones_textarea', 'cones_file']
 
     def clean(self):
-        cleaned_data = super(CatalogueWatchlistForm, self).clean()
+        cleaned_data = super(WatchlistForm, self).clean()
         conetext = cleaned_data.get("cones_textarea")
         conefile = cleaned_data.get("cones_file")
         if not conetext and not conefile and 1 == 0:
@@ -31,10 +31,10 @@ class CatalogueWatchlistForm(forms.ModelForm):
 
     def save(self, commit=True):
         # do something with self.cleaned_data['temp_id']
-        return super(CatalogueWatchlistForm, self).save(commit=commit)
+        return super(WatchlistForm, self).save(commit=commit)
 
 
-class UpdateCatalogueWatchlistForm(forms.ModelForm):
+class UpdateWatchlistForm(forms.ModelForm):
 
     class Meta:
         model = Watchlists

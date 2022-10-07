@@ -38,8 +38,8 @@ urlpatterns = [
     path('', include('lasair.object.urls')),
     path('', include('lasair.search.urls')),
     path('', include('lasair.status.urls')),
-    path('', include('lasair.watchlist_catalogue.urls')),
-    path('', include('lasair.watchlist_region.urls')),
+    path('', include('lasair.watchlist.urls')),
+    path('', include('lasair.watchmap.urls')),
     path('', include('users.urls')),
     path("__reload__/", include("django_browser_reload.urls")),
 ]

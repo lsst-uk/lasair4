@@ -4,7 +4,7 @@ import math
 import ephem
 from datetime import datetime, timedelta
 from lasair.lightcurves import lightcurve_fetcher
-from lasair.watchlist_catalogue.models import Watchlists
+from lasair.watchlist.models import Watchlists
 from django.db.models import Q
 from django.views.decorators.csrf import csrf_exempt
 from django.template.context_processors import csrf

@@ -12,16 +12,16 @@
                         <div class="row d-block d-xl-flex align-items-start">
                             <div class="col-4 col-xl-1 text-xl-center mb-3 mb-xl-0 d-flex align-items-center justify-content-xl-start">
                                 <div class="icon-shape icon-shape-tertiary rounded me-1 me-sm-0">
-                                    {% include "includes/icon_watchlist_catalogue.html" %}
+                                    {% include "includes/icon_watchlist.html" %}
                                 </div>
                             </div>
                             <div class="col-12 col-xl-10 px-xl-0">
                                 <div class="d-block">
 
-                                    <h3 class="fw-extrabold mb-2">Create a New Catalogue Watchlists</h3>
+                                    <h3 class="fw-extrabold mb-2">Create a New Watchlists</h3>
                                 </div>
                                 <small class="text-gray-500">
-                                    A Catalogue Watchlist is composed of a set of locations in the sky, together with an association radius in arcseconds. These locations are presumably coordinates of sources of specific interest to you. Use a Catalogue Watchlist to be alerted of transient events found in association with any of these sources. Your Catalogue Watchlists will appear in the </em>My Catalogue Watchlists</em> of the Catalogue Watchlists index.
+                                    A Watchlist is composed of a set of locations in the sky, together with an association radius in arcseconds. These locations are presumably coordinates of sources of specific interest to you. Use a Watchlist to be alerted of transient events found in association with any of these sources. Your Watchlists will appear in the </em>My Watchlists</em> of the Watchlists index.
                         </small>
                     </div>
                 </div>
@@ -32,7 +32,7 @@
     {% if user.is_authenticated %}
         <div class="col-12 col-md-6 mb-4">
             <div class="bg-white border-0 rounded border-light p-4 p-lg-5 w-100 fmxw-500">
-                {% include "includes/widget_watchlist_catalogue_create_form.html" with type="my" position="auto" %}
+                {% include "includes/widget_watchlist_create_form.html" with type="my" position="auto" %}
             </div>
         </div>
     {% endif %}

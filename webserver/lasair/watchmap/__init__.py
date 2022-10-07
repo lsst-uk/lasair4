@@ -5,7 +5,7 @@ import matplotlib.pyplot as plt
 from src import db_connect
 
 
-def add_watchlist_region_metadata(
+def add_watchmap_metadata(
         watchlists,
         remove_duplicates=False):
     """*add extra metadata to the watchlists and return a list of watchlist dictionaries*
@@ -18,7 +18,7 @@ def add_watchlist_region_metadata(
     **Usage:**
 
     ```python
-    watchlistDicts = add_watchlist_region_metadata(watchlists)
+    watchlistDicts = add_watchmap_metadata(watchlists)
     ```           
     """
 

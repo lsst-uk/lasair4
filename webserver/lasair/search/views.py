@@ -2,9 +2,12 @@ from django.shortcuts import render
 from . import conesearch_impl, readcone, distance, sexra, sexde
 import re
 from src import db_connect
+from lasair.db_schema import get_schema_dict
 
 
-def search(request):
+def search(
+        request,
+        query=False):
     """*return conesearch results (search data within request body)*
 
     **Key Arguments:**
@@ -23,8 +26,8 @@ def search(request):
     """
     if request.method == 'POST':
         query = request.POST['query']
-        results = do_search(query)
-        print(results)
+    if query:
+        results, schema = do_search(query)
         json_checked = False
         if 'json' in request.POST and request.POST['json'] == 'on':
             json_checked = True
@@ -33,7 +36,7 @@ def search(request):
         if json_checked:
             return HttpResponse(json.dumps(results, indent=2), content_type="application/json")
         else:
-            return render(request, 'search/search.html', {'results': results})
+            return render(request, 'search/search.html', {'results': results, 'schema': schema, 'query': query})
     else:
         return render(request, 'search/search.html', {})
 
@@ -59,18 +62,35 @@ def do_search(
     msl = db_connect.remote()
     cursor = msl.cursor(buffered=True, dictionary=True)
 
-    objectName = re.compile(r'^\w\S*', re.S)
+    query = query.strip()
+
+    objectName = re.compile(r'^[a-zA-Z]\S*', re.S)
     objectMatch = objectName.match(query)
+
+    queries = []
+    results = []
+
+    schema = get_schema_dict('objects')
 
     if objectMatch:
         objectName = objectMatch.group()
+        print(objectName)
 
-        query = f"select {objectColumns} from objects o where o.objectId = '{objectName}'"
+        queries.append(f"select {objectColumns} from objects o where o.objectId = '{objectName}'")
+        queries.append(f"SELECT {objectColumns} FROM objects o, crossmatch_tns t, watchlist_cones w, watchlist_hits h where w.wl_id = 141 and w.cone_id=h.cone_id and h.objectId=o.objectId and t.tns_name = w.name and (w.name = '{objectName.replace('AT','').replace('SN','').replace('KN','')}' or LOCATE('{objectName}' ,t.disc_int_name))")
+        queries.append(f"SELECT {objectColumns} FROM objects o, sherlock_classifications s where s.objectId=o.objectId and s.catalogue_object_id = '{objectName}'")
 
-        cursor.execute(query)
-        results = cursor.fetchall()
+        for q in queries:
+            cursor.execute(q)
+            results += cursor.fetchall()
 
-    return results
+        print("HERE")
+
+    else:
+        results = readcone(query)
+        print(results)
+
+    return results, schema
 
 # use the tab-trigger below for new function
 # xt-def-simple-function-template

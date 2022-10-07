@@ -2,8 +2,8 @@ from django.db import models
 from django.contrib.auth.models import User
 
 
-class Region(models.Model):
-    """Region.
+class Watchmap(models.Model):
+    """Watchmap.
     """
 
     ar_id = models.AutoField(primary_key=True)
