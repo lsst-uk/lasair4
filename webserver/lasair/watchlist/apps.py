@@ -1,6 +1,6 @@
 from django.apps import AppConfig
 
 
-class WatchlistRegionConfig(AppConfig):
+class WatchlistConfig(AppConfig):
     default_auto_field = 'django.db.models.BigAutoField'
-    name = 'lasair.watchlist_region'
+    name = 'lasair.watchlist'

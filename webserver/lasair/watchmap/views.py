@@ -1,4 +1,4 @@
-from .models import Region
+from .models import Watchmap
 import tempfile
 import io
 import base64
@@ -19,41 +19,41 @@ from django.template.context_processors import csrf
 from django.shortcuts import render, get_object_or_404
 from src import db_connect
 import sys
-from . import bytes2string, string2bytes, make_image_of_MOC, add_watchlist_region_metadata
+from . import bytes2string, string2bytes, make_image_of_MOC, add_watchmap_metadata
 sys.path.append('../common')
 
 
-def watchlist_region_download(request, ar_id):
-    """*download the original region file used to create the watchlist region*
+def watchmap_download(request, ar_id):
+    """*download the original watchmap file used to create the Watchmap*
 
     **Key Arguments:**
 
     - `request` -- the original request
-    - `ar_id` -- UUID of the watchlist region
+    - `ar_id` -- UUID of the Watchmap
 
     **Usage:**
 
     ```python
     urlpatterns = [
         ...
-         path('watchlist-regions/<int:ar_id>/file/', views.watchlist_region_download, name='watchlist_region_download'),
+         path('watchmaps/<int:ar_id>/file/', views.watchmap_download, name='watchmap_download'),
         ...
     ]
     ```           
     """
     message = ''
-    region = get_object_or_404(Region, ar_id=ar_id)
+    watchmap = get_object_or_404(Watchmap, ar_id=ar_id)
 
-    is_owner = (request.user.is_authenticated) and (request.user == region.user)
-    is_public = (region.public == 1)
+    is_owner = (request.user.is_authenticated) and (request.user == Watchmap.user)
+    is_public = (Watchmap.public == 1)
     is_visible = is_owner or is_public
     if not is_visible:
         return render(request, 'error.html', {
-            'message': "This region is private and not visible to you"})
+            'message': "This watchmap is private and not visible to you"})
 
-    moc = string2bytes(region.moc)
+    moc = string2bytes(Watchmap.moc)
 
-    filename = slugify(region.name) + '.fits'
+    filename = slugify(Watchmap.name) + '.fits'
     tmpfilename = tempfile.NamedTemporaryFile().name + '.fits'
     f = open(tmpfilename, 'wb')
     f.write(moc)
@@ -65,51 +65,51 @@ def watchlist_region_download(request, ar_id):
     return r
 
 
-def watchlist_region_detail(request, ar_id):
+def watchmap_detail(request, ar_id):
     """*summary of function*
 
     **Key Arguments:**
 
     - `request` -- the original request
-    - `ar_id` -- UUID of the watchlist region
+    - `ar_id` -- UUID of the Watchmap
 
     **Usage:**
 
     ```python
     urlpatterns = [
         ...
-        path('watchlist-regions/<int:ar_id>/', views.watchlist_region_detail, name='watchlist_region_detail'),
+        path('watchmaps/<int:ar_id>/', views.watchmap_detail, name='watchmap_detail'),
         ...
     ]
     ```           
     """
     message = ''
-    region = get_object_or_404(Region, ar_id=ar_id)
+    watchmap = get_object_or_404(Watchmap, ar_id=ar_id)
 
-    is_owner = (request.user.is_authenticated) and (request.user == region.user)
-    is_public = (region.public == 1)
+    is_owner = (request.user.is_authenticated) and (request.user == Watchmap.user)
+    is_public = (Watchmap.public == 1)
     is_visible = is_owner or is_public
     if not is_visible:
         return render(request, 'error.html', {
-            'message': "This region is private and not visible to you"})
+            'message': "This watchmap is private and not visible to you"})
 
     if request.method == 'POST' and is_owner:
         if 'name' in request.POST:
-            region.name = request.POST.get('name')
-            region.description = request.POST.get('description')
+            Watchmap.name = request.POST.get('name')
+            Watchmap.description = request.POST.get('description')
 
             if request.POST.get('active'):
-                region.active = 1
+                Watchmap.active = 1
             else:
-                region.active = 0
+                Watchmap.active = 0
 
             if request.POST.get('public'):
-                region.public = 1
+                Watchmap.public = 1
             else:
-                region.public = 0
+                Watchmap.public = 0
 
-            region.save()
-            message += 'region updated'
+            Watchmap.save()
+            message += 'watchmap updated'
 
     msl = db_connect.readonly()
     cursor = msl.cursor()
@@ -122,18 +122,18 @@ def watchlist_region_detail(request, ar_id):
     for row in cursor:
         objIds.append(row[0])
 
-    return render(request, 'watchlist_region/watchlist_region_detail.html', {
-        'region': region,
+    return render(request, 'watchmap/watchmap_detail.html', {
+        'watchmap': watchmap,
         'objIds': objIds,
-        'mocimage': region.mocimage,
+        'mocimage': Watchmap.mocimage,
         'count': count,
         'is_owner': is_owner,
         'message': message})
 
 
 @csrf_exempt
-def watchlist_region_index(request):
-    """*return a list of public and user owned watchlist regions*
+def watchmap_index(request):
+    """*return a list of public and user owned watchmaps*
 
     **Key Arguments:**
 
@@ -144,7 +144,7 @@ def watchlist_region_index(request):
     ```python
     urlpatterns = [
         ...
-        path('watchlist-regions/', views.watchlist_region_index, name='watchlist_region_index'),
+        path('watchmaps/', views.watchmap_index, name='watchmap_index'),
         ...
     ]
     ```           
@@ -153,49 +153,49 @@ def watchlist_region_index(request):
     if request.method == 'POST' and request.user.is_authenticated:
         delete = request.POST.get('delete')
 
-        if delete == None:   # create new region
+        if delete == None:   # create new watchmap
 
             t = time.time()
             name = request.POST.get('name')
             description = request.POST.get('description')
 
-            if 'region_file' in request.FILES:
-                fits_bytes = (request.FILES['region_file']).read()
+            if 'watchmap_file' in request.FILES:
+                fits_bytes = (request.FILES['watchmap_file']).read()
                 fits_string = bytes2string(fits_bytes)
                 png_bytes = make_image_of_MOC(fits_bytes)
                 png_string = bytes2string(png_bytes)
 
-                region = Region(user=request.user, name=name, description=description,
-                                moc=fits_string, mocimage=png_string, active=0)
-                region.save()
-                message += '\nRegion created successfully in %.1f sec' % (time.time() - t)
+                watchmap = Watchmap(user=request.user, name=name, description=description,
+                                    moc=fits_string, mocimage=png_string, active=0)
+                Watchmap.save()
+                message += '\nWatchmap created successfully in %.1f sec' % (time.time() - t)
             else:
                 message = '\nNo file in upload'
         else:
             ar_id = int(delete)
-            region = get_object_or_404(Region, ar_id=ar_id)
-            if request.user == region.user:
-                region.delete()
-                message = 'Region %s deleted successfully' % region.name
+            watchmap = get_object_or_404(Watchmap, ar_id=ar_id)
+            if request.user == Watchmap.user:
+                Watchmap.delete()
+                message = 'Watchmap %s deleted successfully' % Watchmap.name
 
-    other_regions = Region.objects.filter(public__gte=1)
-    other_regions = add_watchlist_region_metadata(other_regions, remove_duplicates=True)
+    other_watchmaps = Watchmap.objects.filter(public__gte=1)
+    other_watchmaps = add_watchmap_metadata(other_watchmaps, remove_duplicates=True)
     if request.user.is_authenticated:
-        my_regions = Region.objects.filter(user=request.user)
-        my_regions = add_watchlist_region_metadata(my_regions)
+        my_watchmaps = Watchmap.objects.filter(user=request.user)
+        my_watchmaps = add_watchmap_metadata(my_watchmaps)
     else:
-        my_regions = []
+        my_watchmaps = []
 
-    return render(request, 'watchlist_region/watchlist_region_index.html',
-                  {'my_regions': my_regions,
+    return render(request, 'watchmap/watchmap_index.html',
+                  {'my_watchmaps': my_watchmaps,
                    'random': '%d' % randrange(1000),
-                   'other_regions': other_regions,
+                   'other_watchmaps': other_watchmaps,
                    'authenticated': request.user.is_authenticated,
                    'message': message})
 
 
-def watchlist_region_create(request):
-    """*create a new watchlist region*
+def watchmap_create(request):
+    """*create a new Watchmap*
 
     **Key Arguments:**
 
@@ -206,12 +206,12 @@ def watchlist_region_create(request):
     ```python
     urlpatterns = [
         ...
-        path('watchlist-regions/create/', views.watchlist_region_create, name='watchlist_region_create'),
+        path('watchmaps/create/', views.watchmap_create, name='watchmap_create'),
         ...
     ]
     ```           
     """
-    return render(request, 'watchlist_region/watchlist_region_create.html',
+    return render(request, 'watchmap/watchmap_create.html',
                   {'random': '%d' % randrange(1000),
                    'authenticated': request.user.is_authenticated
                    })

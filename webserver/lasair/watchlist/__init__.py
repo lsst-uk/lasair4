@@ -1,7 +1,7 @@
 
 
 def handle_uploaded_file(f):
-    """*handle the upload of a watchlist catalogue*
+    """*handle the upload of a watchlist*
 
     **Key Arguments:**
 
@@ -16,7 +16,7 @@ def handle_uploaded_file(f):
     return f.read().decode('utf-8')
 
 
-def add_watchlist_catalogue_metadata(
+def add_watchlist_metadata(
         watchlists,
         remove_duplicates=False):
     """*add extra metadata to the watchlists and return a list of watchlist dictionaries*
@@ -29,10 +29,10 @@ def add_watchlist_catalogue_metadata(
     **Usage:**
 
     ```python
-    watchlistDicts = add_watchlist_catalogue_metadata(watchlists)
+    watchlistDicts = add_watchlist_metadata(watchlists)
     ```           
     """
-    from lasair.watchlist_catalogue.models import Watchlists, WatchlistCones
+    from lasair.watchlist.models import Watchlists, WatchlistCones
     updatedWatchlists = []
     dupCheck = []
     for wlDict, wl in zip(watchlists.values(), watchlists):

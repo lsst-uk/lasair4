@@ -26,16 +26,16 @@
         <div class="d-flex ms-4">
             <div class="row d-block d-xl-flex align-items-start">
                 <h3 class="fw-extrabold mb-2">{% if type == "my" %}
-                    My Catalogue Watchlists
+                    My Watchlists
                 {% else %}
                     Public Gallery
                 {% endif %} </h3>
 
                 <small class="text-gray-500">
                     {% if type == "my" %}
-                        Your saved catalogue based watchlists.
+                        Your saved watchlists.
                     {% else %}
-                        Catalogue based watchlists submitted to the public gallery by other Lasair users. You can view matches or copy individual watchlists into your own collection.
+                        Watchlists submitted to the public gallery by other Lasair users. You can view matches or copy individual watchlists into your own collection.
                     {% endif %}
                 </small>
             </div>
@@ -79,7 +79,7 @@
                                     {% endif %}
 
 
-                                    <b><a href="{% url 'watchlist_catalogue_detail' wl.wl_id %}">{{ wl.name }}</a></b></td>
+                                    <b><a href="{% url 'watchlist_detail' wl.wl_id %}">{{ wl.name }}</a></b></td>
                                     <td  style="white-space: normal;">{% if wl.description|length > 60 %}
                                         {{ wl.description|slice:"0:60" }} ...
 
@@ -103,7 +103,7 @@
                                 <tr><td class="align-middle">
 
 
-                                    <b><a href="{% url 'watchlist_catalogue_detail' wl.wl_id %}">{{ wl.name }}</a></b></td>
+                                    <b><a href="{% url 'watchlist_detail' wl.wl_id %}">{{ wl.name }}</a></b></td>
                                     <td><img alt="Image placeholder" src="{{ wl.profile_image }}" class="mb-1 me-1 avatar rounded-circle"> {{ wl.user }}</td>
                                     <td  style="white-space: normal;">{% if wl.description|length > 60 %}
                                         {{ wl.description|slice:"0:60" }} ...
