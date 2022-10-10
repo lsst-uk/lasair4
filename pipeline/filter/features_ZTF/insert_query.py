@@ -33,17 +33,25 @@ def make_ema(candlist):
 
         # separate the g mag (fid=1) from r mag (fid=2)
         if c['fid'] == 1:
-            f02 = math.exp(-(jd-oldgjd)/2.0)
-            f08 = math.exp(-(jd-oldgjd)/8.0)
-            f28 = math.exp(-(jd-oldgjd)/28.0)
+            try:
+                f02 = math.exp(-(jd-oldgjd)/2.0)
+                f08 = math.exp(-(jd-oldgjd)/8.0)
+                f28 = math.exp(-(jd-oldgjd)/28.0)
+            except:
+                f02 = f08 = f28 = 0.0
+
             g02 = g02*f02 + mag*(1-f02)
             g08 = g08*f08 + mag*(1-f08)
             g28 = g28*f28 + mag*(1-f28)
             oldgjd = jd
         else:
-            f02 = math.exp(-(jd-oldrjd)/2.0)
-            f08 = math.exp(-(jd-oldrjd)/8.0)
-            f28 = math.exp(-(jd-oldrjd)/28.0)
+            try:
+                f02 = math.exp(-(jd-oldrjd)/2.0)
+                f08 = math.exp(-(jd-oldrjd)/8.0)
+                f28 = math.exp(-(jd-oldrjd)/28.0)
+            except:
+                f02 = f08 = f28 = 0.0
+
             r02 = r02*f02 + mag*(1-f02)
             r08 = r08*f08 + mag*(1-f08)
             r28 = r28*f28 + mag*(1-f28)
