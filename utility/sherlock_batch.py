@@ -3,6 +3,8 @@ output lines containing the Sherlock Classification, also as ?
 (see https://github.com/lsst-uk/lasair4/blob/main/common/schema/sherlock_classifications.sql)
 
 Example: head /mnt/cephfs/missingsherlock/split/xaa | python3 sherlock_batch.py -s /opt/lasair/sherlock_settings.yaml
+
+Output schema is: objectId, ra, dec, classification, description, transient_object_id, association_type, catalogue_table_name, catalogue_object_id, catalogue_object_type, raDeg, decDeg, separationArcsec, northSeparationArcsec, eastSeparationArcsec, physical_separation_kpc, direct_distance, distance, z, photoZ, photoZErr, Mag, MagFilter, MagErr, classificationReliability, major_axis_arcsec, annotator, additional_output
 """
 
 __version__ = "0.1"
