@@ -1,14 +1,14 @@
-"""Sherlock Batch
-
-Read lines containing whitespace separated triplets of objectId, ra, dec and produce
+"""sherlock_batch reads lines containing whitespace separated triplets of objectId, ra, dec and produces
 output lines containing the Sherlock Classification, also as ?
 (see https://github.com/lsst-uk/lasair4/blob/main/common/schema/sherlock_classifications.sql)
+
+Example: head /mnt/cephfs/missingsherlock/split/xaa | python3 sherlock_batch.py -s /opt/lasair/sherlock_settings.yaml
 """
 
 __version__ = "0.1"
 
 #import warnings
-#import json
+import json
 import yaml
 import argparse
 import logging
@@ -60,10 +60,10 @@ def classify(conf, log, alerts):
     # run sherlock
     cm_by_name = {}
     if len(names) > 0:
-        log.log(logging.INFO_, "running Sherlock classifier on {:d} objects".format(len(names)))
+        log.log(logging.DEBUG, "running Sherlock classifier on {:d} objects".format(len(names)))
         classifications, crossmatches = classifier.classify()
-        log.log(logging.INFO_, "got {:d} classifications".format(len(classifications)))
-        log.log(logging.INFO_, "got {:d} crossmatches".format(len(crossmatches)))
+        log.log(logging.DEBUG, "got {:d} classifications".format(len(classifications)))
+        log.log(logging.DEBUG, "got {:d} crossmatches".format(len(crossmatches)))
         # process classfications
         for name in names:
             if name in classifications:
@@ -87,7 +87,7 @@ def classify(conf, log, alerts):
                         if key != 'rank':
                             annotations[name][key] = value
     else:
-        log.log(logging.INFO_, "not running Sherlock as no remaining alerts to process")
+        log.log(logging.INFO, "not running Sherlock as no remaining alerts to process")
 
     # add the annotations to the alerts
     n = 0
@@ -105,6 +105,13 @@ def classify(conf, log, alerts):
             n += 1
 
     return n
+
+
+def toCSV(object):
+    csv = "{},{},{},".format(object['objectId'], object['ra'], object['dec'])
+    sherlock = object['annotations']['sherlock'][0]
+    csv += ",".join(map(str,sherlock.values()))
+    return csv
 
 
 def run(conf, log):
@@ -132,7 +139,8 @@ def run(conf, log):
             break
         log.info ("batch {}".format(batch))
         classify(conf, log, objects)
-        print (objects)
+        for object in objects:
+            print(toCSV(object))
 
 
 if __name__ == '__main__':
