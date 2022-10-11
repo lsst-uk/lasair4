@@ -4,7 +4,7 @@ output lines containing the Sherlock Classification, also as ?
 
 Example: head /mnt/cephfs/missingsherlock/split/xaa | python3 sherlock_batch.py -s /opt/lasair/sherlock_settings.yaml
 
-Output schema is: objectId, ra, dec, classification, description, transient_object_id, association_type, catalogue_table_name, catalogue_object_id, catalogue_object_type, raDeg, decDeg, separationArcsec, northSeparationArcsec, eastSeparationArcsec, physical_separation_kpc, direct_distance, distance, z, photoZ, photoZErr, Mag, MagFilter, MagErr, classificationReliability, major_axis_arcsec, annotator, additional_output
+Output is JSON.
 """
 
 __version__ = "0.1"
@@ -117,6 +117,8 @@ def toCSV(object):
 
 
 def run(conf, log):
+    first = True
+    print("[")
     batch = 0
     while True:
         if conf['max_batches'] > 0 and batch == conf['max_batches']:
@@ -142,7 +144,12 @@ def run(conf, log):
         log.info ("batch {}".format(batch))
         classify(conf, log, objects)
         for object in objects:
-            print(toCSV(object))
+            if not first:
+                print (",")
+            else:
+                first = False
+            print(json.dumps(object, indent=2))
+    print("]")
 
 
 if __name__ == '__main__':
