@@ -11,7 +11,17 @@
                                 <path fill-rule="evenodd" d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z" clip-rule="evenodd"></path>
                             </svg>
                         </span>
-                        <input type="text" class="form-control" id="topbarInputIconLeft" placeholder="Search" aria-label="Search" aria-describedby="topbar-addon" name="query">
+                        <input type="text"  list="datalistOptions" class="form-control" id="topbarInputIconLeft" placeholder="Search" aria-label="Search" aria-describedby="topbar-addon" name="query" value="{{query}}">
+                        <datalist id="datalistOptions">
+                            <option value="ZTF22aafxzfb">Object Name</option>
+                            <option value="SN2022ffg">TNS Id</option>
+                            <option value="ATLAS22jsz">TNS Associated Names</option>
+                            <option value="CGCG093-074">Host Galaxy</option>
+                            <option value="153.450963 18.127326">RA Dec (decimal)</option>
+                            <option value="153.450963 18.127326 5.0">RA Dec ArsecRadius (decimal)</option>
+                            <option value="10.13:48.231 18:07.38.377 5.6">RA Dec ArsecRadius (sexigesimal)</option>
+                            <option value="10 13 48.231 |  18 07 38.377  | 5.6">RA Dec ArsecRadius (pipe separated)</option>
+                        </datalist>
                     </div>
                 </form>
                 <!-- / Search form -->
