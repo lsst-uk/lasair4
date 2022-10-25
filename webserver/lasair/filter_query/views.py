@@ -626,3 +626,217 @@ def topic_name(userid, name):
     """
     name = ''.join(e for e in name if e.isalnum() or e == '_' or e == '-' or e == '.')
     return 'lasair_' + '%d' % userid + name
+
+
+def filter_query_create(request, mq_id=None):
+    """create a new filter.
+
+    Args:
+        request:
+        mq_id:
+    """
+    logged_in = request.user.is_authenticated
+
+    return render(request, 'filter_query/filter_query_create.html', {})
+
+    message = ''
+
+    schemas = {
+        'objects': get_schema('objects'),
+        'sherlock_classifications': get_schema('sherlock_classifications'),
+        'crossmatch_tns': get_schema('crossmatch_tns'),
+        'annotations': get_schema('annotations'),
+    }
+
+    if logged_in:
+        email = request.user.email
+        watchlists = Watchlists.objects.filter(Q(user=request.user) | Q(public__gte=1))
+        watchmaps = Watchmap.objects.filter(Q(user=request.user) | Q(public__gte=1))
+        annotators = Annotators.objects.filter(Q(user=request.user) | Q(public__gte=1))
+    else:
+        email = ''
+        watchlists = Watchlists.objects.filter(public__gte=1)
+        watchmaps = Watchmap.objects.filter(public__gte=1)
+        annotators = Annotators.objects.filter(public__gte=1)
+
+    if mq_id is None:
+        # New query, returned from form
+        if request.method == 'POST' and logged_in:
+            name = request.POST.get('name')
+            description = request.POST.get('description')
+            selected = request.POST.get('selected')
+            conditions = request.POST.get('conditions')
+            tables = request.POST.get('tables')
+            try:
+                active = int(request.POST.get('active'))
+            except:
+                active = 0
+
+            public = request.POST.get('public')
+            if public == 'on':
+                public = 1
+            else:
+                public = 0
+
+            e = check_query(selected, tables, conditions)
+            if e:
+                return render(request, 'error.html', {'message': e})
+
+            sqlquery_real = build_query(selected, tables, conditions)
+            e = check_query_zero_limit(sqlquery_real)
+            if e:
+                return render(request, 'error.html', {'message': e})
+
+            tn = topic_name(request.user.id, name)
+
+            myquery = filter_query(user=request.user,
+                                   name=name, description=description,
+                                   public=public, active=active,
+                                   selected=selected, conditions=conditions, tables=tables,
+                                   real_sql=sqlquery_real, topic_name=tn)
+            myquery.save()
+
+            # after saving, delete the topic and push some records from the database
+            if myquery.active == 2:
+                message += topic_refresh(myquery.real_sql, tn, limit=10)
+
+            message += "Query saved successfully"
+            return render(request, 'queryform.html', {
+                'myquery': myquery,
+                'watchlists': watchlists,
+                'watchmaps': watchmaps,
+                'annotators': annotators,
+                'topic': tn,
+                'is_owner': True,
+                'logged_in': logged_in,
+                'email': email,
+                'new': False,
+                'newandloggedin': False,
+                'schemas': schemas,
+                'message': message})
+        else:
+            # New query, blank query form
+            message += 'New query'
+            return render(request, 'queryform.html', {
+                'watchlists': watchlists,
+                'watchmaps': watchmaps,
+                'annotators': annotators,
+                'random': '%d' % random.randrange(1000),
+                'email': email,
+                'is_owner': False,
+                'logged_in': logged_in,
+                'email': email,
+                'new': True,
+                'newandloggedin': logged_in,
+                'schemas': schemas,
+                'message': message,
+            })
+
+    # Existing query
+    myquery = get_object_or_404(filter_query, mq_id=mq_id)
+    is_owner = logged_in and (request.user == myquery.user)
+
+    if not is_owner and myquery.public == 0:
+        return render(request, 'error.html', {'message': 'This query is private'})
+
+    # Existing query, owner wants to change it
+    if request.method == 'POST' and logged_in:
+
+        #        s = ''   ####
+        #        for k,v in request.POST.items():
+        #            s += '%s --> %s<br/>' % (k,v)
+        #        return render(request, 'error.html', {'message': s})
+
+        # Delete the given query
+        if 'delete' in request.POST:
+            myquery.delete()
+            delete_stream_file(request, myquery.name)
+            return redirect('/explore')
+
+        # Copy the given query
+        if 'copy' in request.POST:
+            newname = 'Copy_Of_' + myquery.name + '_'
+            letters = string.ascii_lowercase
+            newname += ''.join(random.choice(letters) for i in range(6))
+            tn = topic_name(request.user.id, newname)
+            mq = filter_query(user=request.user, name=newname,
+                              description=myquery.description,
+                              public=0, active=0,
+                              selected=myquery.selected,
+                              conditions=myquery.conditions, tables=myquery.tables,
+                              real_sql=myquery.real_sql, topic_name=tn)
+            mq.save()
+
+            # after saving, delete the topic and push some records from the database
+            if myquery.active == 2:
+                message + topic_refresh(myquery.real_sql, tn, limit=10)
+
+            message += 'Query copied<br/>'
+            return redirect('/query/%d/' % mq.mq_id)
+
+        # Update the given query from the post
+        else:
+            myquery.name = request.POST.get('name')
+            myquery.description = request.POST.get('description')
+            myquery.selected = request.POST.get('selected')
+            myquery.tables = request.POST.get('tables')
+            myquery.conditions = request.POST.get('conditions')
+            public = request.POST.get('public')
+            e = check_query(myquery.selected, myquery.tables, myquery.conditions)
+            if e:
+                return render(request, 'error.html', {'message': str(e) + '<br/>'})
+
+            myquery.real_sql = build_query(myquery.selected, myquery.tables, myquery.conditions)
+            e = check_query_zero_limit(myquery.real_sql)
+            if e:
+                return render(request, 'error.html', {'message': str(e) + '<br/>'})
+
+            tn = topic_name(request.user.id, myquery.name)
+            myquery.topic_name = tn
+            try:
+                myquery.active = int(request.POST.get('active'))
+            except:
+                myquery.active = 0
+
+            if public == 'on':
+                if myquery.public is None or myquery.public == 0:
+                    myquery.public = 1  # if set to 1 or 2 leave it as it is
+            else:
+                myquery.public = 0
+            delete_stream_file(request, myquery.name)
+
+            # after saving, delete the topic and push some records from the database
+            if myquery.active == 2:
+                message += topic_refresh(myquery.real_sql, tn, limit=10)
+
+            message += 'Query %s updated<br/>' % myquery.name
+
+        myquery.save()
+        return render(request, 'queryform.html', {
+            'myquery': myquery,
+            'watchlists': watchlists,
+            'watchmaps': watchmaps,
+            'annotators': annotators,
+            'topic': tn,
+            'is_owner': is_owner,
+            'logged_in': logged_in,
+            'email': email,
+            'new': False,
+            'newandloggedin': False,
+            'schemas': schemas,
+            'message': message})
+
+    # Existing query, view it
+    return render(request, 'queryform.html', {
+        'myquery': myquery,
+        'watchlists': watchlists,
+        'watchmaps': watchmaps,
+        'annotators': annotators,
+        'topic': myquery.topic_name,
+        'is_owner': is_owner,
+        'logged_in': logged_in,
+        'email': email,
+        'new': False,
+        'newandloggedin': False,
+        'schemas': schemas,
+        'message': message})
