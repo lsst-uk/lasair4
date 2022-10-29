@@ -21,15 +21,8 @@ def now():
     # current UTC as string
     return datetime.utcnow().strftime("%Y/%m/%dT%H:%M:%S")
 
-# if there is an argument, use it on the filter instances
-arg = None
-if len(sys.argv) > 1: arg = sys.argv[1]
-
 # where the log files go
-if arg:
-    log = open('/home/ubuntu/logs/' + arg + '.log', 'a')
-else:
-    log = open('/home/ubuntu/logs/ingest.log', 'a')
+log = open('/home/ubuntu/logs/ingest.log', 'a')
 
 while 1:
     if sigterm_raised:
@@ -38,8 +31,8 @@ while 1:
         sys.exit(0)
 
     if os.path.isfile(settings.LOCKFILE):
-        args = ['python3', 'filter.py']
-        if arg: args.append(arg)
+        # args on the command line passed to filter.py
+        args = ['python3', 'filter.py'] + sys.argv[1:]
         print('------', now())
         process = Popen(args, stdout=PIPE, stderr=PIPE)
 
