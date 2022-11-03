@@ -78,12 +78,12 @@ def main(args):
     t = time.time()
     
     conf = {
-        'bootstrap.servers': '%s' % settings.KAFKA_SERVER,
-        'enable.auto.commit': False,   # require explicit commit!
-        'group.id':           group_id,
-        'default.topic.config': {
-             'auto.offset.reset': 'smallest'
-        }}
+        'bootstrap.servers'   : '%s' % settings.KAFKA_SERVER,
+        'enable.auto.commit'  : False,   # require explicit commit!
+        'group.id'            : group_id,
+        'max.poll.interval.ms': 20*60*1000,  # 20 minute timeout in case queries take time
+        'default.topic.config': { 'auto.offset.reset': 'smallest' }
+    }
     print(conf, topic_in)
     try:
         consumer = confluent_kafka.Consumer(conf)
