@@ -8,13 +8,11 @@ Filter code for Lasair.
     send data to main db with mysql --host
 
 Usage:
-    filter.py [--nprocess=NPROCESS]
-              [--maxalert=MAX]
+    filter.py [--maxalert=MAX]
               [--group_id=GID]
               [--topic_in=TIN]
 
 Options:
-    --nprocess=NP      Number of processes to use [default:1]
     --maxalert=MAX     Number of alerts to process, default is from settings.
     --group_id=GID     Group ID for kafka, default is from settings
     --topic_in=TIN     Kafka topic to use, default is from settings
@@ -24,6 +22,7 @@ import os,sys
 sys.path.append('../../common')
 import settings
 import time, tempfile
+import confluent_kafka
 from docopt import docopt
 from socket import gethostname
 from datetime import datetime
@@ -33,6 +32,7 @@ import run_active_queries
 from check_alerts_watchlists import get_watchlist_hits, insert_watchlist_hits
 from check_alerts_areas import get_area_hits, insert_area_hits
 from counts import since_midnight, grafana_today
+from consume_alerts import kafka_consume
 from subprocess import Popen, PIPE
 import signal
 
@@ -47,11 +47,6 @@ def main(args):
     else:
         topic_in  = 'ztf_sherlock'
 
-    if args['--nprocess']:
-        nprocess = int(args['--nprocess'])
-    else:
-        nprocess = 2
-
     if args['--group_id']:
         group_id = args['--group_id']
     else:
@@ -62,7 +57,7 @@ def main(args):
     else:
         maxalert = settings.KAFKA_MAXALERTS
 
-    print('Topic_in=%s, group_id=%s, nprocess=%d, maxalert=%d' % (topic_in, group_id, nprocess, maxalert))
+    print('Topic_in=%s, group_id=%s, maxalert=%d' % (topic_in, group_id, maxalert))
 
     print('------------------')
     ##### clear out the local database
@@ -82,24 +77,27 @@ def main(args):
     print("Topic is %s" % topic_in)
     t = time.time()
     
-    # use subprocess here rather than os.system because we want child process to be in same PID group
-    args = [
-            'python3',
-            'consume_alerts.py',
-            '--maxalert','%d' % maxalert,
-            '--nprocess','%d' % nprocess,
-            '--group','%s'    % group_id,
-            '--host','%s'     % settings.KAFKA_SERVER,
-            '--topic_in',       topic_in
-            ]
-    print(' '.join(args))
-    process = Popen(args)
-    process.wait()
-    rc = process.returncode
+    conf = {
+        'bootstrap.servers'   : '%s' % settings.KAFKA_SERVER,
+        'enable.auto.commit'  : False,   # require explicit commit!
+        'group.id'            : group_id,
+        'max.poll.interval.ms': 20*60*1000,  # 20 minute timeout in case queries take time
+        'default.topic.config': { 'auto.offset.reset': 'smallest' }
+    }
+    print(conf, topic_in)
+    try:
+        consumer = confluent_kafka.Consumer(conf)
+        consumer.subscribe([topic_in])
+    except Exception as e:
+        print('ERROR cannot connect to kafka', e)
+        sys.stdout.flush()
+        return
+
+    rc = kafka_consume(consumer, maxalert)
 
     # rc is the return code from ingestion, number of alerts received
     if rc < 0:
-        rtxt = "ERROR in filter/filter: consume_alerts failed"
+        rtxt = "ERROR in filter/filter: consume_kafka failed"
         slack_webhook.send(settings.SLACK_URL, rtxt)
         print(rtxt)
         sys.stdout.flush()
@@ -233,6 +231,8 @@ def main(args):
     ##### send CSV file to central database
     t = time.time()
 
+    #### if one of the tables doesn't go through, we run this batch again
+    commit = True
     for table in tablelist:
         sql  = "LOAD DATA LOCAL INFILE '/data/mysql/%s.txt' " % table
         sql += "REPLACE INTO TABLE %s FIELDS TERMINATED BY ',' " % table
@@ -250,10 +250,21 @@ def main(args):
             slack_webhook.send(settings.SLACK_URL, rtxt)
             print(rtxt)
             sys.stdout.flush()
+            commit = False
         else:
             print(table, 'ingested to main db')
 
     print('Transfer to main database %.1f seconds' % (time.time() - t))
+    if commit:
+        consumer.commit()
+        consumer.close()
+        print('Kafka committed for this batch')
+    else:
+        print('Waiting 10 minutes')
+        consumer.close()
+        time.sleep(600)
+        sys.exit(1)
+
     sys.stdout.flush()
     
     ms = manage_status(settings.SYSTEM_STATUS)
