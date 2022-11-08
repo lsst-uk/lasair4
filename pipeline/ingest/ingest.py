@@ -3,15 +3,13 @@ Ingestion code for Lasair. Takes a stream of AVRO, splits it into
 FITS cutouts to Ceph, Lightcurves to Cassandra, and JSON versions of 
 the AVRO packets, but without the cutouts, to Kafka.
 Usage:
-    ingest.py [--nprocess=NPROCESS] 
-              [--maxalert=MAX]
+    ingest.py [--maxalert=MAX]
               [--group_id=GID]
               [--topic_in=TIN | --nid=NID] 
               [--topic_out=TOUT]
 
 Options:
-    --nprocess=NP      Number of processes to use [default:1]
-    --maxalert=MAX     Number of alerts to process, default is from settings.
+    --maxalert=MAX     Number of alerts to process, default is infinite
     --group_id=GID     Group ID for kafka, default is from settings
     --topic_in=TIN     Kafka topic to use, or
     --nid=NID          ZTF night number to use (default today)
@@ -23,16 +21,13 @@ sys.path.append('../../common')
 import settings
 from docopt import docopt
 from datetime import datetime
-from multiprocessing import Process, Manager
-import alertConsumer
 from src import objectStore, date_nid
 from src.manage_status import manage_status
-from confluent_kafka import Producer, KafkaError
+from confluent_kafka import Consumer, Producer, KafkaError
 from gkhtm import _gkhtm as htmCircle
 from cassandra.cluster import Cluster
 from gkdbutils.ingesters.cassandra import executeLoad
-import os, time, json, zlib
-import signal
+import os, time, json, zlib, signal, io, fastavro
 
 sigterm_raised = False
 
@@ -67,7 +62,6 @@ def store_images(message, store, candid):
         return 0
     except:
         return None # failure of batch
-
 
 def insert_cassandra(alert, cassandra_session):
     """insert_casssandra.
@@ -150,23 +144,23 @@ def handle_alert(alert, image_store, producer, topic_out, cassandra_session):
         image_store:
         producer:
         topic_out:
+        cassandra_session
     """
     # here is the part of the alert that has no binary images
     alert_noimages = msg_text(alert)
+    candid = alert_noimages['candidate']['candid']
+    objectId = alert_noimages['objectId']
+
     if not alert_noimages:
         print('ERROR: in ingest.py: No json in alert')
         return None  # ingest batch failed
 
-    # Call on Cassandra
+    # candidates to cassandra
     try:
         ncandidate = insert_cassandra(alert_noimages, cassandra_session)
     except:
         print('ERROR: in ingest.py: Cassandra insert failed')
         return None  # ingest batch failed
-
-    # add to CephFS
-    candid = alert_noimages['candidate']['candid']
-    objectId = alert_noimages['objectId']
 
     # store the fits images
     if image_store:
@@ -179,7 +173,7 @@ def handle_alert(alert, image_store, producer, topic_out, cassandra_session):
 #    if ss_mag > 0:
 #        return None
 
-        # produce to kafka
+    # produce to kafka
     if producer is not None:
         try:
             s = json.dumps(alert_noimages)
@@ -191,117 +185,10 @@ def handle_alert(alert, image_store, producer, topic_out, cassandra_session):
             return None   # ingest failed
     return ncandidate
 
-def run(runarg, return_dict):
-    """run.
-    """
-    global sigterm_raised
-    processID = runarg['processID']
-
-    # connect to cassandra cluster
-    try:
-        cluster = Cluster(settings.CASSANDRA_HEAD)
-        cassandra_session = cluster.connect()
-        cassandra_session.set_keyspace('lasair')
-    except Exception as e:
-        print("ERROR in ingest/ingestBatch: Cannot connect to Cassandra")
-        sys.stdout.flush()
-        cassandra_session = None
-        print(e)
-
-    try:
-        streamReader = alertConsumer.AlertConsumer(runarg['topic_in'], **runarg['consumer_conf'])
-        streamReader.__enter__()
-    except alertConsumer.EopError as e:
-        print('ERROR in ingest/ingestBatch: Cannot connect to Kafka')
-        sys.stdout.flush()
-        return
-
-    topic_out = runarg['topic_out']
-    producer_conf = {
-        'bootstrap.servers': '%s' % settings.KAFKA_SERVER,
-        'client.id': 'client-1',
-    }
-    producer = Producer(producer_conf)
-    print('Producing Kafka to %s with topic %s' % (settings.KAFKA_SERVER, topic_out))
-
-    if runarg['maxalert']:
-        maxalert = runarg['maxalert']
-    else:
-        maxalert = 50000
-
-    nalert = 0
-    ncandidate = 0
-    nuncommitted = 0
-    startt = time.time()
-    while nalert < maxalert:
-        if sigterm_raised:
-            # clean shutdown - this should stop the consumer and commit offsets
-            print("Stopping ingest")
-            sys.stdout.flush()
-            streamReader.consumer.close()
-            break
-
-        t = time.time()
-        try:
-            msg = streamReader.poll(decode=True, timeout=5)
-        except alertConsumer.EopError as e:
-            print('eop end of messages')
-            sys.stdout.flush()
-            break
-
-        if msg is None:
-            print('null message end of messages')
-            sys.stdout.flush()
-            break
-        else:
-            for alert in msg:
-                # Apply filter to each alert
-                icandidate = handle_alert(alert, runarg['image_store'], \
-                        producer, topic_out, cassandra_session)
-
-                if icandidate == None:
-                    print('Ingestion batch failed with %d alerts to be done again' % nuncommitted)
-                    return_dict[processID] = None
-                    return
-
-                nalert += 1
-                nuncommitted += 1
-                ncandidate += icandidate
-
-                if nalert%1000 == 0:
-                    print('process %d nalert %d time %.1f' % \
-                            ((processID, nalert, time.time()-startt)))
-                    sys.stdout.flush()
-
-                    # if this is not flushed, it will run out of memory
-                    if producer is not None:
-                        producer.flush()
-
-                    # commit the alerts we have read
-                    streamReader.consumer.commit()
-                    nuncommitted = 0
-
-    # finally flush
-    if producer is not None:
-        producer.flush()
-
-    # commit the alerts we have read
-    streamReader.consumer.commit()
-
-    print('INGEST %d finished with %d alerts %d candidates' \
-            % (processID, nalert, ncandidate))
-    sys.stdout.flush()
-    streamReader.__exit__(0,0,0)
-
-    # shut down the cassandra cluster
-    if cassandra_session:
-        cluster.shutdown()
-
-    return_dict[processID] = { 'nalert':nalert, 'ncandidate': ncandidate }
-
 def main(args):
     """main.
     """
+    global sigterm_raised
 
     if args['--topic_in']:
         topic_in = args['--topic_in']
@@ -310,14 +197,8 @@ def main(args):
         date = date_nid.nid_to_date(nid)
         topic_in  = 'ztf_' + date + '_programid1'
     else:
-        nid  = date_nid.nid_now()
-        date = date_nid.nid_to_date(nid)
-        topic_in  = 'ztf_' + date + '_programid1'
-
-    if args['--nprocess']:
-        nprocess = int(args['--nprocess'])
-    else:
-        nprocess = 2
+        # get all alerts from every nid
+        topic_in = '^ztf_202211.*_programid1$'
 
     if args['--topic_out']:
         topic_out = args['--topic_out']
@@ -332,26 +213,14 @@ def main(args):
     if args['--maxalert']:
         maxalert = int(args['--maxalert'])
     else:
-        maxalert = settings.KAFKA_MAXALERTS
-    
-
-    print('Topic_in=%s, topic_out=%s, group_id=%s, nprocess=%d, maxalert=%d' % (topic_in, topic_out, group_id, nprocess, maxalert))
+        maxalert = sys.maxsize  # largest possible integer
 
     try:
         fitsdir = settings.IMAGEFITS
     except:
         fitsdir = None
 
-    print('INGEST ----------', now())
-
-    consumer_conf = {
-        'bootstrap.servers': '%s' % settings.KAFKA_SERVER,
-        'group.id': group_id,
-        'enable.auto.commit': False,
-        'session.timeout.ms': 6000,
-        'default.topic.config': {'auto.offset.reset': 'smallest'}
-    }
-
+    # set up image store in shared file system
     if fitsdir and len(fitsdir) > 0:
         image_store  = objectStore.objectStore(suffix='fits', fileroot=fitsdir)
     else:
@@ -359,54 +228,138 @@ def main(args):
         sys.stdout.flush()
         image_store = None
 
-#    print('Configuration = %s' % str(conf))
+    # connect to cassandra cluster
+    try:
+        cluster = Cluster(settings.CASSANDRA_HEAD)
+        cassandra_session = cluster.connect()
+        cassandra_session.set_keyspace('lasair')
+    except Exception as e:
+        print("ERROR in ingest/ingestBatch: Cannot connect to Cassandra")
+        sys.stdout.flush()
+        cassandra_session = None
+        print(e)
 
-    print('Processes = %d' % nprocess)
-    sys.stdout.flush()
+    # set up kafka consumer
+    print('Consuming from %s' % settings.KAFKA_SERVER)
+    print('Topic_in       %s' % topic_in)
+    print('Topic_out      %s' % topic_out)
+    print('group_id       %s' % group_id)
+    print('maxalert       %d' % maxalert)
 
-    runargs = []
-    process_list = []
-    manager = Manager()
-    return_dict = manager.dict()
-    t = time.time()
-    for t in range(nprocess):
-        runarg = {
-            'processID':t, 
-            'topic_in'   : topic_in,
-            'maxalert'   : maxalert,
-            'topic_out':topic_out,
-            'image_store': image_store,
-            'consumer_conf':consumer_conf,
-        }
-        p = Process(target=run, args=(runarg, return_dict))
-        process_list.append(p)
-        p.start()
+    consumer_conf = {
+        'bootstrap.servers'   : '%s' % settings.KAFKA_SERVER,
+        'group.id'            : group_id,
+        'enable.auto.commit'  : False,
+        'max.poll.interval.ms': 20*60*1000,  # wait 20 min before forgetting me
+        'session.timeout.ms'  : 6000,
+        'default.topic.config': {'auto.offset.reset': 'smallest'}
+    }
 
-    for p in process_list:
-        p.join()
+    try:
+        consumer = Consumer(consumer_conf)
+    except:
+        print('ERROR in ingest/ingestBatch: Cannot connect to Kafka')
+        sys.stdout.flush()
+        return 1
+    consumer.subscribe([topic_in])
 
-    r = return_dict.values()
-    nalert = ncandidate = 0
-    for t in range(nprocess):
-        if r[t] == None:
-            return 2   # did not complete the batch
+    # set up kafka producer
+    producer_conf = {
+        'bootstrap.servers': '%s' % settings.KAFKA_SERVER,
+        'client.id': 'client-1',
+    }
+    producer = Producer(producer_conf)
+    print('Producing to   %s' % settings.KAFKA_SERVER)
 
-    for t in range(nprocess):
-        nalert     += r[t]['nalert']
-        ncandidate += r[t]['ncandidate']
-    print('%d alerts and %d candidates' % (nalert, ncandidate))
-    sys.stdout.flush()
+    nalert = 0        # number not yet send to manage_status
+    ncandidate = 0    # number not yet send to manage_status
+    ntotalalert = 0   # number since this program started
+    print('INGEST starts', now())
 
-    os.system('date')
+    # put status on Lasair web page
     ms = manage_status(settings.SYSTEM_STATUS)
+
+    while ntotalalert < maxalert:
+
+        msg = consumer.poll(timeout=5)
+
+        # no messages available
+        if msg is None:
+            end_batch(consumer, producer, ms, nalert, ncandidate)
+            nalert = ncandidate = 0
+            print('no more messages ... sleeping')
+            sys.stdout.flush()
+            time.sleep(600) # sleep 10 minutes
+            continue
+
+        # read the avro contents
+        try:
+            bytes_io = io.BytesIO(msg.value())
+            msg = fastavro.reader(bytes_io)
+        except:
+            print(msg.value())
+            break
+
+        for alert in msg:
+            if sigterm_raised:
+                # clean shutdown - this should stop the consumer and commit offsets
+                print("Stopping ingest")
+                sys.stdout.flush()
+                break
+
+            # Apply filter to each alert
+            icandidate = handle_alert(alert, image_store, producer, topic_out, cassandra_session)
+
+            if icandidate == None:
+                print('Ingestion failed ')
+                return 0
+
+            nalert += 1
+            ntotalalert += 1
+            ncandidate += icandidate
+
+            # every so often commit, flush, and update status
+            if nalert >= 5000:
+                end_batch(consumer, producer, ms, nalert, ncandidate)
+                nalert = ncandidate = 0
+
+        if sigterm_raised:  # need to break out of two loops if sigterm
+            break
+
+    # if we exit this loop, clean up
+    print('Shutting down')
+    end_batch(consumer, producer, ms, nalert, ncandidate)
+
+    # shut down kafka consumer
+    consumer.close()
+
+    # shut down the cassandra cluster
+    if cassandra_session:
+        cluster.shutdown()
+
+    # did we get any alerts
+    if ntotalalert > 0: return 1
+    else:               return 0
+
+def end_batch(consumer, producer, ms, nalert, ncandidate):
+    now = datetime.now()
+    date = now.strftime("%Y-%m-%d %H:%M:%S")
+    print('%s %d alerts %d candidates' % (date, nalert, ncandidate))
+    # if this is not flushed, it will run out of memory
+    if producer is not None:
+        producer.flush()
+
+    # commit the alerts we have read
+    consumer.commit()
+    sys.stdout.flush()
+
+    # update the status page
     nid  = date_nid.nid_now()
     ms.add({'today_alert':nalert, 'today_candidate':ncandidate}, nid)
-
-    if nalert > 0: return 1  # got alerts, more to come
-    else:          return 0  # got no alerts
 
 if __name__ == "__main__":
     args = docopt(__doc__)
     rc = main(args)
-    print('return code ', rc)
+    # rc=1, got alerts, more to come
+    # rc=0, got no alerts
     sys.exit(rc)
