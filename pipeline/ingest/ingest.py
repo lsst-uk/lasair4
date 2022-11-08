@@ -60,7 +60,8 @@ def store_images(message, store, candid):
             filename = '%d_%s' % (candid, cutoutType)
             store.putObject(filename, content)
         return 0
-    except:
+    except Exception as e:
+        print(e)
         return None # failure of batch
 
 def insert_cassandra(alert, cassandra_session):
