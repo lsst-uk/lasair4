@@ -31,6 +31,8 @@ class CommonLoggingTest(unittest.TestCase):
         file should exist and contain the message in the right format."""
         log = lasairLogging.getLogger("test_logger")
         log.info("Test message")
+        with open("logging_test.log", "r") as f:
+            self.assertEqual("Test message", f.readline().strip())
 
 
 if __name__ == '__main__':
