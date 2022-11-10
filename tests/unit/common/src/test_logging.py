@@ -47,21 +47,37 @@ class CommonLoggingTest(unittest.TestCase):
             self.assertRegex(f.readlines()[-1].strip(),
                              "^\\[.*\\] INFO: test_existing_logger: Test message 2")
 
-    def test_slack_logger(self):
+    def test_slack_error(self):
         """Start a logger configured to send >=ERROR to Slack (mock).
-        Send an error message. The (mock) Slack webhook should be called."""
+        Send an ERROR message. The (mock) Slack webhook should be called."""
         with unittest.mock.MagicMock() as mock_slack_webhook:
             lasairLogging.basicConfig(
-                filename="test_slack_logger.log",
+                filename="test_slack_error.log",
                 webhook=mock_slack_webhook,
                 force=True
             )
             log = lasairLogging.getLogger("test_logger")
             log.error("Test message 3")
-            with open("test_slack_logger.log", "r") as f:
+            with open("test_slack_error.log", "r") as f:
                 self.assertRegex(f.readlines()[-1].strip(),
-                                 "^\\[.*\\] ERROR: test_slack_logger: Test message 3")
+                                 "^\\[.*\\] ERROR: test_slack_error: Test message 3")
             mock_slack_webhook.send.assert_called_once()
+
+    def test_slack_info(self):
+        """Start a logger configured to send >=ERROR to Slack (mock).
+        Send an INFO message. The (mock) Slack webhook should NOT be called."""
+        with unittest.mock.MagicMock() as mock_slack_webhook:
+            lasairLogging.basicConfig(
+                filename="test_slack_info.log",
+                webhook=mock_slack_webhook,
+                force=True
+            )
+            log = lasairLogging.getLogger("test_logger")
+            log.info("Test message 4")
+            with open("test_slack_info.log", "r") as f:
+                self.assertRegex(f.readlines()[-1].strip(),
+                                 "^\\[.*\\] INFO: test_slack_info: Test message 4")
+            mock_slack_webhook.send.assert_not_called()
 
 
 if __name__ == '__main__':
