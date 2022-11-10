@@ -258,7 +258,7 @@ def main(args):
         'default.topic.config': {'auto.offset.reset': 'smallest'}
 
         # wait twice wait time before forgetting me
-        'max.poll.interval.ms': settings.WAIT_TIME*60*1000,  
+        'max.poll.interval.ms': 2*settings.WAIT_TIME*1000,  
     }
 
     try:
