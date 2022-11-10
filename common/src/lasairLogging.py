@@ -5,7 +5,11 @@ import logging
 
 
 def basicConfig(filename, slack_webhook=None, level=logging.INFO):
-    logging.basicConfig(filename=filename, level=level)
+    logging.basicConfig(
+        filename=filename,
+        level=level,
+        format="[%(asctime)s]:%(levelname)s:%(funcName)s:%(message)s"
+    )
 
 
 def getLogger(name):
