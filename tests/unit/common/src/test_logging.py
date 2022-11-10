@@ -1,7 +1,7 @@
 """Unit tests for Lasair logging module."""
-
 import context
 import lasairLogging
+import time
 import os
 import unittest, unittest.mock
 # from manage_status import manage_status
@@ -32,7 +32,7 @@ class CommonLoggingTest(unittest.TestCase):
         log = lasairLogging.getLogger("test_logger")
         log.info("Test message")
         with open("logging_test.log", "r") as f:
-            self.assertEqual("Test message", f.readline().strip())
+            self.assertEqual("INFO:test_logger:Test message", f.readline().strip())
 
 
 if __name__ == '__main__':
