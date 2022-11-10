@@ -1,8 +1,8 @@
-import sys, requests, json
+import sys, requests, json, os
 import argparse
 
 def send(url, message):
-    data = {'channel': '#general', 'text': message}
+    data = {'channel': '#general', 'text': os.uname().nodename+': '+ message}
 
     response = requests.post(url, data=json.dumps(data),
         headers={'Content-Type': 'application/json'})

@@ -29,11 +29,11 @@ from cassandra.cluster import Cluster
 from gkdbutils.ingesters.cassandra import executeLoad
 import os, time, json, zlib, signal, io, fastavro
 
-sigterm_raised = False
+stop = False
 
 def sigterm_handler(signum, frame):
-    global sigterm_raised
-    sigterm_raised = True
+    global stop
+    stop = True
     print("Caught SIGTERM")
 
 signal.signal(signal.SIGTERM, sigterm_handler)
@@ -61,7 +61,7 @@ def store_images(message, store, candid):
             store.putObject(filename, content)
         return 0
     except Exception as e:
-        print(e)
+        print('ERROR in ingest/ingest: ', e)
         return None # failure of batch
 
 def insert_cassandra(alert, cassandra_session):
@@ -153,20 +153,20 @@ def handle_alert(alert, image_store, producer, topic_out, cassandra_session):
     objectId = alert_noimages['objectId']
 
     if not alert_noimages:
-        print('ERROR: in ingest.py: No json in alert')
+        print('ERROR:  in ingest/ingest: No json in alert')
         return None  # ingest batch failed
 
     # candidates to cassandra
     try:
         ncandidate = insert_cassandra(alert_noimages, cassandra_session)
     except:
-        print('ERROR: in ingest.py: Cassandra insert failed')
+        print('ERROR in ingest/ingest: Cassandra insert failed')
         return None  # ingest batch failed
 
     # store the fits images
     if image_store:
         if store_images(alert, image_store, candid) == None:
-            print('ERROR: in ingest.py: Failed to put cutouts in file system')
+            print('ERROR: in ingest/ingest: Failed to put cutouts in file system')
             return None   # ingest batch failed
 
     # do not put known solar system objects into kafka
@@ -180,8 +180,8 @@ def handle_alert(alert, image_store, producer, topic_out, cassandra_session):
             s = json.dumps(alert_noimages)
             producer.produce(topic_out, json.dumps(alert_noimages))
         except Exception as e:
-            print("ERROR in ingest/ingestBatch: Kafka production failed for %s" % topic_out)
-            print(e)
+            print("ERROR in ingest/ingest: Kafka production failed for %s" % topic_out)
+            print("ERROR:", e)
             sys.stdout.flush()
             return None   # ingest failed
     return ncandidate
@@ -189,7 +189,7 @@ def handle_alert(alert, image_store, producer, topic_out, cassandra_session):
 def main(args):
     """main.
     """
-    global sigterm_raised
+    global stop
 
     if args['--topic_in']:
         topic_in = args['--topic_in']
@@ -199,7 +199,7 @@ def main(args):
         topic_in  = 'ztf_' + date + '_programid1'
     else:
         # get all alerts from every nid
-        topic_in = '^ztf_202211.*_programid1$'
+        topic_in = '^ztf_.*_programid1$'
 
     if args['--topic_out']:
         topic_out = args['--topic_out']
@@ -221,6 +221,11 @@ def main(args):
     except:
         fitsdir = None
 
+    # check for lockfile
+    if not os.path.isfile(settings.LOCKFILE):
+        print('Lockfile not present')
+        return  0
+
     # set up image store in shared file system
     if fitsdir and len(fitsdir) > 0:
         image_store  = objectStore.objectStore(suffix='fits', fileroot=fitsdir)
@@ -235,10 +240,9 @@ def main(args):
         cassandra_session = cluster.connect()
         cassandra_session.set_keyspace('lasair')
     except Exception as e:
-        print("ERROR in ingest/ingestBatch: Cannot connect to Cassandra")
+        print("ERROR in ingest/ingestBatch: Cannot connect to Cassandra", e)
         sys.stdout.flush()
         cassandra_session = None
-        print(e)
 
     # set up kafka consumer
     print('Consuming from %s' % settings.KAFKA_SERVER)
@@ -251,15 +255,16 @@ def main(args):
         'bootstrap.servers'   : '%s' % settings.KAFKA_SERVER,
         'group.id'            : group_id,
         'enable.auto.commit'  : False,
-        'max.poll.interval.ms': 20*60*1000,  # wait 20 min before forgetting me
-        'session.timeout.ms'  : 6000,
         'default.topic.config': {'auto.offset.reset': 'smallest'}
+
+        # wait twice wait time before forgetting me
+        'max.poll.interval.ms': settings.WAIT_TIME*60*1000,  
     }
 
     try:
         consumer = Consumer(consumer_conf)
-    except:
-        print('ERROR in ingest/ingestBatch: Cannot connect to Kafka')
+    except Exception as e:
+        print('ERROR in ingest/ingestBatch: Cannot connect to Kafka', e)
         sys.stdout.flush()
         return 1
     consumer.subscribe([topic_in])
@@ -290,7 +295,7 @@ def main(args):
             nalert = ncandidate = 0
             print('no more messages ... sleeping')
             sys.stdout.flush()
-            time.sleep(600) # sleep 10 minutes
+            time.sleep(settings.WAIT_TIME) # sleep 10 minutes
             continue
 
         # read the avro contents
@@ -298,11 +303,11 @@ def main(args):
             bytes_io = io.BytesIO(msg.value())
             msg = fastavro.reader(bytes_io)
         except:
-            print(msg.value())
+            print('ERROR in ingest/ingest: ', msg.value())
             break
 
         for alert in msg:
-            if sigterm_raised:
+            if stop:
                 # clean shutdown - this should stop the consumer and commit offsets
                 print("Stopping ingest")
                 sys.stdout.flush()
@@ -320,11 +325,15 @@ def main(args):
             ncandidate += icandidate
 
             # every so often commit, flush, and update status
-            if nalert >= 5000:
+            if nalert >= 1000:
                 end_batch(consumer, producer, ms, nalert, ncandidate)
                 nalert = ncandidate = 0
+                # check for lockfile
+                if not os.path.isfile(settings.LOCKFILE):
+                    print('Lockfile not present')
+                    stop = True
 
-        if sigterm_raised:  # need to break out of two loops if sigterm
+        if stop:  # need to break out of two loops if sigterm
             break
 
     # if we exit this loop, clean up
