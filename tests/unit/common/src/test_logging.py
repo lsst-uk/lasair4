@@ -79,6 +79,27 @@ class CommonLoggingTest(unittest.TestCase):
                                  "^\\[.*\\] INFO: test_slack_info: Test message 4")
             mock_slack_webhook.send.assert_not_called()
 
+    def test_slack_merge(self):
+        """Start a logger configured to merge similar messages. Send 10 identical
+        messages. The (mock) Slack webhook should be called once."""
+        with unittest.mock.MagicMock() as mock_slack_webhook:
+            lasairLogging.basicConfig(
+                filename="test_slack_merge.log",
+                webhook=mock_slack_webhook,
+                force=True,
+                merge=True
+            )
+            log = lasairLogging.getLogger("test_logger")
+            for i in range(10):
+                log.error("Test message 5")
+            log.error("Test message 6")
+            hostname = os.uname().nodename
+            mock_slack_webhook.send.assert_has_calls([
+                unittest.mock.call("ERROR: {}: test_slack_merge: Test message 5".format(hostname)),
+                unittest.mock.call("Suppressed 9 identical messages"),
+                unittest.mock.call("ERROR: {}: test_slack_merge: Test message 6".format(hostname))
+            ])
+
 
 if __name__ == '__main__':
     import xmlrunner

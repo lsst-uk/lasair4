@@ -6,11 +6,11 @@ import warnings
 class SlackWebhook():
     """Represents a Slack app or integration that we can send messages to."""
 
-    def __init__(self, url, channel=None):
+    def __init__(self, url: str, channel: str = None):
         self.url = url
         self.channel = channel
 
-    def send(self, message):
+    def send(self, message: str):
         """Send a message."""
         _send(self.url, message, self.channel)
 
