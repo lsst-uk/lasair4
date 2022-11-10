@@ -5,35 +5,45 @@ sys.path.append('../../common')
 import settings
 from datetime import datetime
 from subprocess import Popen, PIPE
-from src import slack_webhook
+from src import lasairLogging, slack_webhook
 import signal
 
 # If we catch a SIGTERM, set a flag
 sigterm_raised = False
 
+
 def sigterm_handler(signum, frame):
     global sigterm_raised
     sigterm_raised = True
 
+
 signal.signal(signal.SIGTERM, sigterm_handler)
+
 
 def now():
     # current UTC as string
     return datetime.utcnow().strftime("%Y/%m/%dT%H:%M:%S")
 
-# where the log files go
-log = open('/home/ubuntu/logs/ingest.log', 'a')
+
+# Set up the logger
+lasairLogging.basicConfig(
+    # TODO: Why is this called ingest.log? Can we rename it to filter.log or filter_runner.log?
+    filename='/home/ubuntu/logs/ingest.log',
+    webhook=slack_webhook.SlackWebhook(url=settings.SLACK_URL),
+    merge=True
+)
+log = lasairLogging.getLogger("filter_runner")
 
 while 1:
     if sigterm_raised:
-        log.write("Caught SIGTERM, exiting.\n")
-        log.flush()
+        log.info("Caught SIGTERM, exiting.")
+        lasairLogging.shutdown()
         sys.exit(0)
 
     if os.path.isfile(settings.LOCKFILE):
         # args on the command line passed to filter.py
         args = ['python3', 'filter.py'] + sys.argv[1:]
-        print('------', now())
+        log.info('------', now())
         process = Popen(args, stdout=PIPE, stderr=PIPE)
 
         while 1:
@@ -41,54 +51,47 @@ while 1:
             rbin = process.stdout.readline()
             if len(rbin) == 0: break
 
-            # if the worher uses 'print', there will be at least the newline
+            # if the worker uses 'print', there will be at least the newline
             rtxt = rbin.decode('utf-8').rstrip()
-            log.write(rtxt + '\n')
-            log.flush()
-            print(rtxt)
-
-            # scream to the humans if ERROR
             if rtxt.startswith('ERROR'):
-                slack_webhook.send(settings.SLACK_URL, rtxt)
+                log.error(rtxt)
+            else:
+                log.info(rtxt)
 
         while 1:
             # same with stderr
             rbin = process.stderr.readline()
             if len(rbin) == 0: break
 
-            # if the worher uses 'print', there will be at least the newline
+            # if the worker uses 'print', there will be at least the newline
             rtxt = 'stderr:' + rbin.decode('utf-8').rstrip()
-            log.write(rtxt + '\n')
-            log.flush()
-            print(rtxt)
+            log.warning(rtxt)
 
 
         process.wait()
         rc = process.returncode
 
         # if we timed out of kafka, wait a while and ask again
-        log.write(now() + '\n')
+        log.info(now())
         if rc > 0:  # try again
-            log.write("END getting more ...\n\n")
+            log.info("END getting more ...\n")
         # else just go ahead immediately
         elif rc == 0:
-            log.write("END waiting %d seconds ...\n\n" % settings.WAIT_TIME)
+            log.info("END waiting %d seconds ...\n" % settings.WAIT_TIME)
             for i in range(settings.WAIT_TIME):
                 if sigterm_raised:
-                    log.write("Caught SIGTERM, exiting.\n")
-                    log.flush()
+                    log.info("Caught SIGTERM, exiting.")
+                    lasairLogging.shutdown()
                     sys.exit(0)
                 time.sleep(1)
         else:   # rc < 0
-            log.write("STOP on error!")
-            log.flush()
+            log.warning("STOP on error!")
+            lasairLogging.shutdown()
             sys.exit(1)
 
     else:
         # wait until the lockfile reappears
         rtxt = 'Waiting for lockfile ' + now()
-        print(rtxt)
-        log.write(rtxt + '\n')
-        log.flush()
+        log.info(rtxt)
         time.sleep(settings.WAIT_TIME)
 
