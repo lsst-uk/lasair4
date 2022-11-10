@@ -6,7 +6,7 @@ from slack_webhook import SlackWebhook
 
 
 class SlackHandler(logging.Handler):
-    """Logging handler to send Slack messages"""
+    """Logging handler to send Slack messages."""
     def __init__(self, webhook: SlackWebhook):
         super().__init__()
         self.webhook = webhook
@@ -18,6 +18,7 @@ class SlackHandler(logging.Handler):
 
 
 class DuplicateFilter(logging.Filter):
+    """Filter to suppress multiple identical Slack messages."""
     def __init__(self, webhook: SlackWebhook):
         super().__init__()
         self.n_msg = 0
