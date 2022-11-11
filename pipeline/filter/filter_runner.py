@@ -1,6 +1,15 @@
 """
-Ingest proess runner. Sends args to its child and logs the outputs.
-SIGTERM is passed to those children and dealt with properly.
+Filter process runner. Sends args to its child and logs the outputs.
+It will run continously, running batch after batch. Each batch is a run of the 
+child program filter.py.
+
+The runner needs a lockfile -- usually as ~ubuntu/lockfile. If not present
+the runner continues, but looking for a lockfile every few minutes.
+
+A SIGTERM is handled and passed to the child process, which finishes the batch
+and exits cleanly. The SIGTERM also cause this runner process to exit,
+which is different from the lockfile check.
+
 Usage:
     ingest.py [--maxalert=MAX]
               [--group_id=GID]
@@ -21,6 +30,7 @@ from src import slack_webhook
 from docopt import docopt
 import signal
 
+# if this is True, the runner stops when it can and exits
 stop = False
 
 def sigterm_handler(signum, frame):
@@ -44,12 +54,14 @@ for k, v in my_args.items():
     if v != None:
         child_args.append('%s=%s' % (k,v))
 
-
-if not os.path.isfile(settings.LOCKFILE):
-    print('Lockfile not present, exiting')
-    sys.exit(0)
-
 while not stop:
+    # check for lockfile
+    if not os.path.isfile(settings.LOCKFILE):
+        print('Lockfile not present, waiting')
+        log.write('Lockfile not present, waiting\n')
+        time.sleep(settings.WAIT_TIME)
+        continue
+    
     rtxt = '======================\nFilter_runner at %s' % now()
     log.write('%s\n'% rtxt)
     print(rtxt)
@@ -77,12 +89,7 @@ while not stop:
     process.wait()
     retcode = process.returncode
 
-    # all the processes have done their batch
-    if not os.path.isfile(settings.LOCKFILE):
-        print('Lockfile not present, exiting')
-        sys.exit(0)
-    
-    if retcode == 0:   # process got no alerts
+    if retcode == 0:   # process got no alerts, so sleep a few minutes
         print('Waiting for more alerts ....')
         log.write('Waiting for more alerts ....\n')
         time.sleep(settings.WAIT_TIME)
