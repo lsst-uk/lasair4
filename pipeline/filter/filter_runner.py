@@ -1,19 +1,42 @@
-""" To be run in as 'screen' session that continuously fetches batches
 """
+Filter process runner. Sends args to its child and logs the outputs.
+It will run continously, running batch after batch. Each batch is a run of the 
+child program filter.py.
+
+The runner needs a lockfile -- usually as ~ubuntu/lockfile. If not present
+the runner continues, but looking for a lockfile every few minutes.
+
+A SIGTERM is handled and passed to the child process, which finishes the batch
+and exits cleanly. The SIGTERM also cause this runner process to exit,
+which is different from the lockfile check.
+
+Usage:
+    ingest.py [--maxalert=MAX]
+              [--group_id=GID]
+              [--topic_in=TIN]
+
+Options:
+    --maxalert=MAX     Number of alerts to process, default is infinite
+    --group_id=GID     Group ID for kafka, default is from settings
+    --topic_in=TIN     Kafka topic to use, or
+"""
+
 import os, sys, time
 sys.path.append('../../common')
 import settings
 from datetime import datetime
-from subprocess import Popen, PIPE
+from subprocess import Popen, PIPE, STDOUT
 from src import slack_webhook
+from docopt import docopt
 import signal
 
-# If we catch a SIGTERM, set a flag
-sigterm_raised = False
+# if this is True, the runner stops when it can and exits
+stop = False
 
 def sigterm_handler(signum, frame):
-    global sigterm_raised
-    sigterm_raised = True
+    global stop
+    print('Stopping by SIGTERM')
+    stop = True
 
 signal.signal(signal.SIGTERM, sigterm_handler)
 
@@ -24,71 +47,51 @@ def now():
 # where the log files go
 log = open('/home/ubuntu/logs/ingest.log', 'a')
 
-while 1:
-    if sigterm_raised:
-        log.write("Caught SIGTERM, exiting.\n")
-        log.flush()
-        sys.exit(0)
+# Deal with arguments
+my_args = docopt(__doc__)
+child_args = []
+for k, v in my_args.items():
+    if v != None:
+        child_args.append('%s=%s' % (k,v))
 
-    if os.path.isfile(settings.LOCKFILE):
-        # args on the command line passed to filter.py
-        args = ['python3', 'filter.py'] + sys.argv[1:]
-        print('------', now())
-        process = Popen(args, stdout=PIPE, stderr=PIPE)
+while not stop:
+    # check for lockfile
+    if not os.path.isfile(settings.LOCKFILE):
+        print('Lockfile not present, waiting')
+        log.write('Lockfile not present, waiting\n')
+        time.sleep(settings.WAIT_TIME)
+        continue
+    
+    rtxt = '======================\nFilter_runner at %s' % now()
+    log.write('%s\n'% rtxt)
+    print(rtxt)
 
-        while 1:
-            # when the worker terminates, readline returns zero
-            rbin = process.stdout.readline()
-            if len(rbin) == 0: break
+    # start the process
+    process = Popen(['python3', 'filter.py'] + child_args, stdout=PIPE, stderr=STDOUT)
 
-            # if the worher uses 'print', there will be at least the newline
-            rtxt = rbin.decode('utf-8').rstrip()
-            log.write(rtxt + '\n')
+    while 1:
+        rbin = process.stdout.readline()
+
+        # if the worker uses 'print', there will be at least the newline
+        rtxt = rbin.decode('utf-8').rstrip()
+        if len(rtxt) > 0:
+            print('%s'% rtxt)
+            log.write('%s\n'% rtxt)
             log.flush()
-            print(rtxt)
+        else:
+            break
 
-            # scream to the humans if ERROR
-            if rtxt.startswith('ERROR'):
-                slack_webhook.send(settings.SLACK_URL, rtxt)
+        # scream to the humans if ERROR
+        if 'ERROR' in rtxt:
+            slack_webhook.send(settings.SLACK_URL, rtxt)
+            time.sleep(settings.WAIT_TIME)
 
-        while 1:
-            # same with stderr
-            rbin = process.stderr.readline()
-            if len(rbin) == 0: break
+    process.wait()
+    retcode = process.returncode
 
-            # if the worher uses 'print', there will be at least the newline
-            rtxt = 'stderr:' + rbin.decode('utf-8').rstrip()
-            log.write(rtxt + '\n')
-            log.flush()
-            print(rtxt)
-
-
-        process.wait()
-        rc = process.returncode
-
-        # if we timed out of kafka, wait a while and ask again
-        log.write(now() + '\n')
-        if rc > 0:  # try again
-            log.write("END getting more ...\n\n")
-        # else just go ahead immediately
-        elif rc == 0:
-            log.write("END waiting %d seconds ...\n\n" % settings.WAIT_TIME)
-            for i in range(settings.WAIT_TIME):
-                if sigterm_raised:
-                    log.write("Caught SIGTERM, exiting.\n")
-                    log.flush()
-                    sys.exit(0)
-                time.sleep(1)
-        else:   # rc < 0
-            log.write("STOP on error!")
-            log.flush()
-            sys.exit(1)
-
-    else:
-        # wait until the lockfile reappears
-        rtxt = 'Waiting for lockfile ' + now()
-        print(rtxt)
-        log.write(rtxt + '\n')
-        log.flush()
+    if retcode == 0:   # process got no alerts, so sleep a few minutes
+        print('Waiting for more alerts ....')
+        log.write('Waiting for more alerts ....\n')
         time.sleep(settings.WAIT_TIME)
 
+print('Exiting')

@@ -148,7 +148,6 @@ def kafka_consume(consumer, maxalert):
         # Apply filter to each alert
         alert = json.loads(msg.value())
         nalert_in += 1
-        print(alert['objectId'])
         try:
             d = alert_filter(alert, msl)
             nalert_out += d['nalert']
@@ -157,8 +156,8 @@ def kafka_consume(consumer, maxalert):
             break
 
         if nalert_in%1000 == 0:
-            print('process %d nalert_in %d nalert_out  %d time %.1f' % 
-                (processID, nalert_in, nalert_out, time.time()-startt))
+            print('nalert_in %d nalert_out  %d time %.1f' % 
+                (nalert_in, nalert_out, time.time()-startt))
             sys.stdout.flush()
             # refresh the database every 1000 alerts
             # make sure everything is committed
