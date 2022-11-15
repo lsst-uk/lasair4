@@ -637,7 +637,14 @@ def filter_query_create(request, mq_id=None):
     """
     logged_in = request.user.is_authenticated
 
-    return render(request, 'filter_query/filter_query_create.html', {})
+    schemas = {
+        'objects': get_schema('objects'),
+        'sherlock_classifications': get_schema('sherlock_classifications'),
+        'crossmatch_tns': get_schema('crossmatch_tns'),
+        'annotations': get_schema('annotations'),
+    }
+
+    return render(request, 'filter_query/filter_query_create.html', {'schemas': schemas})
 
     message = ''
 

@@ -139,6 +139,7 @@ gulp.task('concat:dist:js', function() {
             paths.src.js + '/lasair_js9.js',
             paths.src.js + '/fitsview_init.js',
             paths.src.js + '/fitsview.js',
+            paths.src.js + '/lasair_utils.js',
             paths.src.js + '/lasair_fixes.js',
         ])
         .pipe(sourcemaps.init())
