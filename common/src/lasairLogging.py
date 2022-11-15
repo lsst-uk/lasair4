@@ -19,14 +19,15 @@ class SlackHandler(logging.Handler):
 
 class DuplicateFilter(logging.Filter):
     """Filter to suppress multiple identical Slack messages."""
-    def __init__(self, webhook: SlackWebhook):
+    def __init__(self, webhook: SlackWebhook, maxmerge):
         super().__init__()
         self.n_msg = 0
         self.webhook = webhook
+        self.maxmerge = maxmerge
 
     def filter(self, record):
         current_log = (record.levelno, record.msg)
-        if current_log != getattr(self, "last_log", None) or self.n_msg > 19:
+        if current_log != getattr(self, "last_log", None) or self.n_msg >= self.maxmerge:
             if self.n_msg > 0:
                 self.webhook.send("Suppressed {} identical messages".format(self.n_msg))
             self.last_log = current_log
@@ -36,7 +37,7 @@ class DuplicateFilter(logging.Filter):
         return False
 
 
-def basicConfig(filename, webhook: SlackWebhook = None, level=logging.INFO, force=False, merge=False):
+def basicConfig(filename, webhook: SlackWebhook = None, maxmerge = 20, level=logging.INFO, force=False, merge=False):
     logging.basicConfig(
         filename=filename,
         level=level,
@@ -52,7 +53,7 @@ def basicConfig(filename, webhook: SlackWebhook = None, level=logging.INFO, forc
         slack_handler.setFormatter(slack_formatter)
         logging.getLogger().addHandler(slack_handler)
         if merge:
-            slack_handler.addFilter(DuplicateFilter(webhook))
+            slack_handler.addFilter(DuplicateFilter(webhook, maxmerge))
 
 
 def getLogger(name):
