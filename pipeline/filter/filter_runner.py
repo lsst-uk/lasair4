@@ -25,27 +25,39 @@ import os, sys, time
 sys.path.append('../../common')
 import settings
 from datetime import datetime
+
 from subprocess import Popen, PIPE, STDOUT
 from src import slack_webhook
 from docopt import docopt
+
 import signal
 
 # if this is True, the runner stops when it can and exits
 stop = False
+
 
 def sigterm_handler(signum, frame):
     global stop
     print('Stopping by SIGTERM')
     stop = True
 
+
 signal.signal(signal.SIGTERM, sigterm_handler)
+
 
 def now():
     # current UTC as string
     return datetime.utcnow().strftime("%Y/%m/%dT%H:%M:%S")
 
-# where the log files go
-log = open('/home/ubuntu/logs/ingest.log', 'a')
+
+# Set up the logger
+lasairLogging.basicConfig(
+    # TODO: Why is this called ingest.log? Can we rename it to filter.log or filter_runner.log?
+    filename='/home/ubuntu/logs/ingest.log',
+    webhook=slack_webhook.SlackWebhook(url=settings.SLACK_URL),
+    merge=True
+)
+log = lasairLogging.getLogger("filter_runner")
 
 # Deal with arguments
 my_args = docopt(__doc__)
@@ -57,13 +69,12 @@ for k, v in my_args.items():
 while not stop:
     # check for lockfile
     if not os.path.isfile(settings.LOCKFILE):
-        print('Lockfile not present, waiting')
-        log.write('Lockfile not present, waiting\n')
+        log.info('Lockfile not present, waiting')
         time.sleep(settings.WAIT_TIME)
         continue
     
     rtxt = '======================\nFilter_runner at %s' % now()
-    log.write('%s\n'% rtxt)
+    log.info('%s'% rtxt)
     print(rtxt)
 
     # start the process
@@ -76,22 +87,21 @@ while not stop:
         rtxt = rbin.decode('utf-8').rstrip()
         if len(rtxt) > 0:
             print('%s'% rtxt)
-            log.write('%s\n'% rtxt)
-            log.flush()
+            log.info('%s'% rtxt)
         else:
             break
 
         # scream to the humans if ERROR
         if 'ERROR' in rtxt:
-            slack_webhook.send(settings.SLACK_URL, rtxt)
+            log.error(rtxt)
             time.sleep(settings.WAIT_TIME)
 
     process.wait()
     retcode = process.returncode
-
+    
     if retcode == 0:   # process got no alerts, so sleep a few minutes
-        print('Waiting for more alerts ....')
-        log.write('Waiting for more alerts ....\n')
+        log.info('Waiting for more alerts ....')
         time.sleep(settings.WAIT_TIME)
 
+log.info('Exiting')
 print('Exiting')
