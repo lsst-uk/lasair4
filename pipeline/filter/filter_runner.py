@@ -1,20 +1,45 @@
-""" To be run in as 'screen' session that continuously fetches batches
 """
+Filter process runner. Sends args to its child and logs the outputs.
+It will run continously, running batch after batch. Each batch is a run of the 
+child program filter.py.
+
+The runner needs a lockfile -- usually as ~ubuntu/lockfile. If not present
+the runner continues, but looking for a lockfile every few minutes.
+
+A SIGTERM is handled and passed to the child process, which finishes the batch
+and exits cleanly. The SIGTERM also cause this runner process to exit,
+which is different from the lockfile check.
+
+Usage:
+    ingest.py [--maxalert=MAX]
+              [--group_id=GID]
+              [--topic_in=TIN]
+
+Options:
+    --maxalert=MAX     Number of alerts to process, default is infinite
+    --group_id=GID     Group ID for kafka, default is from settings
+    --topic_in=TIN     Kafka topic to use, or
+"""
+
 import os, sys, time
 sys.path.append('../../common')
 import settings
 from datetime import datetime
-from subprocess import Popen, PIPE
-from src import lasairLogging, slack_webhook
+
+from subprocess import Popen, PIPE, STDOUT
+from src import slack_webhook
+from docopt import docopt
+
 import signal
 
-# If we catch a SIGTERM, set a flag
-sigterm_raised = False
+# if this is True, the runner stops when it can and exits
+stop = False
 
 
 def sigterm_handler(signum, frame):
-    global sigterm_raised
-    sigterm_raised = True
+    global stop
+    print('Stopping by SIGTERM')
+    stop = True
 
 
 signal.signal(signal.SIGTERM, sigterm_handler)
@@ -34,64 +59,49 @@ lasairLogging.basicConfig(
 )
 log = lasairLogging.getLogger("filter_runner")
 
-while 1:
-    if sigterm_raised:
-        log.info("Caught SIGTERM, exiting.")
-        lasairLogging.shutdown()
-        sys.exit(0)
+# Deal with arguments
+my_args = docopt(__doc__)
+child_args = []
+for k, v in my_args.items():
+    if v != None:
+        child_args.append('%s=%s' % (k,v))
 
-    if os.path.isfile(settings.LOCKFILE):
-        # args on the command line passed to filter.py
-        args = ['python3', 'filter.py'] + sys.argv[1:]
-        log.info('------', now())
-        process = Popen(args, stdout=PIPE, stderr=PIPE)
+while not stop:
+    # check for lockfile
+    if not os.path.isfile(settings.LOCKFILE):
+        log.info('Lockfile not present, waiting')
+        time.sleep(settings.WAIT_TIME)
+        continue
+    
+    rtxt = '======================\nFilter_runner at %s' % now()
+    log.info('%s'% rtxt)
+    print(rtxt)
 
-        while 1:
-            # when the worker terminates, readline returns zero
-            rbin = process.stdout.readline()
-            if len(rbin) == 0: break
+    # start the process
+    process = Popen(['python3', 'filter.py'] + child_args, stdout=PIPE, stderr=STDOUT)
 
-            # if the worker uses 'print', there will be at least the newline
-            rtxt = rbin.decode('utf-8').rstrip()
-            if rtxt.startswith('ERROR'):
-                log.error(rtxt)
-            else:
-                log.info(rtxt)
+    while 1:
+        rbin = process.stdout.readline()
 
-        while 1:
-            # same with stderr
-            rbin = process.stderr.readline()
-            if len(rbin) == 0: break
+        # if the worker uses 'print', there will be at least the newline
+        rtxt = rbin.decode('utf-8').rstrip()
+        if len(rtxt) > 0:
+            print('%s'% rtxt)
+            log.info('%s'% rtxt)
+        else:
+            break
 
-            # if the worker uses 'print', there will be at least the newline
-            rtxt = 'stderr:' + rbin.decode('utf-8').rstrip()
-            log.warning(rtxt)
+        # scream to the humans if ERROR
+        if 'ERROR' in rtxt:
+            log.error(rtxt)
+            time.sleep(settings.WAIT_TIME)
 
-
-        process.wait()
-        rc = process.returncode
-
-        # if we timed out of kafka, wait a while and ask again
-        log.info(now())
-        if rc > 0:  # try again
-            log.info("END getting more ...\n")
-        # else just go ahead immediately
-        elif rc == 0:
-            log.info("END waiting %d seconds ...\n" % settings.WAIT_TIME)
-            for i in range(settings.WAIT_TIME):
-                if sigterm_raised:
-                    log.info("Caught SIGTERM, exiting.")
-                    lasairLogging.shutdown()
-                    sys.exit(0)
-                time.sleep(1)
-        else:   # rc < 0
-            log.warning("STOP on error!")
-            lasairLogging.shutdown()
-            sys.exit(1)
-
-    else:
-        # wait until the lockfile reappears
-        rtxt = 'Waiting for lockfile ' + now()
-        log.info(rtxt)
+    process.wait()
+    retcode = process.returncode
+    
+    if retcode == 0:   # process got no alerts, so sleep a few minutes
+        log.info('Waiting for more alerts ....')
         time.sleep(settings.WAIT_TIME)
 
+log.info('Exiting')
+print('Exiting')
