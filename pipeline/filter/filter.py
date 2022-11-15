@@ -34,12 +34,6 @@ from check_alerts_areas import get_area_hits, insert_area_hits
 from counts import since_midnight, grafana_today
 from consume_alerts import kafka_consume
 from subprocess import Popen, PIPE
-import signal
-
-def sigterm_handler(signum, frame):
-    pass
-
-signal.signal(signal.SIGTERM, sigterm_handler)
 
 def main(args):
     if args['--topic_in']:
@@ -284,5 +278,8 @@ def main(args):
 
 if __name__ == '__main__':
     args = docopt(__doc__)
+    # rc=1: got some alerts
+    # rc=0: got no alerts
+
     rc = main(args)
     sys.exit(rc)
