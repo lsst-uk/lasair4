@@ -117,11 +117,11 @@ class CommonLoggingTest(unittest.TestCase):
             log.error("Test message 8")
             hostname = os.uname().nodename
             mock_slack_webhook.send.assert_has_calls([
-                unittest.mock.call("ERROR: {}: test_slack_merge: Test message 7".format(hostname)),
+                unittest.mock.call("ERROR: {}: test_slack_merge_maxmerge: Test message 7".format(hostname)),
                 unittest.mock.call("Suppressed 7 identical messages"),
-                unittest.mock.call("ERROR: {}: test_slack_merge: Test message 7".format(hostname)),
+                unittest.mock.call("ERROR: {}: test_slack_merge_maxmerge: Test message 7".format(hostname)),
                 unittest.mock.call("Suppressed 1 identical messages"),
-                unittest.mock.call("ERROR: {}: test_slack_merge: Test message 8".format(hostname))
+                unittest.mock.call("ERROR: {}: test_slack_merge_maxmerge: Test message 8".format(hostname))
             ])
 
 if __name__ == '__main__':
