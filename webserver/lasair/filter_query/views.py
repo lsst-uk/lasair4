@@ -1,4 +1,4 @@
-from . import add_filter_query_metadata
+from . import add_filter_query_metadata, run_filter
 import random
 from src import date_nid, db_connect
 from django.shortcuts import render
@@ -11,6 +11,7 @@ from confluent_kafka import Producer, KafkaError, admin
 from django.views.decorators.csrf import csrf_exempt
 from lasair.db_schema import get_schema, get_schema_dict, get_schema_for_query_selected
 from .models import filter_query
+from .forms import filterQueryForm
 from lasair.query_builder import check_query, build_query
 import settings
 import json
@@ -34,11 +35,11 @@ def filter_query_index(request):
 
     ```python
     urlpatterns = [
-        ... 
+        ...
         path('filters/', views.filter_query_index, name='filter_query_index'),
         ...
-    ]    
-    ```           
+    ]
+    ```
     """
     message = ''
 
@@ -389,7 +390,7 @@ def filter_query_detail(request, mq_id):
         path('filters/<int:mq_id>/', views.filter_query_detail, name='filter_query_detail'),
         ...
     ]
-    ```           
+    ```
     """
     msl = db_connect.readonly()
     cursor = msl.cursor(buffered=True, dictionary=True)
@@ -403,7 +404,34 @@ def filter_query_detail(request, mq_id):
     limit = 1000
     offset = 0
     json_checked = False
-    return runquery(request, mq_id, query_name, selected, tables, conditions, limit, offset, json_checked)
+
+    message = ""
+
+    table, tableSchema, nalert, topic = run_filter(
+        selected=selected,
+        tables=tables,
+        conditions=conditions,
+        limit=limit,
+        offset=offset,
+        mq_id=mq_id,
+        query_name=query_name)
+
+    if json_checked:
+        return HttpResponse(json.dumps(table, indent=2), content_type="application/json")
+    else:
+        return render(request, 'filter_query/filter_query_detail.html',
+                      {'table': table, 'nalert': nalert,
+                       'topic': topic,
+                       'title': query_name,
+                       'mq_id': mq_id,
+                       'selected': selected,
+                       'tables': tables,
+                       'conditions': conditions,
+                       'nalert': nalert,
+                       'ps': offset, 'pe': offset + nalert,
+                       'limit': limit, 'offset': offset,
+                       'message': message,
+                       "schema": tableSchema})
 
 
 def runquery_post(request):
@@ -447,59 +475,6 @@ def runquery_post(request):
     return runquery(request, mq_id, query_name, selected, tables, conditions, limit, offset, json_checked)
 
 
-def runquery(request, mq_id, query_name, selected, tables, conditions, limit, offset, json_checked):
-    message = ''
-    e = check_query(selected, tables, conditions)
-    if e:
-        return render(request, 'error.html', {'message': message})
-    sqlquery_real = build_query(selected, tables, conditions)
-    sqlquery_limit = sqlquery_real + ' LIMIT %d OFFSET %d' % (limit, offset)
-    message += sqlquery_limit
-
-# lets keep a record of all the queries the people try to execute
-#    record_query(request, sqlquery_real)
-
-    nalert = 0
-    msl = db_connect.readonly()
-    cursor = msl.cursor(buffered=True, dictionary=True)
-
-    topic = topic_name(mq_id, query_name)
-
-    try:
-        cursor.execute(sqlquery_limit)
-    except Exception as e:
-        message = 'Your query:<br/><b>' + sqlquery_limit + '</b><br/>returned the error<br/><i>' + str(e) + '</i>'
-        return render(request, 'error.html', {'message': message})
-
-    table = []
-    for row in cursor:
-        table.append(row)
-        nalert += 1
-
-    tableSchema = get_schema_for_query_selected(selected)
-    if len(table):
-        for k in table[0].keys():
-            if k not in tableSchema:
-                tableSchema[k] = "custom column"
-
-    if json_checked:
-        return HttpResponse(json.dumps(table, indent=2), content_type="application/json")
-    else:
-        return render(request, 'filter_query/filter_query_detail.html',
-                      {'table': table, 'nalert': nalert,
-                       'topic': topic,
-                       'title': query_name,
-                       'mq_id': mq_id,
-                       'selected': selected,
-                       'tables': tables,
-                       'conditions': conditions,
-                       'nalert': nalert,
-                       'ps': offset, 'pe': offset + nalert,
-                       'limit': limit, 'offset': offset,
-                       'message': message,
-                       "schema": tableSchema})
-
-
 def record_query(request, query):
     """record_query.
 
@@ -537,8 +512,8 @@ def check_query_zero_limit(real_sql):
     **Usage:**
 
     ```python
-    usage code 
-    ```           
+    usage code
+    ```
     """
     msl = db_connect.readonly()
     cursor = msl.cursor(buffered=True, dictionary=True)
@@ -617,17 +592,6 @@ def topic_refresh(real_sql, topic, limit=10):
     return message
 
 
-def topic_name(userid, name):
-    """topic_name.
-
-    Args:
-        userid:
-        name:
-    """
-    name = ''.join(e for e in name if e.isalnum() or e == '_' or e == '-' or e == '.')
-    return 'lasair_' + '%d' % userid + name
-
-
 def filter_query_create(request, mq_id=None):
     """create a new filter.
 
@@ -644,16 +608,35 @@ def filter_query_create(request, mq_id=None):
         'annotations': get_schema('annotations'),
     }
 
-    return render(request, 'filter_query/filter_query_create.html', {'schemas': schemas})
+    form = filterQueryForm(request.POST, request.FILES)
+
+    if request.method == 'POST':
+
+        selected = request.POST.get('selected')
+        conditions = request.POST.get('conditions')
+        tables = "objects"
+        limit = 1000
+        offset = 0
+
+        # FIND THE TABLES THAT NEED TO BE QUIERIED FROM THE SELECT STATEMENT
+        matchObjectList = re.findall(r'([a-zA-Z0-9_\-]*)\.([a-zA-Z0-9_\-]*)', selected)
+        tables = [m[0] for m in matchObjectList]
+        tables = (",").join(set(tables))
+
+        table, tableSchema, nalert, topic = run_filter(
+            selected=selected,
+            tables=tables,
+            conditions=conditions,
+            limit=limit,
+            offset=offset,
+            mq_id=mq_id,
+            query_name=False)
+
+        return render(request, 'filter_query/filter_query_create.html', {'schemas': schemas, 'form': form, 'table': table, 'schema': tableSchema, 'limit': str(limit)})
+
+    return render(request, 'filter_query/filter_query_create.html', {'schemas': schemas, 'form': form})
 
     message = ''
-
-    schemas = {
-        'objects': get_schema('objects'),
-        'sherlock_classifications': get_schema('sherlock_classifications'),
-        'crossmatch_tns': get_schema('crossmatch_tns'),
-        'annotations': get_schema('annotations'),
-    }
 
     if logged_in:
         email = request.user.email
