@@ -29,6 +29,7 @@ urlpatterns = [
     path('lasairlsst',  TemplateView.as_view(template_name='lasairlsst.html')),
 #    path('release',  TemplateView.as_view(template_name='release.html')),
     path('contact',  TemplateView.as_view(template_name='contact.html')),
+    path('gdpr',  TemplateView.as_view(template_name='gdpr.html')),
 
     path('',              views.index,                  name='index'),
     path('index2',        views.index2,                  name='index2'),
