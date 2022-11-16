@@ -27,7 +27,8 @@ import settings
 from datetime import datetime
 
 from subprocess import Popen, PIPE, STDOUT
-from src import slack_webhook
+sys.path.append('../../common/src')
+import slack_webhook, lasairLogging
 from docopt import docopt
 
 import signal
