@@ -33,6 +33,13 @@ import run_active_queries
 from check_alerts_watchlists import get_watchlist_hits, insert_watchlist_hits
 from check_alerts_areas import get_area_hits, insert_area_hits
 from counts import since_midnight, grafana_today
+from subprocess import Popen, PIPE
+import signal
+
+def sigterm_handler(signum, frame):
+    pass
+
+signal.signal(signal.SIGTERM, sigterm_handler)
 
 def main(args):
     if args['--topic_in']:
@@ -68,29 +75,35 @@ def main(args):
         print(rtxt)
         slack_webhook.send(settings.SLACK_URL, rtxt)
         sys.stdout.flush()
-        sys.exit(-1)
+        sys.exit(0)
     
     ##### fetch a batch of annotated alerts
     print('INGEST start %s' % datetime.utcnow().strftime("%H:%M:%S"))
     print("Topic is %s" % topic_in)
     t = time.time()
     
-    cmd =  'python3 consume_alerts.py '
-    cmd += '--maxalert %d ' % maxalert
-    cmd += '--nprocess %d ' % nprocess
-    cmd += '--group %s '    % group_id
-    cmd += '--host %s '     % settings.KAFKA_SERVER
-    cmd += '--topic_in ' + topic_in
-    
-    print(cmd)
+    # use subprocess here rather than os.system because we want child process to be in same PID group
+    args = [
+            'python3',
+            'consume_alerts.py',
+            '--maxalert','%d' % maxalert,
+            '--nprocess','%d' % nprocess,
+            '--group','%s'    % group_id,
+            '--host','%s'     % settings.KAFKA_SERVER,
+            '--topic_in',       topic_in
+            ]
+    print(' '.join(args))
+    process = Popen(args)
+    process.wait()
+    rc = process.returncode
+
     # rc is the return code from ingestion, number of alerts received
-    rc = os.system(cmd)
     if rc < 0:
         rtxt = "ERROR in filter/filter: consume_alerts failed"
         slack_webhook.send(settings.SLACK_URL, rtxt)
         print(rtxt)
         sys.stdout.flush()
-        sys.exit(-1)
+        sys.exit(0)
     
     print('INGEST duration %.1f seconds' % (time.time() - t))
     
@@ -99,7 +112,7 @@ def main(args):
     except:
         print('ERROR in filter/filter: cannot connect to local database')
         sys.stdout.flush()
-        sys.exit(-1)
+        sys.exit(0)
     
     ##### run the watchlists
     print('WATCHLIST start %s' % datetime.utcnow().strftime("%H:%M:%S"))
@@ -113,7 +126,7 @@ def main(args):
         slack_webhook.send(settings.SLACK_URL, rtxt)
         print(rtxt)
         sys.stdout.flush()
-        sys.exit(-1)
+        sys.exit(0)
     
     print('got %d watchlist hits' % len(hits))
     sys.stdout.flush()
@@ -127,7 +140,7 @@ def main(args):
             slack_webhook.send(settings.SLACK_URL, rtxt)
             print(rtxt)
             sys.stdout.flush()
-            sys.exit(-1)
+            sys.exit(0)
     
     print('WATCHLIST %.1f seconds' % (time.time() - t))
     sys.stdout.flush()
@@ -144,7 +157,7 @@ def main(args):
         slack_webhook.send(settings.SLACK_URL, rtxt)
         print(rtxt)
         sys.stdout.flush()
-        sys.exit(-1)
+        sys.exit(0)
     
     print('got %d area hits' % len(hits))
     sys.stdout.flush()
@@ -157,7 +170,7 @@ def main(args):
             slack_webhook.send(settings.SLACK_URL, rtxt)
             print(rtxt)
             sys.stdout.flush()
-            sys.exit(-1)
+            sys.exit(0)
     print('AREA %.1f seconds' % (time.time() - t))
     sys.stdout.flush()
     
@@ -173,7 +186,7 @@ def main(args):
         slack_webhook.send(settings.SLACK_URL, rtxt)
         print(rtxt)
         sys.stdout.flush()
-        sys.exit(-1)
+        sys.exit(0)
     
     try:
         run_active_queries.run_queries(query_list)
@@ -183,7 +196,7 @@ def main(args):
         slack_webhook.send(settings.SLACK_URL, rtxt)
         print(rtxt)
         sys.stdout.flush()
-        sys.exit(-1)
+        sys.exit(0)
     print('QUERIES %.1f seconds' % (time.time() - t))
     sys.stdout.flush()
     
@@ -213,7 +226,7 @@ def main(args):
         slack_webhook.send(settings.SLACK_URL, rtxt)
         print(rtxt)
         sys.stdout.flush()
-        sys.exit(-1)
+        sys.exit(0)
     
     tablelist = ['objects', 'sherlock_classifications', 'watchlist_hits', 'area_hits']
     
