@@ -11,6 +11,17 @@ from multiprocessing import Process, Manager
 from features_ZTF import insert_query
 import confluent_kafka
 import argparse, time, json
+import signal
+
+# If we catch a SIGTERM, set a flag
+sigterm_raised = False
+
+def sigterm_handler(signum, frame):
+    global sigterm_raised
+    sigterm_raised = True
+
+signal.signal(signal.SIGTERM, sigterm_handler)
+
 
 sherlock_attributes = [
     "classification",
@@ -72,10 +83,11 @@ def execute_query(query, msl):
         cursor.execute(query)
         cursor.close()
         msl.commit()
-    except mysql.connector.Error as err:
-        print('ERROR filter/consume_alerts: object Database insert candidate failed: %s' % str(err))
+    except Exception as e:
+        print('ERROR filter/consume_alerts: object Database insert candidate failed: %s' % str(e))
         print(query)
         sys.stdout.flush()
+        raise
 
 def alert_filter(alert, msl):
     """alert_filter.
@@ -149,7 +161,14 @@ def run(runarg, return_dict):
 
     nalert_in = nalert_out = nalert_ss = 0
     startt = time.time()
+    commit = True
     while nalert_in < maxalert:
+        if sigterm_raised:
+            # clean shutdown - stop the consumer and commit offsets
+            print("Caught SIGTERM, aborting.")
+            sys.stdout.flush()
+            break
+
         # Here we get the next alert by kafka
         msg = consumer.poll(timeout=5)
         if msg is None:
@@ -162,9 +181,13 @@ def run(runarg, return_dict):
             # Apply filter to each alert
             alert = json.loads(msg.value())
             nalert_in += 1
-            d = alert_filter(alert, msl)
-            nalert_out += d['nalert']
-            nalert_ss  += d['ss']
+            try:
+                d = alert_filter(alert, msl)
+                nalert_out += d['nalert']
+                nalert_ss  += d['ss']
+            except:
+                commit = False
+                break
             if nalert_in%1000 == 0:
                 print('process %d nalert_in %d nalert_out  %d time %.1f' % 
                     (processID, nalert_in, nalert_out, time.time()-startt))
@@ -173,6 +196,13 @@ def run(runarg, return_dict):
                 # make sure everything is committed
                 msl.close()
                 msl = db_connect.local()
+
+    if commit:
+        consumer.commit()
+    else:
+        rtxt = 'ERROR: filter/consume_alerts: Batch not committed'
+        print(rtxt)
+        slack_webhook.send(settings.SLACK_URL, rtxt)
 
     consumer.close()
     return_dict[processID] = {
@@ -190,6 +220,7 @@ def main():
     # Configure consumer connection to Kafka broker
     conf = {
         'bootstrap.servers': '%s' % args.host,
+        'enable.auto.commit': False,
         'default.topic.config': {
              'auto.offset.reset': 'smallest'
         }}
@@ -247,10 +278,10 @@ if __name__ == '__main__':
         rc = main()
         sys.exit(rc)
     except Exception as e:
-        rtxt = "ERROR in filter/consume_alerts"
+        rtxt = "ERROR in filter/consume_alerts:"
         rtxt += str(e)
         slack_webhook.send(settings.SLACK_URL, rtxt)
         print(rtxt)
         sys.stdout.flush()
-        sys.exit(-1)
+        sys.exit(0)
 

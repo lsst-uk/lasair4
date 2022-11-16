@@ -2,21 +2,22 @@ import sys, os
 sys.path.append('../common/')
 import settings
 from datetime import datetime
+from my_cmd import execute_cmd
 today = datetime.today().strftime('%Y%m%d')
+now   = datetime.today().strftime('%Y%m%d %H:%M:%S')
+
 logfile = settings.SERVICES_LOG +'/'+ today + '.log'
 
-cmd = 'echo "\\n-- mysql backup at %s" >> %s'
-cmd = cmd % (today, logfile)
-os.system(cmd)
+cmd = 'echo "\\n-- mysql backup at %s"' % now
+execute_cmd(cmd, logfile)
 
-cmd = 'ssh %s sudo mysqldump -u root -p%s --port=%s ztf > %s/mysqlbackup.sql'
-cmd = cmd % (settings.DB_HOST, settings.DB_ROOT_PASS, settings.DB_PORT, settings.MYSQL_BACKUP_DIR)
-print(cmd)
-os.system(cmd)
+cmd = 'mysqldump -u %s -p%s --port=%s --host=%s ztf > %s/mysqlbackup.sql'
 
-cmd = 'ls -l %s >> %s'
-cmd = cmd % (settings.MYSQL_BACKUP_DIR, logfile)
-os.system(cmd)
+cmd = cmd % (settings.DB_USER_READWRITE, settings.DB_PASS_READWRITE, settings.BACKUP_DATABASE_PORT, settings.BACKUP_DATABASE_HOST, settings.MYSQL_BACKUP_DIR)
+execute_cmd(cmd, logfile)
+
+cmd = 'ls -l %s' % settings.MYSQL_BACKUP_DIR
+execute_cmd(cmd, logfile)
 
 
 

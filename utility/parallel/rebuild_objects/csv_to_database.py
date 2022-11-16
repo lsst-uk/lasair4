@@ -25,11 +25,13 @@ print ('Database', settings.DB_HOST, settings.DB_PORT)
 tstart = time.time()
 filelist =  os.listdir(csvdir)
 filelist.sort()
+n = 0
 for csvfile in os.listdir(csvdir):
     filename = '%s/%s' % (csvdir,csvfile)
     os.system('wc %s' % filename)
     t = time.time()
     handle(filename)
-    print('%s imported in %.1f seconds' % (csvfile, (time.time() - t)))
+    n += 1
+    print('%d: %s imported in %.1f seconds' % (n, csvfile, (time.time() - t)))
 print('Finished in %.1f seconds' % (time.time() - tstart))
 

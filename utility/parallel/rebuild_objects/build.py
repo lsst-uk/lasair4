@@ -24,6 +24,8 @@ def rebuild_features(d):
     objectId          = d['objectId']
     schema_names      = d['schema_names']
     cassandra_session = d['cassandra_session']
+    if len(objectId) == 0:
+        return None
 
     cass_query = "SELECT * FROM candidates WHERE objectId = '%s'" % objectId
     ret = cassandra_session.execute(cass_query)
@@ -33,11 +35,14 @@ def rebuild_features(d):
     for c in ret:
         clist.append(c)
     clist.sort(key = lambda c: -c['jd'])
+    if len(clist) == 0:
+        return None
     jdmax = clist[0]['jd']
     candidates = []
-    for c in clist:
-        if (jdmax - c['jd']) < 30:    # ZTF alerts have at most 30 days of candidates
-            candidates.append(c)
+#    for c in clist:
+#        if (jdmax - c['jd']) < 30:    # ZTF alerts have at most 30 days of candidates
+#            candidates.append(c)
+    candidates = clist    # changed our minds! will use all the candidates
 
     attrs = create_features(objectId, candidates)
     if not attrs:

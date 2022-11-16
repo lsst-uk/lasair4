@@ -4,10 +4,21 @@ from datetime import datetime
 from subprocess import Popen, PIPE
 import settings
 from src import date_nid, slack_webhook
+import signal
 
 """ Fire up the the ingestion and keep the results in a log file
     the start it again afte a minute or so
 """
+
+# If we catch a SIGTERM, set a flag
+sigterm_raised = False
+
+def sigterm_handler(signum, frame):
+    global sigterm_raised
+    sigterm_raised = True
+
+signal.signal(signal.SIGTERM, sigterm_handler)
+
 def now():
     # current UTC as string
     return datetime.utcnow().strftime("%Y/%m/%dT%H:%M:%S")
@@ -20,6 +31,9 @@ while 1:
     date = date_nid.nid_to_date(nid)
     topic  = 'ztf_' + date + '_programid1'
     log = open('/home/ubuntu/logs/' + topic + '.log', 'a')
+    if sigterm_raised:
+        log.write("Caught SIGTERM, exiting.\n")
+        sys.exit(0)
 
     if os.path.isfile(settings.LOCKFILE):
         args = ['python3', 'ingest.py', '--nid=%d'%nid]
@@ -34,10 +48,12 @@ while 1:
             # if the worher uses 'print', there will be at least the newline
             rtxt = rbin.decode('utf-8').rstrip()
             log.write(rtxt + '\n')
+            log.flush()
 
             # scream to the humans if ERROR
-            if rtxt.startswith('ERROR'):
+            if 'ERROR' in rtxt:
                 slack_webhook.send(settings.SLACK_URL, rtxt)
+                time.sleep(settings.WAIT_TIME)
 
         while 1:
             # same with stderr
@@ -47,6 +63,7 @@ while 1:
             # if the worher uses 'print', there will be at least the newline
             rtxt = 'stderr:' + rbin.decode('utf-8').rstrip()
             log.write(rtxt + '\n')
+            log.flush()
             print(rtxt)
 
         process.wait()
@@ -54,7 +71,11 @@ while 1:
     
         if rc == 0:  # no more to get
             log.write("END waiting %d seconds ...\n\n" % settings.WAIT_TIME)
-            time.sleep(settings.WAIT_TIME)
+            for i in range(settings.WAIT_TIME):
+                if sigterm_raised:
+                    log.write("Caught SIGTERM, exiting.\n")
+                    sys.exit(0)
+                time.sleep(1)
         else:
             log.write("END getting more ...\n\n")
         log.close()
@@ -63,4 +84,5 @@ while 1:
         rtxt = 'Waiting for lockfile ' + now()
         print(rtxt)
         log.write(rtxt + '\n')
+        log.flush()
         time.sleep(settings.WAIT_TIME)
