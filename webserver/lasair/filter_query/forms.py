@@ -1,17 +1,14 @@
 from django import forms
 from django.contrib import admin
+from .models import filter_query
 
 
-class filter_query_ModelForm(forms.ModelForm):
+class filterQueryForm(forms.ModelForm):
     description = forms.CharField(widget=forms.Textarea)
     selected = forms.CharField(widget=forms.Textarea)
-    conditions = forms.CharField(widget=forms.Textarea)
+    conditions = forms.CharField(widget=forms.Textarea, required=False)
     real_sql = forms.CharField(widget=forms.Textarea)
 
     class Meta:
-        model = Myqueries
+        model = filter_query
         fields = '__all__'
-
-
-class filter_query_Admin(admin.ModelAdmin):
-    form = MyqueriesModelForm

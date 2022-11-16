@@ -27,6 +27,11 @@
             </div>
 
             <div class="col-12 mb-4">
+
+                {% include "includes/widget_objectlist_table.html" with zerotext="Zero objects have been matched against this filter so far" table=table header="Filter Results"  desc="Here are the filtered objects, limited to "|add:limit|add:" objects" %}
+            </div>
+
+            <div class="col-12 mb-4">
                 {% include "includes/widget_schema_table.html" %}
             </div>
 
