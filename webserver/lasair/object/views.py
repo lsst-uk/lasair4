@@ -42,7 +42,7 @@ def object_detail(request, objectId):
         return render(request, 'error.html',
                       {'message': 'Object %s not in database' % objectId})
 
-    if 'sherlock' in data:
+    if 'sherlock' in data and 'classification' in data['sherlock']:
         data['sherlock']['classification_expanded'] = data['sherlock']['classification']
         for k, v in {"NT": "Nuclear Transient", "BS": "Bright Star", "VS": "Variable Star", "SN": "Supernova", "CV": "Cataclysmic Variable", "AGN": "AGN"}.items():
             if data['sherlock']['classification_expanded'] == k:
