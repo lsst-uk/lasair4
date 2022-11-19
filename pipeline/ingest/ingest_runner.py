@@ -18,62 +18,51 @@ Options:
     --topic_out=TOUT   Kafka topic for output [default:ztf_sherlock]
 """
 import os,sys, time
+from datetime import datetime
+from docopt import docopt
+from multiprocessing import Process, Manager
+
+log = None
+from ingest import run_ingest
+
 sys.path.append('../../common')
 import settings
-from datetime import datetime
-from subprocess import Popen, PIPE, STDOUT
-from src import date_nid, slack_webhook
-from docopt import docopt
+
+sys.path.append('../../common/src')
+import date_nid, slack_webhook, lasairLogging
+
+# Set up the logger
+lasairLogging.basicConfig(
+    filename='/home/ubuntu/logs/ingest.log',
+    webhook=slack_webhook.SlackWebhook(url=settings.SLACK_URL),
+    merge=True
+)
+log = lasairLogging.getLogger("ingest_runner")
 
 # Our processes
 process_list = []
 
 # Deal with arguments
-nprocess = 1
-child_args = []
-my_args = docopt(__doc__)
+args = docopt(__doc__)
 
-for k, v in my_args.items():
-    # pick out the nprocess argument, thats mine
-    if k == '--nprocess' and v != None:
-        nprocess = int(v)
+# The nprocess argument is used in this module
+if args['--nprocess']:
+    nprocess = int(args['--nprocess'])
+else:
+    nprocess = 1
+log.info('ingest_runner with %d processes' % nprocess)
 
-    # everything else gets sent to the children
-    elif v != None:
-        child_args.append('%s=%s' % (k,v))
+# Start up the processes
+process_list = []
+manager = Manager()
+t = time.time()
+log.info('Starting processes')
+for t in range(nprocess):
+    p = Process(target=run_ingest, args=(args,))
+    process_list.append(p)
+    p.start()
 
-print('ingest_runner with %d processes' % nprocess)
-
-# The log file
-log = open('/home/ubuntu/logs/ingest.log', 'a')
-
-# start the processes
-for i in range(nprocess):
-    process = Popen(['python3', 'ingest.py'] + child_args, stdout=PIPE, stderr=STDOUT)
-    process_list.append(process)
-
-# read from them
-while 1:
-    n = 0
-    for i in range(nprocess):
-        # when the worker terminates, readline returns zero
-        rbin = process_list[i].stdout.readline()
-        if len(rbin) == 0:
-            n += 1
-  
-        # if the worker uses 'print', there will be at least the newline
-        rtxt = rbin.decode('utf-8').rstrip()
-        if len(rtxt) > 0:
-            log.write('%d: %s\n'% (i, rtxt))
-            log.flush()
-
-        # scream to the humans if ERROR
-        if 'ERROR' in rtxt:
-            slack_webhook.send(settings.SLACK_URL, rtxt)
-            time.sleep(settings.WAIT_TIME)
-    if n == nprocess:
-        break
-
-# wait for them to finish
-for i in range(nprocess):
-    process_list[i].wait()
+log.info('Wait for processes to exit')
+for p in process_list:
+    p.join()
+log.info('All done, ingest_runner exiting')

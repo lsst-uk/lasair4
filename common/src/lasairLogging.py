@@ -37,14 +37,33 @@ class DuplicateFilter(logging.Filter):
         return False
 
 
-def basicConfig(filename, webhook: SlackWebhook = None, maxmerge = 20, level=logging.INFO, force=False, merge=False):
-    logging.basicConfig(
-        filename=filename,
-        level=level,
-        format="[%(asctime)s] %(levelname)s: %(funcName)s: %(message)s",
-        force=force
-    )
+def basicConfig(filename: str = None,
+                stream=None,
+                webhook: SlackWebhook = None,
+                level=logging.INFO,
+                force=False,
+                merge=False,
+                maxmerge=20):
+    fmt = "[%(asctime)s] %(levelname)s: %(funcName)s: %(message)s"
+    if filename is None and stream is None:
+        # Don't log anything - presumably Slack only
+        logging.basicConfig(filename="/dev/null", level=level, format=fmt, force=force)
+    elif stream is None:
+        # Log to file only
+        logging.basicConfig(filename=filename, level=level, format=fmt, force=force)
+    elif filename is None:
+        # Log to stream only
+        logging.basicConfig(stream=stream, level=level, format=fmt, force=force)
+    else:
+        # Log to both file and stream
+        logging.basicConfig(filename=filename, level=level, format=fmt, force=force)
+        stream_formatter = logging.Formatter(fmt)
+        stream_handler = logging.StreamHandler(stream)
+        stream_handler.setLevel(level)
+        stream_handler.setFormatter(stream_formatter)
+        logging.getLogger().addHandler(stream_handler)
     if webhook is not None:
+        # Set up Slack alerting
         hostname = os.uname().nodename
         slack_formatter = logging.Formatter(
             "%(levelname)s: {}: %(funcName)s: %(message)s".format(hostname))
