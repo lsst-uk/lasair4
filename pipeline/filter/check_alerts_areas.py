@@ -10,7 +10,7 @@ import math
 from mocpy import MOC
 import astropy.units as u
 
-def read_area_cache_files(cache_dir):
+def read_area_cache_files(log, cache_dir):
     """
     read_area_cache_files
     This function reads all the files in the cache directories and keeps them in memory
@@ -36,7 +36,7 @@ def read_area_cache_files(cache_dir):
         arealist.append(area)
     return arealist
 
-def check_alerts_against_area(alertlist, area):
+def check_alerts_against_area(log, alertlist, area):
     """ check_alerts_against_area.
     For a given moc, check the alerts in the batch 
 
@@ -62,7 +62,7 @@ def check_alerts_against_area(alertlist, area):
                     })
     return hits
 
-def check_alerts_against_areas(alertlist, arealist):
+def check_alerts_against_areas(log, alertlist, arealist):
     """ check_alerts_against_areas.
     check the batch of alerts agains all the areas
 
@@ -73,10 +73,10 @@ def check_alerts_against_areas(alertlist, arealist):
     hits = []
     for area in arealist:
         ar_id = area['ar_id']
-        hits += check_alerts_against_area(alertlist, area)
+        hits += check_alerts_against_area(log, alertlist, area)
     return hits
 
-def fetch_alerts(msl):
+def fetch_alerts(log, msl):
     """ fetch_alerts.
     Get all the alerts from the local cache to check againstr watchlist
 
@@ -96,7 +96,7 @@ def fetch_alerts(msl):
         delist.append (row['decmean'])
     return {"obj":objlist, "ra":ralist, "de":delist}
 
-def get_area_hits(msl, cache_dir):
+def get_area_hits(log, msl, cache_dir):
     """ get_area_hits.
     Get all the alerts, then run against the arealist, return the hits
 
@@ -105,16 +105,16 @@ def get_area_hits(msl, cache_dir):
         cache_dir:
     """
     # read in the cache files
-    arealist = read_area_cache_files(cache_dir)
+    arealist = read_area_cache_files(log, cache_dir)
 
     # get the alert positions from the database
-    alertlist = fetch_alerts(msl)
+    alertlist = fetch_alerts(log, msl)
 
     # check the list against the watchlists
-    hits = check_alerts_against_areas(alertlist, arealist)
+    hits = check_alerts_against_areas(log, alertlist, arealist)
     return hits
 
-def insert_area_hits(msl, hits):
+def insert_area_hits(log, msl, hits):
     """ insert_area_hits.
     Build and execute the insertion query to get the hits into the database
 
@@ -133,7 +133,7 @@ def insert_area_hits(msl, hits):
        cursor.execute(query)
        cursor.close()
     except mysql.connector.Error as err:
-       print('ERROR in filter/check_alerts_areas cannot insert areas_hits: %s' % str(err))
+       log.error('ERROR in filter/check_alerts_areas cannot insert areas_hits: %s' % str(err))
        sys.stdout.flush()
     msl.commit()
 
@@ -141,11 +141,17 @@ if __name__ == "__main__":
     import sys
     sys.path.append('../../common')
     import settings
-    from src import db_connect
+    sys.path.append('../../common/src')
+    import db_connect, lasairLogging
+
+    lasairLogging.basicConfig(stream=sys.stdout)
+    log = lasairLogging.getLogger("ingest_runner")
+
     msl_local = db_connect.local()
 
     # can run the area process without the rest of the filter code 
-    hits = get_area_hits(msl_local, settings.AREA_MOCS)
+    hits = get_area_hits(log, msl_local, settings.AREA_MOCS)
     if hits:
-        for hit in hits: print(hit)
-        insert_area_hits(msl_local, hits)
+        for hit in hits: 
+            log.info(hit)
+        insert_area_hits(log, msl_local, hits)
