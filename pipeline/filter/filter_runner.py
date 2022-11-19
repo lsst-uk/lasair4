@@ -21,7 +21,10 @@ Options:
     --topic_in=TIN     Kafka topic to use, or
 """
 
-import os, sys, time
+import os, sys, time, signal
+from docopt import docopt
+from filter import run_filter
+
 sys.path.append('../../common')
 import settings
 from datetime import datetime
@@ -29,9 +32,6 @@ from datetime import datetime
 from subprocess import Popen, PIPE, STDOUT
 sys.path.append('../../common/src')
 import slack_webhook, lasairLogging
-from docopt import docopt
-
-import signal
 
 # if this is True, the runner stops when it can and exits
 stop = False
@@ -45,27 +45,20 @@ def sigterm_handler(signum, frame):
 
 signal.signal(signal.SIGTERM, sigterm_handler)
 
-
 def now():
     # current UTC as string
     return datetime.utcnow().strftime("%Y/%m/%dT%H:%M:%S")
 
-
 # Set up the logger
 lasairLogging.basicConfig(
     # TODO: Why is this called ingest.log? Can we rename it to filter.log or filter_runner.log?
-    filename='/home/ubuntu/logs/ingest.log',
+    filename='/home/ubuntu/logs/filter.log',
     webhook=slack_webhook.SlackWebhook(url=settings.SLACK_URL),
     merge=True
 )
 log = lasairLogging.getLogger("filter_runner")
 
-# Deal with arguments
-my_args = docopt(__doc__)
-child_args = []
-for k, v in my_args.items():
-    if v != None:
-        child_args.append('%s=%s' % (k,v))
+args = docopt(__doc__)
 
 while not stop:
     # check for lockfile
@@ -73,36 +66,12 @@ while not stop:
         log.info('Lockfile not present, waiting')
         time.sleep(settings.WAIT_TIME)
         continue
+    log.info('Filter_runner at %s' % now())
     
-    rtxt = '======================\nFilter_runner at %s' % now()
-    log.info('%s'% rtxt)
-    print(rtxt)
+    retcode = run_filter(log, args)
 
-    # start the process
-    process = Popen(['python3', 'filter.py'] + child_args, stdout=PIPE, stderr=STDOUT)
-
-    while 1:
-        rbin = process.stdout.readline()
-
-        # if the worker uses 'print', there will be at least the newline
-        rtxt = rbin.decode('utf-8').rstrip()
-        if len(rtxt) > 0:
-            print('%s'% rtxt)
-            log.info('%s'% rtxt)
-        else:
-            break
-
-        # scream to the humans if ERROR
-        if 'ERROR' in rtxt:
-            log.error(rtxt)
-            time.sleep(settings.WAIT_TIME)
-
-    process.wait()
-    retcode = process.returncode
-    
     if retcode == 0:   # process got no alerts, so sleep a few minutes
         log.info('Waiting for more alerts ....')
         time.sleep(settings.WAIT_TIME)
 
 log.info('Exiting')
-print('Exiting')

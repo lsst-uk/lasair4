@@ -35,20 +35,18 @@ Deal with the query results
 
 """
 
-import os, sys
-sys.path.append('../../common')
-import time
-import json
-import settings
-from src import db_connect
+import os, sys, time, json, datetime, smtplib
 from confluent_kafka import Consumer, Producer, KafkaError
-import datetime
-import smtplib
-#from email.message import EmailMessage
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
 
-def fetch_queries():
+sys.path.append('../../common')
+import settings
+
+sys.path.append('../../common/src')
+import db_connect, lasairLogging
+
+def fetch_queries(log):
     """fetch_queries.
     Get all the stored queries from the main database
     """
@@ -76,7 +74,7 @@ def fetch_queries():
         query_list.append(query_dict)
     return query_list
 
-def run_annotation_queries(query_list):
+def run_annotation_queries(log, query_list):
     """run_annotation_queries.
     Pulls the recent content from the kafka topic 'ztf_annotations' 
     Each message has an annotator/topic name, and the objectId that was annotated.
@@ -101,9 +99,9 @@ def run_annotation_queries(query_list):
             continue
     streamReader.close()
     #print('got ', annotation_list)
-    run_queries(query_list, annotation_list)
+    run_queries(log, query_list, annotation_list)
 
-def run_queries(query_list, annotation_list=None):
+def run_queries(log, query_list, annotation_list=None):
     """
     When annotation_list is None, it runs all the queries against the local database
     When not None, runs some queires agains a specific object, using the main database
@@ -120,22 +118,22 @@ def run_queries(query_list, annotation_list=None):
 
         # normal case of streaming queries
         if annotation_list == None:  
-            query_results = run_query(query, msl_local)
-            n += dispose_query_results(query, query_results)
+            query_results = run_query(log, query, msl_local)
+            n += dispose_query_results(log, query, query_results)
 
         # immediate response to active=2 annotators
         else:
             for ann in annotation_list:  
                 msl_remote = db_connect.remote()
-                query_results = run_query(query, msl_remote, ann['annotator'], ann['objectId'])
-                n += dispose_query_results(query, query_results)
+                query_results = run_query(log, query, msl_remote, ann['annotator'], ann['objectId'])
+                n += dispose_query_results(log, query, query_results)
 
         t = time.time() - t
         if n > 0:
-            print('   %s got %d in %.1f seconds' % (query['topic_name'], n, t))
+            log.info('   %s got %d in %.1f seconds' % (query['topic_name'], n, t))
             sys.stdout.flush()
 
-def query_for_object(query, objectId):
+def query_for_object(log, query, objectId):
     """ modifies an existing query to add a new constraint for a specific object.
     We already know this query comes from multiple tables: objects and annotators,
     so we know there is an existing WHERE clause. Can add the new constraint to the end,
@@ -151,7 +149,7 @@ def query_for_object(query, objectId):
         query += ' ORDER BY ' + tok[1]
     return query
 
-def run_query(query, msl, annotator=None, objectId=None):
+def run_query(log, query, msl, annotator=None, objectId=None):
     """run_query. Two cases here: 
     if annotator=None, runs the query against the local database
     if annotator and objectId, checks if the query involves the annotator, 
@@ -173,7 +171,7 @@ def run_query(query, msl, annotator=None, objectId=None):
         if not annotator in query['tables']:
             return []
         # run the query against main for this specific object that has been annotated
-        sqlquery_real = query_for_object(sqlquery_real, objectId)
+        sqlquery_real = query_for_object(log, sqlquery_real, objectId)
 
     # in any case, limit the output
     sqlquery_real += (' LIMIT %d' % limit)
@@ -187,40 +185,36 @@ def run_query(query, msl, annotator=None, objectId=None):
             recorddict = dict(record)
             utcnow = datetime.datetime.utcnow()
             recorddict['UTC'] = utcnow.strftime("%Y-%m-%d %H:%M:%S")
-            #print(recorddict)
-            query_results.append(recorddict)
             n += 1
     except Exception as e:
-        print("SQL error for %s" % topic)
-        print(e)
-        print(sqlquery_real)
-        sys.stdout.flush()
+        log.warning("SQL error for %s: %s" % (topic, str(e)))
+        log.warning(sqlquery_real)
         return []
 
     return query_results
 
-def dispose_query_results(query, query_results):
+def dispose_query_results(log, query, query_results):
     """ Send out the query results by email or kafka, and ipdate the digest file
     """
     if len(query_results) == 0:
         return 0
     active = query['active']
-    digest,last_entry,last_email = fetch_digest(query['topic_name'])
+    digest,last_entry,last_email = fetch_digest(log, query['topic_name'])
     allrecords = (query_results + digest)[:10000]
 
     if active == 1:
         # send results by email if 24 hurs has passed, returns time of last email send
-        last_email = dispose_email(allrecords, last_email, query)
+        last_email = dispose_email(log, allrecords, last_email, query)
 
     if active == 2:
         # send results by kafka on given topic
-        dispose_kafka(query_results, query['topic_name'])
+        dispose_kafka(log, query_results, query['topic_name'])
 
     utcnow = datetime.datetime.utcnow()
     write_digest(allrecords, query['topic_name'], utcnow, last_email)
     return len(query_results)
 
-def write_digest(allrecords, topic_name, last_entry, last_email):
+def write_digest(log, allrecords, topic_name, last_entry, last_email):
     # update the digest file
     last_email_text = last_email.strftime("%Y-%m-%d %H:%M:%S")
     last_entry_text = last_entry.strftime("%Y-%m-%d %H:%M:%S")
@@ -237,7 +231,7 @@ def write_digest(allrecords, topic_name, last_entry, last_email):
     f.write(digestdict_text)
     f.close()
 
-def fetch_digest(topic_name):
+def fetch_digest(log, topic_name):
     filename = settings.KAFKA_STREAMS +'/'+ topic_name
     try:
         digest_file = open(filename, 'r')
@@ -254,7 +248,7 @@ def fetch_digest(topic_name):
     last_email = datetime.datetime.strptime(last_email_text, "%Y-%m-%d %H:%M:%S")
     return digest,last_entry,last_email
 
-def dispose_email(allrecords, last_email, query):
+def dispose_email(log, allrecords, last_email, query):
     """ Send out email notifications
     """
     utcnow = datetime.datetime.utcnow()
@@ -264,9 +258,8 @@ def dispose_email(allrecords, last_email, query):
     # delta is number of days since last email went out
     if delta < 1.0:
         return last_email
-    print('   --- send email to %s' % query['email'])
+    log.info('   --- send email to %s' % query['email'])
     topic = query['topic_name']
-    sys.stdout.flush()
     query_url = '/query/%d/' % (query['mq_id'])
     message      = 'Your active query with Lasair on topic %s\n' % topic
     message_html = 'Your active query with Lasair on <a href=%s>%s</a><br/>' % (query_url, topic)
@@ -282,15 +275,13 @@ def dispose_email(allrecords, last_email, query):
                 jsonout = json.dumps(out, default=datetime_converter)
                 message += jsonout + '\n'
     try:
-        send_email(query['email'], topic, message, message_html)
+        send_email(log, query['email'], topic, message, message_html)
         return utcnow
     except Exception as e:
-        print('ERROR in filter/run_active_queries: Cannot send email!')
-        print(e)
-        sys.stdout.flush()
+        log.error('ERROR in filter/run_active_queries: Cannot send email!: %s' % str(e))
         return last_email
 
-def send_email(email, topic, message, message_html):
+def send_email(log, email, topic, message, message_html):
     """send_email.
 
     Args:
@@ -310,7 +301,7 @@ def send_email(email, topic, message, message_html):
     s.sendmail('donotreply@%s' % settings.LASAIR_URL, email, msg.as_string())
     s.quit()
 
-def dispose_kafka(query_results, topic):
+def dispose_kafka(log, query_results, topic):
     """ Send out query results by kafka to the given topic.
     """
     conf = {
@@ -325,13 +316,10 @@ def dispose_kafka(query_results, topic):
         p = Producer(conf)
         for out in query_results: 
             jsonout = json.dumps(out, default=datetime_converter)
-            p.produce(topic, value=jsonout, callback=kafka_ack)
+            p.produce(topic, value=jsonout)
         p.flush(10.0)   # 10 second timeout
     except Exception as e:
-        rtxt = "ERROR in filter/run_active_queries: cannot produce to public kafka"
-        rtxt += str(e)
-        slack_webhook.send(settings.SLACK_URL, rtxt)
-        print(rtxt)
+        log.error("ERROR in filter/run_active_queries: cannot produce to public kafka: %s" % str(e))
         sys.stdout.flush()
 
 def datetime_converter(o):
@@ -344,16 +332,12 @@ def datetime_converter(o):
     if isinstance(o, datetime.datetime):
         return o.__str__()
 
-def kafka_ack(err, msg):
-    if err is not None:
-        print("Failed to deliver message: %s: %s" % (str(msg), str(err)))
-
 if __name__ == "__main__":
-    from src import slack_webhook
-    print('--------- RUN ACTIVE QUERIES -----------')
-    sys.stdout.flush()
+    lasairLogging.basicConfig(stream=sys.stdout)
+    log = lasairLogging.getLogger("ingest_runner")
+
+    log.info('--------- RUN ACTIVE QUERIES -----------')
     t = time.time()
-    query_list = fetch_queries()
-    run_queries(query_list)
-    print('Active queries done in %.1f seconds' % (time.time() - t))
-    sys.stdout.flush()
+    query_list = fetch_queries(log)
+    run_queries(log, query_list)
+    log.info('Active queries done in %.1f seconds' % (time.time() - t))
