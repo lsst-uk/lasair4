@@ -1,8 +1,11 @@
 """Unit tests for Lasair logging module."""
+
 import context
 import lasairLogging
 import os
+import sys
 import glob
+from io import StringIO
 import unittest, unittest.mock
 # from manage_status import manage_status
 
@@ -123,6 +126,37 @@ class CommonLoggingTest(unittest.TestCase):
                 unittest.mock.call("Suppressed 1 identical messages"),
                 unittest.mock.call("ERROR: {}: test_slack_merge_maxmerge: Test message 8".format(hostname))
             ])
+
+    def test_stream_logger(self):
+        """Start a logger with stream output only, log a message.
+        The message should be printed on the given stream."""
+        out = StringIO()
+        lasairLogging.basicConfig(
+            stream=out,
+            force=True
+        )
+        log = lasairLogging.getLogger("test_logger")
+        log.info("Test message 9")
+        self.assertRegex(out.getvalue().strip(),
+                         "^\\[.*\\] INFO: test_stream_logger: Test message 9")
+
+    def test_multi_logger(self):
+        """Start a logger with both file and stream output, log a message.
+        The message should be printed on the given stream and to the file."""
+        out = StringIO()
+        lasairLogging.basicConfig(
+            stream=out,
+            filename="test_multi_logger.log",
+            force=True
+        )
+        log = lasairLogging.getLogger("test_logger")
+        log.info("Test message 10")
+        self.assertRegex(out.getvalue().strip(),
+                         "^\\[.*\\] INFO: test_multi_logger: Test message 10")
+        with open("test_multi_logger.log", "r") as f:
+            self.assertRegex(f.readlines()[-1].strip(),
+                             "^\\[.*\\] INFO: test_multi_logger: Test message 10")
+
 
 if __name__ == '__main__':
     import xmlrunner
