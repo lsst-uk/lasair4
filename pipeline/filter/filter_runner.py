@@ -36,12 +36,10 @@ import slack_webhook, lasairLogging
 # if this is True, the runner stops when it can and exits
 stop = False
 
-
 def sigterm_handler(signum, frame):
     global stop
     print('Stopping by SIGTERM')
     stop = True
-
 
 signal.signal(signal.SIGTERM, sigterm_handler)
 
@@ -51,7 +49,6 @@ def now():
 
 # Set up the logger
 lasairLogging.basicConfig(
-    # TODO: Why is this called ingest.log? Can we rename it to filter.log or filter_runner.log?
     filename='/home/ubuntu/logs/filter.log',
     webhook=slack_webhook.SlackWebhook(url=settings.SLACK_URL),
     merge=True
@@ -66,7 +63,7 @@ while not stop:
         log.info('Lockfile not present, waiting')
         time.sleep(settings.WAIT_TIME)
         continue
-    log.info('Filter_runner at %s' % now())
+    log.info('------------- Filter_runner at %s' % now())
     
     retcode = run_filter(log, args)
 
