@@ -42,7 +42,9 @@ def read_watchlist_cache_files(log, cache_dir):
     try:
         dir_list = os.listdir(cache_dir)
     except:
-        log.error('ERROR in filter/check_alerts_watchlists: cannot read watchlist cache directory')
+        s = 'ERROR in filter/check_alerts_watchlists: cannot read watchlist cache directory'
+        if log: log.error(s)
+        else:   print(s)
 
     for wl_dir in dir_list:
         # every directory in the cache should be of the form wl_<nn> 
