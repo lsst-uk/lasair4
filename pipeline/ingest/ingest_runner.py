@@ -1,6 +1,8 @@
 """
 Ingest proess runner. Takes the --nprocess arg and starts that many versions of ingest.py, 
 with other arguments sent there, also logs the outputs. 
+If maxalert is specified, it does that many for each process then exits,
+otherwise maxalert is the largest possible. 
 SIGTERM is passed to those children and dealt with properly.
 Usage:
     ingest.py [--maxalert=MAX]

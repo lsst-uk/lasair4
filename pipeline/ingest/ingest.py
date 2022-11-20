@@ -2,6 +2,7 @@
 Ingestion code for Lasair. Takes a stream of AVRO, splits it into
 FITS cutouts to Ceph, Lightcurves to Cassandra, and JSON versions of 
 the AVRO packets, but without the cutouts, to Kafka.
+Kafka commit os every 1000 alerts, and before exit.
 Usage:
     ingest.py [--maxalert=MAX]
               [--group_id=GID]
@@ -39,8 +40,6 @@ def sigterm_handler(signum, frame):
     global log
     stop = True
     log.info("Caught SIGTERM")
-
-signal.signal(signal.SIGTERM, sigterm_handler)
 
 def now():
     # current UTC as string
@@ -207,6 +206,8 @@ def run_ingest(args):
             merge=True
         )
         log = lasairLogging.getLogger("ingest_runner")
+
+    signal.signal(signal.SIGTERM, sigterm_handler)
 
     if args['--topic_in']:
         topic_in = args['--topic_in']
@@ -388,6 +389,8 @@ def end_batch(consumer, producer, ms, nalert, ncandidate):
 if __name__ == "__main__":
     lasairLogging.basicConfig(stream=sys.stdout)
     log = lasairLogging.getLogger("ingest_runner")
+
+    signal.signal(signal.SIGTERM, sigterm_handler)
 
     args = docopt(__doc__)
     rc = run_ingest(args)
