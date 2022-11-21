@@ -13,7 +13,7 @@
 
             <div class="col-1 text-xl-center mb-3 mb-xl-0 d-flex justify-content-xl-start">
                 <div class="icon-shape icon-shape-tertiary rounded me-4 me-sm-0">
-                    {% include "includes/icon_watchlist.html" %}
+                    {% include "includes/icons/icon_watchmap.html" %}
                 </div>
             </div>
 
@@ -25,22 +25,22 @@
 
 
                         <div class="d-flex align-items-start">
-                            {% if watchlist.public %}
+                            {% if watchmap.public %}
                                 <span class="icon icon-md me-0 me-sm-0 text-gray-400 " data-bs-toggle="tooltip" data-bs-title="public list">
-                                    {% include "includes/icon_padlock_open.html" %}
+                                    {% include "includes/icons/icon_padlock_open.html" %}
                                 </span>
 
                             {% else %}
                                 <span class="icon icon-md me-0 me-sm-0 text-gray-400" data-bs-toggle="tooltip" data-bs-title="private list">
-                                    {% include "includes/icon_padlock_closed.html" %}
+                                    {% include "includes/icons/icon_padlock_closed.html" %}
                                 </span>
 
                             {% endif %}
 
-                            <div class="h3 fw-extrabold mb-0 ms-2">'{{ watchlist.name }}' Watchlist Associations</div>
+                            <div class="h3 fw-extrabold mb-0 ms-2">'{{ watchmap.name }}' Watched watchmap Associations</div>
                         </div>
                         <small class="text-gray-500">
-                            Transient objects located within an association radius of a source in the <em>{{ watchlist.name }}</em> watchlist ({{number_cones}} sources). The default association radius set at <b>{{watchlist.radius}} arcsec</b> and the watchlist is <b>{% if not watchlist.active %}not {% endif %} active</b> {% include "includes/info_tooltip.html" with info="when active, a watchlist will be dynamically matched against new transient alerts. See the watchlist settings to make changes." position="auto" %}.
+                            Transient objects located within the <em>{{ watchmap.name }}</em> watchlist watchmap. The watchlist watchmap is <b>{% if not area.active %}not {% endif %} active</b> {% include "includes/info_tooltip.html" with info="when active, a watchlist watchmap will be dynamically matched against new transient alerts. See the watchlist settings to make changes." position="auto" %}.
                         </small>
 
 
@@ -54,20 +54,12 @@
 
                     <div class=" ms-auto ps-1">
                         {# <div class="btn-group" role="group" aria-label="Basic button group"> #}
-                        <form  method="post" class="mt-0 mb-3">
-                            {% csrf_token %}
-                            <button type="submit" class="btn btn-sm btn-tertiary me-1 icon-sm" data-bs-toggle="tooltip" data-bs-placement="auto" data-bs-title="run the filter to give live results">{% include "includes/icon_run.html" %}<span class="align-middle">Refresh</span></button></form>
-                        {% if "filter/log/" not in request.path %}
 
-                            <span data-bs-toggle="tooltip" data-bs-placement="auto" data-bs-title="edit the watchlist settings">
-                                <a class="btn btn-sm btn-gray-600 me-1 align-middle " href='#' data-bs-toggle="modal" data-bs-target="#editWatchlistForm">
-                                    {% include "includes/icon_edit.html" %}
-                                    <span class="align-middle">Settings</span></a>
-                            </span>
-                        {% else %}
-
-                        {% endif %}
-
+                        <span data-bs-toggle="tooltip" data-bs-placement="auto" data-bs-title="edit the watchlist settings">
+                            <a class="btn btn-sm btn-gray-600 me-1 align-middle " href='#' data-bs-toggle="modal" data-bs-target="#editWatchlistForm">
+                                {% include "includes/icons/icon_edit.html" %}
+                                <span class="align-middle">Settings</span></a>
+                        </span>
 
                         {# </div> #}
                     </div>
@@ -92,5 +84,5 @@
 </div>
 
 
-{% include "includes/widget_watchlist_update_form.html" %}
+{% include "includes/widgets/widget_watchlist_update_form.html" %}
 

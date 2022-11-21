@@ -14,7 +14,7 @@
             {% else %}
 
                 <div class="icon-shape icon-shape-tertiary rounded me-4 me-sm-0">
-                    {% include "includes/icon_schema.html" %}
+                    {% include "includes/icons/icon_schema.html" %}
 
                 </div>
             {% endif %}
@@ -28,7 +28,7 @@
                 <h3 class="fw-extrabold mb-2">Lasair Schema</h3>
 
                 <small class="text-gray-500">
-                    Use the search bar below to find the columns required for your filter. Click on  {% include "includes/icon_copy.html" %} to copy the <code>table.column</code> name to your clipboard.
+                    Use the search bar below to find the columns required for your filter. Click on  {% include "includes/icons/icon_copy.html" %} to copy the <code>table.column</code> name to your clipboard.
                 </small>
             </div>
         </div>
@@ -51,7 +51,7 @@
 
                         {% for row in schema_content %}
                             <tr>
-                                <td ><button data-bs-toggle="tooltip" data-bs-trigger="click" data-bs-animation="true" data-bs-placement="top" data-bs-title="copied" onclick="copy('{{schema_name}}.{{row.name}}','#copy_button_{{schema_name}}_{{row.name}}')" id="copy_button_{{schema_name}}_{{row.name}}" class="btn btn-xs copy-button me-1">  {% include "includes/icon_copy.html" %} </button> <code class="fw-extrabold text-gray-400">{{schema_name}}.</code><code class="fw-extrabold text-gray-700">{{row.name}}</code></td>
+                                <td ><button data-bs-toggle="tooltip" data-bs-trigger="click" data-bs-animation="true" data-bs-placement="top" data-bs-title="copied" onclick="copy('{{schema_name}}.{{row.name}}','#copy_button_{{schema_name}}_{{row.name}}')" id="copy_button_{{schema_name}}_{{row.name}}" class="btn btn-xs copy-button me-1">  {% include "includes/icons/icon_copy.html" %} </button> <code class="fw-extrabold text-gray-400">{{schema_name}}.</code><code class="fw-extrabold text-gray-700">{{row.name}}</code></td>
                                 <td> {{row.doc}}</td>
 
                             </tr>

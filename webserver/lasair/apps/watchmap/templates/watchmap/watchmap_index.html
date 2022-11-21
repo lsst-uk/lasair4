@@ -13,7 +13,7 @@
                             <div class="col-1 text-xl-center mb-3 mb-xl-0 d-flex justify-content-xl-start">
                                 <div class="icon-shape icon-shape-tertiary rounded me-4 me-sm-0">
 
-                                    {% include "includes/icon_watchmap.html" %}
+                                    {% include "includes/icons/icon_watchmap.html" %}
                                 </div>
                             </div>
 
@@ -47,12 +47,12 @@
 
             {% if user.is_authenticated %}
                 <div class="col-12 mb-4">
-                    {% include "includes/widget_watchmap_table.html" with type="my" position="auto" %}
+                    {% include "includes/widgets/widget_watchmap_table.html" with type="my" position="auto" %}
                 </div>
             {% endif %}
 
             <div class="col-12 mb-4">
-                {% include "includes/widget_watchmap_table.html" with type="public" position="auto" %}
+                {% include "includes/widgets/widget_watchmap_table.html" with type="public" position="auto" %}
             </div>
 
         </div>
