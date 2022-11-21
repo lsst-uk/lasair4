@@ -119,8 +119,12 @@ gulp.task('concat:vendor:css', function() {
             paths.src.node_modules + '/notyf/notyf.min.css',
             paths.src.node_modules + '/js9/js9support.css',
             paths.src.node_modules + '/js9/js9.css',
+            paths.src.node_modules + '/tributejs/dist/tribute.css',
             paths.src.vendor + '/aladin.min.css',
-            paths.src.vendor + '/prism.css'
+            paths.src.vendor + '/prism.css',
+            paths.src.vendor + '/prism-live.css',
+            paths.src.vendor + '/style.css',
+
         ])
         .pipe(sourcemaps.init())
         .pipe(cleanCss())
@@ -156,6 +160,7 @@ gulp.task('concat:vendor:js', function() {
             paths.src.node_modules + '/bootstrap/dist/js/bootstrap.min.js',
             paths.src.node_modules + '/onscreen/dist/on-screen.umd.min.js',
             paths.src.node_modules + '/nouislider/dist/nouislider.min.js',
+            paths.src.node_modules + '/blissfuljs/bliss.js',
             paths.src.node_modules + '/smooth-scroll/dist/smooth-scroll.polyfills.min.js',
             paths.src.node_modules + '/chartist/dist/chartist.min.js',
             paths.src.node_modules + '/chartist-plugin-tooltips/dist/chartist-plugin-tooltip.min.js',
@@ -165,12 +170,15 @@ gulp.task('concat:vendor:js', function() {
             paths.src.node_modules + '/vanillajs-datepicker/dist/js/datepicker.min.js',
             paths.src.node_modules + '/notyf/notyf.min.js',
             paths.src.node_modules + '/simplebar/dist/simplebar.min.js',
+            paths.src.node_modules + '/tributejs/dist/tribute.js',
             paths.src.node_modules + '/@fortawesome/fontawesome-free/js/all.min.js',
             paths.src.node_modules + '/simple-datatables/dist/umd/simple-datatables.js',
             paths.src.node_modules + '/plotly.js/dist/plotly.min.js',
             paths.src.node_modules + '/jquery/dist/jquery.min.js',
+
             paths.src.vendor + '/aladin.min.js',
-            paths.src.vendor + '/prism.js'
+            paths.src.vendor + '/prism.js',
+            paths.src.vendor + '/prism-live.js',
 
         ])
         .pipe(sourcemaps.init())

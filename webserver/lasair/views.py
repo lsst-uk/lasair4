@@ -15,7 +15,7 @@ from django.template.context_processors import csrf
 from django.http import HttpResponseRedirect, HttpResponse
 from django.shortcuts import render, get_object_or_404, redirect
 import settings
-from lasair.db_schema import get_schema, get_schema_dict, get_schema_for_query_selected
+from lasair.apps.db_schema.utils import get_schema, get_schema_dict, get_schema_for_query_selected
 from src import db_connect
 import re
 import sys
