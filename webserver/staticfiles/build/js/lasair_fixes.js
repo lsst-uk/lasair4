@@ -1,4 +1,5 @@
-$(function() {
+document.addEventListener('DOMContentLoaded', function() {
+
     const myDefaultAllowList = bootstrap.Popover.Default.allowList;
 
     myDefaultAllowList.table = [];
@@ -10,28 +11,16 @@ $(function() {
     myDefaultAllowList.thead = [];
 
     $('[data-bs-toggle="popover"]').popover();
+
+    var ttDefaultAllowList = bootstrap.Tooltip.Default.allowList;
+    ttDefaultAllowList.table = [];
+    ttDefaultAllowList.tr = [];
+    ttDefaultAllowList.td = ['data-bs-option'];
+    ttDefaultAllowList.th = [];
+    ttDefaultAllowList.div = [];
+    ttDefaultAllowList.tbody = [];
+    ttDefaultAllowList.thead = [];
+
     $('[data-bs-toggle="tooltip"]').tooltip();
-
-    // $('[data-bs-toggle="popover"]').Popover({
-    //     html: true,
-
-    //     content: function() {
-    //         console.log("Shot");
-    //         var content = $(this).attr("data-bs-content");
-    //         return $(content).children(".popover-body").html();
-    //     },
-    //     title: function() {
-    //         console.log("Shot");
-    //         var title = $(this).attr("data-bs-content");
-    //         return $(title).children(".popover-heading").html();
-    //     }
-    // });
-
-    // var table = $('#datatable').dataTable({
-    //     fnDrawCallback: function() {
-    //         console.log("adasda")
-    //         $('[data-bs-toggle="popover"]').Popover();
-    //     }
-    // })
 
 });

@@ -39,7 +39,7 @@ class Migration(migrations.Migration):
                 ('ra', models.FloatField(blank=True, null=True)),
                 ('decl', models.FloatField(blank=True, null=True)),
                 ('radius', models.FloatField(blank=True, null=True)),
-                ('wl', models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.DO_NOTHING, to='lasair.watchlists')),
+                ('wl', models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.DO_NOTHING, to='lasair.apps.watchlists')),
             ],
             options={
                 'db_table': 'watchlist_cones',
