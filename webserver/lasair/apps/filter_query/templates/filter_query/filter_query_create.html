@@ -19,20 +19,20 @@
         <div class="row mt-4">
 
             <div class="col-12 mb-4">
-                {% include "includes/widget_filter_query_create_header.html" %}
+                {% include "includes/widgets/widget_filter_query_create_header.html" %}
             </div>
 
             <div class="col-12 mb-4">
-                {% include "includes/widget_filter_creation_form.html" %}
+                {% include "includes/widgets/widget_filter_creation_form.html" %}
             </div>
 
             <div class="col-12 mb-4">
 
-                {% include "includes/widget_objectlist_table.html" with zerotext="Zero objects have been matched against this filter so far" table=table header="Filter Results"  desc="Here are the filtered objects, limited to "|add:limit|add:" objects" %}
+                {% include "includes/widgets/widget_objectlist_table.html" with zerotext="Zero objects have been matched against this filter so far" table=table header="Filter Results"  desc="Here are the filtered objects, limited to "|add:limit|add:" objects" %}
             </div>
 
             <div class="col-12 mb-4">
-                {% include "includes/widget_schema_table.html" %}
+                {% include "includes/widgets/widget_schema_table.html" %}
             </div>
 
         </div>
