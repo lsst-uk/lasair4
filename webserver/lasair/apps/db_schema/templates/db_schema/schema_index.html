@@ -1,42 +1,35 @@
 {% extends "layouts/base.html" %}
+
+<!-- Specific Page CSS goes HERE  -->
+{% block stylesheets %}{% endblock stylesheets %}
+{% load static %}
+
+
+{% block title %}
+    {{data.objectId}}
+{% endblock title %}
+
+
 {% block content %}
-    <div class="row">
-        <div class="col-sm">
-            <h2>Schemas for the tables</h2>
-            <i>All attributes are floating point or double unless otherwise noted.</i>
-            <p>
-                <h3>Schema for "objects" table</h3>
-                <table class="table">
-                    {% for row in schemas.objects %}
-                        <tr><td>{{ row.name }}</td><td>{{ row.doc }}</td><td><i>{{ row.type }}</i></td></tr>
-                    {% endfor %}
-                </table>
 
-                <p>
-                    <h3>Schema for "sherlock_classifications" table</h3>
-                    (for more information see <a href=/sherlock>Sherlock documentation</a>)
-                    <table class="table">
-                        {% for row in schemas.sherlock_classifications %}
-                            <tr><td>{{ row.name }}</td><td>{{ row.doc }}</td><td><i>{{ row.type }}</i></td></tr>
-                        {% endfor %}
-                    </table>
+    <div class="container">
 
+        <div class="row mt-4">
 
-                    <h3>Schema for "crossmatch_tns" table</h3>
-                    <table class="table">
-                        {% for row in schemas.crossmatch_tns %}
-                            <tr><td>{{ row.name }}</td><td>{{ row.doc }}</td><td><i>{{ row.type }}</i></td></tr>
-                        {% endfor %}
-                    </table>
+            <div class="col-12 mb-4">
+                {% include "includes/widgets/widget_schema_browser_header.html" %}
+            </div>
 
-                    <h3>Schema for "annotations" table</h3>
-                    <table class="table">
-                        {% for row in schemas.annotations %}
-                            <tr><td>{{ row.name }}</td><td>{{ row.doc }}</td><td><i>{{ row.type }}</i></td></tr>
-                        {% endfor %}
-                    </table>
-                    <p>
+            {% for schema_name, schema_content in schemas.items %}
 
-                    </div>
+                <div class="col-12 mb-4">
+                    {% include "includes/widgets/widget_schema_table.html" with tablename=schema_name  %}
                 </div>
+
+            {% endfor %}
+
+        </div>
+    </div>
+    <hr/>
+
 {% endblock %}
