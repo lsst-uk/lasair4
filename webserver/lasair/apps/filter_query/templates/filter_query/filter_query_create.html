@@ -47,65 +47,65 @@
 
         // example of Tribute in autocomplete mode
 
+        var tables = [];
+        var tableColumns = [];
+        {% for schema_name, schema_content in schemas.items %}
+            tables.push({ key : "{{schema_name}}", value: "{{schema_name}}"})
+            var theseColumns = {
+                trigger: "{{schema_name}}".concat("."),
+                values: [],
+                noMatchTemplate: "",
+                spaceSelectsMatch: false,
+                selectTemplate: function(item) {
+                    if (typeof item === "undefined") return null;
+                    if (this.range.isContentEditable(this.current.element)) {
+                        return (
+                            '<span contenteditable="false"><a>' +
+                            item.original.key +
+                            "</a></span>"
+                        );
+                    }
 
+                    return item.original.value;
+                },
+                menuItemTemplate: function(item) {
+                    return item.string;
+                }
+            }
 
-        var tributeAttributes = {
+            {% for row in schema_content %}
+                theseColumns.values.push({ key : "{{schema_name}}.{{row.name}}", value: "{{schema_name}}.{{row.name}}"})
+            {% endfor %}
+            tableColumns.push(theseColumns)
+        {% endfor %}
 
+        var tableNames = {
             autocompleteMode: true, // DON'T REQUIRE A TRIGGER
             noMatchTemplate: "",
             spaceSelectsMatch: false,
-            values: [
-                { key: "Alabama", value: "Alabama" },
-                { key: "Alaska", value: "Alaska" },
-                { key: "Arizona", value: "Arizona" },
-                { key: "Arkansas", value: "Arkansas" },
-                { key: "California", value: "California" },
-                { key: "Colorado", value: "Colorado" },
-                { key: "Connecticut", value: "Connecticut" },
-                { key: "Delaware", value: "Delaware" },
-                { key: "Florida", value: "Florida" },
-                { key: "Georgia", value: "Georgia" },
-                { key: "Hawaii", value: "Hawaii" },
-                { key: "Idaho", value: "Idaho" },
-                { key: "Illinois", value: "Illinois" },
-                { key: "Indiana", value: "Indiana" },
-                { key: "Iowa", value: "Iowa" },
-                { key: "Kansas", value: "Kansas" },
-                { key: "Kentucky", value: "Kentucky" },
-                { key: "Louisiana", value: "Louisiana" },
-                { key: "Maine", value: "Maine" },
-                { key: "Maryland", value: "Maryland" },
-                { key: "Massachusetts", value: "Massachusetts" },
-                { key: "Michigan", value: "Michigan" },
-                { key: "Minnesota", value: "Minnesota" },
-                { key: "Mississippi", value: "Mississippi" },
-                { key: "Missouri", value: "Missouri" },
-                { key: "Montana", value: "Montana" },
-                { key: "Nebraska", value: "Nebraska" },
-                { key: "Nevada", value: "Nevada" },
-                { key: "New Hampshire", value: "New Hampshire" },
-                { key: "New Jersey", value: "New Jersey" },
-                { key: "New Mexico", value: "New Mexico" },
-                { key: "New York", value: "New York" },
-                { key: "North Carolina", value: "North Carolina" },
-                { key: "North Dakota", value: "North Dakota" },
-                { key: "Ohio", value: "Ohio" },
-                { key: "Oklahoma", value: "Oklahoma" },
-                { key: "Oregon", value: "Oregon" },
-                { key: "Pennsylvania", value: "Pennsylvania" },
-                { key: "Rhode Island", value: "Rhode Island" },
-                { key: "South Carolina", value: "South Carolina" },
-                { key: "South Dakota", value: "South Dakota" },
-                { key: "Tennessee", value: "Tennessee" },
-                { key: "Texas", value: "Texas" },
-                { key: "Utah", value: "Utah" },
-                { key: "Vermont", value: "Vermont" },
-                { key: "Virginia", value: "Virginia" },
-                { key: "Washington", value: "Washington" },
-                { key: "West Virginia", value: "West Virginia" },
-                { key: "Wisconsin", value: "Wisconsin" },
-                { key: "Wyoming", value: "Wyoming" }
-            ],
+            values: tables,
+            selectTemplate: function(item) {
+                if (typeof item === "undefined") return null;
+                if (this.range.isContentEditable(this.current.element)) {
+                    return (
+                        '<span contenteditable="false"><a>' +
+                        item.original.key +
+                        "</a></span>"
+                    );
+                }
+
+                return item.original.value;
+            },
+            menuItemTemplate: function(item) {
+                return item.string;
+            }
+        };
+
+        var tableNames2 = {
+            trigger: "objects.",
+            noMatchTemplate: "",
+            spaceSelectsMatch: false,
+            values: tables,
             selectTemplate: function(item) {
                 if (typeof item === "undefined") return null;
                 if (this.range.isContentEditable(this.current.element)) {
@@ -124,29 +124,38 @@
         };
 
 
-        var tributeAutocompleteTestArea = new Tribute(
-            Object.assign(
-                {
-                    menuContainer: document.getElementById(
-                        "select_div"
-                    )
-                },
-                tributeAttributes
-            )
-        );
+        var tributeAutocompleteTestArea = new Tribute({
+            autocompleteMode: true,
+            noMatchTemplate: "",
+            collection: [tableNames]
+        });
         tributeAutocompleteTestArea.attach(
             document.querySelector("textarea#id_selected")
 
         );
 
+        var tributeAutocompleteTestArea2 = new Tribute({
+            noMatchTemplate: "",
+            collection: tableColumns
+        });
+        tributeAutocompleteTestArea2.attach(
+            document.querySelector("textarea#id_selected")
+
+        );
+
+
+
         if (tributeAutocompleteTestArea.isActive) {
-            input.keydown(function(event) {
-                if (event.keyCode === 9) {
-                    console.log("shit")
-                    event.preventDefault();
-                }
-            })
-        };
+            console.log('Somebody is being mentioned!');
+        } else {
+            console.log("Who's this guy talking to?");
+        }
+
+        document.querySelector(".prism-live").addEventListener('keydown', function(e) {
+            if (e.key == 'Tab') {
+                e.preventDefault();
+            }
+        });
 
     </script>
 {% endblock javascripts %}
