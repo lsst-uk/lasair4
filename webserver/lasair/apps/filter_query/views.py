@@ -429,7 +429,7 @@ def filter_query_detail(request, mq_id):
                        'conditions': conditions,
                        'nalert': nalert,
                        'ps': offset, 'pe': offset + nalert,
-                       'limit': limit, 'offset': offset,
+                       'limit': str(limit), 'offset': offset,
                        'message': message,
                        "schema": tableSchema})
 
