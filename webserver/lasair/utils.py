@@ -1,5 +1,4 @@
-from src.objectStore import objectStore
-import sys
+import sys, os
 from django.shortcuts import get_object_or_404
 from django.http import HttpResponse, HttpResponseRedirect
 from django.template.context_processors import csrf
@@ -16,8 +15,8 @@ from datetime import date
 import settings
 from lasair.lightcurves import lightcurve_fetcher
 from astropy.time import Time
-sys.path.append('../common')
-
+sys.path.append('../../common')
+from src import objectStore
 
 def jd_from_iso(date):
     """convert and return a Julian Date from ISO format date
@@ -177,6 +176,7 @@ def objjson(objectId):
     LF.close()
 
     count_isdiffpos = count_all_candidates = count_noncandidate = 0
+    image_store  = objectStore.objectStore(suffix='fits', fileroot=settings.IMAGEFITS)
     for cand in candidates:
         cand['mjd'] = mjd = float(cand['jd']) - 2400000.5
         cand['since_now'] = mjd - now
@@ -186,6 +186,18 @@ def objjson(objectId):
             date = datetime.strptime("1858/11/17", "%Y/%m/%d")
             date += timedelta(mjd)
             cand['utc'] = date.strftime("%Y-%m-%d %H:%M:%S")
+
+            # add image urls
+            for cutoutType in ['Science', 'Template', 'Difference']:
+                candid_cutoutType = '%s_cutout%s' % (candid, cutoutType)
+                filename = image_store.getFileName(candid_cutoutType)
+                if os.path.exists(filename):
+                    url = filename.replace(\
+                        '/mnt/cephfs/lasair', \
+                        'https://%s.%s/lasair/static')
+                    url = url % (settings.WEB_DOMAIN, settings.LASAIR_URL)
+                    image_urls[candid_cutoutType] = url
+
             if 'ssnamenr' in cand:
                 ssnamenr = cand['ssnamenr']
                 if ssnamenr == 'null':
