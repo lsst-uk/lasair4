@@ -50,6 +50,8 @@ args = docopt(__doc__)
 # The nprocess argument is used in this module
 if args['--nprocess']:
     nprocess = int(args['--nprocess'])
+    log.error('Sorry the multiprocessing option doesnt work yet')
+    sys.exit()
 else:
     nprocess = 1
 log.info('ingest_runner with %d processes' % nprocess)
