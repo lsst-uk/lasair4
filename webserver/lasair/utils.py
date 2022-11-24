@@ -177,6 +177,7 @@ def objjson(objectId):
 
     count_isdiffpos = count_all_candidates = count_noncandidate = 0
     image_store  = objectStore.objectStore(suffix='fits', fileroot=settings.IMAGEFITS)
+    image_urls = {}
     for cand in candidates:
         cand['mjd'] = mjd = float(cand['jd']) - 2400000.5
         cand['since_now'] = mjd - now
@@ -232,6 +233,7 @@ def objjson(objectId):
             'count_all_candidates': count_all_candidates,
             'count_noncandidate': count_noncandidate,
             'sherlock': sherlock,
+            'image_urls': image_urls,
             'TNS': TNS, 'message': message,
             }
     return data
