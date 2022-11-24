@@ -4,7 +4,7 @@ import re
 import json
 from cassandra.cluster import Cluster
 from lasair.query_builder import check_query, build_query
-from lasair.apps.object.views import objjson
+from lasair.utils import objjson
 import requests
 from lasair.lightcurves import lightcurve_fetcher
 from cassandra.query import dict_factory
