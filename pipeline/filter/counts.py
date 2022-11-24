@@ -4,15 +4,9 @@ import settings
 sys.path.append('../../common/src')
 import db_connect, lasairLogging
 
-import requests
-import urllib
-import urllib.parse
-import json
-import time
-import math
-import datetime
+import requests, urllib, urllib.parse, json, time, math, datetime 
 
-def since_midnight(log):
+def since_midnight():
     """since_midnight.
     How many objects updated since last midnight
     """
@@ -53,7 +47,7 @@ def since_midnight(log):
         total_count = -1
     return {'count':count, 'delay':delay, 'total_count':total_count}
 
-def grafana_today(log):
+def grafana_today():
     """since_midnight.
     How many objects reported today from ZTF
     """
@@ -70,6 +64,7 @@ def grafana_today(log):
         alertsstr = result['data']['result'][0]['value'][1]
         today_candidates_ztf = int(alertsstr)
     except Exception as e:
+        log = lasairLogging.getLogger("filter")
         log.info('Cannot parse grafana: %s: %s' % (str(result), str(e)))
         today_candidates_ztf = -1
 
@@ -79,4 +74,4 @@ if __name__ == "__main__":
     lasairLogging.basicConfig(stream=sys.stdout)
     log = lasairLogging.getLogger("ingest_runner")
 
-    print('Grafana today:', grafana_today(log))
+    print('Grafana today:', grafana_today())

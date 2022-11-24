@@ -58,9 +58,9 @@ def test_alerts():
     alertlist = {"obj":alert_objlist, "ra":alert_ralist, "de":alert_delist}
 
     print('reading cache files')
-    watchlistlist = read_watchlist_cache_files(None, cache_dir)
+    watchlistlist = read_watchlist_cache_files(cache_dir)
     print('checking alerts')
-    hits = check_alerts_against_watchlists(None, alertlist, watchlistlist, chunk_size)
+    hits = check_alerts_against_watchlists(alertlist, watchlistlist, chunk_size)
     return hits
 
 class FilterWatchlistTest(TestCase):

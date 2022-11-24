@@ -65,7 +65,7 @@ while not stop:
         continue
     log.info('------------- Filter_runner at %s' % now())
     
-    retcode = run_filter(log, args)
+    retcode = run_filter(args)
 
     if retcode == 0:   # process got no alerts, so sleep a few minutes
         log.info('Waiting for more alerts ....')
