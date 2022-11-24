@@ -35,7 +35,7 @@ import settings
 sys.path.append('../../common/src')
 import date_nid, db_connect, manage_status, lasairLogging
 
-def run_filter(log, args):
+def run_filter(args):
 
     if args['--topic_in']:
         topic_in = args['--topic_in']
@@ -52,6 +52,7 @@ def run_filter(log, args):
     else:
         maxalert = settings.KAFKA_MAXALERTS
 
+    log = lasairLogging.getLogger("filter")
     log.info('Topic_in=%s, group_id=%s, maxalert=%d' % (topic_in, group_id, maxalert))
 
     ##### clear out the local database
@@ -82,7 +83,7 @@ def run_filter(log, args):
         log.error('ERROR cannot connect to kafka: %s' % str(e))
         return
 
-    rc = kafka_consume(log, consumer, maxalert)
+    rc = kafka_consume(consumer, maxalert)
 
     # rc is the return code from ingestion, number of alerts received
     if rc < 0:
@@ -101,7 +102,7 @@ def run_filter(log, args):
     log.info('WATCHLIST start %s' % datetime.utcnow().strftime("%H:%M:%S"))
     t = time.time()
     try:
-        hits = get_watchlist_hits(log, msl_local, settings.WATCHLIST_MOCS, settings.WATCHLIST_CHUNK)
+        hits = get_watchlist_hits(msl_local, settings.WATCHLIST_MOCS, settings.WATCHLIST_CHUNK)
     except Exception as e:
         log.error("ERROR in filter/get_watchlist_hits: %s" % str(e))
         sys.exit(0)
@@ -110,7 +111,7 @@ def run_filter(log, args):
     
     if len(hits) > 0:
         try:
-            insert_watchlist_hits(log, msl_local, hits)
+            insert_watchlist_hits(msl_local, hits)
         except Exception as e:
             log.error("ERROR in filter/insert_watchlist_hits: %s" % str(e))
             sys.exit(0)
@@ -121,7 +122,7 @@ def run_filter(log, args):
     log.info('AREA start %s' % datetime.utcnow().strftime("%H:%M:%S"))
     t = time.time()
     try:
-        hits = get_area_hits(log, msl_local, settings.AREA_MOCS)
+        hits = get_area_hits(msl_local, settings.AREA_MOCS)
     except Exception as e:
         log.error("ERROR in filter/get_area_hits: %s" % str(e))
         sys.exit(0)
@@ -129,7 +130,7 @@ def run_filter(log, args):
     log.info('got %d area hits' % len(hits))
     if len(hits) > 0:
         try:
-            insert_area_hits(log, msl_local, hits)
+            insert_area_hits(msl_local, hits)
         except Exception as e:
             log.error("ERROR in filter/insert_area_hits: %s" % str(e))
             sys.exit(0)
@@ -139,13 +140,13 @@ def run_filter(log, args):
     log.info('QUERIES start %s' % datetime.utcnow().strftime("%H:%M:%S"))
     t = time.time()
     try:
-        query_list = run_active_queries.fetch_queries(log)
+        query_list = run_active_queries.fetch_queries()
     except Exception as e:
         log.error("ERROR in filter/run_active_queries.fetch_queries: %s" % str(e))
         sys.exit(0)
     
     try:
-        run_active_queries.run_queries(log, query_list)
+        run_active_queries.run_queries(query_list)
     except Exception as e:
         log.error("ERROR in filter/run_active_queries.run_queries: %s" % str(e))
         sys.exit(0)
@@ -155,7 +156,7 @@ def run_filter(log, args):
     log.info('ANNOTATION QUERIES start %s' % datetime.utcnow().strftime("%H:%M:%S"))
     t = time.time()
     try:
-        run_active_queries.run_annotation_queries(log, query_list)
+        run_active_queries.run_annotation_queries(query_list)
     except Exception as e:
         log.warning("WARNING in filter/run_active_queries.run_annotation_queries: %s" % str(e))
     log.info('ANNOTATION QUERIES %.1f seconds' % (time.time() - t))
@@ -209,9 +210,9 @@ def run_filter(log, args):
 
     ms = manage_status.manage_status(settings.SYSTEM_STATUS)
     nid = date_nid.nid_now()
-    d = since_midnight(log)
+    d = since_midnight()
     ms.set({
-        'today_ztf':grafana_today(log), 
+        'today_ztf':grafana_today(), 
         'today_database':d['count'], 
         'min_delay':d['delay'], 
         'total_count': d['total_count'],
@@ -223,11 +224,11 @@ def run_filter(log, args):
 
 if __name__ == '__main__':
     lasairLogging.basicConfig(stream=sys.stdout)
-    log = lasairLogging.getLogger("ingest_runner")
+    log = lasairLogging.getLogger("filter")
 
     args = docopt(__doc__)
     # rc=1: got some alerts
     # rc=0: got no alerts
 
-    rc = run_filter(log, args)
+    rc = run_filter(args)
     sys.exit(rc)
