@@ -195,8 +195,8 @@ def objjson(objectId):
                 if os.path.exists(filename):
                     url = filename.replace(\
                         '/mnt/cephfs/lasair', \
-                        'https://%s.%s/lasair/static')
-                    url = url % (settings.WEB_DOMAIN, settings.LASAIR_URL)
+                        'https://%s/lasair/static')
+                    url = url % (settings.LASAIR_URL)
                     image_urls[candid_cutoutType] = url
 
             if 'ssnamenr' in cand:
