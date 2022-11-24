@@ -54,9 +54,7 @@ def run_filter(log, args):
 
     log.info('Topic_in=%s, group_id=%s, maxalert=%d' % (topic_in, group_id, maxalert))
 
-    log.info('------------------')
     ##### clear out the local database
-    os.system('date')
     log.info('clear local caches')
     cmd = 'python3 refresh.py'
     if os.system(cmd) != 0:
@@ -220,8 +218,8 @@ def run_filter(log, args):
         'nid': nid}, 
         nid)
     log.info('Exit status %d' % rc)
-    if rc > 0: sys.exit(1)
-    else:      sys.exit(0)
+    if rc > 0: return(1)
+    else:      return(0)
 
 if __name__ == '__main__':
     lasairLogging.basicConfig(stream=sys.stdout)
