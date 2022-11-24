@@ -107,7 +107,7 @@ def objjson(objectId):
     **Usage:**
 
     ```python
-    from lasair.apps.object import objjson
+    from lasair.utils import objjson
     objectData = objjson(objID)
     ```  
     """
