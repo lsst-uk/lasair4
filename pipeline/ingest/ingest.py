@@ -200,12 +200,7 @@ def run_ingest(args):
 
     # if logging wasn't set up in __main__ then do it here
     if not log:
-        lasairLogging.basicConfig(
-            filename='/home/ubuntu/logs/ingest.log',
-            webhook=slack_webhook.SlackWebhook(url=settings.SLACK_URL),
-            merge=True
-        )
-        log = lasairLogging.getLogger("ingest_runner")
+        log = lasairLogging.getLogger("ingest")
 
     signal.signal(signal.SIGTERM, sigterm_handler)
 
@@ -388,7 +383,7 @@ def end_batch(consumer, producer, ms, nalert, ncandidate):
 
 if __name__ == "__main__":
     lasairLogging.basicConfig(stream=sys.stdout)
-    log = lasairLogging.getLogger("ingest_runner")
+    log = lasairLogging.getLogger("ingest")
 
     signal.signal(signal.SIGTERM, sigterm_handler)
 
