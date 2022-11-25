@@ -52,6 +52,9 @@ td .icon-shape  {
     }
 }
 
+a > svg {
+    height: 1.1rem;
+}
 
 .icon, .icon > svg {
     height: $icon-size !important;

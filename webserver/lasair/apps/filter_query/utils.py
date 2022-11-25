@@ -54,9 +54,9 @@ def run_filter(
 
     """
     message = ''
-    e = check_query(selected, tables, conditions)
-    if e:
-        return e
+    error = check_query(selected, tables, conditions)
+    if error:
+        return None, None, None, None, error
     sqlquery_real = build_query(selected, tables, conditions)
     sqlquery_limit = sqlquery_real + ' LIMIT %d OFFSET %d' % (limit, offset)
     message += sqlquery_limit
@@ -76,8 +76,8 @@ def run_filter(
     try:
         cursor.execute(sqlquery_limit)
     except Exception as e:
-        message = 'Your query:<br/><b>' + sqlquery_limit + '</b><br/>returned the error<br/><i>' + str(e) + '</i>'
-        return render(request, 'error.html', {'message': message})
+        error = 'Your query:<br/><b>' + sqlquery_limit + '</b><br/>returned the error<br/><i>' + str(e) + '</i>'
+        return None, None, None, None, error
 
     table = []
     for row in cursor:
@@ -90,7 +90,7 @@ def run_filter(
             if k not in tableSchema:
                 tableSchema[k] = "custom column"
 
-    return table, tableSchema, nalert, topic
+    return table, tableSchema, nalert, topic, error
 
     if json_checked:
         return HttpResponse(json.dumps(table, indent=2), content_type="application/json")
