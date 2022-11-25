@@ -126,13 +126,13 @@ class SherlockObjectsSerializer(serializers.Serializer):
         datadict = {}
 #        url = 'http://%s/object/%s' % (lasair_settings.SHERLOCK_SERVICE, objectIds)
 #        if lite: url += '?lite=true'
-            url += '?lite=true'
+        url += '?lite=true'
 #        r = requests.get(url)
 
-        data = { 'lite': lite }
+        data = {'lite': lite}
         r = requests.post(
             'http://%s/object/%s' % (lasair_settings.SHERLOCK_SERVICE, objectIds),
-            headers={"Content-Type":"application/json"},
+            headers={"Content-Type": "application/json"},
             data=json.dumps(data)
         )
 
@@ -165,10 +165,10 @@ class SherlockPositionSerializer(serializers.Serializer):
         if not lasair_settings.SHERLOCK_SERVICE:
             return {"error": "This Lasair cluster does not have a Sherlock service"}
 
-        data = { 'lite': lite, 'ra': '%.7f'%ra, 'dec': '%.7f'%dec }
+        data = {'lite': lite, 'ra': '%.7f' % ra, 'dec': '%.7f' % dec}
         r = requests.post(
             'http://%s/query' % lasair_settings.SHERLOCK_SERVICE,
-            headers={"Content-Type":"application/json"},
+            headers={"Content-Type": "application/json"},
             data=json.dumps(data)
         )
 
@@ -274,7 +274,7 @@ class StreamsSerializer(serializers.Serializer):
             userId = request.user
 
         if topic:
-            filename = lasair_settings.KAFKA_STREAMS +'/'+ topic
+            filename = lasair_settings.KAFKA_STREAMS + '/' + topic
             try:
                 datafile = open(filename, 'r').read()
                 data = json.loads(datafile)['digest']
@@ -283,7 +283,7 @@ class StreamsSerializer(serializers.Serializer):
                 return data
             except:
                 error = 'Cannot open digest file %s' % filename
-                return {"error":error}
+                return {"error": error}
 
         if regex:
             try:
@@ -300,7 +300,7 @@ class StreamsSerializer(serializers.Serializer):
             for row in cursor:
                 tn = row['topic_name']
                 if r.match(tn):
-                    td = {'topic':tn, 'more_info':'https://%s/query/%d/' % (lasair_settings.LASAIR_URL, row['mq_id'])}
+                    td = {'topic': tn, 'more_info': 'https://%s/query/%d/' % (lasair_settings.LASAIR_URL, row['mq_id'])}
                     result.append(td)
             info = result
             return info
