@@ -18,6 +18,7 @@ import json
 import re
 import time
 from datetime import datetime
+from django.contrib import messages
 import os
 import sys
 sys.path.append('../common')
@@ -623,7 +624,7 @@ def filter_query_create(request, mq_id=None):
         tables = [m[0] for m in matchObjectList]
         tables = (",").join(set(tables))
 
-        table, tableSchema, nalert, topic = run_filter(
+        table, tableSchema, nalert, topic, error = run_filter(
             selected=selected,
             tables=tables,
             conditions=conditions,
@@ -631,6 +632,9 @@ def filter_query_create(request, mq_id=None):
             offset=offset,
             mq_id=mq_id,
             query_name=False)
+
+        if error:
+            messages.error(request, error)
 
         return render(request, 'filter_query/filter_query_create.html', {'schemas': schemas, 'form': form, 'table': table, 'schema': tableSchema, 'limit': str(limit)})
 
