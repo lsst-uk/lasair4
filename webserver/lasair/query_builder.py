@@ -211,8 +211,6 @@ def build_query(select_expression, from_expression, where_condition):
         else:
             if len(where_condition.strip()) > 0:
                 where_clauses.append(where_condition)
-    else:
-        where_clauses = []
 
     # Now we can build the real SQL
     sql = 'SELECT /*+ MAX_EXECUTION_TIME(%d) */ ' % max_execution_time
