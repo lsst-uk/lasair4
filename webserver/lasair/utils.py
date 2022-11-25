@@ -1,4 +1,6 @@
-import sys, os
+from src import objectStore
+import sys
+import os
 from django.shortcuts import get_object_or_404
 from django.http import HttpResponse, HttpResponseRedirect
 from django.template.context_processors import csrf
@@ -16,7 +18,7 @@ import settings
 from lasair.lightcurves import lightcurve_fetcher
 from astropy.time import Time
 sys.path.append('../../common')
-from src import objectStore
+
 
 def jd_from_iso(date):
     """convert and return a Julian Date from ISO format date
@@ -176,7 +178,7 @@ def objjson(objectId):
     LF.close()
 
     count_isdiffpos = count_all_candidates = count_noncandidate = 0
-    image_store  = objectStore.objectStore(suffix='fits', fileroot=settings.IMAGEFITS)
+    image_store = objectStore.objectStore(suffix='fits', fileroot=settings.IMAGEFITS)
     image_urls = {}
     for cand in candidates:
         cand['mjd'] = mjd = float(cand['jd']) - 2400000.5
@@ -193,10 +195,9 @@ def objjson(objectId):
                 candid_cutoutType = '%s_cutout%s' % (candid, cutoutType)
                 filename = image_store.getFileName(candid_cutoutType)
                 if os.path.exists(filename):
-                    url = filename.replace(\
-                        '/mnt/cephfs/lasair', \
-                        'https://%s/lasair/static')
-                    url = url % (settings.LASAIR_URL)
+                    url = filename.replace(
+                        '/mnt/cephfs/lasair',
+                        f'https://{settings.LASAIR_URL}/lasair/static')
                     image_urls[candid_cutoutType] = url
 
             if 'ssnamenr' in cand:
@@ -287,7 +288,7 @@ def string2bytes(str):
 
 def fits(request, candid_cutoutType):
     # cutoutType can be cutoutDifference, cutoutTemplate, cutoutScience
-    image_store = objectStore(suffix='fits', fileroot=settings.IMAGEFITS)
+    image_store = objectStore.objectStore(suffix='fits', fileroot=settings.IMAGEFITS)
     try:
         fitsdata = image_store.getFileObject(candid_cutoutType)
     except:
