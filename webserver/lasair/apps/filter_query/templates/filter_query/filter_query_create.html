@@ -44,11 +44,15 @@
     <script>
 
         // example of Tribute in autocomplete mode
-
-        var tables = [];
+        var justTypeCollectionValues = [
+            { key : "MYSQL > jdnow()", value: "jdnow()", info: "readme now"},
+            { key : "MYSQL > as", value: "as", info: "readme now"},
+            { key : "MYSQL > BETWEEN", value: "BETWEEN xx AND xx", info: "readme now"},
+            { key : "MYSQL > LIKE", value: "LIKE `%xx%`", info: "readme now"},
+        ];
         var tableColumns = [];
         {% for schema_name, schema_content in schemas.items %}
-            tables.push({ key : "{{schema_name}}", value: "{{schema_name}}"})
+            justTypeCollectionValues.push({ key : "TABLE > {{schema_name}}", value: "{{schema_name}}", info: "readme now"})
             var theseColumns = {
                 trigger: "{{schema_name}}".concat("."),
                 values: [],
@@ -58,9 +62,10 @@
                     if (typeof item === "undefined") return null;
                     if (this.range.isContentEditable(this.current.element)) {
                         return (
+
                             '<span contenteditable="false"><a>' +
                             item.original.key +
-                            "</a></span>"
+                            "NOPE</a>"+`{% include "includes/info_tooltip.html" with info="Powered by Aladin Lite" position="auto" %}`+"</span>"
                         );
                     }
 
@@ -72,16 +77,13 @@
             }
 
             {% for row in schema_content %}
-                theseColumns.values.push({ key : "{{schema_name}}.{{row.name}}", value: "{{schema_name}}.{{row.name}}"})
+                theseColumns.values.push({ key : "COLUMN > {{schema_name}}.{{row.name}}", value: "{{schema_name}}.{{row.name}}", info: "readme now"})
             {% endfor %}
             tableColumns.push(theseColumns)
         {% endfor %}
 
-        var tableNames = {
-            autocompleteMode: true, // DON'T REQUIRE A TRIGGER
-            noMatchTemplate: "",
-            spaceSelectsMatch: false,
-            values: tables,
+        var justTypeCollection = {
+            values: justTypeCollectionValues,
             selectTemplate: function(item) {
                 if (typeof item === "undefined") return null;
                 if (this.range.isContentEditable(this.current.element)) {
@@ -92,29 +94,12 @@
                     );
                 }
 
-                return item.original.value;
-            },
-            menuItemTemplate: function(item) {
-                return item.string;
-            }
-        };
-
-        var tableNames2 = {
-            trigger: "objects.",
-            noMatchTemplate: "",
-            spaceSelectsMatch: false,
-            values: tables,
-            selectTemplate: function(item) {
-                if (typeof item === "undefined") return null;
-                if (this.range.isContentEditable(this.current.element)) {
-                    return (
-                        '<span contenteditable="false"><a>' +
-                        item.original.key +
-                        "</a></span>"
-                    );
+                if (item.original.key.includes("MYSQL >")) {
+                    return item.original.value+" ";
+                } else {
+                    return item.original.value+".";
                 }
 
-                return item.original.value;
             },
             menuItemTemplate: function(item) {
                 return item.string;
@@ -122,36 +107,34 @@
         };
 
 
-        var tributeAutocompleteTestArea = new Tribute({
+
+        var tributeAutocompleteSelectArea = new Tribute({
             autocompleteMode: true,
             noMatchTemplate: "",
-            collection: [tableNames]
+            spaceSelectsMatch: false,
+            replaceTextSuffix: '',
+            collection: [justTypeCollection]
         });
-        tributeAutocompleteTestArea.attach(
+        tributeAutocompleteSelectArea.attach(
             document.querySelector("textarea#id_selected")
 
         );
-
-        var tributeAutocompleteTestArea2 = new Tribute({
+        var tributeAutocompleteTestAreaColumns = new Tribute({
             noMatchTemplate: "",
             collection: tableColumns
         });
-        tributeAutocompleteTestArea2.attach(
+        tributeAutocompleteTestAreaColumns.attach(
             document.querySelector("textarea#id_selected")
 
         );
 
 
 
-        if (tributeAutocompleteTestArea.isActive) {
-            console.log('Somebody is being mentioned!');
-        } else {
-            console.log("Who's this guy talking to?");
-        }
-
         document.querySelector(".prism-live").addEventListener('keydown', function(e) {
             if (e.key == 'Tab') {
-                e.preventDefault();
+                if (tributeAutocompleteSelectArea.isActive) {
+                    e.stopImmediatePropagation()
+                }
             }
         });
 
