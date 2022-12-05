@@ -1,4 +1,7 @@
-[![](https://live.staticflickr.com/65535/52193681450_5c81810ec3_b.png)](https://live.staticflickr.com/65535/52193681450_5c81810ec3_o.png)
+<!-- [![](https://live.staticflickr.com/65535/52193681450_5c81810ec3_b.png)](https://live.staticflickr.com/65535/52193681450_5c81810ec3_o.png) -->
+<img src="https://live.staticflickr.com/65535/52193681450_5c81810ec3_b.png" width="500"/>
+
+
 
 <!-- INFO BADGES -->  
 
