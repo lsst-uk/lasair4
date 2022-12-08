@@ -5,10 +5,12 @@ in a file named ar_<nn>.fits where nn is the area id from the database.
 The "moc<nnn>.fits" files are
 "Multi-Order Coverage maps", https://cds-astro.github.io/mocpy/. 
 """
-import os
+import os, sys
 import math
 from mocpy import MOC
 import astropy.units as u
+sys.path.append('../../common/src')
+import lasairLogging
 
 def read_area_cache_files(cache_dir):
     """
@@ -133,7 +135,8 @@ def insert_area_hits(msl, hits):
        cursor.execute(query)
        cursor.close()
     except mysql.connector.Error as err:
-       print('ERROR in filter/check_alerts_areas cannot insert areas_hits: %s' % str(err))
+       log = lasairLogging.getLogger("filter")
+       log.error('ERROR in filter/check_alerts_areas cannot insert areas_hits: %s' % str(err))
        sys.stdout.flush()
     msl.commit()
 
@@ -141,11 +144,17 @@ if __name__ == "__main__":
     import sys
     sys.path.append('../../common')
     import settings
-    from src import db_connect
+    sys.path.append('../../common/src')
+    import db_connect, lasairLogging
+
+    lasairLogging.basicConfig(stream=sys.stdout)
+    log = lasairLogging.getLogger("filter")
+
     msl_local = db_connect.local()
 
     # can run the area process without the rest of the filter code 
     hits = get_area_hits(msl_local, settings.AREA_MOCS)
     if hits:
-        for hit in hits: print(hit)
+        for hit in hits: 
+            log.info(hit)
         insert_area_hits(msl_local, hits)

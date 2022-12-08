@@ -35,18 +35,16 @@ Deal with the query results
 
 """
 
-import os, sys
-sys.path.append('../../common')
-import time
-import json
-import settings
-from src import db_connect
+import os, sys, time, json, datetime, smtplib
 from confluent_kafka import Consumer, Producer, KafkaError
-import datetime
-import smtplib
-#from email.message import EmailMessage
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
+
+sys.path.append('../../common')
+import settings
+
+sys.path.append('../../common/src')
+import db_connect, lasairLogging
 
 def fetch_queries():
     """fetch_queries.
@@ -132,7 +130,8 @@ def run_queries(query_list, annotation_list=None):
 
         t = time.time() - t
         if n > 0:
-            print('   %s got %d in %.1f seconds' % (query['topic_name'], n, t))
+            log = lasairLogging.getLogger("filter")
+            log.info('   %s got %d in %.1f seconds' % (query['topic_name'], n, t))
             sys.stdout.flush()
 
 def query_for_object(query, objectId):
@@ -187,14 +186,11 @@ def run_query(query, msl, annotator=None, objectId=None):
             recorddict = dict(record)
             utcnow = datetime.datetime.utcnow()
             recorddict['UTC'] = utcnow.strftime("%Y-%m-%d %H:%M:%S")
-            #print(recorddict)
-            query_results.append(recorddict)
             n += 1
     except Exception as e:
-        print("SQL error for %s" % topic)
-        print(e)
-        print(sqlquery_real)
-        sys.stdout.flush()
+        log = lasairLogging.getLogger("filter")
+        log.warning("SQL error for %s: %s" % (topic, str(e)))
+        log.warning(sqlquery_real)
         return []
 
     return query_results
@@ -264,9 +260,9 @@ def dispose_email(allrecords, last_email, query):
     # delta is number of days since last email went out
     if delta < 1.0:
         return last_email
-    print('   --- send email to %s' % query['email'])
+    log = lasairLogging.getLogger("filter")
+    log.info('   --- send email to %s' % query['email'])
     topic = query['topic_name']
-    sys.stdout.flush()
     query_url = '/query/%d/' % (query['mq_id'])
     message      = 'Your active query with Lasair on topic %s\n' % topic
     message_html = 'Your active query with Lasair on <a href=%s>%s</a><br/>' % (query_url, topic)
@@ -285,9 +281,8 @@ def dispose_email(allrecords, last_email, query):
         send_email(query['email'], topic, message, message_html)
         return utcnow
     except Exception as e:
-        print('ERROR in filter/run_active_queries: Cannot send email!')
-        print(e)
-        sys.stdout.flush()
+        log = lasairLogging.getLogger("filter")
+        log.error('ERROR in filter/run_active_queries: Cannot send email!: %s' % str(e))
         return last_email
 
 def send_email(email, topic, message, message_html):
@@ -325,13 +320,11 @@ def dispose_kafka(query_results, topic):
         p = Producer(conf)
         for out in query_results: 
             jsonout = json.dumps(out, default=datetime_converter)
-            p.produce(topic, value=jsonout, callback=kafka_ack)
+            p.produce(topic, value=jsonout)
         p.flush(10.0)   # 10 second timeout
     except Exception as e:
-        rtxt = "ERROR in filter/run_active_queries: cannot produce to public kafka"
-        rtxt += str(e)
-        slack_webhook.send(settings.SLACK_URL, rtxt)
-        print(rtxt)
+        log = lasairLogging.getLogger("filter")
+        log.error("ERROR in filter/run_active_queries: cannot produce to public kafka: %s" % str(e))
         sys.stdout.flush()
 
 def datetime_converter(o):
@@ -344,16 +337,12 @@ def datetime_converter(o):
     if isinstance(o, datetime.datetime):
         return o.__str__()
 
-def kafka_ack(err, msg):
-    if err is not None:
-        print("Failed to deliver message: %s: %s" % (str(msg), str(err)))
-
 if __name__ == "__main__":
-    from src import slack_webhook
-    print('--------- RUN ACTIVE QUERIES -----------')
-    sys.stdout.flush()
+    lasairLogging.basicConfig(stream=sys.stdout)
+    log = lasairLogging.getLogger("ingest_runner")
+
+    log.info('--------- RUN ACTIVE QUERIES -----------')
     t = time.time()
     query_list = fetch_queries()
     run_queries(query_list)
-    print('Active queries done in %.1f seconds' % (time.time() - t))
-    sys.stdout.flush()
+    log.info('Active queries done in %.1f seconds' % (time.time() - t))

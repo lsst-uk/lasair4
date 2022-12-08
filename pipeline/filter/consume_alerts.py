@@ -21,7 +21,6 @@ def sigterm_handler(signum, frame):
 
 signal.signal(signal.SIGTERM, sigterm_handler)
 
-
 sherlock_attributes = [
     "classification",
     "objectId",
@@ -51,7 +50,7 @@ sherlock_attributes = [
     "summary",
 ]
 
-def execute_query(query, msl):
+def execute_query(log, query, msl):
     """ execute_query: run a query and close it, and compalin to slack if failure
 
     Args:
@@ -64,12 +63,11 @@ def execute_query(query, msl):
         cursor.close()
         msl.commit()
     except Exception as e:
-        print('ERROR filter/consume_alerts: object Database insert candidate failed: %s' % str(e))
-        print(query)
-        sys.stdout.flush()
+        log.error('ERROR filter/consume_alerts: object Database insert candidate failed: %s' % str(e))
+        log.info(query)
         raise
 
-def alert_filter(alert, msl):
+def alert_filter(log, alert, msl):
     """alert_filter: handle a single alert
 
     Args:
@@ -92,7 +90,7 @@ def alert_filter(alert, msl):
 
     # lets not fill up the database with SS detections right now
     if ss == 0:   
-        execute_query(query, msl)
+        execute_query(log, query, msl)
 
     # now ingest the sherlock_classifications
     if 'annotations' in alert:
@@ -109,10 +107,10 @@ def alert_filter(alert, msl):
 #                f = open('data/%s_sherlock.json'%objectId, 'w')
 #                f.write(query)
 #                f.close()
-                execute_query(query, msl)
+                execute_query(log, query, msl)
     return {'ss':iq_dict['ss'], 'nalert':1}
 
-def kafka_consume(consumer, maxalert):
+def kafka_consume(log, consumer, maxalert):
     """ kafka_consume: consume maxalert alerts from the consumer
         Args:
             consumer: confluent_kafka Consumer
@@ -123,7 +121,7 @@ def kafka_consume(consumer, maxalert):
     try:
         msl = db_connect.local()
     except Exception as e:
-        print('ERROR cannot connect to local database', e)
+        log.error('ERROR cannot connect to local database: %s' % str(e))
         sys.stdout.flush()
         return -1    # error return
 
@@ -133,8 +131,7 @@ def kafka_consume(consumer, maxalert):
     while nalert_in < maxalert:
         if sigterm_raised:
             # clean shutdown - stop the consumer and commit offsets
-            print("Caught SIGTERM, aborting.")
-            sys.stdout.flush()
+            log.info("Caught SIGTERM, aborting.")
             break
 
         # Here we get the next alert by kafka
@@ -149,23 +146,21 @@ def kafka_consume(consumer, maxalert):
         alert = json.loads(msg.value())
         nalert_in += 1
         try:
-            d = alert_filter(alert, msl)
+            d = alert_filter(log, alert, msl)
             nalert_out += d['nalert']
             nalert_ss  += d['ss']
         except:
             break
 
         if nalert_in%1000 == 0:
-            print('nalert_in %d nalert_out  %d time %.1f' % 
+            log.info('nalert_in %d nalert_out  %d time %.1f' % 
                 (nalert_in, nalert_out, time.time()-startt))
-            sys.stdout.flush()
             # refresh the database every 1000 alerts
             # make sure everything is committed
             msl.close()
             msl = db_connect.local()
 
-    print('INGEST finished %d in, %d out, %d solar system' % (nalert_in, nalert_out, nalert_ss))
-    sys.stdout.flush()
+    log.info('Finished %d in, %d out, %d solar system' % (nalert_in, nalert_out, nalert_ss))
 
     ms = manage_status(settings.SYSTEM_STATUS)
     nid  = date_nid.nid_now()
