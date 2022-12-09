@@ -26,7 +26,7 @@ from datetime import datetime
 import run_active_queries
 from check_alerts_watchlists import get_watchlist_hits, insert_watchlist_hits
 from check_alerts_areas import get_area_hits, insert_area_hits
-from counts import since_midnight, grafana_today
+from counts import batch_statistics, grafana_today
 from consume_alerts import kafka_consume
 
 sys.path.append('../../common')
@@ -203,22 +203,32 @@ def run_filter(args):
         consumer.close()
         log.info('Kafka committed for this batch')
     else:
-        log.info('Waiting 10 minutes')
+        log.info('ERROR: No kafka commit')
         consumer.close()
         time.sleep(600)
         sys.exit(1)
 
     ms = manage_status.manage_status(settings.SYSTEM_STATUS)
     nid = date_nid.nid_now()
-    d = since_midnight()
+    d = batch_statistics()
     ms.set({
         'today_ztf':grafana_today(), 
         'today_database':d['count'], 
-        'min_delay':d['delay'], 
         'total_count': d['total_count'],
+        'min_delay':d['min_delay'], 
         'nid': nid}, 
         nid)
-    log.info('Exit status %d' % rc)
+    if rc > 0:
+        t = int(1000*time.time())
+        s  = 'lasair_alert_batch_lag{type="min"} %d %d\n' % (int(d['min_delay']*60), t)
+        s += 'lasair_alert_batch_lag{type="avg"} %d %d\n' % (int(d['avg_delay']*60), t)
+        s += 'lasair_alert_batch_lag{type="max"} %d %d\n' % (int(d['max_delay']*60), t)
+        f = open('/var/lib/prometheus/node-exporter/lasair.prom', 'a')
+        f.write(s)
+        f.close()
+        log.info('\n' + s)
+
+    log.info('Return status %d' % rc)
     if rc > 0: return(1)
     else:      return(0)
 
