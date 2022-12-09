@@ -4,8 +4,11 @@ from __future__ import print_function
 import os, sys
 sys.path.append('../../common')
 from src import date_nid, slack_webhook, db_connect
-from src.manage_status import manage_status
 import settings
+
+sys.path.append('../../common/src')
+import lasairLogging
+from manage_status import manage_status
 
 from multiprocessing import Process, Manager
 from features_ZTF import insert_query
@@ -50,7 +53,7 @@ sherlock_attributes = [
     "summary",
 ]
 
-def execute_query(log, query, msl):
+def execute_query(query, msl):
     """ execute_query: run a query and close it, and compalin to slack if failure
 
     Args:
@@ -63,11 +66,12 @@ def execute_query(log, query, msl):
         cursor.close()
         msl.commit()
     except Exception as e:
+        log = lasairLogging.getLogger("filter")
         log.error('ERROR filter/consume_alerts: object Database insert candidate failed: %s' % str(e))
         log.info(query)
         raise
 
-def alert_filter(log, alert, msl):
+def alert_filter(alert, msl):
     """alert_filter: handle a single alert
 
     Args:
@@ -90,7 +94,7 @@ def alert_filter(log, alert, msl):
 
     # lets not fill up the database with SS detections right now
     if ss == 0:   
-        execute_query(log, query, msl)
+        execute_query(query, msl)
 
     # now ingest the sherlock_classifications
     if 'annotations' in alert:
@@ -107,20 +111,22 @@ def alert_filter(log, alert, msl):
 #                f = open('data/%s_sherlock.json'%objectId, 'w')
 #                f.write(query)
 #                f.close()
-                execute_query(log, query, msl)
+                execute_query(query, msl)
     return {'ss':iq_dict['ss'], 'nalert':1}
 
-def kafka_consume(log, consumer, maxalert):
+def kafka_consume(consumer, maxalert):
     """ kafka_consume: consume maxalert alerts from the consumer
         Args:
             consumer: confluent_kafka Consumer
             maxalert: how many to consume
     """
+    log = lasairLogging.getLogger("filter")
 
     # Configure database connection
     try:
         msl = db_connect.local()
     except Exception as e:
+        log = lasairLogging.getLogger("filter")
         log.error('ERROR cannot connect to local database: %s' % str(e))
         sys.stdout.flush()
         return -1    # error return
@@ -146,7 +152,7 @@ def kafka_consume(log, consumer, maxalert):
         alert = json.loads(msg.value())
         nalert_in += 1
         try:
-            d = alert_filter(log, alert, msl)
+            d = alert_filter(alert, msl)
             nalert_out += d['nalert']
             nalert_ss  += d['ss']
         except:
