@@ -215,16 +215,16 @@ def run_filter(args):
         'today_ztf':grafana_today(), 
         'today_database':d['count'], 
         'total_count': d['total_count'],
-        'min_delay':d['min_delay'], 
+        'min_delay':int(d['min_delay']), 
         'nid': nid}, 
         nid)
     if rc > 0:
         t = int(1000*time.time())
         s  = '#HELP lasair_alert_batch_lag Lasair alert batch lag stats\n'
         s += '#TYPE gauge\n'
-        s += 'lasair_alert_batch_lag{type="min"} %d %d\n' % (int(d['min_delay']*60), t)
-        s += 'lasair_alert_batch_lag{type="avg"} %d %d\n' % (int(d['avg_delay']*60), t)
-        s += 'lasair_alert_batch_lag{type="max"} %d %d\n' % (int(d['max_delay']*60), t)
+        s += ('lasair_alert_batch_lag{type="min"} %d %d\n' % (int(d['min_delay']*60), t))
+        s += ('lasair_alert_batch_lag{type="avg"} %d %d\n' % (int(d['avg_delay']*60), t))
+        s += ('lasair_alert_batch_lag{type="max"} %d %d\n' % (int(d['max_delay']*60), t))
         f = open('/var/lib/prometheus/node-exporter/lasair.prom', 'w')
         f.write(s)
         f.close()
