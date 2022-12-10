@@ -73,7 +73,7 @@ def grafana_today():
             auth=(settings.GRAFANA_USERNAME, settings.GRAFANA_PASSWORD))
         result = json.loads(resultjson.text)
         alertsstr = result['data']['result'][0]['value'][1]
-        today_candidates_ztf = int(alertsstr)
+        today_candidates_ztf = int(alertsstr/4)
     except Exception as e:
         log = lasairLogging.getLogger("filter")
         log.info('Cannot parse grafana: %s: %s' % (str(result), str(e)))
