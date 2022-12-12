@@ -11,8 +11,8 @@ This is a template document giving an overview of the syntax that can be used th
 
 ## AutoStructify
 
-* [Link to Some File](somefile.md)
-* [Link to Installation File](installation.md)
+#* [Link to Some File](somefile.md)
+#* [Link to Installation File](installation.md)
 
 ## Embed reStructuredText
 

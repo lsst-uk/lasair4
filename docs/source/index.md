@@ -2,7 +2,15 @@
 
 {{../../README.md}}
 
-Please start here by learning what the words mean:
+The following is about the astronomical science enabled by Lasair:
+```eval_rst
+.. toctree::
+   :maxdepth: 1
+   :caption: Astronomy
+
+   about
+```
+Please start here to discover the key ideas of Lasair:
 
 ```eval_rst
 .. toctree::
@@ -18,7 +26,7 @@ Please start here by learning what the words mean:
    concepts/annotations
 ```
 
-Lasair's core features are described here:
+Lasair's core features are described in more detail here:
 
 ```eval_rst
 .. toctree::
