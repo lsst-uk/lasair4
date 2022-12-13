@@ -1,7 +1,7 @@
 from .models import Watchmap
 import tempfile
 import io
-import base64
+
 import time
 import json
 import matplotlib.pyplot as plt
@@ -17,8 +17,10 @@ from django.contrib.auth.models import User
 from django.views.decorators.csrf import csrf_exempt
 from django.template.context_processors import csrf
 from django.shortcuts import render, get_object_or_404
+from lasair.apps.db_schema.utils import get_schema_dict
 from src import db_connect
 import sys
+from .forms import WatchmapForm, UpdateWatchmapForm
 from .utils import make_image_of_MOC, add_watchmap_metadata
 from lasair.utils import bytes2string, string2bytes
 sys.path.append('../common')
@@ -45,16 +47,17 @@ def watchmap_download(request, ar_id):
     message = ''
     watchmap = get_object_or_404(Watchmap, ar_id=ar_id)
 
-    is_owner = (request.user.is_authenticated) and (request.user == Watchmap.user)
-    is_public = (Watchmap.public == 1)
+    # IS USER ALLOWED TO SEE THIS RESOURCE?
+    is_owner = (request.user.is_authenticated) and (request.user.id == watchmap.user.id)
+    is_public = (watchmap.public == 1)
     is_visible = is_owner or is_public
     if not is_visible:
         return render(request, 'error.html', {
             'message': "This watchmap is private and not visible to you"})
 
-    moc = string2bytes(Watchmap.moc)
+    moc = string2bytes(watchmap.moc)
 
-    filename = slugify(Watchmap.name) + '.fits'
+    filename = slugify(watchmap.name) + '.fits'
     tmpfilename = tempfile.NamedTemporaryFile().name + '.fits'
     f = open(tmpfilename, 'wb')
     f.write(moc)
@@ -87,8 +90,9 @@ def watchmap_detail(request, ar_id):
     message = ''
     watchmap = get_object_or_404(Watchmap, ar_id=ar_id)
 
-    is_owner = (request.user.is_authenticated) and (request.user == Watchmap.user)
-    is_public = (Watchmap.public == 1)
+    # IS USER ALLOWED TO SEE THIS RESOURCE?
+    is_owner = (request.user.is_authenticated) and (request.user.id == watchmap.user.id)
+    is_public = (watchmap.public == 1)
     is_visible = is_owner or is_public
     if not is_visible:
         return render(request, 'error.html', {
@@ -96,40 +100,58 @@ def watchmap_detail(request, ar_id):
 
     if request.method == 'POST' and is_owner:
         if 'name' in request.POST:
-            Watchmap.name = request.POST.get('name')
-            Watchmap.description = request.POST.get('description')
+            watchmap.name = request.POST.get('name')
+            watchmap.description = request.POST.get('description')
 
             if request.POST.get('active'):
-                Watchmap.active = 1
+                watchmap.active = 1
             else:
-                Watchmap.active = 0
+                watchmap.active = 0
 
             if request.POST.get('public'):
-                Watchmap.public = 1
+                watchmap.public = 1
             else:
-                Watchmap.public = 0
+                watchmap.public = 0
 
-            Watchmap.save()
+            watchmap.save()
             message += 'watchmap updated'
 
     msl = db_connect.readonly()
-    cursor = msl.cursor()
-    cursor.execute('SELECT count(*) AS count FROM area_hits WHERE ar_id=%d' % ar_id)
-    for row in cursor:
-        count = row[0]
+    cursor = msl.cursor(buffered=True, dictionary=True)
+    # cursor.execute('SELECT count(*) AS count FROM area_hits WHERE ar_id=%d' % ar_id)
+    # for row in cursor:
+    #     count = row[0]
 
-    cursor.execute('SELECT objectId FROM area_hits WHERE ar_id=%d LIMIT 1000' % ar_id)
-    objIds = []
-    for row in cursor:
-        objIds.append(row[0])
+    query_hit = f"""
+SELECT
+o.objectId, o.ramean,o.decmean, o.rmag, o.gmag, jdnow()-o.jdmax as "last detected (days ago)"
+FROM area_hits as h, objects AS o
+WHERE h.ar_id={ar_id}
+AND o.objectId=h.objectId
+"""
+
+    cursor.execute(query_hit)
+    objectlist = cursor.fetchall()
+    count = len(objectlist)
+
+    schema = get_schema_dict("objects")
+
+    if len(objectlist):
+        for k in objectlist[0].keys():
+            if k not in schema:
+                schema[k] = "custom column"
+
+    form = UpdateWatchmapForm(instance=watchmap)
 
     return render(request, 'watchmap/watchmap_detail.html', {
         'watchmap': watchmap,
-        'objIds': objIds,
-        'mocimage': Watchmap.mocimage,
+        'objectlist': objectlist,
+        'mocimage': watchmap.mocimage,
         'count': count,
         'is_owner': is_owner,
-        'message': message})
+        'message': message,
+        'schema': schema,
+        'form': form})
 
 
 @csrf_exempt
@@ -212,7 +234,36 @@ def watchmap_create(request):
     ]
     ```           
     """
-    return render(request, 'watchmap/watchmap_create.html',
-                  {'random': '%d' % randrange(1000),
-                   'authenticated': request.user.is_authenticated
-                   })
+    # SUBMISSION OF NEW WATCHLIST
+    message = ""
+    if request.method == "POST" and request.user.is_authenticated:
+        form = WatchmapForm(request.POST, request.FILES)
+        if form.is_valid():
+            form.save()
+
+            # GET WATCHLIST PARAMETERS
+            t = time.time()
+            name = request.POST.get('name')
+            description = request.POST.get('description')
+            if 'mapfile' in request.FILES:
+                mapfile = handle_uploaded_file(request.FILES['mapfile'])
+
+            wl = Watchmaps(user=request.user, name=name, description=description, active=0, radius=default_radius)
+            wl.save()
+            cones = []
+            for cone in cone_list:
+                name = cone[0].encode('ascii', 'ignore').decode()
+                if name != cone[0]:
+                    message += 'Non-ascii characters removed from name %s --> %s<br/>' % (cone[0], name)
+                wlc = WatchlistCone(wl=wl, name=name, ra=cone[1], decl=cone[2], radius=cone[3])
+                cones.append(wlc)
+            chunks = 1 + int(len(cones) / 50000)
+            for i in range(chunks):
+                WatchlistCone.objects.bulk_create(cones[(i * 50000): ((i + 1) * 50000)])
+
+            watchlistname = form.cleaned_data.get('name')
+            messages.success(request, f'The {watchlistname} catalogue watchlist has been successfully created')
+            return redirect('watchlist_index')
+    else:
+        form = WatchmapForm()
+    return render(request, 'watchmap/watchmap_create.html', {'form': form})

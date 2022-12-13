@@ -1,4 +1,15 @@
 {% extends "layouts/base.html" %}
+
+<!-- Specific Page CSS goes HERE  -->
+{% block stylesheets %}{% endblock stylesheets %}
+{% load static %}
+
+
+{% block title %}
+    Watchmap: {{watchmap.name}}
+{% endblock title %}
+
+
 {% block content %}
 
 
@@ -11,7 +22,7 @@
             </div>
 
             <div class="col-12 mb-4">
-                {% include "includes/widgets/widget_watchmap_object_table.html" %}
+                {% include "includes/widgets/widget_objectlist_table.html" with zerotext="Zero objects have been matched against this watchmap so far." table=objectlist header="Watchmap Results"  desc="Here are the objects matching against this watchmap." %}
             </div>
         </div>
     </div>
@@ -55,12 +66,7 @@
         {{ message }}
         <hr/>
 
-        <table border=1>
-            <tr><th> ObjectId</th></tr>
-            {% for objId in objIds %}
-                <tr> <td><a href=/object/{{ objId }}/>{{ objId }}</a></td> </tr>
-            {% endfor %}
-        </table>
+
     </div>
     </div>
 

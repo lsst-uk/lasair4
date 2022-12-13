@@ -23,14 +23,14 @@ def add_watchmap_metadata(
     """
 
     msl = db_connect.readonly()
-    cursor = msl.cursor()
+    cursor = msl.cursor(buffered=True, dictionary=True)
 
     updatedWatchlists = []
     mocFiles = []
     for wlDict, wl in zip(watchlists.values(), watchlists):
         if wlDict["moc"] not in mocFiles or not remove_duplicates:
             # ADD LIST COUNT
-            # wlDict['count'] = WatchlistCones.objects.filter(wl_id=wlDict['wl_id']).count()
+            # wlDict['count'] = WatchlistCone.objects.filter(wl_id=wlDict['wl_id']).count()
 
             # ADD LIST USER
             wlDict['user'] = f"{wl.user.first_name} {wl.user.last_name}"
@@ -40,7 +40,7 @@ def add_watchmap_metadata(
 
             cursor.execute(f'SELECT count(*) AS count FROM area_hits WHERE ar_id={wlDict["ar_id"]}')
             for row in cursor:
-                wlDict['count'] = row[0]
+                wlDict['count'] = row['count']
     return updatedWatchlists
 
 

@@ -40,7 +40,7 @@
                             <div class="h3 fw-extrabold mb-0 ms-2">'{{ watchmap.name }}' Watched watchmap Associations</div>
                         </div>
                         <small class="text-gray-500">
-                            Transient objects located within the <em>{{ watchmap.name }}</em> watchlist watchmap. The watchlist watchmap is <b>{% if not area.active %}not {% endif %} active</b> {% include "includes/info_tooltip.html" with info="when active, a watchlist watchmap will be dynamically matched against new transient alerts. See the watchlist settings to make changes." position="auto" %}.
+                            Transient objects located within the <em>{{ watchmap.name }}</em> watchmap. The watchmap is <b>{% if not watchmap.active %}not {% endif %} active</b> {% include "includes/info_tooltip.html" with info="when active, a watchmap will be dynamically matched against new transient alerts. See the watchmap settings to make changes." position="auto" %}.
                         </small>
 
 
@@ -55,8 +55,8 @@
                     <div class=" ms-auto ps-1">
                         {# <div class="btn-group" role="group" aria-label="Basic button group"> #}
 
-                        <span data-bs-toggle="tooltip" data-bs-placement="auto" data-bs-title="edit the watchlist settings">
-                            <a class="btn btn-sm btn-gray-600 me-1 align-middle " href='#' data-bs-toggle="modal" data-bs-target="#editWatchlistForm">
+                        <span data-bs-toggle="tooltip" data-bs-placement="auto" data-bs-title="edit the watchmap settings">
+                            <a class="btn btn-sm btn-gray-600 me-1 align-middle " href='#' data-bs-toggle="modal" data-bs-target="#editWatchmapForm">
                                 {% include "includes/icons/icon_edit.html" %}
                                 <span class="align-middle">Settings</span></a>
                         </span>
@@ -69,8 +69,9 @@
                             export<svg class="icon icon-xs" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd"></path></svg>
                         </button>
                         <ul class="dropdown-menu" aria-labelledby="exportDropdown">
-                            <li><a class="dropdown-item export" data-table="filter-results" href="#" data-type="csv" data-filename="{{watchlist.name}}_watchlist_results">csv</a></li>
-                            <li><a class="dropdown-item export" data-table="filter-results" href="#" data-type="json" data-filename="{{watchlist.name}}_watchlist_results">json</a></li>
+                            <li><a class="dropdown-item export" data-table="filter-results" href="#" data-type="csv" data-filename="{{watchmap.name}}_watchmap_results">csv</a></li>
+                            <li><a class="dropdown-item export" data-table="filter-results" href="#" data-type="json" data-filename="{{watchmap.name}}_watchmap_results">json</a></li>
+                            <li><a class="dropdown-item export" href="{% url 'watchmap_download' watchmap.ar_id %}">Original MOC file</a></li>
                         </ul>
                     </div>
                 </div>
@@ -78,11 +79,14 @@
 
         </div>
 
-
+        <div class="d-flex justify-content-center">
+            <img src="data:image/png;base64,{{ mocimage }}" class="w-50 img-fluid thumbnail " style="clip-path: inset(10px 10px 10px 10px);" alt="watchmap image"
+            >
+        </div>
 
     </div>
 </div>
 
 
-{% include "includes/widgets/widget_watchlist_update_form.html" %}
+{% include "includes/widgets/widget_watchmap_update_form.html" %}
 

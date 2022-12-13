@@ -32,14 +32,14 @@ def add_watchlist_metadata(
     watchlistDicts = add_watchlist_metadata(watchlists)
     ```           
     """
-    from lasair.apps.watchlist.models import Watchlists, WatchlistCones
+    from lasair.apps.watchlist.models import Watchlist, WatchlistCone
     updatedWatchlists = []
     dupCheck = []
     for wlDict, wl in zip(watchlists.values(), watchlists):
         uuid = f"{wlDict['name']},{wlDict['description']},{wlDict['radius']}"
         if uuid not in dupCheck or not remove_duplicates:
             # ADD LIST COUNT
-            wlDict['count'] = WatchlistCones.objects.filter(wl_id=wlDict['wl_id']).count()
+            wlDict['count'] = WatchlistCone.objects.filter(wl_id=wlDict['wl_id']).count()
 
             # ADD LIST USER
             wlDict['user'] = f"{wl.user.first_name} {wl.user.last_name}"

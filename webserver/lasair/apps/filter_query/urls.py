@@ -9,6 +9,5 @@ urlpatterns = [
 
     # NEED UPDATED
     path('filters/<slug:which>/', views.querylist, name='filters'),
-    path('querylist/<slug:which>/', views.querylist, name='querylist'),
     path('runquery/', views.runquery_post, name='runquery_post'),
 ]
