@@ -12,6 +12,7 @@ import json
 import math
 import ephem
 import json
+import base64
 from src import db_connect
 from datetime import date
 import settings

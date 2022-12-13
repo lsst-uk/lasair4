@@ -1,4 +1,4 @@
-from .utils import add_filter_query_metadata, run_filter
+from .utils import add_filter_query_metadata, run_filter, topic_name
 import random
 from src import date_nid, db_connect
 from django.shortcuts import render
@@ -6,12 +6,12 @@ from django.shortcuts import render, get_object_or_404, redirect
 from django.db.models import Q
 from lasair.apps.annotator.models import Annotators
 from lasair.apps.watchmap.models import Watchmap
-from lasair.apps.watchlist.models import Watchlists
+from lasair.apps.watchlist.models import Watchlist
 from confluent_kafka import Producer, KafkaError, admin
 from django.views.decorators.csrf import csrf_exempt
 from lasair.apps.db_schema.utils import get_schema, get_schema_dict, get_schema_for_query_selected
 from .models import filter_query
-from .forms import filterQueryForm
+from .forms import filterQueryForm, UpdateFilterQueryForm
 from lasair.query_builder import check_query, build_query
 import settings
 import json
@@ -116,12 +116,12 @@ def handle_myquery(request, mq_id=None):
 
     if logged_in:
         email = request.user.email
-        watchlists = Watchlists.objects.filter(Q(user=request.user) | Q(public__gte=1))
+        watchlists = Watchlist.objects.filter(Q(user=request.user) | Q(public__gte=1))
         watchmaps = Watchmap.objects.filter(Q(user=request.user) | Q(public__gte=1))
         annotators = Annotators.objects.filter(Q(user=request.user) | Q(public__gte=1))
     else:
         email = ''
-        watchlists = Watchlists.objects.filter(public__gte=1)
+        watchlists = Watchlist.objects.filter(public__gte=1)
         watchmaps = Watchmap.objects.filter(public__gte=1)
         annotators = Annotators.objects.filter(public__gte=1)
 
@@ -198,10 +198,11 @@ def handle_myquery(request, mq_id=None):
                 'message': message,
             })
 
-    # Existing query
+    # EXISTING QUERY
     myquery = get_object_or_404(filter_query, mq_id=mq_id)
-    is_owner = logged_in and (request.user == myquery.user)
 
+    # IS USER ALLOWED TO SEE THIS RESOURCE?
+    is_owner = logged_in and (request.user.id == myquery.user.id)
     if not is_owner and myquery.public == 0:
         return render(request, 'error.html', {'message': 'This query is private'})
 
@@ -322,11 +323,11 @@ def querylist(request, which):
         myqueries = None
 
     if request.user.is_authenticated:
-        watchlists = Watchlists.objects.filter(Q(user=request.user) | Q(public__gte=1))
+        watchlists = Watchlist.objects.filter(Q(user=request.user) | Q(public__gte=1))
         watchmaps = Watchmap.objects.filter(Q(user=request.user) | Q(public__gte=1))
         annotators = Annotators.objects.filter(Q(user=request.user) | Q(public__gte=1))
     else:
-        watchlists = Watchlists.objects.filter(public__gte=1)
+        watchlists = Watchlist.objects.filter(public__gte=1)
         watchmaps = Watchmap.objects.filter(public__gte=1)
         annotators = Annotators.objects.filter(public__gte=1)
 
@@ -395,20 +396,26 @@ def filter_query_detail(request, mq_id):
     """
     msl = db_connect.readonly()
     cursor = msl.cursor(buffered=True, dictionary=True)
-    cursor.execute('SELECT name, selected, tables, conditions FROM myqueries WHERE mq_id=%d' % mq_id)
+    cursor.execute('SELECT name, selected, tables, conditions, real_sql FROM myqueries WHERE mq_id=%d' % mq_id)
     for row in cursor:
         query_name = row['name']
         selected = row['selected']
         tables = row['tables']
         conditions = row['conditions']
+        real_sql = row['real_sql']
+        import sqlparse
+        real_sql = sqlparse.format(real_sql, reindent=True, keyword_case='upper', strip_comments=True)
 
     limit = 1000
     offset = 0
     json_checked = False
 
+    thisFilter = get_object_or_404(filter_query, mq_id=mq_id)
+    form = UpdateFilterQueryForm(request.POST, request.FILES, request=request, instance=thisFilter)
+
     message = ""
 
-    table, tableSchema, nalert, topic = run_filter(
+    table, tableSchema, nalert, topic, error = run_filter(
         selected=selected,
         tables=tables,
         conditions=conditions,
@@ -416,6 +423,9 @@ def filter_query_detail(request, mq_id):
         offset=offset,
         mq_id=mq_id,
         query_name=query_name)
+
+    if error:
+        messages.error(request, error)
 
     if json_checked:
         return HttpResponse(json.dumps(table, indent=2), content_type="application/json")
@@ -431,8 +441,10 @@ def filter_query_detail(request, mq_id):
                        'nalert': nalert,
                        'ps': offset, 'pe': offset + nalert,
                        'limit': str(limit), 'offset': offset,
-                       'message': message,
-                       "schema": tableSchema})
+                       'message': real_sql,
+                       "schema": tableSchema,
+                       "form": form,
+                       'filterQ': thisFilter})
 
 
 def runquery_post(request):
@@ -609,34 +621,71 @@ def filter_query_create(request, mq_id=None):
         'annotations': get_schema('annotations'),
     }
 
-    form = filterQueryForm(request.POST, request.FILES)
+    form = filterQueryForm(request.POST, request.FILES, request=request)
 
     if request.method == 'POST':
 
+        action = request.POST.get('action')
         selected = request.POST.get('selected')
         conditions = request.POST.get('conditions')
         tables = "objects"
         limit = 1000
         offset = 0
+        name = request.POST.get('name')
+        description = request.POST.get('description')
+        public = request.POST.get('public')
+        if public == 'on':
+            public = 1
+        else:
+            public = 0
+
+        active = 1
 
         # FIND THE TABLES THAT NEED TO BE QUIERIED FROM THE SELECT STATEMENT
         matchObjectList = re.findall(r'([a-zA-Z0-9_\-]*)\.([a-zA-Z0-9_\-]*)', selected)
         tables = [m[0] for m in matchObjectList]
         tables = (",").join(set(tables))
 
-        table, tableSchema, nalert, topic, error = run_filter(
-            selected=selected,
-            tables=tables,
-            conditions=conditions,
-            limit=limit,
-            offset=offset,
-            mq_id=mq_id,
-            query_name=False)
+        # RUN OR SAVE?
+        if action and action.lower() == "run":
 
-        if error:
-            messages.error(request, error)
+            table, tableSchema, nalert, topic, error = run_filter(
+                selected=selected,
+                tables=tables,
+                conditions=conditions,
+                limit=limit,
+                offset=offset,
+                mq_id=mq_id,
+                query_name=False)
 
-        return render(request, 'filter_query/filter_query_create.html', {'schemas': schemas, 'form': form, 'table': table, 'schema': tableSchema, 'limit': str(limit)})
+            if error:
+                messages.error(request, error)
+
+            return render(request, 'filter_query/filter_query_create.html', {'schemas': schemas, 'form': form, 'table': table, 'schema': tableSchema, 'limit': str(limit)})
+
+        elif action and action.lower() == "save" and len(name):
+
+            e = check_query(selected, tables, conditions)
+            if e:
+                return render(request, 'error.html', {'message': e})
+
+            sqlquery_real = build_query(selected, tables, conditions)
+            e = check_query_zero_limit(sqlquery_real)
+            if e:
+                return render(request, 'error.html', {'message': e})
+
+            tn = topic_name(request.user.id, name)
+
+            myquery = filter_query(user=request.user,
+                                   name=name, description=description,
+                                   public=public, active=active,
+                                   selected=selected, conditions=conditions, tables=tables,
+                                   real_sql=sqlquery_real, topic_name=tn)
+
+            myquery.save()
+
+            messages.success(request, f'The "{name}" filter has been successfully created')
+            return redirect('filter_query_index')
 
     return render(request, 'filter_query/filter_query_create.html', {'schemas': schemas, 'form': form, 'limit': str(1000)})
 
@@ -644,12 +693,12 @@ def filter_query_create(request, mq_id=None):
 
     if logged_in:
         email = request.user.email
-        watchlists = Watchlists.objects.filter(Q(user=request.user) | Q(public__gte=1))
+        watchlists = Watchlist.objects.filter(Q(user=request.user) | Q(public__gte=1))
         watchmaps = Watchmap.objects.filter(Q(user=request.user) | Q(public__gte=1))
         annotators = Annotators.objects.filter(Q(user=request.user) | Q(public__gte=1))
     else:
         email = ''
-        watchlists = Watchlists.objects.filter(public__gte=1)
+        watchlists = Watchlist.objects.filter(public__gte=1)
         watchmaps = Watchmap.objects.filter(public__gte=1)
         annotators = Annotators.objects.filter(public__gte=1)
 

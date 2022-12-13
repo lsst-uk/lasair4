@@ -19,12 +19,12 @@ def add_filter_query_metadata(
     filterQueryDicts = add_filter_query_metadata(filter_queries)
     ```           
     """
-    # from lasair.watchlist.models import Watchlists, WatchlistCones
+    # from lasair.watchlist.models import Watchlist, WatchlistCone
     updatedFilterQueryLists = []
     real_sql = []
     for fqDict, fq in zip(filter_queries.values(), filter_queries):
         # ADD LIST COUNT
-        # fqDict['count'] = WatchlistCones.objects.filter(wl_id=wlDict['wl_id']).count()
+        # fqDict['count'] = WatchlistCone.objects.filter(wl_id=wlDict['wl_id']).count()
 
         # ADD LIST USER
         if not remove_duplicates or fq.real_sql not in real_sql:

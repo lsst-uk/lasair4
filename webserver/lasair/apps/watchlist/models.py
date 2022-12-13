@@ -5,12 +5,12 @@ from django.db import models
 from django.contrib.auth.models import User
 
 
-class WatchlistCones(models.Model):
-    """WatchlistCones.
+class WatchlistCone(models.Model):
+    """WatchlistCone.
     """
 
     cone_id = models.AutoField(primary_key=True)
-    wl = models.ForeignKey('Watchlists', models.DO_NOTHING, blank=True, null=True)
+    wl = models.ForeignKey('Watchlist', models.DO_NOTHING, blank=True, null=True)
     name = models.CharField(max_length=32, blank=True, null=True)
     ra = models.FloatField(blank=True, null=True)
     decl = models.FloatField(blank=True, null=True)
@@ -23,8 +23,8 @@ class WatchlistCones(models.Model):
         db_table = 'watchlist_cones'
 
 
-class Watchlists(models.Model):
-    """Watchlists.
+class Watchlist(models.Model):
+    """Watchlist.
     """
 
     wl_id = models.AutoField(primary_key=True)

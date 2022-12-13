@@ -1,5 +1,5 @@
 from django import forms
-from .models import Watchlists
+from .models import Watchlist
 from crispy_forms.helper import FormHelper
 
 
@@ -15,7 +15,7 @@ class WatchlistForm(forms.ModelForm):
         self.fields['cones_file'].required = False
 
     class Meta:
-        model = Watchlists
+        model = Watchlist
         widgets = {
             'name': forms.TextInput(attrs={'size': 80, 'placeholder': 'Make it memorable'}),
             'description': forms.Textarea(attrs={'rows': 3, 'placeholder': 'A detailed description of your watchlist. Remember to add a citation to the original data source.'}),
@@ -37,9 +37,9 @@ class WatchlistForm(forms.ModelForm):
 class UpdateWatchlistForm(forms.ModelForm):
 
     class Meta:
-        model = Watchlists
+        model = Watchlist
         widgets = {
-            'name': forms.TextInput(attrs={'size': 80, 'placeholder': "asdasd"}),
+            'name': forms.TextInput(attrs={'size': 80, 'placeholder': 'Make it memorable'}),
             'description': forms.Textarea(attrs={'rows': 4, 'placeholder': 'A detailed description of your watchlist. Remember to add a citation to the original data source.'}),
             'public': forms.CheckboxInput(),
             'active': forms.CheckboxInput()

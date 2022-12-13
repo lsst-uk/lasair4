@@ -37,10 +37,14 @@
                         </div>
 
                         <small class="text-danger">{{ form.non_field_errors }}</small>
-                        <div class="d-grid">
+                        <div class="d-flex flex-row-reverse">
 
-                            <button type="submit" name="register" class="btn btn-gray-800">Run Filter</button>
+                            <a class="btn btn-dark me-1 align-middle " href='#' data-bs-toggle="modal" data-bs-target="#editFilterForm">
+                                {% include "includes/icons/icon_save.html" %}
+                                <span class="align-middle ms-2">Save</span></a>
+                            <button type="submit" name="action" class="btn btn-tertiary me-1" value="run">{% include "includes/icons/icon_run.html" %}<span class="align-middle">Run Filter</span></button>
                         </div>
+                        {% include "includes/widgets/widget_filter_update_form.html" %}
                     </form>
                     <br />
                 </div>
@@ -48,3 +52,5 @@
         </div>
     </div>
 </div>
+
+
