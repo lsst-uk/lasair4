@@ -215,7 +215,7 @@ def run_filter(args):
         'today_ztf':grafana_today(), 
         'today_database':d['count'], 
         'total_count': d['total_count'],
-        'min_delay':d['min_delay'], 
+        'min_delay':int(d['min_delay']), 
         'nid': nid}, 
         nid)
     if rc > 0:

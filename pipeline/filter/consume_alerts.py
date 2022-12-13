@@ -90,11 +90,13 @@ def alert_filter(alert, msl):
     if not iq_dict:
         return {'ss':0, 'nalert':0}
     query = iq_dict['query']
-    ss = iq_dict['ss']
+    ss = iq_dict['ss']  # 1 for solar system else 0
 
     # lets not fill up the database with SS detections right now
-    if ss == 0:   
-        execute_query(query, msl)
+    if ss == 1:   
+        return {'ss':1, 'nalert_out':0}
+
+    execute_query(query, msl)
 
     # now ingest the sherlock_classifications
     if 'annotations' in alert:
@@ -112,7 +114,7 @@ def alert_filter(alert, msl):
 #                f.write(query)
 #                f.close()
                 execute_query(query, msl)
-    return {'ss':iq_dict['ss'], 'nalert':1}
+    return {'ss':iq_dict['ss'], 'nalert_out':1}
 
 def kafka_consume(consumer, maxalert):
     """ kafka_consume: consume maxalert alerts from the consumer
@@ -153,7 +155,7 @@ def kafka_consume(consumer, maxalert):
         nalert_in += 1
         try:
             d = alert_filter(alert, msl)
-            nalert_out += d['nalert']
+            nalert_out += d['nalert_out']
             nalert_ss  += d['ss']
         except:
             break
