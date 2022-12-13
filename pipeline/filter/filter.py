@@ -219,16 +219,23 @@ def run_filter(args):
         'nid': nid}, 
         nid)
     if rc > 0:
-        t = int(1000*time.time())
-        s  = '#HELP lasair_alert_batch_lag Lasair alert batch lag stats\n'
-        s += '#TYPE gauge\n'
-        s += 'lasair_alert_batch_lag{type="min"} %d %d\n' % (int(d['min_delay']*60), t)
-        s += 'lasair_alert_batch_lag{type="avg"} %d %d\n' % (int(d['avg_delay']*60), t)
-        s += 'lasair_alert_batch_lag{type="max"} %d %d\n' % (int(d['max_delay']*60), t)
-        f = open('/var/lib/prometheus/node-exporter/lasair.prom', 'w')
-        f.write(s)
-        f.close()
-        log.info('\n' + s)
+        min_str = "{:d}".format(int(d['min_delay']*60))
+        avg_str = "{:d}".format(int(d['avg_delay']*60))
+        max_str = "{:d}".format(int(d['max_delay']*60))
+    else:
+        min_str = "NaN"
+        avg_str = "NaN"
+        max_str = "NaN"
+    #t = int(1000*time.time())
+    s  = '#HELP lasair_alert_batch_lag Lasair alert batch lag stats\n'
+    s += '#TYPE gauge\n'
+    s += 'lasair_alert_batch_lag{type="min"} %s\n' % min_str
+    s += 'lasair_alert_batch_lag{type="avg"} %s\n' % avg_str
+    s += 'lasair_alert_batch_lag{type="max"} %s\n' % max_str
+    f = open('/var/lib/prometheus/node-exporter/lasair.prom', 'w')
+    f.write(s)
+    f.close()
+    log.info('\n' + s)
 
     log.info('Return status %d' % rc)
     if rc > 0: return(1)
