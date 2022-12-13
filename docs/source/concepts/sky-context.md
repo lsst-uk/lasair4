@@ -7,10 +7,11 @@ already known, and if so, what kind of object it is. If the astronomer is search
 explosive events such as supernovae, they are usually associated with a galaxy. That astronomer is also 
 interested if the explosive event has already been seen and registered by somebody else.
 
-Lasair provides severaal kinds of sky context:
+Lasair provides several kinds of sky context:
 
  - Sherlock: A software package and integrated massive database system that provides a 
 rapid and reliable spatial cross-match service for any astrophysical variable or transient.
+[Details here](../core_services/sherlock.html).
 
  - Transient Name Server (TNS) is the official IAU mechanism for reporting new astronomical 
 transients such as supernova candidates. Once spectroscopically confirmed, new supernova 
