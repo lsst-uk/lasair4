@@ -18,24 +18,25 @@ Options:
     --topic_in=TIN     Kafka topic to use, default is from settings
 
 """
-import os,sys
-sys.path.append('../../common')
-import settings
-import time, tempfile
-import confluent_kafka
+import os,sys, time, tempfile, confluent_kafka
 from docopt import docopt
 from socket import gethostname
 from datetime import datetime
-from src.manage_status import manage_status
-from src import slack_webhook, date_nid, db_connect
+
 import run_active_queries
 from check_alerts_watchlists import get_watchlist_hits, insert_watchlist_hits
 from check_alerts_areas import get_area_hits, insert_area_hits
-from counts import since_midnight, grafana_today
+from counts import batch_statistics, grafana_today
 from consume_alerts import kafka_consume
-from subprocess import Popen, PIPE
 
-def main(args):
+sys.path.append('../../common')
+import settings
+
+sys.path.append('../../common/src')
+import date_nid, db_connect, manage_status, lasairLogging
+
+def run_filter(args):
+
     if args['--topic_in']:
         topic_in = args['--topic_in']
     else:
@@ -51,24 +52,19 @@ def main(args):
     else:
         maxalert = settings.KAFKA_MAXALERTS
 
-    print('Topic_in=%s, group_id=%s, maxalert=%d' % (topic_in, group_id, maxalert))
+    log = lasairLogging.getLogger("filter")
+    log.info('Topic_in=%s, group_id=%s, maxalert=%d' % (topic_in, group_id, maxalert))
 
-    print('------------------')
     ##### clear out the local database
-    os.system('date')
-    print('clear local caches')
-    sys.stdout.flush()
+    log.info('clear local caches')
     cmd = 'python3 refresh.py'
     if os.system(cmd) != 0:
-        rtxt = "ERROR in filter/filter.py: refresh.py failed"
-        print(rtxt)
-        slack_webhook.send(settings.SLACK_URL, rtxt)
-        sys.stdout.flush()
+        log.error("ERROR in filter/filter.py: refresh.py failed")
         sys.exit(0)
     
     ##### fetch a batch of annotated alerts
-    print('INGEST start %s' % datetime.utcnow().strftime("%H:%M:%S"))
-    print("Topic is %s" % topic_in)
+    log.info('FILTER start %s' % datetime.utcnow().strftime("%H:%M:%S"))
+    log.info("Topic is %s" % topic_in)
     t = time.time()
     
     conf = {
@@ -78,146 +74,102 @@ def main(args):
         'max.poll.interval.ms': 20*60*1000,  # 20 minute timeout in case queries take time
         'default.topic.config': { 'auto.offset.reset': 'smallest' }
     }
-    print(conf, topic_in)
+    log.info(str(conf))
+    log.info('Topic in = %s' % topic_in)
     try:
         consumer = confluent_kafka.Consumer(conf)
         consumer.subscribe([topic_in])
     except Exception as e:
-        print('ERROR cannot connect to kafka', e)
-        sys.stdout.flush()
+        log.error('ERROR cannot connect to kafka: %s' % str(e))
         return
 
     rc = kafka_consume(consumer, maxalert)
 
     # rc is the return code from ingestion, number of alerts received
     if rc < 0:
-        rtxt = "ERROR in filter/filter: consume_kafka failed"
-        slack_webhook.send(settings.SLACK_URL, rtxt)
-        print(rtxt)
-        sys.stdout.flush()
+        log.error("ERROR in filter/filter: consume_kafka failed")
         sys.exit(0)
     
-    print('INGEST duration %.1f seconds' % (time.time() - t))
+    log.info('FILTER duration %.1f seconds' % (time.time() - t))
     
     try:
         msl_local = db_connect.local()
     except:
-        print('ERROR in filter/filter: cannot connect to local database')
-        sys.stdout.flush()
+        log.error('ERROR in filter/filter: cannot connect to local database')
         sys.exit(0)
     
     ##### run the watchlists
-    print('WATCHLIST start %s' % datetime.utcnow().strftime("%H:%M:%S"))
-    sys.stdout.flush()
+    log.info('WATCHLIST start %s' % datetime.utcnow().strftime("%H:%M:%S"))
     t = time.time()
     try:
         hits = get_watchlist_hits(msl_local, settings.WATCHLIST_MOCS, settings.WATCHLIST_CHUNK)
     except Exception as e:
-        rtxt = "ERROR in filter/get_watchlist_hits"
-        rtxt += str(e)
-        slack_webhook.send(settings.SLACK_URL, rtxt)
-        print(rtxt)
-        sys.stdout.flush()
+        log.error("ERROR in filter/get_watchlist_hits: %s" % str(e))
         sys.exit(0)
     
-    print('got %d watchlist hits' % len(hits))
-    sys.stdout.flush()
+    log.info('got %d watchlist hits' % len(hits))
     
     if len(hits) > 0:
         try:
             insert_watchlist_hits(msl_local, hits)
         except Exception as e:
-            rtxt = "ERROR in filter/insert_watchlist_hits"
-            rtxt += str(e)
-            slack_webhook.send(settings.SLACK_URL, rtxt)
-            print(rtxt)
-            sys.stdout.flush()
+            log.error("ERROR in filter/insert_watchlist_hits: %s" % str(e))
             sys.exit(0)
     
-    print('WATCHLIST %.1f seconds' % (time.time() - t))
-    sys.stdout.flush()
+    log.info('WATCHLIST %.1f seconds' % (time.time() - t))
     
     ##### run the areas
-    print('AREA start %s' % datetime.utcnow().strftime("%H:%M:%S"))
-    sys.stdout.flush()
+    log.info('AREA start %s' % datetime.utcnow().strftime("%H:%M:%S"))
     t = time.time()
     try:
         hits = get_area_hits(msl_local, settings.AREA_MOCS)
     except Exception as e:
-        rtxt = "ERROR in filter/get_area_hits"
-        rtxt += str(e)
-        slack_webhook.send(settings.SLACK_URL, rtxt)
-        print(rtxt)
-        sys.stdout.flush()
+        log.error("ERROR in filter/get_area_hits: %s" % str(e))
         sys.exit(0)
     
-    print('got %d area hits' % len(hits))
-    sys.stdout.flush()
+    log.info('got %d area hits' % len(hits))
     if len(hits) > 0:
         try:
             insert_area_hits(msl_local, hits)
         except Exception as e:
-            rtxt = "ERROR in filter/insert_area_hits"
-            rtxt += str(e)
-            slack_webhook.send(settings.SLACK_URL, rtxt)
-            print(rtxt)
-            sys.stdout.flush()
+            log.error("ERROR in filter/insert_area_hits: %s" % str(e))
             sys.exit(0)
-    print('AREA %.1f seconds' % (time.time() - t))
-    sys.stdout.flush()
+    log.info('AREA %.1f seconds' % (time.time() - t))
     
     ##### run the user queries
-    print('QUERIES start %s' % datetime.utcnow().strftime("%H:%M:%S"))
-    sys.stdout.flush()
+    log.info('QUERIES start %s' % datetime.utcnow().strftime("%H:%M:%S"))
     t = time.time()
     try:
         query_list = run_active_queries.fetch_queries()
     except Exception as e:
-        rtxt = "ERROR in filter/run_active_queries.fetch_queries"
-        rtxt += str(e)
-        slack_webhook.send(settings.SLACK_URL, rtxt)
-        print(rtxt)
-        sys.stdout.flush()
+        log.error("ERROR in filter/run_active_queries.fetch_queries: %s" % str(e))
         sys.exit(0)
     
     try:
         run_active_queries.run_queries(query_list)
     except Exception as e:
-        rtxt = "ERROR in filter/run_active_queries.run_queries"
-        rtxt += str(e)
-        slack_webhook.send(settings.SLACK_URL, rtxt)
-        print(rtxt)
-        sys.stdout.flush()
+        log.error("ERROR in filter/run_active_queries.run_queries: %s" % str(e))
         sys.exit(0)
-    print('QUERIES %.1f seconds' % (time.time() - t))
-    sys.stdout.flush()
+    log.info('QUERIES %.1f seconds' % (time.time() - t))
     
     ##### run the annotation queries
-    print('ANNOTATION QUERIES start %s' % datetime.utcnow().strftime("%H:%M:%S"))
-    sys.stdout.flush()
+    log.info('ANNOTATION QUERIES start %s' % datetime.utcnow().strftime("%H:%M:%S"))
     t = time.time()
     try:
         run_active_queries.run_annotation_queries(query_list)
     except Exception as e:
-        rtxt = "WARNING in filter/run_active_queries.run_annotation_queries"
-        rtxt += str(e)
-        print(rtxt)
-        sys.stdout.flush()
-    print('ANNOTATION QUERIES %.1f seconds' % (time.time() - t))
+        log.warning("WARNING in filter/run_active_queries.run_annotation_queries: %s" % str(e))
+    log.info('ANNOTATION QUERIES %.1f seconds' % (time.time() - t))
     
     ##### build CSV file with local database
     t = time.time()
-    print('SEND to ARCHIVE')
-    sys.stdout.flush()
+    log.info('SEND to ARCHIVE')
     cmd = 'sudo rm /data/mysql/*.txt'
     os.system(cmd)
     
     cmd = 'mysql --user=ztf --database=ztf --password=%s < output_csv.sql' % settings.LOCAL_DB_PASS
     if os.system(cmd) != 0:
-        rtxt = 'ERROR in filter/filter: cannot build CSV from local database'
-        slack_webhook.send(settings.SLACK_URL, rtxt)
-        print(rtxt)
-        sys.stdout.flush()
+        log.error('ERROR in filter/filter: cannot build CSV from local database')
         sys.exit(0)
     
     tablelist = ['objects', 'sherlock_classifications', 'watchlist_hits', 'area_hits']
@@ -240,46 +192,62 @@ def main(args):
         cmd =  "mysql --user=%s --database=ztf --password=%s --port=%s --host=%s < %s" 
         cmd = cmd % (settings.DB_USER_READWRITE, settings.DB_PASS_READWRITE, settings.DB_PORT, settings.DB_HOST, tmpfilename)
         if os.system(cmd) != 0:
-            rtxt = 'ERROR in filter/filter: cannot push %s local to main database' % table
-            slack_webhook.send(settings.SLACK_URL, rtxt)
-            print(rtxt)
-            sys.stdout.flush()
+            log.error('ERROR in filter/filter: cannot push %s local to main database' % table)
             commit = False
         else:
-            print(table, 'ingested to main db')
+            log.info('%s table ingested to main db' % table)
 
-    print('Transfer to main database %.1f seconds' % (time.time() - t))
+    log.info('Transfer to main database %.1f seconds' % (time.time() - t))
     if commit:
         consumer.commit()
         consumer.close()
-        print('Kafka committed for this batch')
+        log.info('Kafka committed for this batch')
     else:
-        print('Waiting 10 minutes')
+        log.info('ERROR: No kafka commit')
         consumer.close()
         time.sleep(600)
         sys.exit(1)
 
-    sys.stdout.flush()
-    
-    ms = manage_status(settings.SYSTEM_STATUS)
+    ms = manage_status.manage_status(settings.SYSTEM_STATUS)
     nid = date_nid.nid_now()
-    d = since_midnight()
+    d = batch_statistics()
     ms.set({
         'today_ztf':grafana_today(), 
         'today_database':d['count'], 
-        'min_delay':d['delay'], 
         'total_count': d['total_count'],
+        'min_delay':int(d['min_delay']), 
         'nid': nid}, 
         nid)
-    print('Exit status', rc)
-    sys.stdout.flush()
-    if rc > 0: sys.exit(1)
-    else:      sys.exit(0)
+    if rc > 0:
+        min_str = "{:d}".format(int(d['min_delay']*60))
+        avg_str = "{:d}".format(int(d['avg_delay']*60))
+        max_str = "{:d}".format(int(d['max_delay']*60))
+    else:
+        min_str = "NaN"
+        avg_str = "NaN"
+        max_str = "NaN"
+    #t = int(1000*time.time())
+    s  = '#HELP lasair_alert_batch_lag Lasair alert batch lag stats\n'
+    s += '#TYPE gauge\n'
+    s += 'lasair_alert_batch_lag{type="min"} %s\n' % min_str
+    s += 'lasair_alert_batch_lag{type="avg"} %s\n' % avg_str
+    s += 'lasair_alert_batch_lag{type="max"} %s\n' % max_str
+    f = open('/var/lib/prometheus/node-exporter/lasair.prom', 'w')
+    f.write(s)
+    f.close()
+    log.info('\n' + s)
+
+    log.info('Return status %d' % rc)
+    if rc > 0: return(1)
+    else:      return(0)
 
 if __name__ == '__main__':
+    lasairLogging.basicConfig(stream=sys.stdout)
+    log = lasairLogging.getLogger("filter")
+
     args = docopt(__doc__)
     # rc=1: got some alerts
     # rc=0: got no alerts
 
-    rc = main(args)
+    rc = run_filter(args)
     sys.exit(rc)

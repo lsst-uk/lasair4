@@ -1,4 +1,4 @@
-# Lasair API
+# Lasair API and Lasair Client
 
 **Table of Contents**
 

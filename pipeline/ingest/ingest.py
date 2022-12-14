@@ -2,6 +2,7 @@
 Ingestion code for Lasair. Takes a stream of AVRO, splits it into
 FITS cutouts to Ceph, Lightcurves to Cassandra, and JSON versions of 
 the AVRO packets, but without the cutouts, to Kafka.
+Kafka commit os every 1000 alerts, and before exit.
 Usage:
     ingest.py [--maxalert=MAX]
               [--group_id=GID]
@@ -17,26 +18,28 @@ Options:
 """
 
 import sys
-sys.path.append('../../common')
-import settings
 from docopt import docopt
 from datetime import datetime
-from src import objectStore, date_nid
-from src.manage_status import manage_status
 from confluent_kafka import Consumer, Producer, KafkaError
 from gkhtm import _gkhtm as htmCircle
 from cassandra.cluster import Cluster
 from gkdbutils.ingesters.cassandra import executeLoad
 import os, time, json, zlib, signal, io, fastavro
 
+sys.path.append('../../common')
+import settings
+
+sys.path.append('../../common/src')
+import objectStore, manage_status, date_nid, slack_webhook, lasairLogging
+
 stop = False
+log = None
 
 def sigterm_handler(signum, frame):
     global stop
+    global log
     stop = True
-    print("Caught SIGTERM")
-
-signal.signal(signal.SIGTERM, sigterm_handler)
+    log.info("Caught SIGTERM")
 
 def now():
     # current UTC as string
@@ -53,6 +56,7 @@ def msg_text(message):
     return message_text
 
 def store_images(message, store, candid):
+    global log
     try:
         for cutoutType in ['cutoutDifference', 'cutoutTemplate', 'cutoutScience']:
             contentgz = message[cutoutType]['stampData']
@@ -61,7 +65,7 @@ def store_images(message, store, candid):
             store.putObject(filename, content)
         return 0
     except Exception as e:
-        print('ERROR in ingest/ingest: ', e)
+        log.error('ERROR in ingest/ingest: ', e)
         return None # failure of batch
 
 def insert_cassandra(alert, cassandra_session):
@@ -72,6 +76,7 @@ def insert_cassandra(alert, cassandra_session):
     Args:
         alert:
     """
+    global log
 
     # if this is not set, then we are not doing cassandra
     if not cassandra_session:
@@ -147,26 +152,27 @@ def handle_alert(alert, image_store, producer, topic_out, cassandra_session):
         topic_out:
         cassandra_session
     """
+    global log
     # here is the part of the alert that has no binary images
     alert_noimages = msg_text(alert)
     candid = alert_noimages['candidate']['candid']
     objectId = alert_noimages['objectId']
 
     if not alert_noimages:
-        print('ERROR:  in ingest/ingest: No json in alert')
+        log.error('ERROR:  in ingest/ingest: No json in alert')
         return None  # ingest batch failed
 
     # candidates to cassandra
     try:
         ncandidate = insert_cassandra(alert_noimages, cassandra_session)
     except:
-        print('ERROR in ingest/ingest: Cassandra insert failed')
+        log.error('ERROR in ingest/ingest: Cassandra insert failed')
         return None  # ingest batch failed
 
     # store the fits images
     if image_store:
         if store_images(alert, image_store, candid) == None:
-            print('ERROR: in ingest/ingest: Failed to put cutouts in file system')
+            log.error('ERROR: in ingest/ingest: Failed to put cutouts in file system')
             return None   # ingest batch failed
 
     # do not put known solar system objects into kafka
@@ -180,16 +186,23 @@ def handle_alert(alert, image_store, producer, topic_out, cassandra_session):
             s = json.dumps(alert_noimages)
             producer.produce(topic_out, json.dumps(alert_noimages))
         except Exception as e:
-            print("ERROR in ingest/ingest: Kafka production failed for %s" % topic_out)
-            print("ERROR:", e)
+            log.error("ERROR in ingest/ingest: Kafka production failed for %s" % topic_out)
+            log.error("ERROR:", e)
             sys.stdout.flush()
             return None   # ingest failed
     return ncandidate
 
-def main(args):
-    """main.
+def run_ingest(args):
+    """run.
     """
     global stop
+    global log
+
+    # if logging wasn't set up in __main__ then do it here
+    if not log:
+        log = lasairLogging.getLogger("ingest")
+
+    signal.signal(signal.SIGTERM, sigterm_handler)
 
     if args['--topic_in']:
         topic_in = args['--topic_in']
@@ -205,17 +218,17 @@ def main(args):
         topic_out = args['--topic_out']
     else:
         topic_out = 'ztf_ingest'
-
+    
     if args['--group_id']:
         group_id = args['--group_id']
     else:
         group_id = settings.KAFKA_GROUPID
-
+    
     if args['--maxalert']:
         maxalert = int(args['--maxalert'])
     else:
         maxalert = sys.maxsize  # largest possible integer
-
+    
     try:
         fitsdir = settings.IMAGEFITS
     except:
@@ -223,14 +236,14 @@ def main(args):
 
     # check for lockfile
     if not os.path.isfile(settings.LOCKFILE):
-        print('Lockfile not present')
+        log.info('Lockfile not present')
         return  0
 
     # set up image store in shared file system
     if fitsdir and len(fitsdir) > 0:
         image_store  = objectStore.objectStore(suffix='fits', fileroot=fitsdir)
     else:
-        print('ERROR in ingest/ingestBatch: No image directory found for file storage')
+        log.error('ERROR in ingest/ingestBatch: No image directory found for file storage')
         sys.stdout.flush()
         image_store = None
 
@@ -240,16 +253,16 @@ def main(args):
         cassandra_session = cluster.connect()
         cassandra_session.set_keyspace('lasair')
     except Exception as e:
-        print("ERROR in ingest/ingestBatch: Cannot connect to Cassandra", e)
+        log.error("ERROR in ingest/ingestBatch: Cannot connect to Cassandra", e)
         sys.stdout.flush()
         cassandra_session = None
 
     # set up kafka consumer
-    print('Consuming from %s' % settings.KAFKA_SERVER)
-    print('Topic_in       %s' % topic_in)
-    print('Topic_out      %s' % topic_out)
-    print('group_id       %s' % group_id)
-    print('maxalert       %d' % maxalert)
+    log.info('Consuming from %s' % settings.KAFKA_SERVER)
+    log.info('Topic_in       %s' % topic_in)
+    log.info('Topic_out      %s' % topic_out)
+    log.info('group_id       %s' % group_id)
+    log.info('maxalert       %d' % maxalert)
 
     consumer_conf = {
         'bootstrap.servers'   : '%s' % settings.KAFKA_SERVER,
@@ -258,13 +271,13 @@ def main(args):
         'default.topic.config': {'auto.offset.reset': 'smallest'},
 
         # wait twice wait time before forgetting me
-        'max.poll.interval.ms': 2*settings.WAIT_TIME*1000,  
+        'max.poll.interval.ms': 50*settings.WAIT_TIME*1000,  
     }
 
     try:
         consumer = Consumer(consumer_conf)
     except Exception as e:
-        print('ERROR in ingest/ingestBatch: Cannot connect to Kafka', e)
+        log.error('ERROR in ingest/ingestBatch: Cannot connect to Kafka', e)
         sys.stdout.flush()
         return 1
     consumer.subscribe([topic_in])
@@ -275,15 +288,15 @@ def main(args):
         'client.id': 'client-1',
     }
     producer = Producer(producer_conf)
-    print('Producing to   %s' % settings.KAFKA_SERVER)
+    log.info('Producing to   %s' % settings.KAFKA_SERVER)
 
     nalert = 0        # number not yet send to manage_status
     ncandidate = 0    # number not yet send to manage_status
     ntotalalert = 0   # number since this program started
-    print('INGEST starts', now())
+    log.info('INGEST starts %s' % now())
 
     # put status on Lasair web page
-    ms = manage_status(settings.SYSTEM_STATUS)
+    ms = manage_status.manage_status(settings.SYSTEM_STATUS)
 
     while ntotalalert < maxalert:
 
@@ -293,9 +306,9 @@ def main(args):
         if msg is None:
             end_batch(consumer, producer, ms, nalert, ncandidate)
             nalert = ncandidate = 0
-            print('no more messages ... sleeping')
+            log.debug('no more messages ... sleeping %d seconds' % settings.WAIT_TIME)
             sys.stdout.flush()
-            time.sleep(settings.WAIT_TIME) # sleep 10 minutes
+            time.sleep(settings.WAIT_TIME)
             continue
 
         # read the avro contents
@@ -303,13 +316,13 @@ def main(args):
             bytes_io = io.BytesIO(msg.value())
             msg = fastavro.reader(bytes_io)
         except:
-            print('ERROR in ingest/ingest: ', msg.value())
+            log.error('ERROR in ingest/ingest: ', msg.value())
             break
 
         for alert in msg:
             if stop:
                 # clean shutdown - this should stop the consumer and commit offsets
-                print("Stopping ingest")
+                log.info("Stopping ingest")
                 sys.stdout.flush()
                 break
 
@@ -317,7 +330,7 @@ def main(args):
             icandidate = handle_alert(alert, image_store, producer, topic_out, cassandra_session)
 
             if icandidate == None:
-                print('Ingestion failed ')
+                log.info('Ingestion failed ')
                 return 0
 
             nalert += 1
@@ -325,19 +338,19 @@ def main(args):
             ncandidate += icandidate
 
             # every so often commit, flush, and update status
-            if nalert >= 1000:
+            if nalert >= 250:
                 end_batch(consumer, producer, ms, nalert, ncandidate)
                 nalert = ncandidate = 0
                 # check for lockfile
                 if not os.path.isfile(settings.LOCKFILE):
-                    print('Lockfile not present')
+                    log.info('Lockfile not present')
                     stop = True
 
         if stop:  # need to break out of two loops if sigterm
             break
 
     # if we exit this loop, clean up
-    print('Shutting down')
+    log.info('Shutting down')
     end_batch(consumer, producer, ms, nalert, ncandidate)
 
     # shut down kafka consumer
@@ -352,9 +365,10 @@ def main(args):
     else:               return 0
 
 def end_batch(consumer, producer, ms, nalert, ncandidate):
+    global log
     now = datetime.now()
     date = now.strftime("%Y-%m-%d %H:%M:%S")
-    print('%s %d alerts %d candidates' % (date, nalert, ncandidate))
+    log.info('%s %d alerts %d candidates' % (date, nalert, ncandidate))
     # if this is not flushed, it will run out of memory
     if producer is not None:
         producer.flush()
@@ -368,8 +382,13 @@ def end_batch(consumer, producer, ms, nalert, ncandidate):
     ms.add({'today_alert':nalert, 'today_candidate':ncandidate}, nid)
 
 if __name__ == "__main__":
+    lasairLogging.basicConfig(stream=sys.stdout)
+    log = lasairLogging.getLogger("ingest")
+
+    signal.signal(signal.SIGTERM, sigterm_handler)
+
     args = docopt(__doc__)
-    rc = main(args)
+    rc = run_ingest(args)
     # rc=1, got alerts, more to come
     # rc=0, got no alerts
     sys.exit(rc)

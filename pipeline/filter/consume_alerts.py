@@ -4,8 +4,11 @@ from __future__ import print_function
 import os, sys
 sys.path.append('../../common')
 from src import date_nid, slack_webhook, db_connect
-from src.manage_status import manage_status
 import settings
+
+sys.path.append('../../common/src')
+import lasairLogging
+from manage_status import manage_status
 
 from multiprocessing import Process, Manager
 from features_ZTF import insert_query
@@ -20,7 +23,6 @@ def sigterm_handler(signum, frame):
     sigterm_raised = True
 
 signal.signal(signal.SIGTERM, sigterm_handler)
-
 
 sherlock_attributes = [
     "classification",
@@ -64,9 +66,9 @@ def execute_query(query, msl):
         cursor.close()
         msl.commit()
     except Exception as e:
-        print('ERROR filter/consume_alerts: object Database insert candidate failed: %s' % str(e))
-        print(query)
-        sys.stdout.flush()
+        log = lasairLogging.getLogger("filter")
+        log.error('ERROR filter/consume_alerts: object Database insert candidate failed: %s' % str(e))
+        log.info(query)
         raise
 
 def alert_filter(alert, msl):
@@ -88,11 +90,13 @@ def alert_filter(alert, msl):
     if not iq_dict:
         return {'ss':0, 'nalert':0}
     query = iq_dict['query']
-    ss = iq_dict['ss']
+    ss = iq_dict['ss']  # 1 for solar system else 0
 
     # lets not fill up the database with SS detections right now
-    if ss == 0:   
-        execute_query(query, msl)
+    if ss == 1:   
+        return {'ss':1, 'nalert_out':0}
+
+    execute_query(query, msl)
 
     # now ingest the sherlock_classifications
     if 'annotations' in alert:
@@ -110,7 +114,7 @@ def alert_filter(alert, msl):
 #                f.write(query)
 #                f.close()
                 execute_query(query, msl)
-    return {'ss':iq_dict['ss'], 'nalert':1}
+    return {'ss':iq_dict['ss'], 'nalert_out':1}
 
 def kafka_consume(consumer, maxalert):
     """ kafka_consume: consume maxalert alerts from the consumer
@@ -118,12 +122,14 @@ def kafka_consume(consumer, maxalert):
             consumer: confluent_kafka Consumer
             maxalert: how many to consume
     """
+    log = lasairLogging.getLogger("filter")
 
     # Configure database connection
     try:
         msl = db_connect.local()
     except Exception as e:
-        print('ERROR cannot connect to local database', e)
+        log = lasairLogging.getLogger("filter")
+        log.error('ERROR cannot connect to local database: %s' % str(e))
         sys.stdout.flush()
         return -1    # error return
 
@@ -133,8 +139,7 @@ def kafka_consume(consumer, maxalert):
     while nalert_in < maxalert:
         if sigterm_raised:
             # clean shutdown - stop the consumer and commit offsets
-            print("Caught SIGTERM, aborting.")
-            sys.stdout.flush()
+            log.info("Caught SIGTERM, aborting.")
             break
 
         # Here we get the next alert by kafka
@@ -150,22 +155,20 @@ def kafka_consume(consumer, maxalert):
         nalert_in += 1
         try:
             d = alert_filter(alert, msl)
-            nalert_out += d['nalert']
+            nalert_out += d['nalert_out']
             nalert_ss  += d['ss']
         except:
             break
 
         if nalert_in%1000 == 0:
-            print('nalert_in %d nalert_out  %d time %.1f' % 
+            log.info('nalert_in %d nalert_out  %d time %.1f' % 
                 (nalert_in, nalert_out, time.time()-startt))
-            sys.stdout.flush()
             # refresh the database every 1000 alerts
             # make sure everything is committed
             msl.close()
             msl = db_connect.local()
 
-    print('INGEST finished %d in, %d out, %d solar system' % (nalert_in, nalert_out, nalert_ss))
-    sys.stdout.flush()
+    log.info('Finished %d in, %d out, %d solar system' % (nalert_in, nalert_out, nalert_ss))
 
     ms = manage_status(settings.SYSTEM_STATUS)
     nid  = date_nid.nid_now()
