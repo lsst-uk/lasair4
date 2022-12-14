@@ -1,16 +1,44 @@
 from django import forms
 from .models import filter_query
 from crispy_forms.helper import FormHelper
+from src import db_connect
+from lasair.apps.annotator.models import Annotators
+from lasair.apps.watchmap.models import Watchmap
+from lasair.apps.watchlist.models import Watchlist
+from django.db.models import Q
 
 
 class filterQueryForm(forms.ModelForm):
+
+    msl = db_connect.readonly()
+    cursor = msl.cursor(buffered=True, dictionary=True)
+    watchlists = forms.ChoiceField(widget=forms.Select)
 
     def __init__(self, *args, **kwargs):
         self.request = kwargs.pop('request', None)
         super().__init__(*args, **kwargs)
         self.helper = FormHelper()
+        if self.request.user.is_authenticated:
+            email = self.request.user.email
+            watchlists = Watchlist.objects.filter(Q(user=self.request.user) | Q(public__gte=1))
+            watchmaps = Watchmap.objects.filter(Q(user=self.request.user) | Q(public__gte=1))
+            annotators = Annotators.objects.filter(Q(user=self.request.user) | Q(public__gte=1))
+        else:
+            email = ''
+            watchlists = Watchlist.objects.filter(public__gte=1)
+            watchmaps = Watchmap.objects.filter(public__gte=1)
+            annotators = Annotators.objects.filter(public__gte=1)
+
+        # ADD WATCHLIST SELECTION TO THE FORM
+        watchlistTypes = []
+        watchlistTypes[:] = [(w.wl_id, w.name) for w in watchlists]
+        watchlistTypes = [(None, "Select a Watchlist")] + watchlistTypes
+        self.fields['watchlists'].required = False
+        self.fields['watchlists'].choices = watchlistTypes
+        self.fields['watchlists'].widget.choices = watchlistTypes
 
     class Meta:
+
         notificationTypes = (
             (0, 'muted'),
             (1, 'email stream (daily)'),
@@ -26,7 +54,7 @@ class filterQueryForm(forms.ModelForm):
             'real_sql': forms.Textarea(),
             'active': forms.Select(choices=notificationTypes)
         }
-        fields = ['name', 'description', 'active', 'public', 'selected', 'conditions', 'real_sql']
+        fields = ['name', 'description', 'active', 'public', 'selected', 'conditions', 'real_sql', 'watchlists']
 
     def clean(self):
         cleaned_data = super(filterQueryForm, self).clean()
