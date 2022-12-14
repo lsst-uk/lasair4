@@ -309,43 +309,6 @@ def handle_myquery(request, mq_id=None):
         'message': message})
 
 
-def querylist(request, which):
-    """querylist.
-
-    Args:
-        request:
-        which: can be 'promoted', 'pubic', 'my'
-    """
-    # shows the list of queries
-    if request.user.is_authenticated:
-        myqueries = filter_query.objects.filter(user=request.user)
-    else:
-        myqueries = None
-
-    if request.user.is_authenticated:
-        watchlists = Watchlist.objects.filter(Q(user=request.user) | Q(public__gte=1))
-        watchmaps = Watchmap.objects.filter(Q(user=request.user) | Q(public__gte=1))
-        annotators = Annotators.objects.filter(Q(user=request.user) | Q(public__gte=1))
-    else:
-        watchlists = Watchlist.objects.filter(public__gte=1)
-        watchmaps = Watchmap.objects.filter(public__gte=1)
-        annotators = Annotators.objects.filter(public__gte=1)
-
-    promoted_queries = filter_query.objects.filter(public=2)
-    public_queries = filter_query.objects.filter(public__gte=1)
-
-    return render(request, 'querylist.html', {
-        'which': which,
-        'promoted_queries': query_list(promoted_queries),
-        'is_authenticated': request.user.is_authenticated,
-        'myqueries': query_list(myqueries),
-        'watchlists': watchlists,
-        'watchmaps': watchmaps,
-        'annotators': annotators,
-        'public_queries': query_list(public_queries)
-    })
-
-
 def query_list(qs):
     """query_list.
 
