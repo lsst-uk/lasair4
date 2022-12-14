@@ -13,6 +13,8 @@ class filterQueryForm(forms.ModelForm):
     msl = db_connect.readonly()
     cursor = msl.cursor(buffered=True, dictionary=True)
     watchlists = forms.ChoiceField(widget=forms.Select)
+    watchmaps = forms.ChoiceField(widget=forms.Select)
+    annotators = forms.ChoiceField(widget=forms.Select)
 
     def __init__(self, *args, **kwargs):
         self.request = kwargs.pop('request', None)
@@ -30,12 +32,34 @@ class filterQueryForm(forms.ModelForm):
             annotators = Annotators.objects.filter(public__gte=1)
 
         # ADD WATCHLIST SELECTION TO THE FORM
-        watchlistTypes = []
-        watchlistTypes[:] = [(w.wl_id, w.name) for w in watchlists]
-        watchlistTypes = [(None, "Select a Watchlist")] + watchlistTypes
+        watchlistTypes, watchlistTypes2 = [], []
+        if self.request.user.is_authenticated:
+            watchlistTypes[:] = [(w.wl_id, w.name + f" ({w.user})") for w in watchlists if w.user.id == self.request.user.id]
+        watchlistTypes2[:] = [(w.wl_id, w.name + f" ({w.user})") for w in watchlists if w.user.id != self.request.user.id]
+        watchlistTypes = [(None, "Select a Watchlist    ")] + watchlistTypes + watchlistTypes2
         self.fields['watchlists'].required = False
         self.fields['watchlists'].choices = watchlistTypes
         self.fields['watchlists'].widget.choices = watchlistTypes
+
+        # ADD WATCHMAP SELECTION TO THE FORM
+        watchmapTypes, watchmapTypes2 = [], []
+        if self.request.user.is_authenticated:
+            watchmapTypes[:] = [(w.ar_id, w.name + f" ({w.user})") for w in watchmaps if w.user.id == self.request.user.id]
+        watchlistTypes2[:] = [(w.ar_id, w.name + f" ({w.user})") for w in watchmaps if w.user.id != self.request.user.id]
+        watchmapTypes = [(None, "Select a Watchmap    ")] + watchmapTypes + watchlistTypes2
+        self.fields['watchmaps'].required = False
+        self.fields['watchmaps'].choices = watchmapTypes
+        self.fields['watchmaps'].widget.choices = watchmapTypes
+
+        # ADD ANNOTATOR SELECTION TO THE FORM
+        annotatorTypes, annotatorTypes2 = [], []
+        if self.request.user.is_authenticated:
+            annotatorTypes[:] = [(w.topic, w.topic + f" ({w.user})") for w in annotators if w.user.id == self.request.user.id]
+        annotatorTypes2[:] = [(w.topic, w.topic + f" ({w.user})") for w in annotators if w.user.id != self.request.user.id]
+        annotatorTypes = [(None, "Select an Annotator")] + annotatorTypes + annotatorTypes2
+        self.fields['annotators'].required = False
+        self.fields['annotators'].choices = annotatorTypes
+        self.fields['annotators'].widget.choices = annotatorTypes
 
     class Meta:
 
@@ -54,7 +78,7 @@ class filterQueryForm(forms.ModelForm):
             'real_sql': forms.Textarea(),
             'active': forms.Select(choices=notificationTypes)
         }
-        fields = ['name', 'description', 'active', 'public', 'selected', 'conditions', 'real_sql', 'watchlists']
+        fields = ['name', 'description', 'active', 'public', 'selected', 'conditions', 'real_sql', 'watchlists', 'watchmaps']
 
     def clean(self):
         cleaned_data = super(filterQueryForm, self).clean()

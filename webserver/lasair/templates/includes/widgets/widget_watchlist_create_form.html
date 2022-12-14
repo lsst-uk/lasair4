@@ -14,7 +14,7 @@
                     A Watchlist is composed of a set of locations in the sky, together with an association radius in arcseconds. These locations are presumably coordinates of sources of specific interest to you. Use a Watchlist to be alerted of transient events found in association with any of these sources. Your Watchlists will appear in the </em>My Watchlists</em> of the Watchlists index.
             </small></p>
 
-        <form enctype="multipart/form-data" method="post" action="{% url 'watchlist_create' %}" class="mt-0">
+        <form enctype="multipart/form-data" method="post" action="{% url 'watchlist_create' %}" class="mt-0 mb-3">
 
             {% csrf_token %}
 

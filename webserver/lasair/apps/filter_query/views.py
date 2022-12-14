@@ -640,6 +640,8 @@ def filter_query_create(request, mq_id=None):
         selected = request.POST.get('selected')
         conditions = request.POST.get('conditions')
         watchlists = request.POST.get('watchlists')
+        watchmaps = request.POST.get('watchmaps')
+        annotators = request.POST.get('annotators')
 
         tables = "objects"
         limit = 1000
@@ -661,7 +663,9 @@ def filter_query_create(request, mq_id=None):
         if watchlists:
             tables += f", watchlist:{watchlists}"
         if watchmaps:
-            tables += f", area:{watchlists}"
+            tables += f", area:{watchmaps}"
+        if annotators:
+            tables += f", annotator:{annotators}"
 
         # RUN OR SAVE?
         if action and action.lower() == "run":

@@ -16,7 +16,9 @@
 
                 <div class="bg-white border-0 rounded border-light p-4 p-lg-5 w-100">
 
-                    <form enctype="multipart/form-data" method="post" class="mt-0">
+
+
+                    <form enctype="multipart/form-data" method="post" class="mt-0 row gy-2 gx-3 align-items-center">
 
                         {% csrf_token %}
 
@@ -36,13 +38,29 @@
                             </div>
                         </div>
 
-                        <div class="form-group mb-4">
-                            <label for="watchlists">Watchlist{% include "includes/info_tooltip.html" with info="The is the default search radius for your catalogue. If individual sources in your catalogue include their own association radii these will be used instead." position="auto" %}</label>
+
+                        <div class="col-auto form-group mb-4">
+                            <label for="watchlists">Watchlist {% include "includes/info_tooltip.html" with info="By selecting a watchlist, the results of the query are constrained to only objects associated with the watchlist." position="auto" %}</label>
                             <div class="input-group">
                                 {{ form.watchlists|add_class:"form-select" }}
                             </div>
                             <span class="text-error">{{ form.watchlists.errors }}</span>
                         </div>
+                        <div class="col-auto form-group mb-4">
+                            <label for="watchmaps">Watchmaps {% include "includes/info_tooltip.html" with info="By selecting a watchmap, the results of the query are constrained to only objects associated with the watchmap." position="auto" %}</label>
+                            <div class="input-group">
+                                {{ form.watchmaps|add_class:"form-select" }}
+                            </div>
+                            <span class="text-error">{{ form.watchmaps.errors }}</span>
+                        </div>
+                        <div class="col-auto form-group mb-4">
+                            <label for="annotators">Annotators {% include "includes/info_tooltip.html" with info="By selecting an annotator, the results of the query are constrained to only objects tagged by the annotator." position="auto" %}</label>
+                            <div class="input-group">
+                                {{ form.annotators|add_class:"form-select" }}
+                            </div>
+                            <span class="text-error">{{ form.annotators.errors }}</span>
+                        </div>
+
 
                         <small class="text-danger">{{ form.non_field_errors }}</small>
                         <div class="d-flex flex-row-reverse">

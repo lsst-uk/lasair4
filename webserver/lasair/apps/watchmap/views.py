@@ -209,12 +209,15 @@ def watchmap_index(request):
     else:
         my_watchmaps = []
 
+    form = WatchmapForm()
+
     return render(request, 'watchmap/watchmap_index.html',
                   {'my_watchmaps': my_watchmaps,
                    'random': '%d' % randrange(1000),
                    'other_watchmaps': other_watchmaps,
                    'authenticated': request.user.is_authenticated,
-                   'message': message})
+                   'message': message,
+                   'form': form})
 
 
 def watchmap_create(request):
@@ -234,22 +237,24 @@ def watchmap_create(request):
     ]
     ```           
     """
-    # SUBMISSION OF NEW WATCHLIST
+    # SUBMISSION OF NEW WATCHMAP
     message = ""
     if request.method == "POST" and request.user.is_authenticated:
         form = WatchmapForm(request.POST, request.FILES)
         if form.is_valid():
             form.save()
 
+            print(request.FILES)
+
             # GET WATCHLIST PARAMETERS
             t = time.time()
             name = request.POST.get('name')
             description = request.POST.get('description')
-            if 'mapfile' in request.FILES:
-                mapfile = handle_uploaded_file(request.FILES['mapfile'])
+            if 'watchmap_file' in request.FILES:
+                mapfile = handle_uploaded_file(request.FILES['watchmap_file'])
 
-            wl = Watchmaps(user=request.user, name=name, description=description, active=0, radius=default_radius)
-            wl.save()
+            wm = Watchmaps(user=request.user, name=name, description=description, active=0, radius=default_radius)
+            wm.save()
             cones = []
             for cone in cone_list:
                 name = cone[0].encode('ascii', 'ignore').decode()
@@ -266,4 +271,4 @@ def watchmap_create(request):
             return redirect('watchlist_index')
     else:
         form = WatchmapForm()
-    return render(request, 'watchmap/watchmap_create.html', {'form': form})
+    return render(request, 'watchmap/watchmap_details.html', {'form': form})

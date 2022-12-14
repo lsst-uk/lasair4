@@ -17,33 +17,27 @@ from crispy_forms.helper import FormHelper
 
 class WatchmapForm(forms.ModelForm):
 
-    cones_textarea = forms.CharField(widget=forms.Textarea(attrs={'rows': 7, 'placeholder': 'Paste a source list. RA and Dec in decimal degrees, a unique source ID and an optional source-specific association radius in arcsec\n\nRA, Dec, ID <,radius>\nRA, Dec, ID <,radius>\n...'}))
-    cones_file = forms.FileField()
+    watchmap_file = forms.FileField()
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.helper = FormHelper()
-        self.fields['cones_textarea'].required = False
-        self.fields['cones_file'].required = False
+        self.fields['watchmap_file'].required = True
 
     class Meta:
         model = Watchmap
         widgets = {
             'name': forms.TextInput(attrs={'size': 80, 'placeholder': 'Make it memorable'}),
-            'description': forms.Textarea(attrs={'rows': 3, 'placeholder': 'A detailed description of your watchlist. Remember to add a citation to the original data source.'}),
+            'description': forms.Textarea(attrs={'rows': 3, 'placeholder': 'A detailed description of your watchmap.'}),
         }
-        fields = ['name', 'description', 'active', 'public', 'cones_textarea', 'cones_file']
+        fields = ['name', 'description', 'active', 'public', 'watchmap_file']
 
     def clean(self):
-        cleaned_data = super(WatchlistForm, self).clean()
-        conetext = cleaned_data.get("cones_textarea")
-        conefile = cleaned_data.get("cones_file")
-        if not conetext and not conefile and 1 == 0:
-            raise forms.ValidationError("Please either paste your catalogue contents or upload a catalogue file.")
+        cleaned_data = super(WatchmapForm, self).clean()
 
     def save(self, commit=True):
         # do something with self.cleaned_data['temp_id']
-        return super(WatchlistForm, self).save(commit=commit)
+        return super(WatchmapForm, self).save(commit=commit)
 
 
 class UpdateWatchmapForm(forms.ModelForm):
@@ -52,7 +46,7 @@ class UpdateWatchmapForm(forms.ModelForm):
         model = Watchmap
         widgets = {
             'name': forms.TextInput(attrs={'size': 80, 'placeholder': 'Make it memorable'}),
-            'description': forms.Textarea(attrs={'rows': 4, 'placeholder': 'A detailed description of your watchlist. Remember to add a citation to the original data source.'}),
+            'description': forms.Textarea(attrs={'rows': 4, 'placeholder': 'A detailed description of your watchmap.'}),
             'public': forms.CheckboxInput(),
             'active': forms.CheckboxInput()
         }
