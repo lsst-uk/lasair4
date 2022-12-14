@@ -1,4 +1,4 @@
-# Sky Regions
+# Watchmaps (Sky Regions)
 
 **Table of Contents**
 

@@ -1,4 +1,4 @@
-# Transient Metadata Tags
+# Sherlock (Sky Context)
 
 
 ```eval_rst
@@ -11,19 +11,66 @@
 
 {{TOC}}
 
-## What are Metadata Tags?
+Detections in the input data stream that have been aggregated into _objects_ 
+(i.e. groups of detections) and identified as static transients (i.e. not moving objects) 
+are spatially context classified against a large number of archival sources 
+(e.g. nearby galaxies, known CVs, AGNs, etc). 
+The information derived from this context check is injected as an object annotation 
+(e.g. see Lasair object page example below). The software used is called _Sherlock_ 
+and is discussed below.
 
-## Sherlock
-
-Detections in the input data stream that have been aggregated into _objects_ (i.e. groups of detections) and identified as static transients (i.e. not moving objects) are spatially context classified against a large number of archival sources (e.g. nearby galaxies, known CVs, AGNs, etc). The information derived from this context check is injected as an object annotation (e.g. see Lasair object page example below). The software used is called _Sherlock_ and is discussed below.
-
-_Sherlock_ is a software package and integrated massive database system that provides a rapid and reliable spatial cross-match service for any astrophysical variable or transient. The concept originated in the PhD thesis of D. Young at QUB, and has been developed by Young et al. in many iterations and cycles since. It associates the position of a transient with all major astronomical catalogues and assigns a basic classification to the transient. At its most basic, it separates stars, AGN and supernova-like transients. It has been tested within QUB on a daily basis with ATLAS and Pan-STARRS transients, and within PESSTO as part of the PESSTO marshall system that allows prioritising of targets. It is thus a boosted decision tree algorithm. A full paper describing the code, catalogues and algorithms is in preparation (Young et al. in prep). A summary is included in Section 4.2 of "Design and Operation of the ATLAS Transient Science Server" (Smith, Smartt, Young et al. 2020, submitted to PASP: [https://arxiv.org/abs/2003.09052](https://arxiv.org/abs/2003.09052)). We label the current version as the official release of Sherlock 2.0. The major upgrade from previous versions are that it includes Pan-STARRS DR1 (including the Tachibana & Miller 2018 star-galaxy separation index) and Gaia DR2 catalogues, along with some adjustments to the ranking algorithm.
+_Sherlock_ is a software package and integrated massive database system that 
+provides a rapid and reliable spatial cross-match service for any astrophysical 
+variable or transient. The concept originated in the PhD thesis of D. Young at QUB, and has 
+been developed by Young et al. in many iterations and cycles since. It associates the 
+position of a transient with all major astronomical catalogues and assigns a basic 
+classification to the transient. At its most basic, it separates stars, AGN and 
+supernova-like transients. It has been tested within QUB on a daily basis with 
+ATLAS and Pan-STARRS transients, and within PESSTO as part of the PESSTO 
+marshall system that allows prioritising of targets. It is thus a boosted 
+decision tree algorithm. A full paper describing the code, catalogues and 
+algorithms is in preparation (Young et al. in prep). A summary is included in Section 4.2 of 
+"Design and Operation of the ATLAS Transient Science Server" 
+(Smith, Smartt, Young et al. 2020, submitted to PASP: 
+[https://arxiv.org/abs/2003.09052](https://arxiv.org/abs/2003.09052)). 
+We label the current version as the official release of Sherlock 2.0. 
+The major upgrade from previous versions are that it includes Pan-STARRS DR1 
+(including the Tachibana & Miller 2018 star-galaxy separation index) and 
+Gaia DR2 catalogues, along with some adjustments to the ranking algorithm.
 
 **That section is copied here and users should currently cite that paper ([Smith et al. 2020](https://arxiv.org/abs/2003.09052)) for _Sherlock_ use:**
 
 A boosted decision tree algorithm (internally known as _Sherlock_) mines a library of historical and on-going astronomical survey data and attempts to predict the nature of the object based on the resulting crossmatched associations found. One of the main purposes of this is to identify variable stars, since they make up about 50% of the objects, and to associate candidate extragalactic sources with potential host galaxies. The full details of this general purpose algorithm and its implementation will be presented in an upcoming paper (Young et al. in prep), and we give an outline of the algorithm here.
 
-The library of catalogues contains datasets from many all-sky surveys such as the major Gaia DR1 and DR2 (Gaia Collaboration et al. 2016, 2018), the Pan-STARRS1 Science Consortium surveys (Chambers et al. 2016; Magnier, Chambers, et al. 2016; Magnier, Sweeney, et al. 2016; Magnier, Schlafly, et al. 2016; Flewelling et al. 2016) and the catalogue of probabilistic classifications of unresolved point sources by (Tachibana and Miller 2018) which is based on the Pan-STARRS1 survey data. The SDSS DR12 PhotoObjAll Table, SDSS DR12 SpecObjAll Table (Alam et al. 2015) usefully contains both reliable star-galaxy separation and photometric redshifts which are useful in transient source classification. Extensive catalogues with lesser spatial resolution or colour information that we use are the GSC v2.3 (Lasker et al. 2008) and 2MASS catalogues (Skrutskie et al. 2006). _Sherlock_ employs many smaller source-specific catalogues such as Million Quasars Catalog v5.2 (Flesch 2019), Veron-Cett AGN Catalogue v13 (Véron-Cetty and Véron 2010), Downes Catalog of CVs (Downes et al. 2001), Ritter Cataclysmic Binaries Catalog v7.21 (Ritter and Kolb 2003). For spectroscopic redshifts we use the GLADE Galaxy Catalogue v2.3 (Dálya et al. 2018) and the NED-D Galaxy Catalogue v13.1[1](https://lasair-ztf.lsst.ac.uk/sherlock#fn1). _Sherlock_ also has the ability to remotely query the NASA/IPAC Extragalactic Database, caching results locally to speed up future searches targeting the same region of sky, and in this way we have built up an almost complete local copy of the NED catalogue. More catalogues are continually being added to the library as they are published and become publicly available.
+The library of catalogues contains datasets from many all-sky surveys such as 
+
+- Gaia DR1 and DR2 (Gaia Collaboration et al. 2016, 2018), 
+
+- Pan-STARRS1 Science Consortium surveys (Chambers et al. 2016; Magnier, Chambers, et al. 2016; Magnier, Sweeney, et al. 2016; Magnier, Schlafly, et al. 2016; Flewelling et al. 2016) and the catalogue of probabilistic classifications of unresolved point sources by (Tachibana and Miller 2018) which is based on the Pan-STARRS1 survey data. 
+
+- The SDSS DR12 PhotoObjAll Table, SDSS DR12 SpecObjAll Table (Alam et al. 2015) contains both reliable star-galaxy separation and photometric redshifts which are useful in transient source classification. 
+
+Extensive catalogues with lesser spatial resolution or colour information that we use are 
+- GSC v2.3 (Lasker et al. 2008) and 
+- 2MASS catalogues (Skrutskie et al. 2006). 
+
+_Sherlock_ employs many smaller source-specific catalogues such as 
+
+- Million Quasars Catalog v5.2 (Flesch 2019), 
+
+- Veron-Cett AGN Catalogue v13 (Véron-Cetty and Véron 2010), 
+
+- Downes Catalog of CVs (Downes et al. 2001), 
+
+- Ritter Cataclysmic Binaries Catalog v7.21 (Ritter and Kolb 2003). 
+
+For spectroscopic redshifts we use the 
+
+- GLADE Galaxy Catalogue v2.3 (Dálya et al. 2018) and the 
+
+- NED-D Galaxy Catalogue v13.1[1](https://lasair-ztf.lsst.ac.uk/sherlock#fn1). 
+
+_Sherlock_ also has the ability to remotely query the NASA/IPAC Extragalactic Database, caching results locally to speed up future searches targeting the same region of sky, and in this way we have built up an almost complete local copy of the NED catalogue. More catalogues are continually being added to the library as they are published and become publicly available.
 
 At a base-level of matching _Sherlock_ distinguishes between transient objects _synonymous_ with (the same as, or very closely linked, to) and those it deems as merely _associated_ with the catalogued source. The resulting classifications are tagged as _synonyms_ and _associations_, with synonyms providing intrinsically more secure transient nature predictions than associations. For example, an object arising from a variable star flux variation would be labeled as _synonymous_ with its host star since it would be astrometrically coincident (assuming no proper motion) with the catalogued source. Whereas an extragalactic supernova would typically be _associated_ with its host galaxy - offset from the core, but close enough to be physically associated. Depending on the underpinning characteristics of the source, there are 7 types of predicted-nature classifications that Sherlock will assign to a transient:
 
@@ -95,30 +142,3 @@ Véron-Cetty, M P, and P Véron. 2010. “A catalogue of quasars and active nucl
 * * *
 
 1.  https://ned.ipac.caltech.edu/Library/Distances/[↩](https://lasair-ztf.lsst.ac.uk/sherlock#fnref1)
-
-
-## Gravitational Wave Regions
-
-
-## alerce_lc  
-
-The [ALeRCE light curve classifier](https://arxiv.org/abs/2008.03311) uses variability features computed from the ZTF alert stream, and colors obtained from AllWISE and ZTF photometry. We apply a Balanced Random Forest algorithm with a two-level scheme, where the top level classifies each source as periodic, stochastic, or transient, and the bottom level further resolves each of these hierarchical classes, amongst 15 total classes. This classifier corresponds to the first attempt to classify multiple classes of stochastic variables (including core- and host-dominated active galactic nuclei, blazars, young stellar objects, and cataclysmic variables) in addition to different classes of periodic and transient sources, using real data.  
-Reproduced with permission from the [Alerce Community Broker.](http://alerce.science/).  
-_responsible user: Roy Williams_
-
-The [Alerce Stamp Classifier](https://arxiv.org/abs/2008.03309) is based on a convolutional neural network, trained on alerts ingested from the Zwicky Transient Facility (ZTF). Using only the science, reference and difference images of the first detection as inputs, along with the metadata of the alert as features, the classifier is able to correctly classify alerts from active galactic nuclei, supernovae (SNe), variable stars, asteroids and bogus classes, with high accuracy (94 percent) in a balanced test set.  
-Reproduced with permission from the [Alerce Community Broker.](http://alerce.science/)  
-_responsible user: Roy Williams_
-
-## fastfinder
-
-Fastfinder is an early-time, fast transient alerting system in development at Queen's University Belfast. The purpose of Fastfinder is to identify any fast-evolving extragalactic transients, such as Kilonovae, from the LSST alert-stream using only the transient's early-time photometry. By comparing the transient's photometric characteristics to that of the parameter space of known fast-evolving transient classes, Fastfinder generates probabilistic scores on the likelihood of the transient's spectral type.  
-_responsible user: Michael Fulton_
-
-## fink_early_sn
-
-[Fink](https://fink-broker.org/) is a LSST Community Alert Broker being developed by an international community of researchers with a large variety of scientific interests, including among others multi-messenger astronomy, supernovae, solar system, anomalies identification, microlensing and gamma-ray bursts optical counterparts. This sub-stream focuses on early supernova type Ia. In order to tag an alert as an early supernova Ia candidate, Fink mainly uses 2 criteria: (a) Ia probability larger than 50% from the [early supernova Ia module](https://arxiv.org/abs/2111.11438) , (b) Ia probability larger than 50% from either one of the deep learning classifier based on [SuperNNova](https://arxiv.org/abs/1901.06384). These candidates are also sent nightly to TNS for spectroscopic follow-up. Users should expect about 90% purity based on current performance. See also the [filter code](https://github.com/astrolabsoftware/fink-filters/blob/master/fink_filters/filter_early_sn_candidates/filter.py).  
-Reproduced with permission from the [Fink Community Broker.](https://fink-broker.org/)  
-_responsible user: Roy Williams_
-
-
