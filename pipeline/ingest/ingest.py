@@ -271,7 +271,7 @@ def run_ingest(args):
         'default.topic.config': {'auto.offset.reset': 'smallest'},
 
         # wait twice wait time before forgetting me
-        'max.poll.interval.ms': 2*settings.WAIT_TIME*1000,  
+        'max.poll.interval.ms': 50*settings.WAIT_TIME*1000,  
     }
 
     try:
@@ -306,9 +306,9 @@ def run_ingest(args):
         if msg is None:
             end_batch(consumer, producer, ms, nalert, ncandidate)
             nalert = ncandidate = 0
-            log.info('no more messages ... sleeping')
+            log.debug('no more messages ... sleeping %d seconds' % settings.WAIT_TIME)
             sys.stdout.flush()
-            time.sleep(settings.WAIT_TIME) # sleep 10 minutes
+            time.sleep(settings.WAIT_TIME)
             continue
 
         # read the avro contents
@@ -338,7 +338,7 @@ def run_ingest(args):
             ncandidate += icandidate
 
             # every so often commit, flush, and update status
-            if nalert >= 1000:
+            if nalert >= 250:
                 end_batch(consumer, producer, ms, nalert, ncandidate)
                 nalert = ncandidate = 0
                 # check for lockfile
