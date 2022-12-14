@@ -3,6 +3,7 @@ import base64
 from mocpy import MOC, World2ScreenMPL
 import matplotlib.pyplot as plt
 from src import db_connect
+import astropy.units as u
 
 
 def add_watchmap_metadata(

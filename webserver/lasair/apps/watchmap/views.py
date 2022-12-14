@@ -1,7 +1,7 @@
+from django.contrib import messages
 from .models import Watchmap
 import tempfile
 import io
-
 import time
 import json
 import matplotlib.pyplot as plt
@@ -16,7 +16,7 @@ from django.http import HttpResponse, FileResponse
 from django.contrib.auth.models import User
 from django.views.decorators.csrf import csrf_exempt
 from django.template.context_processors import csrf
-from django.shortcuts import render, get_object_or_404
+from django.shortcuts import render, get_object_or_404, redirect
 from lasair.apps.db_schema.utils import get_schema_dict
 from src import db_connect
 import sys
@@ -244,31 +244,20 @@ def watchmap_create(request):
         if form.is_valid():
             form.save()
 
-            print(request.FILES)
-
-            # GET WATCHLIST PARAMETERS
+            # GET WATCHMAP PARAMETERS
             t = time.time()
             name = request.POST.get('name')
             description = request.POST.get('description')
+
             if 'watchmap_file' in request.FILES:
-                mapfile = handle_uploaded_file(request.FILES['watchmap_file'])
+                fits_bytes = (request.FILES['watchmap_file']).read()
+                fits_string = bytes2string(fits_bytes)
+                png_bytes = make_image_of_MOC(fits_bytes)
+                png_string = bytes2string(png_bytes)
 
-            wm = Watchmaps(user=request.user, name=name, description=description, active=0, radius=default_radius)
-            wm.save()
-            cones = []
-            for cone in cone_list:
-                name = cone[0].encode('ascii', 'ignore').decode()
-                if name != cone[0]:
-                    message += 'Non-ascii characters removed from name %s --> %s<br/>' % (cone[0], name)
-                wlc = WatchlistCone(wl=wl, name=name, ra=cone[1], decl=cone[2], radius=cone[3])
-                cones.append(wlc)
-            chunks = 1 + int(len(cones) / 50000)
-            for i in range(chunks):
-                WatchlistCone.objects.bulk_create(cones[(i * 50000): ((i + 1) * 50000)])
-
-            watchlistname = form.cleaned_data.get('name')
-            messages.success(request, f'The {watchlistname} catalogue watchlist has been successfully created')
-            return redirect('watchlist_index')
-    else:
-        form = WatchmapForm()
-    return render(request, 'watchmap/watchmap_details.html', {'form': form})
+                wm = watchmap = Watchmap(user=request.user, name=name, description=description,
+                                         moc=fits_string, mocimage=png_string, active=0)
+                wm.save()
+                watchmapname = form.cleaned_data.get('name')
+                messages.success(request, f'The {watchmapname} watchlist has been successfully created')
+                return redirect(f'watchmap_detail', wm.pk)
