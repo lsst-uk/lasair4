@@ -447,47 +447,6 @@ def filter_query_detail(request, mq_id):
                        'filterQ': thisFilter})
 
 
-def runquery_post(request):
-    """runquery.
-
-    Args:
-        request:
-    """
-    json_checked = False
-
-    if not request.method == 'POST':
-        return render(request, 'error.html', {'message': 'This code expects a POST'})
-
-    query_name = request.POST['query_name'].strip()
-    mq_id = request.POST['mq_id'].strip()
-    selected = request.POST['selected'].strip()
-    tables = request.POST['tables'].strip()
-    conditions = request.POST['conditions'].strip()
-
-    limit = 1000
-    if 'limit' in request.POST:
-        limit = request.POST['limit']
-        try:
-            limit = int(limit)
-        except:
-            return render(request, 'error.html', {'message': 'LIMIT must be an integer'})
-        if limit > 1000:
-            return render(request, 'error.html', {'message': 'LIMIT must be 1000 or less'})
-
-    offset = 0
-    if 'offset' in request.POST:
-        offset = request.POST['offset']
-        try:
-            offset = int(offset)
-        except:
-            return render(request, 'error.html', {'message': 'OFFSET must be an integer'})
-
-    if 'json' in request.POST and request.POST['json'] == 'on':
-        json_checked = True
-
-    return runquery(request, mq_id, query_name, selected, tables, conditions, limit, offset, json_checked)
-
-
 def record_query(request, query):
     """record_query.
 
