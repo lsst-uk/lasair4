@@ -623,11 +623,24 @@ def filter_query_create(request, mq_id=None):
 
     form = filterQueryForm(request.POST, request.FILES, request=request)
 
+    if logged_in:
+        email = request.user.email
+        watchlists = Watchlist.objects.filter(Q(user=request.user) | Q(public__gte=1))
+        watchmaps = Watchmap.objects.filter(Q(user=request.user) | Q(public__gte=1))
+        annotators = Annotators.objects.filter(Q(user=request.user) | Q(public__gte=1))
+    else:
+        email = ''
+        watchlists = Watchlist.objects.filter(public__gte=1)
+        watchmaps = Watchmap.objects.filter(public__gte=1)
+        annotators = Annotators.objects.filter(public__gte=1)
+
     if request.method == 'POST':
 
         action = request.POST.get('action')
         selected = request.POST.get('selected')
         conditions = request.POST.get('conditions')
+        watchlists = request.POST.get('watchlists')
+
         tables = "objects"
         limit = 1000
         offset = 0
@@ -645,6 +658,10 @@ def filter_query_create(request, mq_id=None):
         matchObjectList = re.findall(r'([a-zA-Z0-9_\-]*)\.([a-zA-Z0-9_\-]*)', selected)
         tables = [m[0] for m in matchObjectList]
         tables = (",").join(set(tables))
+        if watchlists:
+            tables += f", watchlist:{watchlists}"
+        if watchmaps:
+            tables += f", area:{watchlists}"
 
         # RUN OR SAVE?
         if action and action.lower() == "run":
