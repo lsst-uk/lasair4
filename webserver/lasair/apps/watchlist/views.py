@@ -19,6 +19,87 @@ from .utils import handle_uploaded_file, add_watchlist_metadata
 sys.path.append('../common')
 
 
+@csrf_exempt
+def watchlist_index(request):
+    """*Return list of all watchlists viewable by user*
+
+    **Key Arguments:**
+
+    - `request` -- the original request
+
+    **Usage:**
+
+    ```python
+    urlpatterns = [
+        ...
+        path('watchlists/', views.watchlist_index, name='watchlist_index'),
+        ...
+    ]
+    ```
+    """
+
+    # PUBLIC WATCHLISTS
+    publicWatchlists = Watchlist.objects.filter(public__gte=1)
+    publicWatchlists = add_watchlist_metadata(publicWatchlists, remove_duplicates=True)
+
+    # USER WATCHLISTS
+    if request.user.is_authenticated:
+        myWatchlists = Watchlist.objects.filter(user=request.user)
+        myWatchlists = add_watchlist_metadata(myWatchlists)
+    else:
+        myWatchlists = None
+
+    form = WatchlistForm()
+
+    return render(request, 'watchlist/watchlist_index.html',
+                  {'myWatchlists': myWatchlists,
+                   'publicWatchlists': publicWatchlists,
+                   'authenticated': request.user.is_authenticated,
+                   'form': form})
+
+
+def watchlist_delete(request, wl_id):
+    """*delete a watchlist
+
+    **Key Arguments:**
+
+    - `request` -- the original request
+    - `wl_id` -- the watchlist UUID
+
+    **Usage:**
+
+    ```python
+    urlpatterns = [
+        ...
+        path('watchlists/<int:ar_id>/delete/', views.watchlist_delete, name='watchlist_delete'),
+        ...
+    ]
+    ```
+    """
+    msl = db_connect.remote()
+    cursor = msl.cursor(buffered=True, dictionary=True)
+    watchlist = get_object_or_404(Watchlist, wl_id=wl_id)
+    name = watchlist.name
+
+    # DELETE WATCHLIST -- NEEDS MOVE TO IT'S OWN FUNCTION
+    if request.method == 'POST' and request.user.is_authenticated and watchlist.user.id == request.user.id:
+        action = request.POST.get('action')
+        if action == "delete":
+            # DELETE ALL THE CONES OF THIS WATCHLIST
+            WatchlistCone.objects.filter(wl_id=wl_id).delete()
+            # DELETE ALL THE HITS OF THIS WATCHLIST
+            query = 'DELETE from watchlist_hits WHERE wl_id=%d' % wl_id
+            cursor.execute(query)
+            msl.commit()
+            # DELETE THE WATCHLIST
+            watchlist.delete()
+            messages.success(request, f'The "{name}" watchlist has been successfully deleted')
+    else:
+        messages.error(request, f'You must be the owner to delete this watchlist')
+
+    return redirect('watchlist_index')
+
+
 def watchlist_download(request, wl_id):
     """*download the original watchlist*
 
@@ -87,6 +168,7 @@ def watchlist_detail(request, wl_id):
     """
 
     msl = db_connect.remote()
+    cursor = msl.cursor(buffered=True, dictionary=True)
     watchlist = get_object_or_404(Watchlist, wl_id=wl_id)
 
     # IS USER ALLOWED TO SEE THIS RESOURCE?
@@ -97,6 +179,7 @@ def watchlist_detail(request, wl_id):
         messages.error(request, "This watchlist is private and not visible to you")
         return render(request, 'error.html')
 
+    # UPDATING SETTINGS?
     if request.method == 'POST' and is_owner:
         action = request.POST.get('action')
         # REQUEST TO UPDATE THE WATCHLIST DETAILS
@@ -125,7 +208,7 @@ def watchlist_detail(request, wl_id):
             messages.success(request, f'{hits} crossmatches found')
 
     # FIND THE COUNT OF WATCHLIST MATCHES
-    cursor = msl.cursor(buffered=True, dictionary=True)
+
     cursor.execute('SELECT count(*) AS count FROM watchlist_cones WHERE wl_id=%d' % wl_id)
     for row in cursor:
         number_cones = row['count']
@@ -160,70 +243,6 @@ WHERE c.wl_id=%d
         'is_owner': is_owner,
         'schema': schema,
         'form': form})
-
-
-@csrf_exempt
-def watchlist_index(request):
-    """*Return list of all watchlists viewable by user*
-
-    **Key Arguments:**
-
-    - `request` -- the original request
-
-    **Usage:**
-
-    ```python
-    urlpatterns = [
-        ...
-        path('watchlists/', views.watchlist_index, name='watchlist_index'),
-        ...
-    ]
-    ```
-    """
-
-    # DELETE WATCHLIST -- NEEDS MOVE TO IT'S OWN FUNCTION
-    if request.method == 'POST' and request.user.is_authenticated:
-        delete = request.POST.get('delete')
-
-        if delete == None:   # create new watchlist
-
-            pass
-        else:
-            wl_id = int(delete)
-            watchlist = get_object_or_404(Watchlist, wl_id=wl_id)
-            if request.user == watchlist.user:
-                # delete all the cones of this watchlist
-                WatchlistCone.objects.filter(wl_id=wl_id).delete()
-                # delete all the hits of this watchlist
-                query = 'DELETE from watchlist_hits WHERE wl_id=%d' % wl_id
-                msl = db_connect.remote()
-                cursor = msl.cursor(buffered=True, dictionary=True)
-                cursor.execute(query)
-                msl.commit()
-                # delete the watchlist
-                watchlist.delete()
-                messages.sucess(request, f'Watchlist {watchlist.name} deleted successfully')
-            else:
-                messages.error(request, f'Must be owner to delete watchlist')
-
-    # PUBLIC WATCHLISTS
-    publicWatchlists = Watchlist.objects.filter(public__gte=1)
-    publicWatchlists = add_watchlist_metadata(publicWatchlists, remove_duplicates=True)
-
-    # USER WATCHLISTS
-    if request.user.is_authenticated:
-        myWatchlists = Watchlist.objects.filter(user=request.user)
-        myWatchlists = add_watchlist_metadata(myWatchlists)
-    else:
-        myWatchlists = None
-
-    form = WatchlistForm()
-
-    return render(request, 'watchlist/watchlist_index.html',
-                  {'myWatchlists': myWatchlists,
-                   'publicWatchlists': publicWatchlists,
-                   'authenticated': request.user.is_authenticated,
-                   'form': form})
 
 
 def watchlist_create(request):

@@ -26,92 +26,108 @@
 
                 <div class="d-flex ms-2">
                     <div class="flex-grow-1">
-                        {% if "/filter/log/" not in request.path %}
-                            <h2 class="h3 fw-extrabold mb-0">'{{ title }}' filter results </h2>
-                            <small class="text-gray-500">
-                                A list of objects passing the <em>{{ title }}</em> filter (capped at 5000 detections)
-                                A list of objects passing the <em>{{ title }}</em> filter (capped at 5000 detections)
-                                A list of objects passing the <em>{{ title }}</em> filter (capped at 5000 detections)
-                                A list of objects passing the <em>{{ title }}</em> filter (capped at 5000 detections)
-                                A list of objects passing the <em>{{ title }}</em> filter (capped at 5000 detections)
-
-                            </small>
-                        {% else %}
-                            <h2 class="h3 fw-extrabold mb-0">'{{ title }}' filter history </h2>
-                            <small class="text-gray-500">
-                                A log of objects passing the <em>{{ title }}</em> filter since its creation
-                            </small>
-                        {% endif %}
-                    </div>
-                </div>
-            </div>
-
-            <div class="col-4  px-xl-1">
-                <div class="float-end">
-
-                    <div class="d-flex ms-2">
-                        {# <div class="btn-group" role="group" aria-label="Basic button group"> #}
-
-                        <a class="btn btn-sm btn-tertiary me-1" href='{% url "filter_query_detail" mq_id %}' data-bs-toggle="tooltip" data-bs-placement="auto" data-bs-title="run the filter to give live results">
-                            {% include "includes/icons/icon_run.html" %}<span class="align-middle">Run Filter</span></a>
-
-                        {% if "filter/log/" not in request.path %}
-                            <a class="btn btn-sm btn-gray-600 me-1 align-middle" href='{% url "filter_log" topic %}' data-bs-toggle="tooltip" data-bs-placement="auto" data-bs-title="listing all transients passing filter since its creation"><?xml version="1.0" encoding="UTF-8"?>
-
-                                {% include "includes/icons/icon_history.html" %}
-                                <span class="align-middle">History</span></a>
-                            {% if user.is_authenticated and user.id == filterQ.user.id %}
-                                <span data-bs-toggle="tooltip" data-bs-placement="auto" data-bs-title="edit the filter settings">
-                                    <a class="btn btn-sm btn-gray-600 me-1 align-middle " href='#' data-bs-toggle="modal" data-bs-target="#editFilterForm">
-                                        {% include "includes/icons/icon_edit.html" %}
-                                        <span class="align-middle">Settings</span></a>
+                        <div class="d-flex align-items-start">
+                            {% if filterQ.public %}
+                                <span class="icon icon-md me-2 me-sm-2 text-gray-400 " data-bs-toggle="tooltip" data-bs-title="public list">
+                                    {% include "includes/icons/icon_padlock_open.html" %}
                                 </span>
-                                {% include "includes/widgets/widget_filter_update_form.html" %}
+
+                            {% else %}
+                                <span class="icon icon-md me-2 me-sm-2 text-gray-400" data-bs-toggle="tooltip" data-bs-title="private list">
+                                    {% include "includes/icons/icon_padlock_closed.html" %}
+                                </span>
+
                             {% endif %}
-                        {% else %}
-
-
-                        {% endif %}
-
-
-                        {# </div> #}
-
-                        <div class="dropdown ms-auto ps-1">
-                            <button class="btn btn-sm btn-dark dropdown-toggle" type="button" id="exportDropdown" data-bs-toggle="dropdown" aria-expanded="false">
-                                export<svg class="icon icon-xs" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd"></path></svg>
-                            </button>
-                            <ul class="dropdown-menu" aria-labelledby="exportDropdown">
-                                <li><a class="dropdown-item export" data-table="filter-results" href="#" data-type="csv" data-filename="{{topic}}">csv</a></li>
-                                <li><a class="dropdown-item export" data-table="filter-results" href="#" data-type="json" data-filename="{{topic}}">json</a></li>
-                            </ul>
+                            {% if "/filter/log/" not in request.path %}
+                                <h2 class="h3 fw-extrabold mb-0">'{{ title }}' filter results </h2>
+                                </div>
+                                <div>
+                                    <small class="text-gray-500">
+                                        {{filterQ.description}}
+                                    </small>
+                                </div>
+                            {% else %}
+                                <h2 class="h3 fw-extrabold mb-0">'{{ title }}' filter history </h2>
+                                </div>
+                                <div>
+                                    <small class="text-gray-500">
+                                        {{filterQ.description}}
+                                    </small>
+                                </div>
+                            {% endif %}
+                            <small class="text-gray-500">
+                                The filter is <b>{% if not filterQ.active %}not active{% elif filterQ.active == 1%} streamed via email{% elif filterQ.active == 2%} streamed via kafka {% endif %} </b> {% include "includes/info_tooltip.html" with info="when active, a filter will be dynamically matched against new transient alerts and the results streamed via email or kafka." position="auto" %}.
+                            </small>
                         </div>
                     </div>
+                </div>
+
+                <div class="col-4  px-xl-1">
+                    <div class="float-end">
+
+                        <div class="d-flex ms-2">
+                            {# <div class="btn-group" role="group" aria-label="Basic button group"> #}
+
+                            <a class="btn btn-sm btn-tertiary me-1" href='{% url "filter_query_detail" mq_id %}' data-bs-toggle="tooltip" data-bs-placement="auto" data-bs-title="run the filter to give live results">
+                                {% include "includes/icons/icon_run.html" %}<span class="align-middle">Run Filter</span></a>
+
+                            {% if "filter/log/" not in request.path %}
+                                <a class="btn btn-sm btn-gray-600 me-1 align-middle" href='{% url "filter_log" topic %}' data-bs-toggle="tooltip" data-bs-placement="auto" data-bs-title="listing all transients passing filter since its creation"><?xml version="1.0" encoding="UTF-8"?>
+
+                                    {% include "includes/icons/icon_history.html" %}
+                                    <span class="align-middle">History</span></a>
+                                {% if user.is_authenticated and user.id == filterQ.user.id %}
+                                    <span data-bs-toggle="tooltip" data-bs-placement="auto" data-bs-title="edit the filter settings">
+                                        <a class="btn btn-sm btn-gray-600 me-1 align-middle " href='#' data-bs-toggle="modal" data-bs-target="#editFilterForm">
+                                            {% include "includes/icons/icon_edit.html" %}
+                                            <span class="align-middle">Settings</span></a>
+                                    </span>
+                                    {% include "includes/widgets/widget_filter_update_form.html" %}
+                                {% endif %}
+                            {% else %}
+
+
+                            {% endif %}
+
+
+                            {# </div> #}
+
+                            <div class="dropdown ms-auto ps-1">
+                                <button class="btn btn-sm btn-dark dropdown-toggle" type="button" id="exportDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+                                    export<svg class="icon icon-xs" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd"></path></svg>
+                                </button>
+                                <ul class="dropdown-menu" aria-labelledby="exportDropdown">
+                                    <li><a class="dropdown-item export" data-table="filter-results" href="#" data-type="csv" data-filename="{{topic}}">csv</a></li>
+                                    <li><a class="dropdown-item export" data-table="filter-results" href="#" data-type="json" data-filename="{{topic}}">json</a></li>
+                                </ul>
+                            </div>
+                        </div>
 
 
 
 
 
+                    </div>
                 </div>
             </div>
-        </div>
-        <div class="row d-block d-xl-flex">
-            {% if message %}
-                <div class="accordion accordion-flush" id="accordionExample">
-                    <div class="accordion-item">
-                        <h2 class="accordion-header " id="headinOne">
-                            <button class="h6 accordion-button collapsed fw-extrabold text-gray-400 m-0 p-0" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="false" aria-controls="collapseOne">
-                            </button>
-                        </h2>
-                        <div id="collapseOne" class="accordion-collapse collapse" aria-labelledby="headinOne" data-bs-parent="#accordionExample">
-                            <div class="accordion-body p-0 ">
-                                <p><pre><code class="language-sql">{{message}}</code></pre></p>
+            <div class="row d-block d-xl-flex">
+                {% if message %}
+                    <div class="accordion accordion-flush" id="accordionExample">
+                        <div class="accordion-item">
+                            <h2 class="accordion-header " id="headinOne">
+                                <button class="h6 accordion-button collapsed fw-extrabold text-gray-400 m-0 p-0" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="false" aria-controls="collapseOne">
+                                </button>
+                            </h2>
+                            <div id="collapseOne" class="accordion-collapse collapse" aria-labelledby="headinOne" data-bs-parent="#accordionExample">
+                                <div class="accordion-body p-0 ">
+                                    <p><pre><code class="language-sql">{{message}}</code></pre></p>
+                                </div>
                             </div>
                         </div>
                     </div>
-                </div>
 
-            {% endif %}
+                {% endif %}
+            </div>
         </div>
     </div>
-</div>
 

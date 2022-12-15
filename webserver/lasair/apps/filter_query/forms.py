@@ -118,14 +118,11 @@ class UpdateFilterQueryForm(forms.ModelForm):
         instance = kwargs.get('instance', {})
 
         for i in self.fields:
-            # print(instance.__dict__[i])
-
-            if i in ["public", "active"]:
+            if i in ["public"]:
                 if instance.__dict__[i]:
                     self.initial[i] = True
                 else:
                     self.initial[i] = False
-
             else:
                 self.fields[i].widget.attrs['value'] = instance.__dict__[i]
             # self.fields[i].initial = instance.__dict__[i]
