@@ -339,6 +339,32 @@ def query_list(qs):
     return list
 
 
+def filter_query_delete(request, mq_id):
+    """*delete a filter query*
+
+    **Key Arguments:**
+
+    - `request` -- the original request
+    - `mq_id` -- the filter UUID
+
+    **Usage:**
+
+    ```python
+    urlpatterns = [
+        ...
+        path('filters/<int:mq_id>/delete/', views.filter_query_delete, name='filter_query_delete'),
+        ...
+    ]
+    ```
+    """
+    msl = db_connect.readonly()
+    cursor = msl.cursor(buffered=True, dictionary=True)
+    filterQuery = get_object_or_404(filter_query, mq_id=mq_id)
+    name = filterQuery.name
+    messages.success(request, f'The "{name}" filter has been successfully deleted')
+    return redirect('filter_query_index')
+
+
 def filter_query_detail(request, mq_id):
     """*return the result of a filter query*
 
@@ -359,6 +385,54 @@ def filter_query_detail(request, mq_id):
     """
     msl = db_connect.readonly()
     cursor = msl.cursor(buffered=True, dictionary=True)
+    filterQuery = get_object_or_404(filter_query, mq_id=mq_id)
+
+    # IS USER ALLOWED TO SEE THIS RESOURCE?
+    is_owner = (request.user.is_authenticated) and (request.user.id == filterQuery.user.id)
+    is_public = (filterQuery.public == 1)
+    is_visible = is_owner or is_public
+    if not is_visible:
+        messages.error(request, "This filter is private and not visible to you")
+        return render(request, 'error.html')
+
+    # UPDATING SETTINGS?
+    if request.method == 'POST' and is_owner:
+        filterQuery.name = request.POST.get('name')
+        filterQuery.description = request.POST.get('description')
+        # filterQuery.selected = request.POST.get('selected')
+        # filterQuery.tables = request.POST.get('tables')
+        # filterQuery.conditions = request.POST.get('conditions')
+
+        if request.POST.get('active'):
+            filterQuery.active = int(request.POST.get('active'))
+        else:
+            filterQuery.active = 0
+
+        if request.POST.get('public'):
+            filterQuery.public = 1
+        else:
+            filterQuery.public = 0
+
+        # VERIFY QUERY WORKS
+        e = check_query(filterQuery.selected, filterQuery.tables, filterQuery.conditions)
+        if e:
+            messages.error(request, f"There was an error updating your filter.\n{e}")
+            return render(request, 'error.html')
+        filterQuery.real_sql = build_query(filterQuery.selected, filterQuery.tables, filterQuery.conditions)
+        e = check_query_zero_limit(filterQuery.real_sql)
+        if e:
+            messages.error(request, f"There was an error updating your filter.\n{e}")
+            return render(request, 'error.html')
+
+        # REFRESH STREAM
+        tn = topic_name(request.user.id, filterQuery.name)
+        filterQuery.topic_name = tn
+        delete_stream_file(request, filterQuery.name)
+        if filterQuery.active == 2:
+            topic_refresh(filterQuery.real_sql, tn, limit=10)
+        filterQuery.save()
+        messages.success(request, f'Your filter has been successfully updated')
+
     cursor.execute('SELECT name, selected, tables, conditions, real_sql FROM myqueries WHERE mq_id=%d' % mq_id)
     for row in cursor:
         query_name = row['name']
@@ -373,8 +447,7 @@ def filter_query_detail(request, mq_id):
     offset = 0
     json_checked = False
 
-    thisFilter = get_object_or_404(filter_query, mq_id=mq_id)
-    form = UpdateFilterQueryForm(request.POST, request.FILES, request=request, instance=thisFilter)
+    form = UpdateFilterQueryForm(instance=filterQuery)
 
     message = ""
 
@@ -407,7 +480,7 @@ def filter_query_detail(request, mq_id):
                        'message': real_sql,
                        "schema": tableSchema,
                        "form": form,
-                       'filterQ': thisFilter})
+                       'filterQ': filterQuery})
 
 
 def record_query(request, query):

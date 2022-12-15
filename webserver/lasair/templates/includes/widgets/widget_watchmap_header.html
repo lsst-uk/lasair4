@@ -39,11 +39,14 @@
 
                             <div class="h3 fw-extrabold mb-0 ms-2">'{{ watchmap.name }}' Watched watchmap Associations</div>
                         </div>
+                        <div>
+                            <small class="text-gray-500">
+                                {{watchmap.description}}
+                            </small>
+                        </div>
                         <small class="text-gray-500">
-                            Transient objects located within the <em>{{ watchmap.name }}</em> watchmap. The watchmap is <b>{% if not watchmap.active %}not {% endif %} active</b> {% include "includes/info_tooltip.html" with info="when active, a watchmap will be dynamically matched against new transient alerts. See the watchmap settings to make changes." position="auto" %}.
+                            The watchmap is <b>{% if not watchmap.active %}not {% endif %} active</b> {% include "includes/info_tooltip.html" with info="when active, a watchmap will be dynamically matched against new transient alerts. See the watchmap settings to make changes." position="auto" %}.
                         </small>
-
-
                     </div>
                 </div>
             </div>

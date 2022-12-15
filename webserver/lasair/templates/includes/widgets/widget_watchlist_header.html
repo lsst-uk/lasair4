@@ -39,8 +39,13 @@
 
                             <div class="h3 fw-extrabold mb-0 ms-2">'{{ watchlist.name }}' Watchlist Associations</div>
                         </div>
+                        <div>
+                            <small class="text-gray-500">
+                                {{watchlist.description}}
+                            </small>
+                        </div>
                         <small class="text-gray-500">
-                            Transient objects located within an association radius of a source in the <em>{{ watchlist.name }}</em> watchlist ({{number_cones}} sources). The default association radius set at <b>{{watchlist.radius}} arcsec</b> and the watchlist is <b>{% if not watchlist.active %}not {% endif %} active</b> {% include "includes/info_tooltip.html" with info="when active, a watchlist will be dynamically matched against new transient alerts. See the watchlist settings to make changes." position="auto" %}.
+                            The watchlist contains {{number_cones}} sources with a default association radius of <b>{{watchlist.radius}} arcsec</b>. The watchlist is <b>{% if not watchlist.active %}not {% endif %} active</b> {% include "includes/info_tooltip.html" with info="when active, a watchlist will be dynamically matched against new transient alerts. See the watchlist settings to make changes." position="auto" %}.
                         </small>
 
 

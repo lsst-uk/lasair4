@@ -66,6 +66,33 @@
                     </div>
                 </form>
 
+                <div class="text-center mt-3">
+                    <a data-bs-toggle="modal" data-bs-dismiss="modal" href="#areYouSureModal"><small>delete filter</small></a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- DELETE MODAL -->
+<div class="modal fade" id="areYouSureModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="areYouSureModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="areYouSureModalLabel">Delete the {{filter.name}} filter?</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                Are you sure you want to do this? There's no going back!
+            </div>
+            <div class="modal-footer">
+                <form enctype="multipart/form-data" method="post" action='{% url "filter_query_delete" filterQ.mq_id %}' class="mt-0 mb-3">
+
+                    {% csrf_token %}
+
+                    <button  data-bs-target="#editWatchlistForm" data-bs-toggle="modal" data-bs-dismiss="modal" type="button" class="btn btn-dark" data-bs-dismiss="modal">Keep</button>
+                    <button type="submit" name="action" value="delete" type="button" class="btn btn-tertiary">Delete</button>
+                </form>
             </div>
         </div>
     </div>
