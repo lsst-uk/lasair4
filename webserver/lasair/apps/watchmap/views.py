@@ -115,14 +115,13 @@ def watchmap_delete(request, ar_id):
     watchmap = get_object_or_404(Watchmap, ar_id=ar_id)
     name = watchmap.name
 
-    # DELETE WATCHLIST -- NEEDS MOVE TO IT'S OWN FUNCTION
-    if request.method == 'POST' and request.user.is_authenticated and watchmap.user.id == request.user.id:
+    # DELETE WATCHMAP
+    if request.method == 'POST' and request.user.is_authenticated and watchmap.user.id == request.user.id and request.POST.get('action') == "delete":
         watchmap.delete()
         messages.success(request, f'The "{name}" watchmap has been successfully deleted')
     else:
         messages.error(request, f'You must be the owner to delete this watchmap')
 
-    messages.success(request, f'The "{name}" watchmap has been successfully deleted')
     return redirect('watchmap_index')
 
 
