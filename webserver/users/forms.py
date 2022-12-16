@@ -13,8 +13,8 @@ class UserRegisterForm(UserCreationForm):
         'required_score': 0.85
     }))
     email = forms.EmailField()
-    if getattr(settings, "DEBUG", False) and getattr(settings, "LASAIR_URL", False) == "127.0.0.1":
-        captcha.clean = lambda x: True
+    # if getattr(settings, "DEBUG", False) and getattr(settings, "LASAIR_URL", False) == "127.0.0.1":
+    #     captcha.clean = lambda x: True
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
