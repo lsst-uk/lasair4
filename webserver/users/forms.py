@@ -10,11 +10,10 @@ from django.conf import settings
 
 class UserRegisterForm(UserCreationForm):
     captcha = ReCaptchaField(widget=ReCaptchaV3(attrs={
-        'required_score': 0.0
+        'required_score': 0.85
     }))
     email = forms.EmailField()
     if getattr(settings, "DEBUG", False) and getattr(settings, "LASAIR_URL", False) == "127.0.0.1":
-        print("HERHEHRERHERHERHERHERHERHERHERHERHER")
         captcha.clean = lambda x: True
 
     def __init__(self, *args, **kwargs):
