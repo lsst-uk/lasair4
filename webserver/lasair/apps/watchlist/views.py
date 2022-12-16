@@ -81,19 +81,17 @@ def watchlist_delete(request, wl_id):
     watchlist = get_object_or_404(Watchlist, wl_id=wl_id)
     name = watchlist.name
 
-    # DELETE WATCHLIST -- NEEDS MOVE TO IT'S OWN FUNCTION
-    if request.method == 'POST' and request.user.is_authenticated and watchlist.user.id == request.user.id:
-        action = request.POST.get('action')
-        if action == "delete":
-            # DELETE ALL THE CONES OF THIS WATCHLIST
-            WatchlistCone.objects.filter(wl_id=wl_id).delete()
-            # DELETE ALL THE HITS OF THIS WATCHLIST
-            query = 'DELETE from watchlist_hits WHERE wl_id=%d' % wl_id
-            cursor.execute(query)
-            msl.commit()
-            # DELETE THE WATCHLIST
-            watchlist.delete()
-            messages.success(request, f'The "{name}" watchlist has been successfully deleted')
+    # DELETE WATCHLIST
+    if request.method == 'POST' and request.user.is_authenticated and watchlist.user.id == request.user.id and request.POST.get('action') == "delete":
+        # DELETE ALL THE CONES OF THIS WATCHLIST
+        WatchlistCone.objects.filter(wl_id=wl_id).delete()
+        # DELETE ALL THE HITS OF THIS WATCHLIST
+        query = 'DELETE from watchlist_hits WHERE wl_id=%d' % wl_id
+        cursor.execute(query)
+        msl.commit()
+        # DELETE THE WATCHLIST
+        watchlist.delete()
+        messages.success(request, f'The "{name}" watchlist has been successfully deleted')
     else:
         messages.error(request, f'You must be the owner to delete this watchlist')
 

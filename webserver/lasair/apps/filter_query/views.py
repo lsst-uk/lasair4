@@ -361,7 +361,14 @@ def filter_query_delete(request, mq_id):
     cursor = msl.cursor(buffered=True, dictionary=True)
     filterQuery = get_object_or_404(filter_query, mq_id=mq_id)
     name = filterQuery.name
-    messages.success(request, f'The "{name}" filter has been successfully deleted')
+
+    # DELETE FILTER
+    if request.method == 'POST' and request.user.is_authenticated and filterQuery.user.id == request.user.id and request.POST.get('action') == "delete":
+        filterQuery.delete()
+        delete_stream_file(request, filterQuery.name)
+        messages.success(request, f'The "{name}" filter has been successfully deleted')
+    else:
+        messages.error(request, f'You must be the owner to delete this filter')
     return redirect('filter_query_index')
 
 
