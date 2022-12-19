@@ -15,7 +15,7 @@
                 <div class="card shadow border-0 text-center p-0 ">
                     <div class="profile-cover rounded-top" data-background="{{ ASSETS_ROOT }}/img/space_images/space_image_002.jpg"></div>
                     <div class="card-body pb-5">
-                        <img src="{{ request.user.profile.image.url }}" class="avatar-xl rounded-circle mx-auto mt-n7 mb-4" alt="Profile Pic">
+                        <img src="data:image/png;base64,{{ request.user.profile.image_b64 }}" class="avatar-xl rounded-circle mx-auto mt-n7 mb-4" alt="Profile Pic">
                         <h4 class="h3">
                             {{ request.user.first_name }}  {{ request.user.last_name }}
                         </h4>
@@ -67,7 +67,7 @@
                         <div class="d-flex align-items-center">
                             <div class="me-3">
                                 <!-- Avatar -->
-                                <img class="rounded avatar-xl" src="{{ user.profile.image.url }}" alt="change avatar">
+                                <img class="rounded avatar-xl" src="data:image/png;base64,{{ request.user.profile.image_b64 }}" alt="change avatar">
                             </div>
                             <div class="file-field">
                                 <div class="d-flex justify-content-xl-center ms-xl-3">

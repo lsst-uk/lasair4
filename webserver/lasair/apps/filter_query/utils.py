@@ -29,7 +29,7 @@ def add_filter_query_metadata(
         # ADD LIST USER
         if not remove_duplicates or fq.real_sql not in real_sql:
             fqDict['user'] = f"{fq.user.first_name} {fq.user.last_name}"
-            fqDict['profile_image'] = fq.user.profile.image.url
+            fqDict['profile_image'] = fq.user.profile.image_b64
             updatedFilterQueryLists.append(fqDict)
             real_sql.append(fq.real_sql)
         else:
