@@ -41,7 +41,8 @@ const paths = {
         js: './build/js',
         files: './build/files',
         img: './build/img',
-        vendor: './build/vendor'
+        vendor: './build/vendor',
+        fonts: './build/webfonts'
     },
     base: {
         base: './',
@@ -60,7 +61,8 @@ const paths = {
         js2: './src/js/**/*.*',
         scss: './src/scss',
         node_modules: './node_modules',
-        vendor: './vendor'
+        vendor: './vendor',
+        fonts: './src/webfonts/**/*.*'
     },
 };
 
@@ -214,6 +216,12 @@ gulp.task('copy:dist:files', function() {
         .pipe(gulp.dest(paths.dist.files))
 });
 
+// COPY FONTS
+gulp.task('copy:dist:fonts', function() {
+    return gulp.src(paths.src.fonts)
+        .pipe(gulp.dest(paths.dist.fonts))
+});
+
 // COPY IMAGES
 gulp.task('copy:dist:img', function() {
     return gulp.src(paths.src.img)
@@ -232,14 +240,15 @@ gulp.task('copy:dist:vendor', function() {
         .pipe(gulp.dest(paths.dist.vendor + "/js9"))
 });
 
-gulp.task('serve', gulp.series('copy:dist:css', 'copy:dist:files', 'copy:dist:img', 'concat:dist:js', function() {
+gulp.task('serve', gulp.series('copy:dist:css', 'copy:dist:files', 'copy:dist:fonts', 'copy:dist:img', 'concat:dist:js', function() {
     gulp.watch([paths.src.scss + '/volt/**/*.scss', paths.src.scss + '/custom/*.scss', paths.src.scss + '/custom/**/*.scss', paths.src.scss + '/volt.scss'], gulp.series('copy:dist:css'));
     gulp.watch([paths.src.files], gulp.series('copy:dist:files'));
+    gulp.watch([paths.src.fonts], gulp.series('copy:dist:fonts'));
     gulp.watch([paths.src.img], gulp.series('copy:dist:img'));
     gulp.watch([paths.src.js], gulp.series('concat:dist:js'));
 }));
 
-gulp.task('build', gulp.series('clean:dist', 'copy:dist:css', 'copy:dist:files', 'copy:dist:img', 'copy:dist:js', 'concat:dist:js', 'concat:vendor:js', 'concat:vendor:css', 'copy:dist:vendor'));
+gulp.task('build', gulp.series('clean:dist', 'copy:dist:css', 'copy:dist:files', 'copy:dist:fonts', 'copy:dist:img', 'copy:dist:js', 'concat:dist:js', 'concat:vendor:js', 'concat:vendor:css', 'copy:dist:vendor'));
 
 // Default
 gulp.task('default', gulp.series('serve'));

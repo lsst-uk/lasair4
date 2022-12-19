@@ -11,6 +11,7 @@ from django.conf import settings
 class UserRegisterForm(UserCreationForm):
     captcha = ReCaptchaField(widget=ReCaptchaV3())
     email = forms.EmailField()
+    privacy = forms.BooleanField(required=True)
     if getattr(settings, "DEBUG", False) and getattr(settings, "LASAIR_URL", False) == "127.0.0.1":
         captcha.clean = lambda x: True
 
@@ -20,7 +21,7 @@ class UserRegisterForm(UserCreationForm):
 
     class Meta:
         model = User
-        fields = ['username', 'email', 'password1', 'password2', 'first_name', 'last_name', 'captcha']
+        fields = ['username', 'email', 'password1', 'password2', 'first_name', 'last_name', 'captcha', 'privacy']
 
 
 class UserUpdateForm(forms.ModelForm):
