@@ -43,7 +43,7 @@ def add_watchlist_metadata(
 
             # ADD LIST USER
             wlDict['user'] = f"{wl.user.first_name} {wl.user.last_name}"
-            wlDict['profile_image'] = wl.user.profile.image.url
+            wlDict['profile_image'] = wl.user.profile.image_b64
             updatedWatchlists.append(wlDict)
             dupCheck.append(uuid)
     return updatedWatchlists

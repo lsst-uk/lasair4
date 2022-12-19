@@ -39,7 +39,7 @@
                                         <strong>{{ request.user.username }}</strong>
                                     </span>
                                 </div>
-                                <img class="avatar rounded-circle" alt="Image placeholder" src="{{ request.user.profile.image.url }}">
+                                <img class="avatar rounded-circle" alt="Image placeholder" src="data:image/png;base64,{{ request.user.profile.image_b64 }}">
 
                             </div>
                         </a>
