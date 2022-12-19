@@ -12,7 +12,7 @@ urlpatterns = [
     path('logout/', views.logout, name='logout'),
     path('password-reset-confirm/<uidb64>/<token>/', auth_views.PasswordResetConfirmView.as_view(template_name="users/password_reset_confirm.html", post_reset_login=True, success_url="/"), name='password_reset_confirm'),
     path('password-reset/', auth_views.PasswordResetView.as_view(template_name="users/password_reset.html", email_template_name="users/password_reset_email.html"), name='password_reset'),
-    path('password-reset/done/', auth_views.PasswordResetDoneView.as_view(template_name="index.html", extra_context={"alert": "Please check your email for instructions on how to reset your password."}), name='password_reset_done'),
+    path('password-reset/done/', auth_views.PasswordResetDoneView.as_view(template_name="index.html", extra_context={"alert": "If your email is associated with a registered account, you will will receive an email with instructions on how to check your password."}), name='password_reset_done'),
 ]
 
 if settings.DEBUG:
