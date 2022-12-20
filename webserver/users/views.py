@@ -1,6 +1,7 @@
 from django.contrib.auth import logout as auth_logout
 from django.shortcuts import render, redirect
 from django.contrib import messages
+from rest_framework.authtoken.models import Token
 from .forms import UserRegisterForm, ProfileUpdateForm, UserUpdateForm
 from django.contrib.auth.decorators import login_required
 import sys
@@ -21,6 +22,9 @@ def register(request):
 
 @login_required
 def profile(request):
+
+    token, created = Token.objects.get_or_create(user=request.user)
+
     if request.method == "POST":
         u_form = UserUpdateForm(request.POST, instance=request.user)
         p_form = ProfileUpdateForm(request.POST, request.FILES, instance=request.user.profile)
@@ -37,7 +41,8 @@ def profile(request):
 
     context = {
         'u_form': u_form,
-        'p_form': p_form
+        'p_form': p_form,
+        'token': token.key
     }
     return render(request, "users/profile.html", context)
 

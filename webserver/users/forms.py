@@ -6,6 +6,7 @@ from crispy_forms.helper import FormHelper
 from captcha.fields import ReCaptchaField
 from captcha.widgets import ReCaptchaV3
 from django.conf import settings
+from django.core.exceptions import ValidationError
 
 
 class UserRegisterForm(UserCreationForm):
@@ -22,6 +23,13 @@ class UserRegisterForm(UserCreationForm):
     class Meta:
         model = User
         fields = ['username', 'email', 'password1', 'password2', 'first_name', 'last_name', 'captcha', 'privacy']
+
+    def clean(self):
+        email = self.cleaned_data.get('email')
+        if User.objects.filter(email=email).exists():
+            msg = 'A user with that email already exists.'
+            self.add_error('email', msg)
+        return self.cleaned_data
 
 
 class UserUpdateForm(forms.ModelForm):

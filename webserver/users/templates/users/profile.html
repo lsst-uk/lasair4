@@ -25,6 +25,9 @@
                         <p class="text-gray mb-4">
                             {{ request.user.email }}
                         </p>
+                        <p class="fw-bold text-gray  mb-0">API Key</p>
+                        <code class="mt-0">{{ token }}</code>
+
                     </div>
                 </div>
             </div>
@@ -51,14 +54,16 @@
                             <div class="col-md-6 mb-3">
                                 <div class="form-group">
                                     <label for="id_email">Email</label>
-                                    <input class="form-control" id="id_email" type="email" name="email"  placeholder="name@company.com" value="{{ request.user.email }}" required>
+                                    <input class="form-control" id="id_email" type="email" name="email"  placeholder="name@company.com" value="{{ request.user.email }}" required readonly>
                                 </div>
+                                <span class="text-error">{{ u_form.email.errors }}</span>
                             </div>
                             <div class="col-md-6 mb-3">
                                 <div class="form-group">
                                     <label for="id_username">Username</label>
                                     <input class="form-control" id="id_username" type="text" name="username"   placeholder="Enter a username" value="{{ request.user.username }}" required>
                                 </div>
+                                <span class="text-error">{{ u_form.username.errors }}</span>
                             </div>
                         </div>
 
