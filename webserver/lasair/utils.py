@@ -191,7 +191,8 @@ def objjson(objectId):
             date += timedelta(mjd)
             cand['utc'] = date.strftime("%Y-%m-%d %H:%M:%S")
 
-            # add image urls
+            # ADD IMAGE URLS
+            cand['image_urls'] = {}
             for cutoutType in ['Science', 'Template', 'Difference']:
                 candid_cutoutType = '%s_cutout%s' % (candid, cutoutType)
                 filename = image_store.getFileName(candid_cutoutType)
@@ -199,7 +200,7 @@ def objjson(objectId):
                     url = filename.replace(
                         '/mnt/cephfs/lasair',
                         f'https://{settings.LASAIR_URL}/lasair/static')
-                    image_urls[candid_cutoutType] = url
+                    cand['image_urls'][cutoutType] = url
 
             if 'ssnamenr' in cand:
                 ssnamenr = cand['ssnamenr']
