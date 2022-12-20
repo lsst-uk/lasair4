@@ -27,7 +27,8 @@ from django.contrib import admin
 
 urlpatterns = [
     path('', views.index, name='index'),
-    path('contact', TemplateView.as_view(template_name='contact.html')),
+    path('contact', TemplateView.as_view(template_name='contact.html'), name='contact'),
+    path('privacy', TemplateView.as_view(template_name='privacy.html'), name='privacy'),
 
     path('admin/', admin.site.urls),
     path('fits/<slug:candid_cutoutType>/', fits, name='fits'),
