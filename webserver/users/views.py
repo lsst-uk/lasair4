@@ -29,7 +29,6 @@ def profile(request):
         u_form = UserUpdateForm(request.POST, instance=request.user)
         p_form = ProfileUpdateForm(request.POST, request.FILES, instance=request.user.profile)
         if u_form.is_valid() and p_form.is_valid():
-            image = p_form.cleaned_data.get('image')
             u_form.save()
             p_form.save()
             messages.success(request, f'Your account has been updated.')

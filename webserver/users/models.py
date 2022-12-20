@@ -16,6 +16,7 @@ class Profile(models.Model):
 
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     image = models.ImageField(default='default.jpg', upload_to='profile_pics')
+
     with open(staticRoot + '/img/default.jpg', mode='rb') as readFile:
         defaultImage = readFile.read()
         defaultImage = bytes2string(defaultImage)
@@ -25,6 +26,7 @@ class Profile(models.Model):
         return f'{self.user.username} Profile'
 
     def save(self, *args, **kwargs):
+        super().save(*args, **kwargs)
         img = Image.open(self.image.path)
 
         if img.height > 300 or img.width > 300:
