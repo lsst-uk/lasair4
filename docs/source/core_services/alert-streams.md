@@ -1,10 +1,32 @@
 ## Alert Streams
 
-```eval_rst
-.. todo::
+The Lasair broker can send immediate “push” notifications when your active query/filter sees and interesting alert. Here is how to make that happen with email notification. First make sure you are logged in to your Lasair account (top left of screen, then go to create new stored query. This page is about how to get email alerts from your active query; the process is very similar for Kafka alerts, except that you will fetch the results by machine instead of by email. See article Reading a Kafka Stream.
 
-    - Flesh out how to use the alert streams ... text below is from old pages
-```
+[![](https://lasair-ztf.lsst.ac.uk/lasair/static/cookbook/realtimealerts/fig1.png)](https://lasair-ztf.lsst.ac.uk/lasair/static/cookbook/realtimealerts/fig1.png)
+
+Fill in the form as shown here. Name and description, then check the “email” box, and fill in the SELECT as
+
+objects.objectId, objects.latestrmag, jdnow()-objects.jdmax as since
+
+check the “objects” table, and fill in the WHERE as
+
+objects.latestrmag < 12
+
+Then click “Create Query”
+
+[![](https://lasair-ztf.lsst.ac.uk/lasair/static/cookbook/realtimealerts/fig2.png)](https://lasair-ztf.lsst.ac.uk/lasair/static/cookbook/realtimealerts/fig2.png)
+
+Nothing will happen immediately. You can run the query in the usual way from the web browser, but you will have to wait for some alerts to arrive before your active query will be triggered. Once that happens, you will get an email at the address you used to create your account. Something like the message shown here. Note that the attributes you chose above are reported (objectId, latestrmag, since), together with the UTC time at which the alert was triggered.
+
+[![](https://lasair-ztf.lsst.ac.uk/lasair/static/cookbook/realtimealerts/fig3.png)](https://lasair-ztf.lsst.ac.uk/lasair/static/cookbook/realtimealerts/fig3.png)
+
+In addition to the email, the webserver holds the last 1000 alerts that went to this channel. The link is in your list of queries.
+
+[![](https://lasair-ztf.lsst.ac.uk/lasair/static/cookbook/realtimealerts/fig4.png)](https://lasair-ztf.lsst.ac.uk/lasair/static/cookbook/realtimealerts/fig4.png)
+
+Click on that link and it will show you a page like this one.
+
+## Smart Watchlists
 
 By providing Kafka streams, Lasair provides a machine-readable packet of data that can cause action at your site. See the FAQ article on how to create a stream using the Lasair web environment. This page is about how to read it on your side. There is a [blog post](https://roywilliams.github.io/writing/streaming_data.html) about why Kafka is a good way to deal with streaming data.
 

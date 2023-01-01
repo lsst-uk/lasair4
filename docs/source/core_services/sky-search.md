@@ -1,34 +1,29 @@
 # Sky Search
 
-**Table of Contents**
-
-{{TOC}}
-
 ## The Search Bar
 
-```eval_rst
-.. todo::
+<img src="../_images/search/searchbar.png" height="400px"/>
 
-    - Flesh out how to use the lasair search bar ... text below is from old pages
-```
+At the top of every Lasair page is a form that can be filled in to do a search 
+on the sky. You can enter several different kinds of search term, as illustrated
+in the screenshot above:
 
-[![](https://lasair-ztf.lsst.ac.uk/lasair/static/cookbook/conesearch/fig1.png)](https://lasair-ztf.lsst.ac.uk/lasair/static/cookbook/conesearch/fig1.png)
+- A Lasair object name, for example <a href=https://lasair-ztf.lsst.ac.uk/object/ZTF22aafxzfb>ZTF22aafxzfb</a>.
 
-At the top of every Lasair page is a form that can be filled in to do a cone search. just fill in the coordinates and hit return/enter. Several syntaxes are supported here, including these:
+- The name of an entry in the 
+<a href=https://www.wis-tns.org/>Transient Name Server (TNS)</a>, for example 
+<a href=https://www.wis-tns.org/search?name=SN2022ffg>SN2022ffg</a>
 
-```text
-141.15725 25.39508
-141.15725;25.39508
-141.15725| 25.39508
-141.15725, 25.39508, 5.0
-09:24:37.74 | +25:23:42.3
-09:24:37.74 | +25:23:42.3 10.0
-09 24 37.74 +25 23 42.3
-09 24 37.74 | +25 23 42.3 5
-09 24 37.74 ; +25 23 42.3 5
-```
+- The name of a host galaxy, that can be searched in the 
+<a href=https://ned.ipac.caltech.edu/>NED database</a>, for example
+<a href=https://ned.ipac.caltech.edu/cgi-bin/objsearch?objname=CGCG093-074>CGCG093-074</a>.
 
-[![](https://lasair-ztf.lsst.ac.uk/lasair/static/cookbook/conesearch/fig2.png)](https://lasair-ztf.lsst.ac.uk/lasair/static/cookbook/conesearch/fig2.png)
+- Right ascension and declination in J2000 frame:
 
-Results appear in a new window, with the text that was typed, and links to the object that was found, here ZTF19acwkwhu.
+    - As decimal degrees, for example 141.15725 25.39508,
 
+    - As decimal degrees with a search radius in arcseconds, for example 141.15725 25.39508 10,
+
+    - As sexagesimal, for example 10:13:48.2 18:07:38.3
+
+    - As sexagesimal with a search radius in arcseconds, for example 10:13:48.2 18:07:38.3 10
