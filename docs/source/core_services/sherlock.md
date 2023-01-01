@@ -1,23 +1,38 @@
 # Sherlock (Sky Context)
 
-
-```eval_rst
-.. todo::
-
-    - Clean up this metadata tag page ... text below is from old pages
-```
-
-**Table of Contents**
-
-{{TOC}}
-
 Detections in the input data stream that have been aggregated into _objects_ 
 (i.e. groups of detections) and identified as static transients (i.e. not moving objects) 
 are spatially context classified against a large number of archival sources 
 (e.g. nearby galaxies, known CVs, AGNs, etc). 
 The information derived from this context check is injected as an object annotation 
-(e.g. see Lasair object page example below). The software used is called _Sherlock_ 
-and is discussed below.
+The software used is called _Sherlock_ 
+and is discussed below. Here is how the Sherlock information looks on the Lasair object page:
+
+<img src=../_images/sherlock/sherlock_panel.png width=700>
+
+This panel shows a natural language diescription of the association, derived from
+some of the fields of the Sherlock table:
+
+ -|`classification`: can be any of the 9 strings: NULL, AGN, BS, CV, NT, ORPHAN, SN, UNCLEAR, VS;
+in the image above the acronym 'SN' has been expanded to 'Supernova', which means
+that the Lasair object is strongly associated with a host galaxy, but not so close as 'NT', which is
+Nuclear Transient.
+
+ -|`catalogue_object_id`: is the name of associated galaxy, in this case CGCG206-039. 
+Not shown in the panel is the `catalogue_table_name`, which is the catalogue (namespace) of
+that name. In this case the name is in the  
+[NED](https://ned.ipac.caltech.edu/) data system.
+
+ -|`northSeparationArcsec` and `eastSeparationArcsec` for the angualr separation between the
+transient and the centre of the associated galaxy. This is translated to `physical_separation_kpc`
+(separation in kilo-parsecs), using `direct_distance` which is mega-parsecs -- if available.
+
+ -|`Mag` is the magnitude of the associated galaxy, using the system in `MagFilter`. This can
+be combined with distance information to derive absolute magnitude.
+
+The full schema for the Sherlock table is in the [Lasair Schema Browser](https://lasair-dev.lsst.ac.uk/schema/#sherlock_classifications-schema).
+
+## How does Sherlock work?
 
 _Sherlock_ is a software package and integrated massive database system that 
 provides a rapid and reliable spatial cross-match service for any astrophysical 
@@ -37,8 +52,6 @@ We label the current version as the official release of Sherlock 2.0.
 The major upgrade from previous versions are that it includes Pan-STARRS DR1 
 (including the Tachibana & Miller 2018 star-galaxy separation index) and 
 Gaia DR2 catalogues, along with some adjustments to the ranking algorithm.
-
-**That section is copied here and users should currently cite that paper ([Smith et al. 2020](https://arxiv.org/abs/2003.09052)) for _Sherlock_ use:**
 
 A boosted decision tree algorithm (internally known as _Sherlock_) mines a library of historical and on-going astronomical survey data and attempts to predict the nature of the object based on the resulting crossmatched associations found. One of the main purposes of this is to identify variable stars, since they make up about 50% of the objects, and to associate candidate extragalactic sources with potential host galaxies. The full details of this general purpose algorithm and its implementation will be presented in an upcoming paper (Young et al. in prep), and we give an outline of the algorithm here.
 
@@ -88,16 +101,11 @@ At a base-level of matching _Sherlock_ distinguishes between transient objects _
     
 7.  **Orphan** if the transient fails to be matched against any catalogued source.
     
-
 For Lasair the synonym radius is set at 1.5″. This is the crossmatch-radius used to assign predictions of VS, CV, AGN and NT. The process of attempting to associate a transient with a catalogued galaxy is relatively nuanced compared with other crossmatches as there are often a variety of data assigned to the galaxy that help to greater inform the decision to associate the transient with the galaxy or not. The location of the core of each galaxy is recorded so we will always be able to calculate the angular separation between the transient and the galaxy. However we may also have measurements of the galaxy morphology including the angular size of its semi-major axis. For Lasair we reject associations if a transient is separated more than 2.4 times the semi-major axis from the galaxy, if the semi-major axis measurement is available for a galaxy. We may also have a distance measurement or redshift for the galaxy enabling us to convert angular separations between transients and galaxies to (projected) physical-distance separations. If a transient is found more than 50 Kpc from a galaxy core the association is rejected.
 
 Once each transient has a set of independently crossmatched synonyms and associations, we need to self-crossmatch these and select the most likely classification. The details of this will be presented in a future paper (Young et al. in prep). Finally the last step is to calculate some value added parameters for the transients, such as absolute peak magnitude if a distance can be assigned from a matched catalogued source, and the predicted nature of each transient is presented to the user along with the lightcurve and other information (see Figure [1](https://lasair-ztf.lsst.ac.uk/sherlock#fig:webcandidatepage2019tua)).
 
 We have constructed a multi-billion row database which contains all these catalogues. It currently consumes about 4.5TB and sits on a separate, similarly specified machine to that of the Lasair database. It will grow significantly as new catalogues are added (e.g. Pan-STARRS 3_π_ DR2, VST and VISTA surveys, future Gaia releases etc).
-
-![Lasair object page. Non-detections are shown as faint diamonds, which display the 5\sigma limiting magnitude. The object was context classified as a SN by Sherlock, and (probable) host annotations are highlighted in the red box. ](https://lasair-ztf.lsst.ac.uk/lasair/static/img/Lasair_object.png)
-
-**Lasair object page.** Non-detections are shown as faint diamonds, which display the 5_σ_ limiting magnitude. The object was context classified as a SN by _Sherlock_, and (probable) host annotations are highlighted in the red box.
 
 The _Sherlock_ code is open source and can be found at: [https://github.com/thespacedoctor/sherlock](https://github.com/thespacedoctor/sherlock). Documentation is also available online here: [https://qub-sherlock.readthedocs.io/en/stable/](https://qub-sherlock.readthedocs.io/en/stable/).
 
@@ -105,7 +113,7 @@ Although the code for _Sherlock_ is public, it requires access to a number of la
 
 Sherlock 2.0 was reviewed as a LSST:UK Deliverable in March 2020. The review noted that an algorithm enhancement would be desirable to take into account stellar proper motions, since some proper motion stars will be variable and if cross-matched with a static catalogue will fall outside the nominal match radius. This is an enhancement we will taken forward for future versions.
 
-##### References
+## Sherlock References
 
 Alam, Shadab, Franco D Albareti, Carlos Allende Prieto, F Anders, Scott F Anderson, Timothy Anderton, Brett H Andrews, et al. 2015. “The Eleventh and Twelfth Data Releases of the Sloan Digital Sky Survey: Final Data from SDSS-III.” _The Astrophysical Journal Supplement Series_ 219 (1). IOP Publishing: 12. [https://doi.org/10.1088/0067-0049/219/1/12](https://doi.org/10.1088/0067-0049/219/1/12).
 

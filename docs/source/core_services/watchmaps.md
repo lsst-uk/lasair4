@@ -1,32 +1,57 @@
 # Watchmaps (Sky Regions)
 
-**Table of Contents**
+## What is it?
 
-{{TOC}}
+A watchmap is a specification of an area of the sky, that can be used as part of a Lasair filter.
+An example might be the footprint of another survey, or the area of sky where a multimessenger 
+event occured. If the watchmap has been set to "active", then all alerts ingested to Lasair are tested 
+against it, and tagged if inside the watchmap. A filter can then be built that selects only
+alerts falling inside the watchmap.
 
-```eval_rst
-.. todo::
+<img src="../_images/watchmap/mollweide.png" width="500px"/>
 
-    - Flesh out how to use the sky region maps ... text below is from old pages
+Above we see a simple watchmap displayed as a 
+(Mollweide projection)[https://en.wikipedia.org/wiki/Mollweide_projection] 
+on the sky. It is a rectangle of sky with vertices (40,10), (50,10), (50, 30), (40,30).
+The watchmap can also have a name and description, accessible from the "settings" button. 
+Also here, the owner can choose for the watchmap to be public or not, 
+and for the watchmap to be "active" or not.
+
+<img src="../_images/watchmap/results.png" width="500px"/>
+
+Below the Mollweide picture of the watchmap is a partial list of the Lasair alerts that fall inside it,
+together with magnitudes. The list is sorted so those observed most recently are first.
+
+<img src="../_images/watchmap/public.png" width="500px"/>
+
+Here we see how the gallery of public watchmaps may look. Each show name, description, 
+and how many alerts fall within it.
+
+## How can I make one?
+
+Building a watchmap starts with building a MOC file -- see the information at <br/>
+[https://cds-astro.github.io/mocpy/](https://cds-astro.github.io/mocpy/index.html).
+
+
+<img src="../_images/watchmap/create.png" width="300px"/>
+
+This is the dialogue to load a MOC file, in this case to cover the Orion Nebula. 
+It expects to upload a MOC file.
+One way to build this from python is this code:<br/>
+[Create a MOC from a Concave Polygon](https://cds-astro.github.io/mocpy/examples/examples.html#create-a-moc-from-a-concave-polygon)
+For the Orion Nebula, we choose a rectangle like this:
 ```
+vertices = np.array([
+    [83.4, -5.0],
+    [84.1, -5.0],
+    [84.1, -5.7],
+    [83.4, -5.7]])
+```
+and we may adjust the `max_depth`: smaller values give smaller files, but larger values 
+give more accurate edges. For a fluffy thing like the Orion Nebula, `max_depth=8` is quite
+sufficient. The output of this program is a file called `polygon_moc.fits`, that can be uploaded.
 
-The current list of available skymaps is shown at https://lasair.roe.ac.uk/skymap/. It is a much longer list than when the page was designed. Below is a typical example.
-
-[![](https://lasair-ztf.lsst.ac.uk/lasair/static/cookbook/skymaps/fig1.png)](https://lasair-ztf.lsst.ac.uk/lasair/static/cookbook/skymaps/fig1.png)
-
-The name of the GW skymap comes from the official LVC sources, as linked from the header test (top red oval). Now look at the distance, and the event-type. A BNS (binary neutron star) event at a "near" location (less than 100 mega-parsecs) would be most exciting, as there would be a good chance for optical and other telescopes to identify it. Below we describe how the three checkboxes in the green box can provide further information.
-
-[![](https://lasair-ztf.lsst.ac.uk/lasair/static/cookbook/skymaps/fig2.png)](https://lasair-ztf.lsst.ac.uk/lasair/static/cookbook/skymaps/fig2.png)
-
-The lower display shows the probability distribution of where in the sky the GW source was. The AladinLite display allows arbitrary zoom and many different sky layers from gamma to radio. The contour lines of the probability are percentiles. Red outside: 90%, and violet inside: 10%. There is also a list of galaxies and the probability each has the counterpart. This is great for the nearby event (50 Mpc) but when the event is at 1000 Mpc, there are galaxies everywhere, and the list is no help.
-
-[![](https://lasair-ztf.lsst.ac.uk/lasair/static/cookbook/skymaps/fig3.png)](https://lasair-ztf.lsst.ac.uk/lasair/static/cookbook/skymaps/fig3.png)
-
-The checkbox "Show galaxies from GLADE" puts a yellow square around each galaxy where the GW counterpart might be found. From the GLADE catalogue, they are selected for sky probability and the distance estimate in the skymap. However a maximum of 200 galaxies are shown, there may be many more for a distant source. Choose the PanSTARRS layer, and zoom in. Doubleclick in a yellow square to centre the image in the source, then use the "+" zoom icon at the right. There is also a link to the galaxy data next to the checkbox.
-
-[![](https://lasair-ztf.lsst.ac.uk/lasair/static/cookbook/skymaps/fig4.png)](https://lasair-ztf.lsst.ac.uk/lasair/static/cookbook/skymaps/fig4.png)
-
-The checkbox about ZTF candidates show all candidates in the 90%, and are within the given time constraint in the form - days before and days after the GW event. It may be slow when you click submit as there may be 1000s of candidates. You can zoom in and click on one of them, and a link pops up that can take you to that object's page.
-
-
-
+Note that the new watchmap is by default public and active. 
+It is only future alerts that will be matched against the new watchmap; however if you 
+[contact us](../more_info/contact.html), quoting the URL for the watchmap, we can 
+match it against past alerts.
