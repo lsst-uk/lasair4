@@ -72,6 +72,7 @@ def get_schema_for_query_selected(
     tableSchema["mjdmin"] = "earliest detection in alert packet"
     tableSchema["mjdmax"] = "most recent detection in alert packet"
     tableSchema["UTC"] = "time Lasair issued detection alert"
+
     for select in selected.split(","):
         select = select.strip()
         if " " not in select:

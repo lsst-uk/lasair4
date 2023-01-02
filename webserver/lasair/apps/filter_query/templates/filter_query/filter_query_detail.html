@@ -6,7 +6,7 @@
 
 
 {% block title %}
-    {{data.objectId}}
+    {{ filterQ.name }}
 {% endblock title %}
 
 
@@ -19,16 +19,16 @@
         <div class="row mt-4">
 
             <div class="col-12 mb-4">
-                {% include "includes/widgets/widget_filter_query_header.html" with message=message %}
+                {% include "includes/widgets/widget_filter_query_header.html" with real_sql=filterQ.real_sql %}
             </div>
 
             {% if limit %}
                 <div class="col-12 mb-4">
-                    {% include "includes/widgets/widget_objectlist_table.html" with zerotext="Zero objects have been matched against this filter so far. Check back later to see if any new objects have been matched, or amend the filtering criteria to catch more objects." table=table header="Filter Results"  desc="A list of objects passing the '"|add:title|add:"' filter, capped at "|add:limit|add:" objects." %}
+                    {% include "includes/widgets/widget_objectlist_table.html" with zerotext="Zero objects have been matched against this filter so far. Check back later to see if any new objects have been matched, or amend the filtering criteria to catch more objects." table=table header="Filter Results"  desc="A list of objects passing the '"|add:filterQ.name|add:"' filter, capped at "|add:limit|add:" objects." %}
                 </div>
             {% else %}
                 <div class="col-12 mb-4">
-                    {% include "includes/widgets/widget_objectlist_table.html" with zerotext="Zero objects have been matched against this filter so far. Check back later to see if any new objects have been matched, or amend the filtering criteria to catch more objects." table=table header="Filter Results"  desc="A log of objects passing the '"|add:title|add:"' filter." %}
+                    {% include "includes/widgets/widget_objectlist_table.html" with zerotext="Zero objects have been matched against this filter so far. Check back later to see if any new objects have been matched, or amend the filtering criteria to catch more objects." table=table header="Filter Results"  desc="A log of objects passing the '"|add:filterQ.name|add:"' filter." %}
                 </div>
 
 

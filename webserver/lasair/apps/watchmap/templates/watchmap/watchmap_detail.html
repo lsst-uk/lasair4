@@ -12,7 +12,6 @@
 
 {% block content %}
 
-
     <div class="container">
 
         <div class="row mt-4">
@@ -22,52 +21,10 @@
             </div>
 
             <div class="col-12 mb-4">
-                {% include "includes/widgets/widget_objectlist_table.html" with zerotext="Zero objects have been matched against this watchmap so far." table=objectlist header="Watchmap Results"  desc="A list of objects located within the '"|add:watchmap.name|add:"' watchmap" %}
+                {% include "includes/widgets/widget_objectlist_table.html" with zerotext="Zero objects have been matched against this watchmap so far." table=table header="Watchmap Results"  desc="A list of objects located within the '"|add:watchmap.name|add:"' watchmap" %}
             </div>
         </div>
     </div>
 
-
-
-    <div class="row">
-        <div class="col-sm">
-
-            {% if is_owner %}
-
-                <form method="POST"  action="/area/{{ watchmap.ar_id }}/">
-                    <table>
-                        {% csrf_token %}
-                        <tr><td>Name</td><td><h2><input name="name" value="{{ watchmap.name }}"></h2></td></tr>
-                        <tr><td>Description</td><td><textarea name="description" rows=4 cols=40>{{ watchmap.description }}</textarea></td></tr>
-                        <tr><td>Active</td><td><h3><input type="checkbox" name="active" {% if watchmap.active == 1 %}checked{% endif %}></h3></td></tr>
-                        <tr><td>Public</td><td><h3><input type="checkbox" name="public" {% if watchmap.public == 1 %}checked{% endif %}></h3></td></tr>
-                    </table>
-
-                    <input type="submit" class="button" style="color: blue; background-color: #EEEEFF;" value=" Update watchmap"></td>
-                </form>
-
-            {% else %}
-
-                <table border=1>
-                    <tr><td>Name</td><td><h2>{{ watchmap.name }}</h2></td></tr>
-                    <tr><td>Description</td><td>{{ watchmap.description }}</td></tr>
-                    <tr><td>Active</td><td>{% if watchmap.active == 1 %}yes{% else %}no{% endif %}</td></tr>
-                    <tr><td>Public</td><td>{% if watchmap.public == 1 %}yes{% else %}no{% endif %}</td></tr>
-                </table>
-
-            {% endif %}
-
-            <img src="data:image/png;base64,{{ mocimage }}" width=500 /><br/>
-
-
-            Watchmap has {{ count }} objects, shown below..
-            To download the original input MOC file, click <a href=/area/{{ watchmap.ar_id }}/file/>here</a>.
-        <hr/>
-        {{ message }}
-        <hr/>
-
-
-    </div>
-    </div>
 
 {% endblock %}

@@ -1,3 +1,4 @@
+from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from .models import Watchmap
 import tempfile
@@ -44,12 +45,133 @@ def watchmap_index(request):
     ]
     ```           
     """
-    message = ''
-    if request.method == 'POST' and request.user.is_authenticated:
-        delete = request.POST.get('delete')
 
-        if delete == None:   # create new watchmap
+    # PUBLIC WATCHMAPS
+    publicWatchmaps = Watchmap.objects.filter(public__gte=1)
+    publicWatchmaps = add_watchmap_metadata(publicWatchmaps, remove_duplicates=True)
 
+    # USER WATCHMAPS
+    if request.user.is_authenticated:
+        myWatchmaps = Watchmap.objects.filter(user=request.user)
+        myWatchmaps = add_watchmap_metadata(myWatchmaps)
+    else:
+        myWatchmaps = None
+
+    form = WatchmapForm()
+
+    return render(request, 'watchmap/watchmap_index.html',
+                  {'myWatchmaps': myWatchmaps,
+                   'publicWatchmaps': publicWatchmaps,
+                   'authenticated': request.user.is_authenticated,
+                   'form': form})
+
+
+def watchmap_detail(request, ar_id):
+    """*return the resulting matches of a watchmap*
+
+    **Key Arguments:**
+
+    - `request` -- the original request
+    - `ar_id` -- UUID of the Watchmap
+
+    **Usage:**
+
+    ```python
+    urlpatterns = [
+        ...
+        path('watchmaps/<int:ar_id>/', views.watchmap_detail, name='watchmap_detail'),
+        ...
+    ]
+    ```           
+    """
+
+    # CONNECT TO DATABASE AND GET WATCHMAP
+    msl = db_connect.remote()
+    cursor = msl.cursor(buffered=True, dictionary=True)
+    watchmap = get_object_or_404(Watchmap, ar_id=ar_id)
+
+    # IS USER ALLOWED TO SEE THIS RESOURCE?
+    is_owner = (request.user.is_authenticated) and (request.user.id == watchmap.user.id)
+    is_public = (watchmap.public == 1)
+    is_visible = is_owner or is_public
+    if not is_visible:
+        messages.error(request, "This watchmap is private and not visible to you")
+        return render(request, 'error.html')
+
+    if request.method == 'POST' and is_owner:
+        # UPDATING SETTINGS?
+        if 'name' in request.POST:
+            watchmap.name = request.POST.get('name')
+            watchmap.description = request.POST.get('description')
+            if request.POST.get('active'):
+                watchmap.active = 1
+            else:
+                watchmap.active = 0
+
+            if request.POST.get('public'):
+                watchmap.public = 1
+            else:
+                watchmap.public = 0
+            watchmap.save()
+            messages.success(request, f'Your watchmap has been successfully updated')
+
+    # GRAB ALL WATCHMAP MATCHES
+    query_hit = f"""
+SELECT
+o.objectId, o.ramean,o.decmean, o.rmag, o.gmag, jdnow()-o.jdmax as "last detected (days ago)"
+FROM area_hits as h, objects AS o
+WHERE h.ar_id={ar_id}
+AND o.objectId=h.objectId
+"""
+
+    cursor.execute(query_hit)
+    table = cursor.fetchall()
+    count = len(table)
+
+    # ADD SCHEMA
+    schema = get_schema_dict("objects")
+
+    if len(table):
+        for k in table[0].keys():
+            if k not in schema:
+                schema[k] = "custom column"
+
+    form = UpdateWatchmapForm(instance=watchmap)
+
+    return render(request, 'watchmap/watchmap_detail.html', {
+        'watchmap': watchmap,
+        'table': table,
+        'count': count,
+        'schema': schema,
+        'form': form
+    })
+
+
+@login_required
+def watchmap_create(request):
+    """*create a new Watchmap*
+
+    **Key Arguments:**
+
+    - `request` -- the original request
+
+    **Usage:**
+
+    ```python
+    urlpatterns = [
+        ...
+        path('watchmaps/create/', views.watchmap_create, name='watchmap_create'),
+        ...
+    ]
+    ```           
+    """
+    # SUBMISSION OF NEW WATCHMAP
+    if request.method == "POST":
+        form = WatchmapForm(request.POST, request.FILES)
+        if form.is_valid():
+            form.save()
+
+            # GET WATCHMAP PARAMETERS
             t = time.time()
             name = request.POST.get('name')
             description = request.POST.get('description')
@@ -60,69 +182,12 @@ def watchmap_index(request):
                 png_bytes = make_image_of_MOC(fits_bytes)
                 png_string = bytes2string(png_bytes)
 
-                watchmap = Watchmap(user=request.user, name=name, description=description,
-                                    moc=fits_string, mocimage=png_string, active=0)
-                Watchmap.save()
-                message += '\nWatchmap created successfully in %.1f sec' % (time.time() - t)
-            else:
-                message = '\nNo file in upload'
-        else:
-            ar_id = int(delete)
-            watchmap = get_object_or_404(Watchmap, ar_id=ar_id)
-            if request.user == Watchmap.user:
-                Watchmap.delete()
-                message = 'Watchmap %s deleted successfully' % Watchmap.name
-
-    other_watchmaps = Watchmap.objects.filter(public__gte=1)
-    other_watchmaps = add_watchmap_metadata(other_watchmaps, remove_duplicates=True)
-    if request.user.is_authenticated:
-        my_watchmaps = Watchmap.objects.filter(user=request.user)
-        my_watchmaps = add_watchmap_metadata(my_watchmaps)
-    else:
-        my_watchmaps = []
-
-    form = WatchmapForm()
-
-    return render(request, 'watchmap/watchmap_index.html',
-                  {'my_watchmaps': my_watchmaps,
-                   'random': '%d' % randrange(1000),
-                   'other_watchmaps': other_watchmaps,
-                   'authenticated': request.user.is_authenticated,
-                   'message': message,
-                   'form': form})
-
-
-def watchmap_delete(request, ar_id):
-    """*delete a watchmap
-
-    **Key Arguments:**
-
-    - `request` -- the original request
-    - `ar_id` -- the watchmap UUID
-
-    **Usage:**
-
-    ```python
-    urlpatterns = [
-        ...
-        path('watchmaps/<int:ar_id>/delete/', views.watchmap_delete, name='watchmap_delete'),
-        ...
-    ]
-    ```
-    """
-    msl = db_connect.readonly()
-    cursor = msl.cursor(buffered=True, dictionary=True)
-    watchmap = get_object_or_404(Watchmap, ar_id=ar_id)
-    name = watchmap.name
-
-    # DELETE WATCHMAP
-    if request.method == 'POST' and request.user.is_authenticated and watchmap.user.id == request.user.id and request.POST.get('action') == "delete":
-        watchmap.delete()
-        messages.success(request, f'The "{name}" watchmap has been successfully deleted')
-    else:
-        messages.error(request, f'You must be the owner to delete this watchmap')
-
-    return redirect('watchmap_index')
+                wm = Watchmap(user=request.user, name=name, description=description,
+                              moc=fits_string, mocimage=png_string, active=0)
+                wm.save()
+                watchmapname = form.cleaned_data.get('name')
+                messages.success(request, f'The {watchmapname} watchlist has been successfully created')
+                return redirect(f'watchmap_detail', wm.pk)
 
 
 def watchmap_download(request, ar_id):
@@ -168,124 +233,35 @@ def watchmap_download(request, ar_id):
     return r
 
 
-def watchmap_detail(request, ar_id):
-    """*return the resulting matches of a watchmap*
+@login_required
+def watchmap_delete(request, ar_id):
+    """*delete a watchmap
 
     **Key Arguments:**
 
     - `request` -- the original request
-    - `ar_id` -- UUID of the Watchmap
+    - `ar_id` -- the watchmap UUID
 
     **Usage:**
 
     ```python
     urlpatterns = [
         ...
-        path('watchmaps/<int:ar_id>/', views.watchmap_detail, name='watchmap_detail'),
+        path('watchmaps/<int:ar_id>/delete/', views.watchmap_delete, name='watchmap_delete'),
         ...
     ]
-    ```           
+    ```
     """
-    msl = db_connect.remote()
+    msl = db_connect.readonly()
     cursor = msl.cursor(buffered=True, dictionary=True)
     watchmap = get_object_or_404(Watchmap, ar_id=ar_id)
+    name = watchmap.name
 
-    # IS USER ALLOWED TO SEE THIS RESOURCE?
-    is_owner = (request.user.is_authenticated) and (request.user.id == watchmap.user.id)
-    is_public = (watchmap.public == 1)
-    is_visible = is_owner or is_public
-    if not is_visible:
-        messages.error(request, "This watchmap is private and not visible to you")
-        return render(request, 'error.html')
+    # DELETE WATCHMAP
+    if request.method == 'POST' and request.user.is_authenticated and watchmap.user.id == request.user.id and request.POST.get('action') == "delete":
+        watchmap.delete()
+        messages.success(request, f'The "{name}" watchmap has been successfully deleted')
+    else:
+        messages.error(request, f'You must be the owner to delete this watchmap')
 
-    # UPDATING SETTINGS?
-    if request.method == 'POST' and is_owner:
-        if 'name' in request.POST:
-            watchmap.name = request.POST.get('name')
-            watchmap.description = request.POST.get('description')
-
-            if request.POST.get('active'):
-                watchmap.active = 1
-            else:
-                watchmap.active = 0
-
-            if request.POST.get('public'):
-                watchmap.public = 1
-            else:
-                watchmap.public = 0
-
-            watchmap.save()
-            messages.success(request, f'Your watchmap has been successfully updated')
-
-    query_hit = f"""
-SELECT
-o.objectId, o.ramean,o.decmean, o.rmag, o.gmag, jdnow()-o.jdmax as "last detected (days ago)"
-FROM area_hits as h, objects AS o
-WHERE h.ar_id={ar_id}
-AND o.objectId=h.objectId
-"""
-
-    cursor.execute(query_hit)
-    objectlist = cursor.fetchall()
-    count = len(objectlist)
-
-    schema = get_schema_dict("objects")
-
-    if len(objectlist):
-        for k in objectlist[0].keys():
-            if k not in schema:
-                schema[k] = "custom column"
-
-    form = UpdateWatchmapForm(instance=watchmap)
-
-    return render(request, 'watchmap/watchmap_detail.html', {
-        'watchmap': watchmap,
-        'objectlist': objectlist,
-        'mocimage': watchmap.mocimage,
-        'count': count,
-        'is_owner': is_owner,
-        'schema': schema,
-        'form': form})
-
-
-def watchmap_create(request):
-    """*create a new Watchmap*
-
-    **Key Arguments:**
-
-    - `request` -- the original request
-
-    **Usage:**
-
-    ```python
-    urlpatterns = [
-        ...
-        path('watchmaps/create/', views.watchmap_create, name='watchmap_create'),
-        ...
-    ]
-    ```           
-    """
-    # SUBMISSION OF NEW WATCHMAP
-    message = ""
-    if request.method == "POST" and request.user.is_authenticated:
-        form = WatchmapForm(request.POST, request.FILES)
-        if form.is_valid():
-            form.save()
-
-            # GET WATCHMAP PARAMETERS
-            t = time.time()
-            name = request.POST.get('name')
-            description = request.POST.get('description')
-
-            if 'watchmap_file' in request.FILES:
-                fits_bytes = (request.FILES['watchmap_file']).read()
-                fits_string = bytes2string(fits_bytes)
-                png_bytes = make_image_of_MOC(fits_bytes)
-                png_string = bytes2string(png_bytes)
-
-                wm = watchmap = Watchmap(user=request.user, name=name, description=description,
-                                         moc=fits_string, mocimage=png_string, active=0)
-                wm.save()
-                watchmapname = form.cleaned_data.get('name')
-                messages.success(request, f'The {watchmapname} watchlist has been successfully created')
-                return redirect(f'watchmap_detail', wm.pk)
+    return redirect('watchmap_index')
