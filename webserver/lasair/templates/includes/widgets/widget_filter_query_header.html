@@ -8,10 +8,10 @@
     <div class="card-body">
 
         <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-tertiary" data-bs-toggle="tooltip" data-bs-placement="auto" data-bs-title="number of objects detected since filter creation (capped at 10000)">
-            {% if nalert >= 10000 %}
-                {{ nalert }}+
+            {% if count >= 10000 %}
+                {{ count }}+
             {% else %}
-                {{ nalert }}
+                {{ count }}
             {% endif %}</span>
 
         <div class="row d-block d-xl-flex">
@@ -39,7 +39,7 @@
 
                             {% endif %}
                             {% if "/filter/log/" not in request.path %}
-                                <h2 class="h3 fw-extrabold mb-0">'{{ title }}' filter results </h2>
+                                <h2 class="h3 fw-extrabold mb-0">'{{ filterQ.name }}' filter results </h2>
                                 </div>
                                 <div>
                                     <small class="text-gray-500">
@@ -47,7 +47,7 @@
                                     </small>
                                 </div>
                             {% else %}
-                                <h2 class="h3 fw-extrabold mb-0">'{{ title }}' filter history </h2>
+                                <h2 class="h3 fw-extrabold mb-0">'{{ filterQ.name }}' filter history </h2>
                                 </div>
                                 <div>
                                     <small class="text-gray-500">
@@ -68,11 +68,11 @@
                         <div class="d-flex ms-2">
                             {# <div class="btn-group" role="group" aria-label="Basic button group"> #}
 
-                            <a class="btn btn-sm btn-tertiary me-1" href='{% url "filter_query_detail" mq_id %}' data-bs-toggle="tooltip" data-bs-placement="auto" data-bs-title="run the filter to give live results">
+                            <a class="btn btn-sm btn-tertiary me-1" href='{% url "filter_query_detail" filterQ.mq_id %}' data-bs-toggle="tooltip" data-bs-placement="auto" data-bs-title="run the filter to give live results">
                                 {% include "includes/icons/icon_run.html" %}<span class="align-middle">Run Filter</span></a>
 
                             {% if "filter/log/" not in request.path %}
-                                <a class="btn btn-sm btn-gray-600 me-1 align-middle" href='{% url "filter_log" topic %}' data-bs-toggle="tooltip" data-bs-placement="auto" data-bs-title="listing all transients passing filter since its creation"><?xml version="1.0" encoding="UTF-8"?>
+                                <a class="btn btn-sm btn-gray-600 me-1 align-middle" href='{% url "filter_log" filterQ.topic_name %}' data-bs-toggle="tooltip" data-bs-placement="auto" data-bs-title="listing all transients passing filter since its creation"><?xml version="1.0" encoding="UTF-8"?>
 
                                     {% include "includes/icons/icon_history.html" %}
                                     <span class="align-middle">History</span></a>
@@ -97,8 +97,8 @@
                                     export<svg class="icon icon-xs" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd"></path></svg>
                                 </button>
                                 <ul class="dropdown-menu" aria-labelledby="exportDropdown">
-                                    <li><a class="dropdown-item export" data-table="filter-results" href="#" data-type="csv" data-filename="{{topic}}">csv</a></li>
-                                    <li><a class="dropdown-item export" data-table="filter-results" href="#" data-type="json" data-filename="{{topic}}">json</a></li>
+                                    <li><a class="dropdown-item export" data-table="filter-results" href="#" data-type="csv" data-filename="{{filterQ.topic_name}}">csv</a></li>
+                                    <li><a class="dropdown-item export" data-table="filter-results" href="#" data-type="json" data-filename="{{filterQ.topic_name}}">json</a></li>
                                 </ul>
                             </div>
                         </div>
@@ -111,7 +111,7 @@
                 </div>
             </div>
             <div class="row d-block d-xl-flex">
-                {% if message %}
+                {% if real_sql %}
                     <div class="accordion accordion-flush" id="accordionExample">
                         <div class="accordion-item">
                             <h2 class="accordion-header " id="headinOne">
@@ -120,7 +120,7 @@
                             </h2>
                             <div id="collapseOne" class="accordion-collapse collapse" aria-labelledby="headinOne" data-bs-parent="#accordionExample">
                                 <div class="accordion-body p-0 ">
-                                    <p><pre><code class="language-sql">{{message}}</code></pre></p>
+                                    <p><pre><code class="language-sql">{{real_sql}}</code></pre></p>
                                 </div>
                             </div>
                         </div>

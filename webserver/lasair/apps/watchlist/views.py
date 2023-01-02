@@ -1,3 +1,4 @@
+from django.contrib.auth.decorators import login_required
 from .forms import WatchlistForm, UpdateWatchlistForm
 import time
 import random
@@ -58,94 +59,6 @@ def watchlist_index(request):
                    'form': form})
 
 
-def watchlist_delete(request, wl_id):
-    """*delete a watchlist
-
-    **Key Arguments:**
-
-    - `request` -- the original request
-    - `wl_id` -- the watchlist UUID
-
-    **Usage:**
-
-    ```python
-    urlpatterns = [
-        ...
-        path('watchlists/<int:ar_id>/delete/', views.watchlist_delete, name='watchlist_delete'),
-        ...
-    ]
-    ```
-    """
-    msl = db_connect.remote()
-    cursor = msl.cursor(buffered=True, dictionary=True)
-    watchlist = get_object_or_404(Watchlist, wl_id=wl_id)
-    name = watchlist.name
-
-    # DELETE WATCHLIST
-    if request.method == 'POST' and request.user.is_authenticated and watchlist.user.id == request.user.id and request.POST.get('action') == "delete":
-        # DELETE ALL THE CONES OF THIS WATCHLIST
-        WatchlistCone.objects.filter(wl_id=wl_id).delete()
-        # DELETE ALL THE HITS OF THIS WATCHLIST
-        query = 'DELETE from watchlist_hits WHERE wl_id=%d' % wl_id
-        cursor.execute(query)
-        msl.commit()
-        # DELETE THE WATCHLIST
-        watchlist.delete()
-        messages.success(request, f'The "{name}" watchlist has been successfully deleted')
-    else:
-        messages.error(request, f'You must be the owner to delete this watchlist')
-
-    return redirect('watchlist_index')
-
-
-def watchlist_download(request, wl_id):
-    """*download the original watchlist*
-
-    **Key Arguments:**
-
-    - `request` -- the original request
-    - `wl_id` -- the watchlist catlaogue UUID
-
-    **Usage:**
-
-    ```python
-    urlpatterns = [
-        ...
-        path('watchlists/<int:wl_id>/cat/', views.watchlist_download, name='watchlist_download'),
-        ...
-    ]
-    ```
-    """
-
-    # GET THE WATCHLIST FROM DATABASE
-    watchlist = get_object_or_404(Watchlist, wl_id=wl_id)
-
-    # IS USER ALLOWED TO SEE THIS RESOURCE?
-    is_owner = (request.user.is_authenticated) and (request.user.id == watchlist.user.id)
-    is_public = (watchlist.public == 1)
-    is_visible = is_owner or is_public
-    if not is_visible:
-        messages.error(request, "This watchlist is private and not visible to you")
-        return render(request, 'error.html')
-
-    msl = db_connect.remote()
-
-    s = []
-    cursor = msl.cursor(buffered=True, dictionary=True)
-    cursor.execute('SELECT name FROM watchlists WHERE wl_id=%d' % wl_id)
-    name = cursor.fetchall()[0]["name"].replace(" ", "_") + "_watchlist_original.csv"
-
-    cursor.execute('SELECT ra, decl, name, radius FROM watchlist_cones WHERE wl_id=%d LIMIT 10000' % wl_id)
-    cones = cursor.fetchall()
-    content = []
-    content[:] = [','.join(str(value) for value in c.values()) for c in cones]
-    content = '\n'.join(content)
-
-    response = HttpResponse(content, content_type='application/text charset=utf-8')
-    response['Content-Disposition'] = f'attachment; filename="{name}"'
-    return response
-
-
 def watchlist_detail(request, wl_id):
     """*return the resulting matches of a watchlist*
 
@@ -165,6 +78,7 @@ def watchlist_detail(request, wl_id):
     ```
     """
 
+    # CONNECT TO DATABASE AND GET WATCHLIST
     msl = db_connect.remote()
     cursor = msl.cursor(buffered=True, dictionary=True)
     watchlist = get_object_or_404(Watchlist, wl_id=wl_id)
@@ -177,10 +91,9 @@ def watchlist_detail(request, wl_id):
         messages.error(request, "This watchlist is private and not visible to you")
         return render(request, 'error.html')
 
-    # UPDATING SETTINGS?
     if request.method == 'POST' and is_owner:
         action = request.POST.get('action')
-        # REQUEST TO UPDATE THE WATCHLIST DETAILS
+        # UPDATING SETTINGS?
         if action == 'save':
             watchlist.name = request.POST.get('name')
             watchlist.description = request.POST.get('description')
@@ -206,28 +119,28 @@ def watchlist_detail(request, wl_id):
             messages.success(request, f'{hits} crossmatches found')
 
     # FIND THE COUNT OF WATCHLIST MATCHES
-
     cursor.execute('SELECT count(*) AS count FROM watchlist_cones WHERE wl_id=%d' % wl_id)
     for row in cursor:
         number_cones = row['count']
 
     # GRAB ALL WATCHLIST MATCHES
-    query_hit = """
+    query_hit = f"""
 SELECT
 h.name as "Catalogue ID", h.arcsec as "separation (arcsec)",c.cone_id, o.objectId, o.ramean,o.decmean, o.rmag, o.gmag, jdnow()-o.jdmax as "last detected (days ago)"
 FROM watchlist_cones AS c
 NATURAL JOIN watchlist_hits as h
 NATURAL JOIN objects AS o
-WHERE c.wl_id=%d 
+WHERE c.wl_id={wl_id}
 """
 
-    cursor.execute(query_hit % wl_id)
-    hits = cursor.fetchall()
+    cursor.execute(query_hit)
+    table = cursor.fetchall()
+    count = len(table)
 
     # ADD SCHEMA
     schema = get_schema_dict("objects")
-    if len(hits):
-        for k in hits[0].keys():
+    if len(table):
+        for k in table[0].keys():
             if k not in schema:
                 schema[k] = "custom column"
 
@@ -235,14 +148,15 @@ WHERE c.wl_id=%d
 
     return render(request, 'watchlist/watchlist_detail.html', {
         'watchlist': watchlist,
-        'conelist': hits,
-        'count': len(hits),
-        'number_cones': number_cones,
-        'is_owner': is_owner,
+        'table': table,
+        'count': count,
         'schema': schema,
-        'form': form})
+        'form': form,
+        'number_cones': number_cones,
+    })
 
 
+@login_required
 def watchlist_create(request):
     """*create a new watchlist*
 
@@ -260,9 +174,8 @@ def watchlist_create(request):
     ]
     ```
     """
-
     # SUBMISSION OF NEW WATCHLIST
-    if request.method == "POST" and request.user.is_authenticated:
+    if request.method == "POST":
         form = WatchlistForm(request.POST, request.FILES)
         if form.is_valid():
             form.save()
@@ -319,3 +232,92 @@ def watchlist_create(request):
             watchlistname = form.cleaned_data.get('name')
             messages.success(request, f'The {watchlistname} catalogue watchlist has been successfully created')
             return redirect(f'watchlist_detail', wl.pk)
+
+
+def watchlist_download(request, wl_id):
+    """*download the original watchlist*
+
+    **Key Arguments:**
+
+    - `request` -- the original request
+    - `wl_id` -- the watchlist catlaogue UUID
+
+    **Usage:**
+
+    ```python
+    urlpatterns = [
+        ...
+        path('watchlists/<int:wl_id>/cat/', views.watchlist_download, name='watchlist_download'),
+        ...
+    ]
+    ```
+    """
+
+    # GET THE WATCHLIST FROM DATABASE
+    watchlist = get_object_or_404(Watchlist, wl_id=wl_id)
+
+    # IS USER ALLOWED TO SEE THIS RESOURCE?
+    is_owner = (request.user.is_authenticated) and (request.user.id == watchlist.user.id)
+    is_public = (watchlist.public == 1)
+    is_visible = is_owner or is_public
+    if not is_visible:
+        messages.error(request, "This watchlist is private and not visible to you")
+        return render(request, 'error.html')
+
+    msl = db_connect.remote()
+
+    s = []
+    cursor = msl.cursor(buffered=True, dictionary=True)
+    cursor.execute('SELECT name FROM watchlists WHERE wl_id=%d' % wl_id)
+    name = cursor.fetchall()[0]["name"].replace(" ", "_") + "_watchlist_original.csv"
+
+    cursor.execute('SELECT ra, decl, name, radius FROM watchlist_cones WHERE wl_id=%d LIMIT 10000' % wl_id)
+    cones = cursor.fetchall()
+    content = []
+    content[:] = [','.join(str(value) for value in c.values()) for c in cones]
+    content = '\n'.join(content)
+
+    response = HttpResponse(content, content_type='application/text charset=utf-8')
+    response['Content-Disposition'] = f'attachment; filename="{name}"'
+    return response
+
+
+@login_required
+def watchlist_delete(request, wl_id):
+    """*delete a watchlist
+
+    **Key Arguments:**
+
+    - `request` -- the original request
+    - `wl_id` -- the watchlist UUID
+
+    **Usage:**
+
+    ```python
+    urlpatterns = [
+        ...
+        path('watchlists/<int:wl_id>/delete/', views.watchlist_delete, name='watchlist_delete'),
+        ...
+    ]
+    ```
+    """
+    msl = db_connect.remote()
+    cursor = msl.cursor(buffered=True, dictionary=True)
+    watchlist = get_object_or_404(Watchlist, wl_id=wl_id)
+    name = watchlist.name
+
+    # DELETE WATCHLIST
+    if request.method == 'POST' and request.user.is_authenticated and watchlist.user.id == request.user.id and request.POST.get('action') == "delete":
+        # DELETE ALL THE CONES OF THIS WATCHLIST
+        WatchlistCone.objects.filter(wl_id=wl_id).delete()
+        # DELETE ALL THE HITS OF THIS WATCHLIST
+        query = 'DELETE from watchlist_hits WHERE wl_id=%d' % wl_id
+        cursor.execute(query)
+        msl.commit()
+        # DELETE THE WATCHLIST
+        watchlist.delete()
+        messages.success(request, f'The "{name}" watchlist has been successfully deleted')
+    else:
+        messages.error(request, f'You must be the owner to delete this watchlist')
+
+    return redirect('watchlist_index')
