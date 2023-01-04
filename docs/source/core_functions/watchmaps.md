@@ -11,7 +11,7 @@ alerts falling inside the watchmap.
 <img src="../_images/watchmap/mollweide.png" width="500px"/>
 
 Above we see a simple watchmap displayed as a 
-(Mollweide projection)[https://en.wikipedia.org/wiki/Mollweide_projection] 
+[Mollweide projection](https://en.wikipedia.org/wiki/Mollweide_projection)
 on the sky. It is a rectangle of sky with vertices (40,10), (50,10), (50, 30), (40,30).
 The watchmap can also have a name and description, accessible from the "settings" button. 
 Also here, the owner can choose for the watchmap to be public or not, 
