@@ -140,8 +140,6 @@ gulp.task('concat:dist:js', function() {
     return gulp.src([
             paths.src.js + '/volt.js',
             paths.src.js + '/lasair_datatables.js',
-            paths.src.js + '/lasair_lightcurve.js',
-            paths.src.js + '/lasair_lightcurve_apparent.js',
             paths.src.js + '/lasair_js9.js',
             paths.src.js + '/fitsview_init.js',
             paths.src.js + '/fitsview.js',

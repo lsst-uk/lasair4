@@ -13,28 +13,31 @@
             <div class="modal-body px-md-5 mb-3">
                 <h2 class="h4 text-center">Filter Settings</h2>
                 <p class="text-center mb-4">Update your filter settings</p>
-                <form enctype="multipart/form-data" action="{% url 'filter_query_detail' filterQ.mq_id %}" method="post" class="mt-0 mb-3">
+                {% if filterQ %}
+                    <form enctype="multipart/form-data" action="{% url 'filter_query_detail' filterQ.mq_id %}" method="post" class="mt-0 mb-3">
+                {% else %}
+                    <form enctype="multipart/form-data" method="post" class="mt-0 mb-3">
+                {% endif %}
+                {% csrf_token %}
 
-                    {% csrf_token %}
-
-                    <div class="form-group mb-4">
-                        <label for="name">Name</label>
-                        <div class="input-group">
-                            {{ form.name|add_class:"form-control" }}
-                        </div>
-                        <span class="text-error">{{ form.name.errors }}</span>
-
+                <div class="form-group mb-4">
+                    <label for="name">Name</label>
+                    <div class="input-group">
+                        {{ form.name|add_class:"form-control" }}
                     </div>
+                    <span class="text-error">{{ form.name.errors }}</span>
 
-                    <div class="form-group mb-4">
-                        <label for="description">Description</label>
-                        <div class="input-group">
-                            <textarea name="description" cols="40" rows="3" required="true" maxlength="4096" class="form-control" id="id_description">{{ form.description.value|default_if_none:"A detailed description of your filter." }}</textarea>
-                        </div>
-                        <span class="text-error">{{ form.description.errors }}</span>
+                </div>
+
+                <div class="form-group mb-4">
+                    <label for="description">Description</label>
+                    <div class="input-group">
+                        <textarea name="description" cols="40" rows="3" required="true" maxlength="4096" class="form-control" id="id_description">{{ form.description.value|default_if_none:"A detailed description of your filter." }}</textarea>
                     </div>
+                    <span class="text-error">{{ form.description.errors }}</span>
+                </div>
 
-                    <!-- <div class="form-group mb-4">
+                <!-- <div class="form-group mb-4">
                         <label for="radius">Association radius (arcsec){% include "includes/info_tooltip.html" with info="The is the default search radius for your catalogue. If individual sources in your catalogue include their own association radii these will be used instead." position="auto" %}</label>
                         <div class="input-group">
                             {{ form.radius|add_class:"form-control" }}
@@ -42,36 +45,36 @@
                         <span class="text-error">{{ form.usernradiusame.errors }}</span>
                     </div> -->
 
-                    <div class="form-group mb-4">
+                <div class="form-group mb-4">
 
-                        <label for="active">Streaming</label>
-                        <small class="d-flex align-items-center text-gray-500 mb-2">How would you like to be notified of new alerts matching your filter?</small>
-                        {{ form.active|add_class:"form-select" }}
+                    <label for="active">Streaming</label>
+                    <small class="d-flex align-items-center text-gray-500 mb-2">How would you like to be notified of new alerts matching your filter?</small>
+                    {{ form.active|add_class:"form-select" }}
 
-                        <span class="text-error">{{ form.active.errors }}</span>
-                    </div>
-
-                    <div class="form-group mb-4">
-                        <div class="form-check form-switch">
-                            <label for="public">public</label>
-                            {{ form.public|add_class:"form-check-input" }}
-                            <small class="d-flex align-items-center text-gray-500">Submit filter to the public gallery</small>
-                        </div>
-
-
-                    </div>
-
-                    <div class="d-grid">
-                        <button type="submit" name="action" class="btn btn-dark" value="save"><span class="icon icon-xs">{% include "includes/icons/icon_save.html" %}</span><span class="align-middle ms-2 icon-xs">Save</span></button>
-                    </div>
-                </form>
-
-                <div class="text-center mt-3">
-                    <a data-bs-toggle="modal" data-bs-dismiss="modal" href="#areYouSureModal"><small>delete filter</small></a>
+                    <span class="text-error">{{ form.active.errors }}</span>
                 </div>
+
+                <div class="form-group mb-4">
+                    <div class="form-check form-switch">
+                        <label for="public">public</label>
+                        {{ form.public|add_class:"form-check-input" }}
+                        <small class="d-flex align-items-center text-gray-500">Submit filter to the public gallery</small>
+                    </div>
+
+
+                </div>
+
+                <div class="d-grid">
+                    <button type="submit" name="action" class="btn btn-dark" value="save"><span class="icon icon-xs">{% include "includes/icons/icon_save.html" %}</span><span class="align-middle ms-2 icon-xs">Save</span></button>
+                </div>
+            </form>
+
+            <div class="text-center mt-3">
+                <a data-bs-toggle="modal" data-bs-dismiss="modal" href="#areYouSureModal"><small>delete filter</small></a>
             </div>
         </div>
     </div>
+</div>
 </div>
 
 {% if filterQ %}

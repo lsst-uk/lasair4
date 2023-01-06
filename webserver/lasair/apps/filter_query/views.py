@@ -284,7 +284,7 @@ def filter_query_create(request):
             messages.success(request, f'The "{filtername}" filter has been successfully created')
             return redirect(f'filter_query_detail', mq.pk)
 
-    return render(request, 'filter_query/filter_query_create.html', {'schemas': schemas, 'form': form, 'limit': str(limit)})
+    return render(request, 'filter_query/filter_query_create.html', {'schemas': schemas, 'form': form, 'limit': None})
 
 
 def filter_log(request, topic):
