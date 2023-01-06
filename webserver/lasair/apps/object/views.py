@@ -16,6 +16,7 @@ import os
 import sys
 from astropy.time import Time
 from lasair.utils import mjd_now, ecliptic, rasex, decsex, objjson
+from .utils import object_difference_lightcurve
 sys.path.append('../common')
 
 
@@ -38,6 +39,7 @@ def object_detail(request, objectId):
     ```           
     """
     data = objjson(objectId)
+
     if not data:
         return render(request, 'error.html',
                       {'message': 'Object %s not in database' % objectId})
@@ -51,6 +53,9 @@ def object_detail(request, objectId):
     if 'sherlock' in data2:
         data2.pop('sherlock')
 
-    return render(request, 'object/object_detail.html',
-                  {'data': data, 'json_data': json.dumps(data2),
-                   'authenticated': request.user.is_authenticated})
+    return render(request, 'object/object_detail.html', {
+        'data': data,
+        'json_data': json.dumps(data2),
+        'authenticated': request.user.is_authenticated,
+        'lightcurveHtml': object_difference_lightcurve(data)
+    })
