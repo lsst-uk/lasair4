@@ -12,6 +12,7 @@ import json
 import math
 import ephem
 import json
+import pandas as pd
 import base64
 from src import db_connect
 from datetime import date
@@ -229,6 +230,22 @@ def objjson(objectId):
 
     candidates.sort(key=lambda c: c['mjd'], reverse=True)
 
+    df = pd.DataFrame(candidates)
+    # SORT BY COLUMN NAME
+    df.sort_values(['mjd'],
+                   ascending=[True], inplace=True)
+    detections = df.loc[(df['candid'] > 0)].head(1)
+    from tabulate import tabulate
+    print(tabulate(detections, headers='keys', tablefmt='psql'))
+
+    objectData["discMjd"] = detections["mjd"].values[0]
+    objectData["discUtc"] = detections["utc"].values[0]
+    objectData["discMag"] = f"{detections['magpsf'].values[0]:.2f}±{detections['sigmapsf'].values[0]:.2f}"
+    if detections['fid'].values[0] == 1:
+        objectData["discFilter"] = "g"
+    else:
+        objectData["discFilter"] = "r"
+
     data = {'objectId': objectId,
             'objectData': objectData,
             'candidates': candidates,
@@ -237,8 +254,7 @@ def objjson(objectId):
             'count_noncandidate': count_noncandidate,
             'sherlock': sherlock,
             'image_urls': image_urls,
-            'TNS': TNS, 'message': message,
-            }
+            'TNS': TNS, 'message': message}
     return data
 
 
