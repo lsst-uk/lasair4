@@ -6,7 +6,7 @@ The following is about the astronomical science enabled by Lasair:
 ```eval_rst
 .. toctree::
    :maxdepth: 1
-   :caption: Astronomy
+   :caption: Lasair Transient Broker
 
    about
 ```
@@ -35,7 +35,7 @@ Lasair's core features are described in more detail here:
 
    core_functions/sky-search
    core_functions/sherlock
-   core_functions/make_query
+   core_functions/make_filter
    core_functions/watchlists
    core_functions/watchmaps
    core_functions/rest-api
