@@ -54,5 +54,4 @@ Lasair's core features are described in more detail here:
    more_info/contact
    more_info/status
    more_info/acknowledgements
-   more_info/references
 ```
