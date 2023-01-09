@@ -38,9 +38,17 @@ exec(open(moduleDirectory + "/../../__version__.py").read())
 
 # SET ENVIRONMENT VARIABLES TO BE REPLACE IN MD TEXT
 # USE '${ENVIRONMENT_VARIABLE}' IN MD TEXT
+
+
 repo = Repo(__file__, search_parent_directories=True)
-branch = repo.active_branch
-if "dev" in str(branch):
+dev = False
+if os.environ.get("READTHEDOCS"):
+    if os.environ.get("READTHEDOCS_VERSION") == "latest":
+        dev = True
+elif "dev" in str(repo.active_branch):
+    dev = True
+
+if dev:
     os.environ["lasairurl"] = "https://lasair-dev.lsst.ac.uk"
 else:
     os.environ["lasairurl"] = "https://lasair.lsst.ac.uk"
