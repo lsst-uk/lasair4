@@ -35,3 +35,4 @@ admin/
 /lasair.sublime-project
 /lasair.sublime-workspace
 node_modules
+/docs/build
