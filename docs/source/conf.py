@@ -43,7 +43,7 @@ exec(open(moduleDirectory + "/../../__version__.py").read())
 repo = Repo(__file__, search_parent_directories=True)
 dev = False
 if os.environ.get("READTHEDOCS"):
-    if os.environ.get("READTHEDOCS_VERSION") == "latest":
+    if "dev" in os.environ.get("READTHEDOCS_VERSION"):
         dev = True
 elif "dev" in str(repo.active_branch):
     dev = True
