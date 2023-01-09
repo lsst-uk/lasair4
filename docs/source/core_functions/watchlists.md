@@ -1,5 +1,8 @@
 # Watchlists
 
+**Easter Egg for Roy**
+
+{%lasairurl%}
 
 A watchlist is a set of points in the sky, together with a radius in arcseconds, which 
 can be the same for all sources, or different for each. 
