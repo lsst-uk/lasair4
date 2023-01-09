@@ -41,6 +41,10 @@ Looking at the Lasair Schema Browser, there are several additional tables that y
    * A watchmap of your choice, either your own or one from the public gallery
    * An annotator of your choice, either your own or one from the public gallery
 
+### Copying a Filter
+An easy way to get started with building a filter is to copy an existing one; either your own or
+from the public gallery. You will be asked to provide a name for the new filter, which 
+should be different from the original. You can then modify the SQL code and save it.
 
 ### Filtering on Sky Context
 Once you start typing into the SELECT or WHERE boxes, the autocomplete function

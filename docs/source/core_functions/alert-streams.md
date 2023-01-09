@@ -33,6 +33,11 @@ You will need to understand two concepts: Topic and GroupID.
 *  The Topic is a string to identify which stream of alerts you want, which derives from the name of a Lasair streaming query. 
 *  The GroupID tells Kafka where to start delivery to you. It is just a string that you can make up, for example "Susan3456". The Kafka server remembers which GroupIds it has seen before, and which was the last alert it delivered. When you start your code again with the same GroupID, you only get alerts that arrived since last time you used that GroupId. If you use a new GroupID, you get the alerts from the start of the Kafka cache, which is about 7 days.
 
+For testing purposes, the `group_id` will change frequently, and you get all of the alerts
+the come from the given stream. Then you will set up your program to run continuously,
+perhaps in a `screen` session on a server machine, or started every hour by `cron`. 
+In this case, the `group_id` should remain constant, so you won't get any alerts twice.
+
 Here is the sample code
 ```
 from lasair import lasair_consumer
