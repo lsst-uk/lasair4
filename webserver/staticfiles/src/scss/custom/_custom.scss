@@ -174,3 +174,13 @@ pre.prism-live {
         content: " "
     }
 
+.tooltip-inner {
+    a {
+        color: $secondary;
+        &:hover {
+            color: $secondary;
+            text-decoration: underline;
+        }
+    }
+}
+

@@ -45,7 +45,7 @@
                             </small>
                         </div>
                         <small class="text-gray-500">
-                            The watchmap is <b>{% if not watchmap.active %}not {% endif %} active</b> {% include "includes/info_tooltip.html" with info="when active, a watchmap will be dynamically matched against new transient alerts. See the watchmap settings to make changes." position="auto" %}.
+                            The watchmap is <b>{% if not watchmap.active %}not {% endif %} active</b> {% include "includes/info_tooltip.html" with info="when active, a watchmap will be dynamically matched against new transient alerts. See the watchmap settings to make changes" position="auto" link=docroot|add:"/core_functions/watchmaps.html" %}.
                         </small>
                     </div>
                 </div>

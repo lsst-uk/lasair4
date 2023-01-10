@@ -45,7 +45,7 @@
                             </small>
                         </div>
                         <small class="text-gray-500">
-                            The watchlist contains {{number_cones}} sources with a default association radius of <b>{{watchlist.radius}} arcsec</b>. The watchlist is <b>{% if not watchlist.active %}not {% endif %} active</b> {% include "includes/info_tooltip.html" with info="when active, a watchlist will be dynamically matched against new transient alerts. See the watchlist settings to make changes." position="auto" %}.
+                            The watchlist contains {{number_cones}} sources with a default association radius of <b>{{watchlist.radius}} arcsec</b>. The watchlist is <b>{% if not watchlist.active %}not {% endif %} active</b> {% include "includes/info_tooltip.html" with info="when active, a watchlist will be dynamically matched against new transient alerts. See the watchlist settings to make changes" position="auto" link=docroot|add:"/core_functions/watchlists.html" %}.
                         </small>
 
 
