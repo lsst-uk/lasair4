@@ -90,6 +90,8 @@ def watchmap_detail(request, ar_id):
     cursor = msl.cursor(buffered=True, dictionary=True)
     watchmap = get_object_or_404(Watchmap, ar_id=ar_id)
 
+    resultCap = 10000
+
     # IS USER ALLOWED TO SEE THIS RESOURCE?
     is_owner = (request.user.is_authenticated) and (request.user.id == watchmap.user.id)
     is_public = (watchmap.public == 1)
@@ -122,11 +124,31 @@ o.objectId, o.ramean,o.decmean, o.rmag, o.gmag, jdnow()-o.jdmax as "last detecte
 FROM area_hits as h, objects AS o
 WHERE h.ar_id={ar_id}
 AND o.objectId=h.objectId
+limit {resultCap}
 """
 
     cursor.execute(query_hit)
     table = cursor.fetchall()
     count = len(table)
+
+    if count == resultCap:
+        limit = resultCap
+        countQuery = f"""
+        SELECT count(*) as count
+        FROM area_hits as h, objects AS o
+        WHERE h.ar_id={ar_id}
+        AND o.objectId=h.objectId
+        """
+        cursor.execute(countQuery)
+        count = cursor.fetchone()["count"]
+
+        if settings.DEBUG:
+            apiUrl = "https://lasair.readthedocs.io/en/develop/core_functions/rest-api.html"
+        else:
+            apiUrl = "https://lasair.readthedocs.io/en/main/core_functions/rest-api.html"
+        messages.info(request, f"We are only displaying the first <b>{resultCap}</b> of {count} objects matched against this watchmap. But don't worry! You can access all {count} results via the <a class='alert-link' href='{apiUrl}' target='_blank'>Lasair API</a>.")
+    else:
+        limit = False
 
     # ADD SCHEMA
     schema = get_schema_dict("objects")
@@ -143,8 +165,8 @@ AND o.objectId=h.objectId
         'table': table,
         'count': count,
         'schema': schema,
-        'form': form
-    })
+        'form': form,
+        'limit': limit})
 
 
 @login_required
