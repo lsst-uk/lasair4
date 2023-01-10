@@ -37,3 +37,4 @@ admin/
 node_modules
 webserver/static/
 webserver/staticfiles/build/streams2/
+/docs/build

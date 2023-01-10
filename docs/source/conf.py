@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 
+from git import Repo
 from builtins import str
 import sys
 import os
@@ -12,7 +13,9 @@ import m2r
 import codecs
 
 extensions = ['sphinx.ext.autodoc', 'sphinx.ext.todo',
-              'sphinx.ext.mathjax', 'sphinx.ext.autosummary', 'sphinx.ext.coverage', 'sphinx.ext.linkcode', 'sphinxcontrib.mermaid', 'sphinx_search.extension']
+              'sphinx.ext.mathjax', 'sphinx.ext.autosummary',
+              'sphinx.ext.coverage', 'sphinx.ext.linkcode',
+              'sphinxcontrib.mermaid', 'sphinx_search.extension']
 
 
 class Mock(MagicMock):
@@ -31,6 +34,24 @@ sys.modules.update((mod_name, Mock()) for mod_name in MOCK_MODULES)
 moduleDirectory = os.path.dirname(os.path.realpath(__file__))
 # GET PACKAGE __version__ INTO locals()
 exec(open(moduleDirectory + "/../../__version__.py").read())
+
+
+# SET ENVIRONMENT VARIABLES TO BE REPLACE IN MD TEXT
+# USE '${ENVIRONMENT_VARIABLE}' IN MD TEXT
+
+
+repo = Repo(__file__, search_parent_directories=True)
+dev = False
+if os.environ.get("READTHEDOCS"):
+    if "dev" in os.environ.get("READTHEDOCS_VERSION"):
+        dev = True
+elif "dev" in str(repo.active_branch):
+    dev = True
+
+if dev:
+    os.environ["lasairurl"] = "https://lasair-dev.lsst.ac.uk"
+else:
+    os.environ["lasairurl"] = "https://lasair.lsst.ac.uk"
 
 
 sys.path.insert(0, os.path.abspath(

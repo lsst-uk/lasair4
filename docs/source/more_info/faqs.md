@@ -1,39 +1,22 @@
 # Questions and Answers
 
-```eval_rst
-.. todo::
-
-    - Clean up these FAQs after web refresh
-```
-
 **Table of Contents**
 
 {{TOC}}
 
 ## What are Lasair-ZTF and Lasair-LSST?
 
-Lasair is an evolving platform. The current Lasair-ZTF is our prototype broker based on the ZTF alert stream, but we have started an intensive planning and technical reviews of the requirements for LSST. We are basing our future requirements on two key LSST documents: [Data Products Definition Document (Juric et al. 2019)](https://lse-163.lsst.io/) and [LSST Alerts: Key Numbers (Graham et al.)](https://dmtn-102.lsst.io/DMTN-102.pdf).
+See [ZTF and LSST](../about.html#ztf-and-lsst)
 
-We envisage the following major differences between Lasair-ZTF and Lasair-LSST :
-
-*   the increase in rate of the number of alerts, by a factor 50
-*   the multi-colour filter nature of LSST of *ugrizy*,
-*   the different surveys : deep drilling fields, wide-fast deep (which may end up splitting the Milky Way from the extragalactic sky), and any additional approved mini-surveys (e.g. target of opportunity observations of gravitational wave sky maps).
-*   access to forced photometry and the timescales for that access a deep image of the whole survey footprint which has photometric redshifts and accurate star-galaxy separation for all objects
-*   expected large increase in the user base
-*   provision to link pubic spectroscopic data to the LSST transients. Both the information derived from the spectra such as type and redshift, but also the data itself.
-
-Given these differences, within Lasair we are reviewing the database architecture and how the lightcurve data are annotated, stored and made available to users. We have developed detailed Science Requirements from the perspective of expert users within the UK and are working particularly with the LSST Science Collaborations (DESC and TVS) to review these. Our main focus is to provide a broker that will allow users to find their transients and eruptive variables of choice and to run filters or analysis code on them. This may be on the Lasair computing platform (the UK's IRIS system) but we will also provide means to bulk download lightcurve data for users to work with locally on their own machines.
-
-This work is intensifying as of April 2020, and we look forward to working with our international colleagues across the LSST community and within the LSST Science Collaborations to define Lasair's functionality for LSST. With this in mind, we are drafting our broker proposal for the June call.
-
-What can I get from this web site?
+## What can I get from this web site?
 
 The Lasair alert broker gives access to millions of astronomical transient detections: when a star or galaxy becomes brighter or fainter than it was at an earlier time.
 
 ## What data does Lasair offer?
 
 Whenever a star or galaxy in the sky changes brightness, it is given an "objectId", which can be used to see all the data about that object. Data includes a "light curve" of brightness measurments at different times, in different filters; crossmatching with existing source catalogs, and other data.
+Changes in brightness are transferred to the Lasair databases, and pushed to users, within an hour
+of the telescope taking the observation.
 
 ## What is here for an amateur astronomer?
 
@@ -45,15 +28,17 @@ Write to the help email: lasair-help at lists.lasair.roe.ac.uk.
 
 ## How can I use my knowledge of SQL to use Lasair?
 
-Each query/filter/stream in Lasair is an SQL SELECT query. The syntax is "SELECT <attributes\> FROM <tables\> WHERE <conditions;\>" The attributes come from the schema -- shown to the right in the query builder page, and can include renaming, for example "magg-magr as mag\_difference", but no sub-queries. The tables are selected from objects, sherlock\_classifications, crossmatch\_tns, as well as any watchlists or areas you choose. The conditions in the WHERE clause allow a simplified SQL, using just comparison operators, without operators such as "group" and "having".
+Each filter in Lasair is an SQL SELECT query. The syntax is "SELECT <attributes\> FROM <tables\> WHERE <conditions;\>" The attributes come from the schema -- shown to the right in the filter builder page. The tables are selected from `objects`, `sherlock_classifications`, `crossmatch_tns`, as well as any watchlists, watchmaps or annotations you choose. The conditions in the WHERE clause allow a simplified SQL, using just comparison operators, without operators such as "group" and "having".
 
 ## How can I query the Lasair database?
 
-You can type SQL into the query builder as above, and you can run a query somebody else has made that is public. If you sign up and login to Lasair, you can save your queries and you can copy somebody else's query then modify it.
+You can type SQL into the filter builder -- [instructions here](../core_functions/make_filter.html), 
+and you can run a query somebody else has made that is public. If you sign up and login to Lasair, you can save your queries and you can copy somebody else's query then modify it.
 
 ## What is the difference between a Query and a Filter?
 
-A query operates on the whole database of alerts, but a Filter only runs on new alerts, as they stream from the telescope. You can convert a Query that you own to a Filter in the query builder page.
+A query operates on the whole database of alerts, but a filter only runs on new alerts, as they stream from the telescope. They are very similar ideas: but query implies running on the database of past alerts,
+and filter implies running on the stream of incoming new alerts.
 
 ## What is the schema of the Lasair database?
 
@@ -74,12 +59,13 @@ There are seven community brokers that will receive and process LSST alerts in r
 ## How long has Lasair been operating?
 
 Lasair has been processing, storing, and distributing alerts from the ZTF survey since 2018.
+Operation with LSST will start in 2023.
 
-Can I get alerts from a particular region of the sky?
+## Can I get alerts from a particular region of the sky?
 
 Lasair supports "sky areas", defined by a [MOC](https://cds-astro.github.io/mocpy/), that you build yourself.
 
-Can I get alerts associated with my favourite sources?
+## Can I get alerts associated with my favourite sources?
 
 You can build a "watchlist" of your favourite sources, and build a corresponding query that includes crossmatch with that watchlist. Instructions are [here](https://lasair-ztf.lsst.ac.uk/cookbook/watchlist/).
 
@@ -91,65 +77,53 @@ There are some filters already built that find alerts in the outskirts of galaxi
 
 Lasair receives immediate notification of gravitational wave alerts. See [here](https://lasair-ztf.lsst.ac.uk/skymap)
 
-How can I find out about the ZTF survey?
-
-The Zwicky Transient Factory (ZTF) is the source of the events to which Lasair provides access. It is well summarised with the following set of papers:
-
-*   _The Zwicky Transient Facility: Data Processing, Products, and Archive_, F. Masci et al [arXiv](https://arxiv.org/abs/1902.01872)
-*   _The Zwicky Transient Facility: System Overview, Performance, and First Results_, E. Bellm et al [arXiv](https://arxiv.org/abs/1902.01932)
-*   _A Morphological Classification Model to Identify Unresolved PanSTARRS1 Sources: Application in the ZTF Real-Time Pipeline_, Y. Tachibana et al, [arXiv](https://arxiv.org/abs/1902.01935)
-*   _Machine Learning for the Zwicky Transient Facility_, A. Mahabal et al, [arXiv](https://arxiv.org/abs/1902.01936)
-*   _The Zwicky Transient Facility: Science Objectives_, M. Graham et al, [arXiv](https://arxiv.org/abs/1902.01945)
-*   _The Zwicky Transient Facility Alert Distribution System_, M. Patterson et al [arXiv](https://arxiv.org/abs/1902.02227)
-
 ## How can I find out about the LSST survey and the Vera Rubin Observatory?
 
 General FAQ on LSST and Rubin is [here](https://www.lsst.org/content/rubin-observatory-general-public-faqs), about community alert brokers in particular [here](https://www.lsst.org/scientists/alert-brokers)
 
 ## How can I write code and notebooks that use the Lasair database?
 
-The documentation is [here](https://lasair-ztf.lsst.ac.uk/code)
+The Lasair client is described [here](../core_functions/rest-api.html), and
+there are sample notebooks [here](../core_functions/python-notebooks.html).
 
-## How can I mine a million Lasair light curves?
+## Does Lasair classify alerts into classes?
 
-Lorem Ipsum
-
-## Does Lasair classify alerst into classes?
-
-Lorem Ipsum
+Lasair supports the idea of *annotation*, where external users and other brokers build and
+share classification information with Lasair. These annotations can then be used as part of 
+Lasair filters.
 
 ## Does Lasair have an API?
 
-Lorem Ipsum
+The Lasair client is described [here](../core_functions/rest-api.html).
 
-## What is difference magnitude compare to apparent magnitude?
+## What is difference magnitude compared to apparent magnitude?
 
-Lorem Ipsum
-
-## What is an exponantial moving average?
-
-Lorem Ipsum
+This is explained [here](../concepts/objects_sources.html).
 
 ## What is a cone-search and can Lasair do this?
 
-Lorem Ipsum
+A *cone* in this contect means a point in the sky with an angular tolerance -- the opening
+angle of the cone, as explained [here](../concepts/sky-search.html). 
+You can use the [Lasair Sky Search](../core_functions/sky-search.html)
+to do this.
 
 ## How can I do 1000 cone searches all at once?
 
-Lorem Ipsum
-
-## What is associated (cross-matched) with a Lasair source?
-
-Lorem Ipsum
+The efficient way to do this is to build a [watchlist](../concepts/watchlist.html),
+as explained [here](../core_functions/watchlist.html). If the watchlist has
+less than 10,000 sources, there is button on the watchlist page to crossmatch
+with all past objects.
 
 ## Can I see sky images in different wavelengths around a Lasair alert?
 
-Lorem Ipsum
+The Lasair object page has a panel of [AladinLite](https://aladin.u-strasbg.fr/AladinLite/)
+that shows many kinds of sky image, from radio to gamma, and can be zoomed in and out.
 
-## When I make a query, can I share it with my colleagues?
+## When I make a filter, can I share it with my colleagues?
 
-Lorem Ipsum
+Filters, watchlists, and watchmaps can all be made public so that others can see them.
+A public filter can be copied and modified.
 
 ## Can I get immediate notification of interesting alerts?
 
-Lorem Ipsum
+See the section on [alert streams](../core_functions/alert-streams).
