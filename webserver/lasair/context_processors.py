@@ -15,3 +15,11 @@ def dev(request):
 
 def cfg_assets_root(request):
     return {'ASSETS_ROOT': settings.ASSETS_ROOT}
+
+
+def global_vars(request):
+    if settings.DEBUG:
+        docroot = "https://lasair.readthedocs.io/en/develop"
+    else:
+        docroot = "https://lasair.readthedocs.io/en/main"
+    return {'docroot': docroot}

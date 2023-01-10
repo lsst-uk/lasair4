@@ -18,12 +18,21 @@
             </div>
         </div>
         <div class="d-flex ms-2">
-            <h2 class="h5 text-gray-400 mb-0">Difference Image Lightcurve{% include "includes/info_tooltip.html" with info="The difference image lightcurve reveals how the transient flux differs over time with respect to the baseline flux found in the reference image at the location of the transient." position="auto" %}</h2>
+            <h2 class="h5 text-gray-400 mb-0">Difference Image Lightcurve{% include "includes/info_tooltip.html" with info="The difference image lightcurve reveals how the transient flux differs over time with respect to the baseline flux found in the reference image at the location of the transient" position="auto" link=docroot|add:"/concepts/lightcurve.html" %}</h2>
+
         </div>
+
 
     </div>
     <div class="card-body">
+
+
         <div class="w-100 ps-5 pe-5 pb-2">{{ lightcurveHtml|safe }}</div>
+        <div class="d-flex justify-content-end ms-2">
+            <small class="text-gray-500">
+                Learn how to <a href="https://plotly.com/chart-studio-help/zoom-pan-hover-controls/">interact with this plot.</a>
+            </small>
+        </div>
     </div>
 </div>
 

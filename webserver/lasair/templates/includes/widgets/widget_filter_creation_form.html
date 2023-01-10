@@ -40,21 +40,21 @@
 
 
                         <div class="col-auto form-group mb-4">
-                            <label for="watchlists">Watchlist {% include "includes/info_tooltip.html" with info="By selecting a watchlist, the results of the query are constrained to only objects associated with the watchlist." position="auto" %}</label>
+                            <label for="watchlists">Watchlist {% include "includes/info_tooltip.html" with info="By selecting a watchlist, the results of the query are constrained to only objects associated with the watchlist" position="auto" %}</label>
                             <div class="input-group">
                                 {{ form.watchlists|add_class:"form-select" }}
                             </div>
                             <span class="text-error">{{ form.watchlists.errors }}</span>
                         </div>
                         <div class="col-auto form-group mb-4">
-                            <label for="watchmaps">Watchmaps {% include "includes/info_tooltip.html" with info="By selecting a watchmap, the results of the query are constrained to only objects associated with the watchmap." position="auto" %}</label>
+                            <label for="watchmaps">Watchmaps {% include "includes/info_tooltip.html" with info="By selecting a watchmap, the results of the query are constrained to only objects associated with the watchmap" position="auto" %}</label>
                             <div class="input-group">
                                 {{ form.watchmaps|add_class:"form-select" }}
                             </div>
                             <span class="text-error">{{ form.watchmaps.errors }}</span>
                         </div>
                         <div class="col-auto form-group mb-4">
-                            <label for="annotators">Annotators {% include "includes/info_tooltip.html" with info="By selecting an annotator, the results of the query are constrained to only objects tagged by the annotator." position="auto" %}</label>
+                            <label for="annotators">Annotators {% include "includes/info_tooltip.html" with info="By selecting an annotator, the results of the query are constrained to only objects tagged by the annotator" position="auto" %}</label>
                             <div class="input-group">
                                 {{ form.annotators|add_class:"form-select" }}
                             </div>

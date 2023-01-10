@@ -56,7 +56,7 @@
                                 </div>
                             {% endif %}
                             <small class="text-gray-500">
-                                The filter is <b>{% if not filterQ.active %}not active{% elif filterQ.active == 1%} streamed via email{% elif filterQ.active == 2%} streamed via kafka {% endif %} </b> {% include "includes/info_tooltip.html" with info="when active, a filter will be dynamically matched against new transient alerts and the results streamed via email or kafka." position="auto" %}.
+                                The filter is <b>{% if not filterQ.active %}not active{% elif filterQ.active == 1%} streamed via email{% elif filterQ.active == 2%} streamed via kafka {% endif %} </b> {% include "includes/info_tooltip.html" with info="when active, a filter will be dynamically matched against new transient alerts and the results streamed via email or kafka" position="auto" link=docroot|add:"/core_functions/make_filter.html" %}.
                             </small>
                         </div>
                     </div>
