@@ -49,6 +49,7 @@ document.addEventListener('DOMContentLoaded', function() {
     };
 
     let fns = [loadFitsImages, fixJS9ExtraStyles, collapseJS9Extras];
+
     // chain function will call the supplied function
     // and recursively call the chain function with the
     // the next element in the array

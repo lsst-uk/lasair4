@@ -77,10 +77,17 @@ $ct-series-colors: (#262B40,
 
 ) !default;
 
+// LASAIR COLOURS
+$lasair-blue: #00BABB;
+$lasair-red: #CE4257;
+$lasair-yellow: #F0A202;
+$lasair-black: #262626;
+$lasair-white: #FFFFF0;
+$lasair-grey: #878E88;
 
 $success: $green !default;
-$info   : $blue !default;
-$warning: $yellow !default;
+$info   : $lasair-blue !default;
+$warning: $lasair-yellow !default;
 $danger : $red !default;
 $gray   : $gray-900 !default;
 $light  : $gray-400 !default;
@@ -89,13 +96,7 @@ $soft   : $gray-200 !default;
 $dark   : $dark !default;
 
 
-// LASAIR COLOURS
-$lasair-blue: #00BABB;
-$lasair-red: #CE4257;
-$lasair-yellow: #F0A202;
-$lasair-black: #262626;
-$lasair-white: #FFFFF0;
-$lasair-grey: #878E88;
+
 
 // Color scheme
 $primary: $lasair-blue;
