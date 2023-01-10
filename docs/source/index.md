@@ -6,7 +6,7 @@ The following is about the astronomical science enabled by Lasair:
 ```eval_rst
 .. toctree::
    :maxdepth: 1
-   :caption: Astronomy
+   :caption: Lasair Transient Broker
 
    about
 ```
@@ -31,17 +31,17 @@ Lasair's core features are described in more detail here:
 ```eval_rst
 .. toctree::
    :maxdepth: 1
-   :caption: Core Services
+   :caption: Core Functions
 
-   core_services/sky-search
-   core_services/sherlock
-   core_services/make_query
-   core_services/watchlists
-   core_services/watchmaps
-   core_services/rest-api
-   core_services/python-notebooks
-   core_services/alert-streams
-   core_services/make_annotator
+   core_functions/sky-search
+   core_functions/sherlock
+   core_functions/make_filter
+   core_functions/watchlists
+   core_functions/watchmaps
+   core_functions/rest-api
+   core_functions/python-notebooks
+   core_functions/alert-streams
+   core_functions/make_annotator
 ```
 
 ```eval_rst
@@ -54,5 +54,4 @@ Lasair's core features are described in more detail here:
    more_info/contact
    more_info/status
    more_info/acknowledgements
-   more_info/references
 ```
