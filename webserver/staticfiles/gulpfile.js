@@ -234,7 +234,7 @@ gulp.task('copy:dist:js', function() {
 
 // COPY REQUIRED VENDOR MODULES
 gulp.task('copy:dist:vendor', function() {
-    return gulp.src(paths.src.node_modules + '/js9/**/*.*', )
+    return gulp.src(paths.src.vendor + '/js9/**/*.*', )
         .pipe(gulp.dest(paths.dist.vendor + "/js9"))
 });
 

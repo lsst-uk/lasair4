@@ -25,6 +25,10 @@ div.JS9Plugin {
     color: #657b83;
 }
 
+div.dhtmlwindow {
+    width: 530px !important;
+}
+
 div.JS9,
 div.JS9 *,
 div.JS9 *:before,
@@ -38,8 +42,12 @@ div.dhtmlwindow *:after   {
     box-sizing: content-box !important;
 }
 
-div.JS9 {
+div.JS9,  {
     resize: none !important;
+}
+
+div.drag-resizearea{
+    visibility: hidden;
 }
 
 // YELLOW SUB- GO DEEPER
