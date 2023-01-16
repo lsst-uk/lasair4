@@ -12,13 +12,34 @@ div.ImExamRadialProj {
     }
 }
 
-.drag-handle {
+div.JS9PluginContainer > .drag-handle {
     display: none;
+}
+
+.drag-handle {
+   height:35px;
 }
 
 div.JS9Plugin {
     background: #E9E9E9;
     color: #657b83;
+}
+
+div.JS9,
+div.JS9 *,
+div.JS9 *:before,
+div.JS9 *:after,
+div.dhtmlwindow,
+div.dhtmlwindow *,
+div.dhtmlwindow *:before, 
+div.dhtmlwindow *:after   {
+    -webkit-box-sizing: content-box !important;
+    -moz-box-sizing: content-box !important;
+    box-sizing: content-box !important;
+}
+
+div.JS9 {
+    resize: none !important;
 }
 
 // YELLOW SUB- GO DEEPER
