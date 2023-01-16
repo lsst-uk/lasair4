@@ -307,12 +307,11 @@ def string2bytes(str):
 def fits(request, candid_cutoutType):
     # cutoutType can be cutoutDifference, cutoutTemplate, cutoutScience
     image_store = objectStore.objectStore(suffix='fits', fileroot=settings.IMAGEFITS)
-    print("FITS", image_store)
     try:
         fitsdata = image_store.getFileObject(candid_cutoutType)
     except:
         fitsdata = ''
-    print("FITSPATH", fitsdata)
+
     response = HttpResponse(fitsdata, content_type='image/fits')
     response['Content-Disposition'] = 'attachment; filename="%s.fits"' % candid_cutoutType
     return response
