@@ -1,7 +1,13 @@
+var loadtype;
+var ndiv = 0;
+var nwin = 1;
+var lastid;
+
 document.addEventListener('DOMContentLoaded', function() {
 
     JS9.globalOpts.alerts = false;
     JS9.globalOpts.updateTitlebar = false;
+    JS9.globalOpts.lightWinClose = "close";
 
     JS9.imageOpts = {
         inherit: false, // inherit props from previous image?
@@ -163,4 +169,14 @@ function toggleJS9Menus() {
     for (var i = 0; i < menus.length; i++) {
         menus[i].classList.toggle('d-none');
     }
+}
+
+function JS9Popout(file, opts) {
+    loadtype = "light";
+    var id, did, head, body, html, doc;
+    var myopts = opts || {};
+    myopts.onload = setDefaultParams;
+    myopts.id = "mylight" + nwin++;
+    lastid = JS9.LoadWindow(file, myopts, "light");
+
 }
