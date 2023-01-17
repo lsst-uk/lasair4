@@ -175,6 +175,7 @@ gulp.task('concat:vendor:js', function() {
             paths.src.node_modules + '/simple-datatables/dist/umd/simple-datatables.js',
             paths.src.node_modules + '/plotly.js/dist/plotly.min.js',
             paths.src.node_modules + '/jquery/dist/jquery.min.js',
+
             paths.src.vendor + '/aladin.min.js',
             paths.src.vendor + '/prism.js',
             paths.src.vendor + '/prism-live.js',
@@ -233,7 +234,7 @@ gulp.task('copy:dist:js', function() {
 
 // COPY REQUIRED VENDOR MODULES
 gulp.task('copy:dist:vendor', function() {
-    return gulp.src(paths.src.vendor + '/js9/**/*.*', )
+    return gulp.src(paths.src.node_modules + '/js9/**/*.*', )
         .pipe(gulp.dest(paths.dist.vendor + "/js9"))
 });
 
