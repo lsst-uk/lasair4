@@ -8,6 +8,8 @@ document.addEventListener('DOMContentLoaded', function() {
     JS9.globalOpts.alerts = false;
     JS9.globalOpts.updateTitlebar = false;
     JS9.globalOpts.lightWinClose = "close";
+    JS9.globalOpts.helperType = "none";
+    JS9.globalOpts.helperPort = 3333;
 
     JS9.imageOpts = {
         inherit: false, // inherit props from previous image?
