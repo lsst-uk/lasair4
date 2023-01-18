@@ -239,7 +239,7 @@ gulp.task('copy:dist:vendor', function() {
 });
 
 gulp.task('serve', gulp.series('copy:dist:css', 'copy:dist:files', 'copy:dist:fonts', 'copy:dist:img', 'concat:dist:js', function() {
-    gulp.watch([paths.src.scss + '/volt/**/*.scss', paths.src.scss + '/custom/*.scss', paths.src.scss + '/custom/**/*.scss', paths.src.scss + '/volt.scss'], gulp.series('copy:dist:css'));
+    gulp.watch([paths.src.scss + '/volt/**/*.scss', paths.src.scss + '/custom/_variables.scss', paths.src.scss + '/custom/*.scss', paths.src.scss + '/custom/**/*.scss', paths.src.scss + '/volt.scss'], gulp.series('copy:dist:css'));
     gulp.watch([paths.src.files], gulp.series('copy:dist:files'));
     gulp.watch([paths.src.fonts], gulp.series('copy:dist:fonts'));
     gulp.watch([paths.src.img], gulp.series('copy:dist:img'));

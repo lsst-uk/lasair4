@@ -213,3 +213,14 @@ pre.prism-live {
     }
 }
 
+$border-radius     : .5rem !default;
+div.search-bar input {
+    border-top-right-radius: $border-radius !important;
+    border-bottom-right-radius: $border-radius !important;
+}
+
+.sidebar .nav-link {
+        font-size: $font-size-base*1.2 !important;
+}
+
+

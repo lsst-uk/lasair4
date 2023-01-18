@@ -157,7 +157,15 @@ def object_difference_lightcurve(
         plot_bgcolor='white',
         paper_bgcolor='white',
         height=650,
-        margin_t=50,
+        margin_t=100,
+        margin_r=1,
+        legend=dict(
+            orientation="h",
+            yanchor="top",
+            y=-0.3,
+            xanchor="left",
+            x=0
+        ),
         hoverlabel=dict(
             font_color="white",
             bgcolor="#1F2937",
@@ -170,7 +178,8 @@ def object_difference_lightcurve(
             'displayModeBar': True,
             'displaylogo': False,
             'modeBarButtonsToRemove': ['select2d', 'lasso2d'],
-            'toImageButtonOptions': {'filename': objectData["objectId"] + "_lasair_lc"}
+            'toImageButtonOptions': {'filename': objectData["objectId"] + "_lasair_lc"},
+            'responsive': True
         })
 
     return htmlLightcurve

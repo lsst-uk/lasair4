@@ -1,8 +1,8 @@
 <div class="card border-0 shadow h-100">
     <div class="card-body">
-        <div class="row d-block d-xl-flex align-items-start">
-            <div class="col-4 col-xl-2 text-xl-center mb-3 mb-xl-0 me-xl-0 d-flex align-items-center justify-content-xl-start">
-                <div class="icon-shape icon-shape-tertiary rounded me me-sm-0">
+        <div class="row d-flex align-items-start">
+            <div class="col-2 col-md-1 text-xl-center mb-3  justify-content-xl-start">
+                <div class="icon-shape icon-shape-tertiary rounded me-sm-0">
 
                     <svg fill="currentColor" stroke="currentColor"  stroke-linecap="round" stroke-linejoin="round" stroke-width="1" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
 
@@ -15,11 +15,13 @@
 
                 </div>
             </div>
-            <div class="col-12 col-xl-10 px-xl-0">
-                <div class="d-block">
-                    <h2 class="h6 text-gray-400 mb-0">Sherlock Contextual Classification{% include "includes/info_tooltip.html" with info="Predicted nature of the transient based on smart crossmatching of known objects" position="auto" link=docroot|add:"/core_functions/sherlock.html" %}</h2>
-                    <h3 class="fw-extrabold mb-2"> <span class="fw-normal text-gray-400">Prediction: </span> {{ data.sherlock.classification_expanded }}</h3>
+            <div class="col-10 col-xl-11 pe-xl-5">
+                <div >
+                    <h2 class="h6 text-gray-400 mb-0 ps-2">Sherlock Contextual Classification{% include "includes/info_tooltip.html" with info="Predicted nature of the transient based on smart crossmatching of known objects" position="auto" link=docroot|add:"/core_functions/sherlock.html" %}</h2>
+                    <h3 class="fw-extrabold mb-2 ps-2"> <span class="fw-normal text-gray-400">Prediction: </span> {{ data.sherlock.classification_expanded }}</h3>
                 </div>
+            </div>
+            <div class="col-12 col-xl-10 pe-xl-5 ps-sm-4">
                 <small class="text-gray-500">
                     {{ data.sherlock.description|safe }}
                 </small>
