@@ -2,10 +2,10 @@
 
 
     <div class="card-body">
-        <div class="row d-block d-xl-flex">
+        <div class="row d-flex">
 
-            <div class="col-3 text-xl-center mb-3 mb-xl-0 d-flex justify-content-xl-start">
-                <div class="icon-shape icon-shape-primary rounded me-4 me-sm-0">
+            <div class="col-2 col-md-1 text-xl-center mb-3 justify-content-xl-start">
+                <div class="icon-shape icon-shape-primary rounded me-sm-0">
 
                     <svg class="w-6 h-6" fill="currentColor" stroke="currentColor" stroke-width="4"  viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
                         <g>
@@ -16,8 +16,8 @@
                 </div>
             </div>
 
-            <div class="col-6  px-xl-1">
-                <div class="d-block">
+            <div class="col-7 col-md-8 px-xl-1">
+                <div class="d-block ps-2">
                     <h2 class="h3 fw-extrabold mb-0">{{data.objectId}}</h2>
 
                     <h2 class="accordion-header " id="headinOne">
@@ -31,8 +31,8 @@
                 </span>
             </div>
         </div>
-        <div class="row d-block d-xl-flex flex-row-reverse mb-3">
-            <div class="col-9  px-xl-1 ">
+        <div class="row d-block d-xl-flex flex-row-reverse mb-3 ms-sm-2">
+            <div class="col-12">
                 <small class="text-gray-500">
                     <div><b>Discovery Date:</b> {{ data.objectData.discUtc }} UTC</div>
                     <div><b>Discovery MJD:</b> {{  data.objectData.discMjd|floatformat:2 }}</div>
@@ -40,7 +40,7 @@
                 </small>
             </div>
         </div>
-        <div class="row d-block d-xl-flex ms-5">
+        <div class="row  d-xl-flex  ms-sm-2">
 
             <div class="accordion accordion-flush" id="accordionExample">
                 <div class="accordion-item">

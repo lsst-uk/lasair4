@@ -1,8 +1,8 @@
 <div class="card border-0 shadow  h-100">
     <div class="card-body">
-        <div class="row d-block d-xl-flex">
-            <div class="col-2 text-xl-center mb-3 mb-xl-0 d-flex justify-content-xl-start">
-                <div class="icon-shape icon-shape-secondary rounded me-4 me-sm-0">
+        <div class="row d-flex">
+            <div class="col-2 col-md-1 text-xl-center mb-3 mb-xl-0  justify-content-xl-start">
+                <div class="icon-shape icon-shape-secondary rounded me-sm-0">
 
                     <svg class="w-6 h-6" fill="currentColor" stroke="currentColor" stroke-width="2"  viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
 
@@ -16,11 +16,11 @@
                 </div>
             </div>
 
-            <div class="col-10  px-xl-1">
+            <div class="col-10 col-md-11  px-xl-1">
                 <div class="d-block">
-                    <h2 class="h6 text-gray-400 mb-1">External Resources{% include "includes/info_tooltip.html" with info="Links to external services providing further context information at the location of the transient" position="auto" %}</h2>
+                    <h2 class="h6 text-gray-400 mb-1 ps-2">External Resources{% include "includes/info_tooltip.html" with info="Links to external services providing further context information at the location of the transient" position="auto" %}</h2>
                 </div>
-                <a href="http://simbad.u-strasbg.fr/simbad/sim-coo?Coord={{ data.objectData.ramean }}%20{{ data.objectData.decmean }}&Radius=0.08" class="btn btn-sm btn-secondary d-inline-flex align-items-center m-2 ms-0">
+                <a href="http://simbad.u-strasbg.fr/simbad/sim-coo?Coord={{ data.objectData.ramean }}%20{{ data.objectData.decmean }}&Radius=0.08" class="btn btn-sm btn-secondary d-inline-flex align-items-center m-2">
                     <img src="{{ ASSETS_ROOT }}/img/icons/simbad.png" class="image-fluid image-xs">
                 </a>
                 <a href="http://ned.ipac.caltech.edu/cgi-bin/nph-objsearch?lon={{ data.objectData.ramean|floatformat:6 }}d&lat={{ data.objectData.decmean|floatformat:6 }}d&radius=2&search_type=Near+Position+Search" class="btn btn-sm btn-secondary d-inline-flex align-items-center m-2  ms-0">
