@@ -1,6 +1,7 @@
 from lasair.query_builder import check_query, build_query
 from src import db_connect
 from lasair.apps.db_schema.utils import get_schema, get_schema_dict, get_schema_for_query_selected
+from lasair.utils import datetime_converter
 
 
 def add_filter_query_metadata(
@@ -61,9 +62,6 @@ def run_filter(
     sqlquery_limit = sqlquery_real + ' LIMIT %d OFFSET %d' % (limit, offset)
     message += sqlquery_limit
 
-# lets keep a record of all the queries the people try to execute
-#    record_query(request, sqlquery_real)
-
     nalert = 0
     msl = db_connect.readonly()
     cursor = msl.cursor(buffered=True, dictionary=True)
@@ -121,3 +119,117 @@ def topic_name(userid, name):
     """
     name = ''.join(e for e in name if e.isalnum() or e == '_' or e == '-' or e == '.')
     return 'lasair_' + '%d' % userid + name
+
+
+def check_query_zero_limit(real_sql):
+    """*use a limit of zero to test the validity of the query*
+
+    **Key Arguments:**
+
+    - `real_sql` -- the full SQL query
+
+    **Usage:**
+
+    ```python
+    from lasair.apps.filter_query.utils import check_query_zero_limit
+    e = check_query_zero_limit(real_sql)
+    ```
+    """
+    msl = db_connect.readonly()
+    cursor = msl.cursor(buffered=True, dictionary=True)
+
+    try:
+        cursor.execute(real_sql + ' LIMIT 0')
+        return None
+    except Exception as e:
+        message = 'Your query:<br/><b>' + real_sql + '</b><br/>returned the error<br/><i>' + str(e) + '</i>'
+        return message
+
+
+def topic_refresh(real_sql, topic, limit=10):
+    """*refresh a kafka topic on creation or update of a filter*
+
+    **Key Arguments:**
+
+    - `real_sql` -- the full SQL query
+    - `topic` -- the topic name to update
+    - `limit` -- the number of items to add to the topic initially
+
+    **Usage:**
+
+    ```python
+    from lasair.apps.filter_query.utils import topic_refresh
+    topic_refresh(filterQuery.real_sql, tn, limit=10)
+    ```
+    """
+    message = ''
+    msl = db_connect.readonly()
+    cursor = msl.cursor(buffered=True, dictionary=True)
+    query = real_sql + ' LIMIT %d' % limit
+
+    try:
+        cursor.execute(query)
+    except Exception as e:
+        message += 'Your query:<br/><b>' + query + '</b><br/>returned the error<br/><i>' + str(e) + '</i><br/>'
+        return message
+
+    recent = []
+    for record in cursor:
+        recorddict = dict(record)
+        now_number = datetime.utcnow()
+        recorddict['UTC'] = now_number.strftime("%Y-%m-%d %H:%M:%S")
+        print(recorddict)
+        recent.append(recorddict)
+
+    conf = {
+        'bootstrap.servers': settings.PUBLIC_KAFKA_SERVER,
+        'security.protocol': 'SASL_PLAINTEXT',
+        'sasl.mechanisms': 'SCRAM-SHA-256',
+        'sasl.username': 'admin',
+        'sasl.password': settings.PUBLIC_KAFKA_PASSWORD
+    }
+
+    # delete the old topic
+    a = admin.AdminClient(conf)
+
+    try:
+        result = a.delete_topics([topic])
+        result[topic].result()
+        time.sleep(1)
+        message += 'Topic %s deleted<br/>' % topic
+    except Exception as e:
+        message += 'Topic is ' + topic + '<br/>'
+        message += str(e) + '<br/>'
+
+    # pushing in new messages will remake the topic
+    try:
+        p = Producer(conf)
+        for out in recent:
+            jsonout = json.dumps(out, default=datetime_converter)
+            p.produce(topic, value=jsonout)
+        p.flush(10.0)   # 10 second timeout
+        message += '%d new messages produced to topic %s<br/>' % (limit, topic)
+    except Exception as e:
+        message += "ERROR in queries/topic_refresh: cannot produce to public kafka<br/>" + str(e) + '<br/>'
+    return message
+
+
+def delete_stream_file(request, query_name):
+    """*delete a filter kafka log file*
+
+    **Key Arguments:**
+
+    - `request` -- original request
+    - `query_name` -- the filter stream to delete
+
+    **Usage:**
+
+    ```python
+    from lasair.apps.filter_query.utils import delete_stream_file
+    delete_stream_file(request, filterQuery.name)
+    ```
+    """
+    topic = topic_name(request.user.id, query_name)
+    filename = settings.KAFKA_STREAMS + topic
+    if os.path.exists(filename):
+        os.remove(filename)
