@@ -22,6 +22,17 @@ from astropy.time import Time
 sys.path.append('../../common')
 
 
+def datetime_converter(o):
+    """convert date to string
+
+     **Key Arguments:**
+
+    - `o` -- datetime object
+    """
+    if isinstance(o, datetime):
+        return o.__str__()
+
+
 def jd_from_iso(date):
     """convert and return a Julian Date from ISO format date
 

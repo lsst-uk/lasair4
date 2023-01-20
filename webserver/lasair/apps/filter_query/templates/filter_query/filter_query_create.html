@@ -129,13 +129,35 @@
 
 
 
+
         document.querySelector(".prism-live").addEventListener('keydown', function(e) {
             if (e.key == 'Tab') {
                 if (tributeAutocompleteSelectArea.isActive) {
                     e.stopImmediatePropagation()
                 }
             }
+            updateFrom();
         });
+
+        function updateFrom(){
+            var selectText = document.getElementById('id_selected').value;
+            var tableList = [ '{{ schemas.keys|join:"', '" }}' ];
+            var fromContent = new Array();
+            for (i = 0; i < tableList.length; i++) {
+                var table = tableList[i];
+                if (selectText.indexOf(table+".") >= 0) {
+                      fromContent.push(table);         
+                }
+            }
+            // ARRAY TO COMMA SEPARATED LIST
+            fromContent = fromContent.toString().replaceAll(",",", ");
+            document.getElementById("from_box").innerHTML = fromContent;
+
+        }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            updateFrom();
+        }, false);
 
     </script>
 {% endblock javascripts %}
