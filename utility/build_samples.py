@@ -105,7 +105,7 @@ def create_fast_sample_annotator(username, user_id):
     query += '2, 0, %d'
     query += ')'
     query = query % (username, user_id)
-#    print(query)
+    print(query)
     cursor.execute(query)
     msl.commit()
 
@@ -131,10 +131,11 @@ def create_fast_annotation_query(user_id):
     query += ' VALUES ('
     query += '3, "Sample Fast", "Sample fast annotator query", '
     query += '"%s", "%s", "%s", '
-    query += '0, 2, "lasair_1Sample_Fast", "%s", %d'
+    query += '0, 2, "lasair_1Sample_Fast", '
+    query += "'%s', %d"
     query += ')'
     query = query % (selected, conditions, tables, real_sql, user_id)
-#    print(query)
+    print(query)
     cursor.execute(query)
     msl.commit()
 

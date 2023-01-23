@@ -4,7 +4,7 @@ import re
 import json
 from cassandra.cluster import Cluster
 from lasair.query_builder import check_query, build_query
-from lasair.object.views import objjson
+from lasair.utils import objjson
 import requests
 from lasair.lightcurves import lightcurve_fetcher
 from cassandra.query import dict_factory
@@ -120,11 +120,22 @@ class SherlockObjectsSerializer(serializers.Serializer):
         if request and hasattr(request, "user"):
             userId = request.user
 
+        if not lasair_settings.SHERLOCK_SERVICE:
+            return {"error": "This Lasair cluster does not have a Sherlock service"}
+
         datadict = {}
-        url = 'http://%s/object/%s' % (lasair_settings.SHERLOCK_SERVICE, objectIds)
-        if lite:
-            url += '?lite=true'
-        r = requests.get(url)
+#        url = 'http://%s/object/%s' % (lasair_settings.SHERLOCK_SERVICE, objectIds)
+#        if lite: url += '?lite=true'
+        url += '?lite=true'
+#        r = requests.get(url)
+
+        data = {'lite': lite}
+        r = requests.post(
+            'http://%s/object/%s' % (lasair_settings.SHERLOCK_SERVICE, objectIds),
+            headers={"Content-Type": "application/json"},
+            data=json.dumps(data)
+        )
+
         if r.status_code == 200:
             return r.json()
         else:
@@ -151,10 +162,16 @@ class SherlockPositionSerializer(serializers.Serializer):
 # can also send multiples, but not yet implemented
 # http://192.41.108.29/query?ra=115.811388,97.486925&dec=-25.76404,-26.975506
 
-        url = 'http://%s/query?ra=%f&dec=%f' % (lasair_settings.SHERLOCK_SERVICE, ra, dec)
-        if lite:
-            url += '&lite=true'
-        r = requests.get(url)
+        if not lasair_settings.SHERLOCK_SERVICE:
+            return {"error": "This Lasair cluster does not have a Sherlock service"}
+
+        data = {'lite': lite, 'ra': '%.7f' % ra, 'dec': '%.7f' % dec}
+        r = requests.post(
+            'http://%s/query' % lasair_settings.SHERLOCK_SERVICE,
+            headers={"Content-Type": "application/json"},
+            data=json.dumps(data)
+        )
+
         if r.status_code != 200:
             return {"error": r.text}
         else:
@@ -257,14 +274,15 @@ class StreamsSerializer(serializers.Serializer):
             userId = request.user
 
         if topic:
+            filename = lasair_settings.KAFKA_STREAMS + '/' + topic
             try:
-                datafile = open(lasair_settings.KAFKA_STREAMS + topic, 'r').read()
+                datafile = open(filename, 'r').read()
                 data = json.loads(datafile)['digest']
                 if limit:
                     data = data[:limit]
                 return data
             except:
-                error = 'Cannot open digest file for topic %s' % topic
+                error = 'Cannot open digest file %s' % filename
                 return {"error": error}
 
         if regex:
@@ -282,7 +300,7 @@ class StreamsSerializer(serializers.Serializer):
             for row in cursor:
                 tn = row['topic_name']
                 if r.match(tn):
-                    td = {'topic': tn, 'more_info': 'https://lasair-iris.roe.ac.uk/query/%d/' % row['mq_id']}
+                    td = {'topic': tn, 'more_info': 'https://%s/query/%d/' % (lasair_settings.LASAIR_URL, row['mq_id'])}
                     result.append(td)
             info = result
             return info

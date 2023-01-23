@@ -1,17 +1,12 @@
 import sys
 sys.path.append('../../common')
 import settings
-from src import db_connect
+sys.path.append('../../common/src')
+import db_connect, lasairLogging
 
-import requests
-import urllib
-import urllib.parse
-import json
-import time
-import math
-import datetime
+import requests, urllib, urllib.parse, json, time, math, datetime 
 
-def since_midnight():
+def batch_statistics():
     """since_midnight.
     How many objects updated since last midnight
     """
@@ -30,17 +25,22 @@ def since_midnight():
     except:
         count = -1
 
-    query = 'SELECT jdnow()-max(jdmax) AS delay FROM objects'
+    query = 'SELECT '
+    query += 'jdnow()-max(jdmax) AS min_delay, '
+    query += 'jdnow()-avg(jdmax) AS avg_delay, '
+    query += 'jdnow()-min(jdmax) AS max_delay '
+    query += 'FROM objects'
     try:
         cursor.execute(query)
         for row in cursor:
-            delay = 24*row['delay']
-            h = int(delay)
-            m = int((delay-h)*60)
-            delay = '%d:%02d' % (h,m)
+            min_delay = 24*60*float(row['min_delay']) # minutes
+            avg_delay = 24*60*float(row['avg_delay']) # minutes
+            max_delay = 24*60*float(row['max_delay']) # minutes
             break
     except:
-        delay = -1.0
+        min_delay = -1
+        avg_delay = -1
+        max_delay = -1
 
     query = 'SELECT count(*) AS total_count FROM objects'
     try:
@@ -50,7 +50,13 @@ def since_midnight():
             break
     except:
         total_count = -1
-    return {'count':count, 'delay':delay, 'total_count':total_count}
+    return {
+        'total_count':total_count, # number of objects in database
+        'count':count,             # number of objects updated since midnight
+        'min_delay':min_delay,     # min delay in this batch, since now
+        'avg_delay':avg_delay,     # avg delay in this batch, since now
+        'max_delay':max_delay,     # max delay in this batch, since now
+    }
 
 def grafana_today():
     """since_midnight.
@@ -67,13 +73,16 @@ def grafana_today():
             auth=(settings.GRAFANA_USERNAME, settings.GRAFANA_PASSWORD))
         result = json.loads(resultjson.text)
         alertsstr = result['data']['result'][0]['value'][1]
-        today_candidates_ztf = int(alertsstr)
+        today_candidates_ztf = int(alertsstr)//4
     except Exception as e:
-        print('Cannot parse grafana: %s' % str(result))
-        print(e)
+        log = lasairLogging.getLogger("filter")
+        log.info('Cannot parse grafana: %s: %s' % (str(result), str(e)))
         today_candidates_ztf = -1
 
     return today_candidates_ztf
 
 if __name__ == "__main__":
+    lasairLogging.basicConfig(stream=sys.stdout)
+    log = lasairLogging.getLogger("ingest_runner")
+
     print('Grafana today:', grafana_today())

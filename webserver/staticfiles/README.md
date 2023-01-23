@@ -10,7 +10,7 @@ To build the static assets simply:
 cd ~/lasair4/webserver/staticfiles/
 gulp build
 cd ..
-python3 manage.py collectstatic
+python3 manage.py collectstatic --settings lasair.settings
 ```
 
 Gulp bundles all assets into `staticfiles/build` which can then be picked up by Django `collectstatic` command.

@@ -15,7 +15,7 @@
                 <div class="card shadow border-0 text-center p-0 ">
                     <div class="profile-cover rounded-top" data-background="{{ ASSETS_ROOT }}/img/space_images/space_image_002.jpg"></div>
                     <div class="card-body pb-5">
-                        <img src="{{ request.user.profile.image.url }}" class="avatar-xl rounded-circle mx-auto mt-n7 mb-4" alt="Profile Pic">
+                        <img src="data:image/png;base64,{{ request.user.profile.image_b64 }}" class="avatar-xl rounded-circle mx-auto mt-n7 mb-4" alt="Profile Pic">
                         <h4 class="h3">
                             {{ request.user.first_name }}  {{ request.user.last_name }}
                         </h4>
@@ -25,6 +25,9 @@
                         <p class="text-gray mb-4">
                             {{ request.user.email }}
                         </p>
+                        <p class="fw-bold text-gray  mb-0">API Token</p>
+                        <code class="mt-0">{{ token }}</code>
+
                     </div>
                 </div>
             </div>
@@ -51,14 +54,16 @@
                             <div class="col-md-6 mb-3">
                                 <div class="form-group">
                                     <label for="id_email">Email</label>
-                                    <input class="form-control" id="id_email" type="email" name="email"  placeholder="name@company.com" value="{{ request.user.email }}" required>
+                                    <input class="form-control" id="id_email" type="email" name="email"  placeholder="name@company.com" value="{{ request.user.email }}" required readonly>
                                 </div>
+                                <span class="text-error">{{ u_form.email.errors }}</span>
                             </div>
                             <div class="col-md-6 mb-3">
                                 <div class="form-group">
                                     <label for="id_username">Username</label>
                                     <input class="form-control" id="id_username" type="text" name="username"   placeholder="Enter a username" value="{{ request.user.username }}" required>
                                 </div>
+                                <span class="text-error">{{ u_form.username.errors }}</span>
                             </div>
                         </div>
 
@@ -67,7 +72,7 @@
                         <div class="d-flex align-items-center">
                             <div class="me-3">
                                 <!-- Avatar -->
-                                <img class="rounded avatar-xl" src="{{ user.profile.image.url }}" alt="change avatar">
+                                <img class="rounded avatar-xl" src="data:image/png;base64,{{ request.user.profile.image_b64 }}" alt="change avatar">
                             </div>
                             <div class="file-field">
                                 <div class="d-flex justify-content-xl-center ms-xl-3">
@@ -78,6 +83,7 @@
                                             <div class="fw-normal text-dark mb-1">Choose Image</div>
                                             <div class="text-gray small">JPG, GIF or PNG. Max size of 800K</div>
                                         </div>
+                                        <span class="text-error">{{ p_form.image.errors }}</span>
                                     </div>
                                 </div>
                             </div>

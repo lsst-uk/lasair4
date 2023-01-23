@@ -1,0 +1,164 @@
+{% extends "layouts/base.html" %}
+
+<!-- Specific Page CSS goes HERE  -->
+{% block stylesheets %}{% endblock stylesheets %}
+{% load static %}
+
+
+{% block title %}
+    {{data.objectId}}
+{% endblock title %}
+
+
+{% block content %}
+
+
+
+    <div class="container">
+
+        <div class="row mt-4">
+
+            <div class="col-12 mb-4">
+                {% include "includes/widgets/widget_filter_query_create_header.html" %}
+            </div>
+
+            <div class="col-12 mb-4">
+                {% include "includes/widgets/widget_filter_creation_form.html" %}
+            </div>
+
+            <div class="col-12 mb-4">
+                {% include "includes/widgets/widget_objectlist_table.html" with zerotext="Zero objects have been matched against this filter so far. Check back later to see if any new objects have been matched, or amend the filtering criteria to catch more objects." table=table header="Filter Results"  desc="Here are the filtered objects, limited to "|add:limit|add:" objects" %}
+            </div>
+
+
+
+        </div>
+    </div>
+    <hr/>
+
+{% endblock content %}
+
+<!-- Specific Page JS goes HERE  -->
+{% block javascripts %}
+    <script>
+
+        // example of Tribute in autocomplete mode
+        var justTypeCollectionValues = [
+            { key : "MYSQL > jdnow()", value: "jdnow()", info: "readme now"},
+            { key : "MYSQL > as", value: "as", info: "readme now"},
+            { key : "MYSQL > BETWEEN", value: "BETWEEN xx AND xx", info: "readme now"},
+            { key : "MYSQL > LIKE", value: "LIKE `%xx%`", info: "readme now"},
+        ];
+        var tableColumns = [];
+        {% for schema_name, schema_content in schemas.items %}
+            justTypeCollectionValues.push({ key : "TABLE > {{schema_name}}", value: "{{schema_name}}", info: "readme now"})
+            var theseColumns = {
+                trigger: "{{schema_name}}".concat("."),
+                values: [],
+                noMatchTemplate: "",
+                spaceSelectsMatch: false,
+                selectTemplate: function(item) {
+                    if (typeof item === "undefined") return null;
+                    if (this.range.isContentEditable(this.current.element)) {
+                        return (
+
+                            '<span contenteditable="false"><a>' +
+                            item.original.key +
+                            "NOPE</a>"+`{% include "includes/info_tooltip.html" with info="Powered by Aladin Lite" position="auto" %}`+"</span>"
+                        );
+                    }
+
+                    return item.original.value;
+                },
+                menuItemTemplate: function(item) {
+                    return item.string;
+                }
+            }
+
+            {% for row in schema_content %}
+                theseColumns.values.push({ key : "COLUMN > {{schema_name}}.{{row.name}}", value: "{{schema_name}}.{{row.name}}", info: "readme now"})
+            {% endfor %}
+            tableColumns.push(theseColumns)
+        {% endfor %}
+
+        var justTypeCollection = {
+            values: justTypeCollectionValues,
+            selectTemplate: function(item) {
+                if (typeof item === "undefined") return null;
+                if (this.range.isContentEditable(this.current.element)) {
+                    return (
+                        '<span contenteditable="false"><a>' +
+                        item.original.key +
+                        "</a></span>"
+                    );
+                }
+
+                if (item.original.key.includes("MYSQL >")) {
+                    return item.original.value+" ";
+                } else {
+                    return item.original.value+".";
+                }
+
+            },
+            menuItemTemplate: function(item) {
+                return item.string;
+            }
+        };
+
+
+
+        var tributeAutocompleteSelectArea = new Tribute({
+            autocompleteMode: true,
+            noMatchTemplate: "",
+            spaceSelectsMatch: false,
+            replaceTextSuffix: '',
+            collection: [justTypeCollection]
+        });
+        tributeAutocompleteSelectArea.attach(
+            document.querySelector("textarea#id_selected")
+
+        );
+        var tributeAutocompleteTestAreaColumns = new Tribute({
+            noMatchTemplate: "",
+            collection: tableColumns
+        });
+        tributeAutocompleteTestAreaColumns.attach(
+            document.querySelector("textarea#id_selected")
+
+        );
+
+
+
+
+        document.querySelector(".prism-live").addEventListener('keydown', function(e) {
+            if (e.key == 'Tab') {
+                if (tributeAutocompleteSelectArea.isActive) {
+                    e.stopImmediatePropagation()
+                }
+            }
+            updateFrom();
+        });
+
+        function updateFrom(){
+            var selectText = document.getElementById('id_selected').value;
+            var tableList = [ '{{ schemas.keys|join:"', '" }}' ];
+            var fromContent = new Array();
+            for (i = 0; i < tableList.length; i++) {
+                var table = tableList[i];
+                if (selectText.indexOf(table+".") >= 0) {
+                      fromContent.push(table);         
+                }
+            }
+            // ARRAY TO COMMA SEPARATED LIST
+            fromContent = fromContent.toString().replaceAll(",",", ");
+            document.getElementById("from_box").innerHTML = fromContent;
+
+        }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            updateFrom();
+        }, false);
+
+    </script>
+{% endblock javascripts %}
+

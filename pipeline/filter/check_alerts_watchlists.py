@@ -21,11 +21,10 @@ import astropy.units as u
 try:
     sys.path.append('../../common')
     import settings
-    from src import db_connect
-    import slack_webhook
+    sys.path.append('../../common/src')
+    import lasairLogging, db_connect
 except:
     pass
-
 
 def read_watchlist_cache_files(cache_dir):
     """read_watchlist_cache_files.
@@ -43,8 +42,12 @@ def read_watchlist_cache_files(cache_dir):
     try:
         dir_list = os.listdir(cache_dir)
     except:
-        print('ERROR in filter/check_alerts_watchlists: cannot read watchlist cache directory')
-        sys.stdout.flush()
+        s = 'ERROR in filter/check_alerts_watchlists: cannot read watchlist cache directory'
+        try:   # unit test comes here without setting up the log
+            log = lasairLogging.getLogger("filter")
+            log.error(s)
+        except:
+            print(s)
 
     for wl_dir in dir_list:
         # every directory in the cache should be of the form wl_<nn> 
@@ -116,8 +119,8 @@ def check_alerts_against_moc(alertlist, wl_id, moc, cones):
     try:
         result = moc.contains(alertralist*u.deg, alertdelist*u.deg)
     except Exception as e:
-        rtxt = 'ERROR in filter/check_alerts_against_moc: ' + str(e)
-#        slack_webhook.send(settings.SLACK_URL, rtxt)
+        log = lasairLogging.getLogger("filter")
+        log.error('ERROR in filter/check_alerts_against_moc: ' + str(e))
         return []
 
     hits = []
@@ -242,18 +245,25 @@ def insert_watchlist_hits(msl, hits):
             (hit['wl_id'], hit['cone_id'], hit['objectId'], hit['arcsec'], hit['name']))
     query += ',\n'.join(list)
     try:
-       cursor.execute(query)
-       cursor.close()
+        cursor.execute(query)
+        cursor.close()
     except mysql.connector.Error as err:
-       print('ERROR in filter/check_alerts_watchlists: insert watchlist_hit failed: %s' % str(err))
-       sys.stdout.flush()
+        log = lasairLogging.getLogger("filter")
+        log.error('ERROR in filter/check_alerts_watchlists: insert watchlist_hit failed: %s' % str(err))
     msl.commit()
 
 if __name__ == "__main__":
+    sys.path.append('../../common/src')
+    import db_connect, lasairLogging
+
+    lasairLogging.basicConfig(stream=sys.stdout)
+    log = lasairLogging.getLogger("ingest_runner")
+
     msl_local = db_connect.local()
 
     # can run the watchlist process without the rest of the filter code 
     hits = get_watchlist_hits(msl_local, settings.WATCHLIST_MOCS, settings.WATCHLIST_CHUNK)
     if hits:
-        for hit in hits: print(hit)
+        for hit in hits: 
+            log.info(hit)
         insert_watchlist_hits(msl_local, hits)

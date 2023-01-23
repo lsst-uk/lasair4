@@ -41,7 +41,8 @@ const paths = {
         js: './build/js',
         files: './build/files',
         img: './build/img',
-        vendor: './build/vendor'
+        vendor: './build/vendor',
+        fonts: './build/webfonts'
     },
     base: {
         base: './',
@@ -60,7 +61,8 @@ const paths = {
         js2: './src/js/**/*.*',
         scss: './src/scss',
         node_modules: './node_modules',
-        vendor: './vendor'
+        vendor: './vendor',
+        fonts: './src/webfonts/**/*.*'
     },
 };
 
@@ -119,8 +121,12 @@ gulp.task('concat:vendor:css', function() {
             paths.src.node_modules + '/notyf/notyf.min.css',
             paths.src.node_modules + '/js9/js9support.css',
             paths.src.node_modules + '/js9/js9.css',
+            paths.src.node_modules + '/tributejs/dist/tribute.css',
             paths.src.vendor + '/aladin.min.css',
-            paths.src.vendor + '/prism.css'
+            paths.src.vendor + '/prism.css',
+            paths.src.vendor + '/prism-live.css',
+            paths.src.vendor + '/style.css',
+
         ])
         .pipe(sourcemaps.init())
         .pipe(cleanCss())
@@ -134,11 +140,10 @@ gulp.task('concat:dist:js', function() {
     return gulp.src([
             paths.src.js + '/volt.js',
             paths.src.js + '/lasair_datatables.js',
-            paths.src.js + '/lasair_lightcurve.js',
-            paths.src.js + '/lasair_lightcurve_apparent.js',
             paths.src.js + '/lasair_js9.js',
             paths.src.js + '/fitsview_init.js',
             paths.src.js + '/fitsview.js',
+            paths.src.js + '/lasair_utils.js',
             paths.src.js + '/lasair_fixes.js',
         ])
         .pipe(sourcemaps.init())
@@ -155,6 +160,7 @@ gulp.task('concat:vendor:js', function() {
             paths.src.node_modules + '/bootstrap/dist/js/bootstrap.min.js',
             paths.src.node_modules + '/onscreen/dist/on-screen.umd.min.js',
             paths.src.node_modules + '/nouislider/dist/nouislider.min.js',
+            paths.src.node_modules + '/blissfuljs/bliss.js',
             paths.src.node_modules + '/smooth-scroll/dist/smooth-scroll.polyfills.min.js',
             paths.src.node_modules + '/chartist/dist/chartist.min.js',
             paths.src.node_modules + '/chartist-plugin-tooltips/dist/chartist-plugin-tooltip.min.js',
@@ -164,12 +170,15 @@ gulp.task('concat:vendor:js', function() {
             paths.src.node_modules + '/vanillajs-datepicker/dist/js/datepicker.min.js',
             paths.src.node_modules + '/notyf/notyf.min.js',
             paths.src.node_modules + '/simplebar/dist/simplebar.min.js',
+            paths.src.node_modules + '/tributejs/dist/tribute.js',
             paths.src.node_modules + '/@fortawesome/fontawesome-free/js/all.min.js',
             paths.src.node_modules + '/simple-datatables/dist/umd/simple-datatables.js',
             paths.src.node_modules + '/plotly.js/dist/plotly.min.js',
             paths.src.node_modules + '/jquery/dist/jquery.min.js',
+
             paths.src.vendor + '/aladin.min.js',
-            paths.src.vendor + '/prism.js'
+            paths.src.vendor + '/prism.js',
+            paths.src.vendor + '/prism-live.js',
 
         ])
         .pipe(sourcemaps.init())
@@ -205,6 +214,12 @@ gulp.task('copy:dist:files', function() {
         .pipe(gulp.dest(paths.dist.files))
 });
 
+// COPY FONTS
+gulp.task('copy:dist:fonts', function() {
+    return gulp.src(paths.src.fonts)
+        .pipe(gulp.dest(paths.dist.fonts))
+});
+
 // COPY IMAGES
 gulp.task('copy:dist:img', function() {
     return gulp.src(paths.src.img)
@@ -223,14 +238,15 @@ gulp.task('copy:dist:vendor', function() {
         .pipe(gulp.dest(paths.dist.vendor + "/js9"))
 });
 
-gulp.task('serve', gulp.series('copy:dist:css', 'copy:dist:files', 'copy:dist:img', 'concat:dist:js', function() {
-    gulp.watch([paths.src.scss + '/volt/**/*.scss', paths.src.scss + '/custom/*.scss', paths.src.scss + '/custom/**/*.scss', paths.src.scss + '/volt.scss'], gulp.series('copy:dist:css'));
+gulp.task('serve', gulp.series('copy:dist:css', 'copy:dist:files', 'copy:dist:fonts', 'copy:dist:img', 'concat:dist:js', function() {
+    gulp.watch([paths.src.scss + '/volt/**/*.scss', paths.src.scss + '/custom/_variables.scss', paths.src.scss + '/custom/*.scss', paths.src.scss + '/custom/**/*.scss', paths.src.scss + '/volt.scss'], gulp.series('copy:dist:css'));
     gulp.watch([paths.src.files], gulp.series('copy:dist:files'));
+    gulp.watch([paths.src.fonts], gulp.series('copy:dist:fonts'));
     gulp.watch([paths.src.img], gulp.series('copy:dist:img'));
     gulp.watch([paths.src.js], gulp.series('concat:dist:js'));
 }));
 
-gulp.task('build', gulp.series('clean:dist', 'copy:dist:css', 'copy:dist:files', 'copy:dist:img', 'copy:dist:js', 'concat:dist:js', 'concat:vendor:js', 'concat:vendor:css', 'copy:dist:vendor'));
+gulp.task('build', gulp.series('clean:dist', 'copy:dist:css', 'copy:dist:files', 'copy:dist:fonts', 'copy:dist:img', 'copy:dist:js', 'concat:dist:js', 'concat:vendor:js', 'concat:vendor:css', 'copy:dist:vendor'));
 
 // Default
 gulp.task('default', gulp.series('serve'));

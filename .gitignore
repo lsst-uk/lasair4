@@ -32,6 +32,9 @@ admin/
 # Swap files
 *.swp
 /static
-/lasair.sublime-workspace
 /lasair.sublime-project
+/lasair.sublime-workspace
 node_modules
+webserver/static/
+webserver/staticfiles/build/streams2/
+/docs/build

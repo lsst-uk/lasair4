@@ -1,0 +1,92 @@
+{% load customtags %}
+{% load widget_tweaks %}
+
+<div class="card border-0 shadow h-100">
+    <div class="card-body">
+
+        <div class="d-flex flex-row-reverse">
+            <a class="btn btn-sm btn-tertiary me-1 icon-sm" href="{% url 'schema_index' %}" target="_blank" role="button" data-bs-toggle="tooltip" data-bs-placement="auto" data-bs-title="open the Lasair Schema Browser in a new tab">{% include "includes/icons/icon_schema.html" %}Schema Browser</a>
+        </div>
+
+
+
+        <div class="row justify-content-center">
+
+            <div class="col-12 d-flex align-items-center justify-content-center">
+
+                <div class="bg-white border-0 rounded border-light p-4 p-lg-5 w-100">
+
+
+
+                    <form enctype="multipart/form-data" method="post" class="mt-0 row gy-2 gx-3 align-items-center">
+
+                        {% csrf_token %}
+
+                        <div class="form-group mb-4">
+                            <label for="name"><h4>SELECT</h4></label>
+
+                            <div id="select_div" class="input-group">
+                                <textarea name="selected" class="prism-live language-sql fill prism-live-source" required="" id="id_selected" spellcheck="false">{{ form.selected.value|default_if_none:"-- Add a comma-separated list of columns you wish to appear in the filter results table below.&#10;-- To find the columns you need, search the Lasair Schema Browser, click the copy button and paste them here,&#10;-- or just start typing and use the autocomplete function to find the columns needed&#10;&#10;objects.objectId, objects.gmag, objects.jdmax as 'latest detection',  sherlock_classifications.classification as 'predicted classification'" }}</textarea>
+                            </div>
+                        </div>
+
+                        <div class="form-group mb-4">
+                            <label for="conditions"><h4>FROM</h4></label>
+                            <pre class="prism language-sql"><code id="from_box"></code></pre>
+                        </div>
+
+                        <div class="form-group mb-4">
+                            <label for="conditions"><h4>WHERE</h4></label>
+                            <div id="where_div" class="input-group">
+                                <textarea name="conditions" class="prism-live language-sql fill prism-live-source" required="" id="id_conditions" spellcheck="false">{{ form.conditions.value|default_if_none:"-- This is where you filter the results to return only sources you are interested in. Use the standard MySQL operators to write the criteria for your filter.&#10;&#10;objects.jdmax > jdnow()-365" }}</textarea>
+
+                            </div>
+                        </div>
+
+
+                        <div class="col-auto form-group mb-4">
+                            <label for="watchlists">Watchlist {% include "includes/info_tooltip.html" with info="By selecting a watchlist, the results of the query are constrained to only objects associated with the watchlist" position="auto" %}</label>
+                            <div class="input-group">
+                                {{ form.watchlists|add_class:"form-select" }}
+                            </div>
+                            <span class="text-error">{{ form.watchlists.errors }}</span>
+                        </div>
+                        <div class="col-auto form-group mb-4">
+                            <label for="watchmaps">Watchmaps {% include "includes/info_tooltip.html" with info="By selecting a watchmap, the results of the query are constrained to only objects associated with the watchmap" position="auto" %}</label>
+                            <div class="input-group">
+                                {{ form.watchmaps|add_class:"form-select" }}
+                            </div>
+                            <span class="text-error">{{ form.watchmaps.errors }}</span>
+                        </div>
+                        <div class="col-auto form-group mb-4">
+                            <label for="annotators">Annotators {% include "includes/info_tooltip.html" with info="By selecting an annotator, the results of the query are constrained to only objects tagged by the annotator" position="auto" %}</label>
+                            <div class="input-group">
+                                {{ form.annotators|add_class:"form-select" }}
+                            </div>
+                            <span class="text-error">{{ form.annotators.errors }}</span>
+                        </div>
+
+
+                        <small class="text-danger">{{ form.non_field_errors }}</small>
+                        <div class="d-flex flex-row-reverse">
+
+                            {% if user.is_authenticated %}
+                                <a class="btn btn-dark me-1 align-middle " href='#' data-bs-toggle="modal" data-bs-target="#editFilterForm">
+                            {% else %}
+                                <a class="btn btn-dark me-1 align-middle"  href="{% url 'login' %}?next={{request.path}}">
+                            {% endif %}
+
+                            {% include "includes/icons/icon_save.html" %}
+                            <span class="align-middle ms-2">Save</span></a>
+                        <button type="submit" name="action" class="btn btn-tertiary me-1" value="run">{% include "includes/icons/icon_run.html" %}<span class="align-middle">Run Filter</span></button>
+                    </div>
+                    {% include "includes/widgets/widget_filter_update_form.html" %}
+                </form>
+                <br />
+            </div>
+        </div>
+    </div>
+</div>
+</div>
+
+

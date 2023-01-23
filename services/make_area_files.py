@@ -5,15 +5,14 @@ that can be used for area determination against alerts. The files are
 named ar_<nn>.fits where nn is the area id from the database. These files are 
 "Multi-Order Coverage maps", https://cds-astro.github.io/mocpy/. 
 """
-import os, sys
+import os, sys, stat, time, base64
+from my_cmd import execute_cmd
 sys.path.append('../common')
-import stat
-import time
 from datetime import datetime
-import base64
-from src import date_nid, db_connect
+from src import date_nid, db_connect, slack_webhook
 
 logfile = ''
+logf = None
 
 def bytes2string(bytes):
     """bytes2string.
@@ -45,7 +44,7 @@ def write_cache_file(msl, ar_id, cache_dir):
     # Build lists of all the data from the database
     for row in cursor:
         txtmoc = row['moc']
-        logfile.write('caching area %s\n' % row['name'])
+        logf.write('caching area %s\n' % row['name'])
     moc = string2bytes(txtmoc)
 
     area_file = cache_dir + '/ar_%d.fits' % ar_id
@@ -89,29 +88,32 @@ if __name__ == "__main__":
     import settings
     nid  = date_nid.nid_now()
     date = date_nid.nid_to_date(nid)
-    logfile = open(settings.SERVICES_LOG +'/'+ date + '.log', 'a')
+    logfile = settings.SERVICES_LOG +'/'+ date + '.log'
+    logf = open(logfile, 'a')
     now = datetime.now()
-    logfile.write('\n-- make_area_files at %s\n' % now.strftime("%d/%m/%Y %H:%M:%S"))
+    logf.write('\n-- make_area_files at %s\n' % now.strftime("%d/%m/%Y %H:%M:%S"))
 
-    msl = db_connect.readonly()
 
     cache_dir = settings.AREA_MOCS
     new_cache_dir = cache_dir + '_new'
-    if os.system('mkdir %s' % new_cache_dir) > 0:
-        print('Cannot connect to shared file system')
-        sys.exit(256)
+    cmd = 'mkdir %s' % new_cache_dir
+    execute_cmd(cmd, logfile)
 
     # who needs to be recomputed
     try:
+        msl = db_connect.readonly()
         areas = fetch_active_areas(msl, cache_dir)
     except:
-        print('Cannot connect to database')
-        sys.exit(256)
+        s = 'make_area_files: Cannot fetch areas from database'
+        slack_webhook.send(settings.SLACK_URL, s)
+        sys.exit(1)
 
     for ar_id in areas['keep']:
-        os.system('mv %s/ar_%d.fits %s' % (cache_dir, ar_id, new_cache_dir))
+        cmd = 'mv %s/ar_%d.fits %s' % (cache_dir, ar_id, new_cache_dir)
+        execute_cmd(cmd, logfile)
+
     for ar_id in areas['get']:
         write_cache_file(msl, ar_id, new_cache_dir)
-    os.system('rm -r %s'  % (cache_dir))
-    os.system('mv %s %s' % (new_cache_dir, cache_dir))
+    execute_cmd('rm -r %s'  % cache_dir, logfile)
+    execute_cmd('mv %s %s' % (new_cache_dir, cache_dir), logfile)
     sys.exit(0)
