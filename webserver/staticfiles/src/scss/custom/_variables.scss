@@ -77,10 +77,17 @@ $ct-series-colors: (#262B40,
 
 ) !default;
 
+// LASAIR COLOURS
+$lasair-blue: #00BABB;
+$lasair-red: #CE4257;
+$lasair-yellow: #F0A202;
+$lasair-black: #262626;
+$lasair-white: #FFFFF0;
+$lasair-grey: #878E88;
 
 $success: $green !default;
-$info   : $blue !default;
-$warning: $yellow !default;
+$info   : $lasair-blue !default;
+$warning: $lasair-yellow !default;
 $danger : $red !default;
 $gray   : $gray-900 !default;
 $light  : $gray-400 !default;
@@ -89,13 +96,7 @@ $soft   : $gray-200 !default;
 $dark   : $dark !default;
 
 
-// LASAIR COLOURS
-$lasair-blue: #00BABB;
-$lasair-red: #CE4257;
-$lasair-yellow: #F0A202;
-$lasair-black: #262626;
-$lasair-white: #FFFFF0;
-$lasair-grey: #878E88;
+
 
 // Color scheme
 $primary: $lasair-blue;
@@ -170,3 +171,29 @@ $icon-size-xxl:         6rem !default;
 
 $tooltip-color        : $white !default;
 $tooltip-bg           : $dark !default;
+
+$form-select-indicator-padding:  2.5rem !default;
+
+$navbar-colors: ("primary": $dark) !default;
+
+
+// scss-docs-start grid-breakpoints
+$grid-breakpoints: (xs: 0,
+    sm: 576px,
+    md: 768px,
+    lg: 992px,
+    xl: 1200px,
+    xxl: 1400px) !default;
+// scss-docs-end grid-breakpoints
+
+// Grid containers
+//
+// Define the maximum width of `.container` for different screen sizes.
+
+// scss-docs-start container-max-widths
+$container-max-widths: (sm: 748px,
+    md: 900px,
+    lg: 960px,
+    xl: 1140px) !default;
+
+$font-size-base: 1rem !default; // Assumes the browser default, typically `16px`

@@ -1,66 +1,72 @@
-import os,sys, time
-sys.path.append('../../common')
-from datetime import datetime
-from subprocess import Popen, PIPE
-import settings
-from src import date_nid, slack_webhook
-
-""" Fire up the the ingestion and keep the results in a log file
-    the start it again afte a minute or so
 """
-def now():
-    # current UTC as string
-    return datetime.utcnow().strftime("%Y/%m/%dT%H:%M:%S")
+Ingest proess runner. Takes the --nprocess arg and starts that many versions of ingest.py, 
+with other arguments sent there, also logs the outputs. 
+If maxalert is specified, it does that many for each process then exits,
+otherwise maxalert is the largest possible. 
+SIGTERM is passed to those children and dealt with properly.
+Usage:
+    ingest.py [--maxalert=MAX]
+              [--nprocess=nprocess]
+              [--group_id=GID]
+              [--topic_in=TIN | --nid=NID]
+              [--topic_out=TOUT]
 
-while 1:
-    if len(sys.argv) > 1:
-        nid = int(sys.argv[1])
-    else:
-        nid  = date_nid.nid_now()
-    date = date_nid.nid_to_date(nid)
-    topic  = 'ztf_' + date + '_programid1'
-    log = open('/home/ubuntu/logs/' + topic + '.log', 'a')
+Options:
+    --maxalert=MAX     Number of alerts to process, default is infinite
+    --nprocess=nprocess  Number of processes
+    --group_id=GID     Group ID for kafka, default is from settings
+    --topic_in=TIN     Kafka topic to use, or
+    --nid=NID          ZTF night number to use (default today)
+    --topic_out=TOUT   Kafka topic for output [default:ztf_sherlock]
+"""
+import os,sys, time
+from datetime import datetime
+from docopt import docopt
+from multiprocessing import Process, Manager
 
-    if os.path.isfile(settings.LOCKFILE):
-        args = ['python3', 'ingest.py', '--nid=%d'%nid]
+log = None
+from ingest import run_ingest
 
-        process = Popen(args, stdout=PIPE, stderr=PIPE)
+sys.path.append('../../common')
+import settings
 
-        while 1:
-            # when the worker terminates, readline returns zero
-            rbin = process.stdout.readline()
-            if len(rbin) == 0: break
-    
-            # if the worher uses 'print', there will be at least the newline
-            rtxt = rbin.decode('utf-8').rstrip()
-            log.write(rtxt + '\n')
+sys.path.append('../../common/src')
+import date_nid, slack_webhook, lasairLogging
 
-            # scream to the humans if ERROR
-            if rtxt.startswith('ERROR'):
-                slack_webhook.send(settings.SLACK_URL, rtxt)
+# Set up the logger
+lasairLogging.basicConfig(
+    filename='/home/ubuntu/logs/ingest.log',
+    webhook=slack_webhook.SlackWebhook(url=settings.SLACK_URL),
+    merge=True
+)
+log = lasairLogging.getLogger("ingest_runner")
 
-        while 1:
-            # same with stderr
-            rbin = process.stderr.readline()
-            if len(rbin) == 0: break
+# Our processes
+process_list = []
 
-            # if the worher uses 'print', there will be at least the newline
-            rtxt = 'stderr:' + rbin.decode('utf-8').rstrip()
-            log.write(rtxt + '\n')
-            print(rtxt)
+# Deal with arguments
+args = docopt(__doc__)
 
-        process.wait()
-        rc = process.returncode
-    
-        if rc == 0:  # no more to get
-            log.write("END waiting %d seconds ...\n\n" % settings.WAIT_TIME)
-            time.sleep(settings.WAIT_TIME)
-        else:
-            log.write("END getting more ...\n\n")
-        log.close()
-    else:
-        # wait until the lockfile reappears
-        rtxt = 'Waiting for lockfile ' + now()
-        print(rtxt)
-        log.write(rtxt + '\n')
-        time.sleep(settings.WAIT_TIME)
+# The nprocess argument is used in this module
+if args['--nprocess']:
+    nprocess = int(args['--nprocess'])
+    log.error('Sorry the multiprocessing option doesnt work yet')
+    sys.exit()
+else:
+    nprocess = 1
+log.info('ingest_runner with %d processes' % nprocess)
+
+# Start up the processes
+process_list = []
+manager = Manager()
+t = time.time()
+log.info('Starting processes')
+for t in range(nprocess):
+    p = Process(target=run_ingest, args=(args,))
+    process_list.append(p)
+    p.start()
+
+log.info('Wait for processes to exit')
+for p in process_list:
+    p.join()
+log.info('All done, ingest_runner exiting')

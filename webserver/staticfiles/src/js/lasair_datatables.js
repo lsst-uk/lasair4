@@ -9,6 +9,11 @@ document.addEventListener('DOMContentLoaded', function() {
                 tableId = dataTableEl.id;
             }
 
+            let perPage = 100;
+            if (dataTableEl.hasAttribute('data-perPage')) {
+                perPage = dataTableEl.getAttribute('data-perPage');
+            }
+
             const dataTable = new simpleDatatables.DataTable(dataTableEl, {
                 labels: {
                     placeholder: "Search table...",
@@ -20,8 +25,8 @@ document.addEventListener('DOMContentLoaded', function() {
                     top: "{search}",
                     bottom: "{select}{info}{pager}"
                 },
-                perPage: 100,
-                perPageSelect: [10, 50, 100, 500, 10000]
+                perPage: perPage,
+                perPageSelect: [5, 10, 50, 100, 500, 10000]
             });
 
             const headings = dataTable.columns().dt.labels;

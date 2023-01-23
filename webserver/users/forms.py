@@ -3,10 +3,18 @@ from django.contrib.auth.models import User
 from django.contrib.auth.forms import UserCreationForm
 from .models import Profile
 from crispy_forms.helper import FormHelper
+from captcha.fields import ReCaptchaField
+from captcha.widgets import ReCaptchaV3
+from django.conf import settings
+from django.core.exceptions import ValidationError
 
 
 class UserRegisterForm(UserCreationForm):
+    captcha = ReCaptchaField(widget=ReCaptchaV3())
     email = forms.EmailField()
+    privacy = forms.BooleanField(required=True)
+    if getattr(settings, "DEBUG", False) and getattr(settings, "LASAIR_URL", False) == "127.0.0.1":
+        captcha.clean = lambda x: True
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -14,7 +22,14 @@ class UserRegisterForm(UserCreationForm):
 
     class Meta:
         model = User
-        fields = ['username', 'email', 'password1', 'password2', 'first_name', 'last_name']
+        fields = ['username', 'email', 'password1', 'password2', 'first_name', 'last_name', 'captcha', 'privacy']
+
+    def clean(self):
+        email = self.cleaned_data.get('email')
+        if User.objects.filter(email=email).exists():
+            msg = 'A user with that email already exists.'
+            self.add_error('email', msg)
+        return self.cleaned_data
 
 
 class UserUpdateForm(forms.ModelForm):

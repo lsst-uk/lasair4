@@ -16,6 +16,6 @@ schema = {
     }
   ],
   "indexes": [
-    "PRIMARY KEY (`objectId`)"
+    "PRIMARY KEY (`objectId`, `ar_id`)"
   ]
 }

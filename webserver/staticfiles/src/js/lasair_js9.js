@@ -1,7 +1,15 @@
+var loadtype;
+var ndiv = 0;
+var nwin = 1;
+var lastid;
+
 document.addEventListener('DOMContentLoaded', function() {
 
     JS9.globalOpts.alerts = false;
     JS9.globalOpts.updateTitlebar = false;
+    JS9.globalOpts.lightWinClose = "close";
+    JS9.globalOpts.helperType = "none";
+    JS9.globalOpts.helperPort = 3333;
 
     JS9.imageOpts = {
         inherit: false, // inherit props from previous image?
@@ -49,6 +57,7 @@ document.addEventListener('DOMContentLoaded', function() {
     };
 
     let fns = [loadFitsImages, fixJS9ExtraStyles, collapseJS9Extras];
+
     // chain function will call the supplied function
     // and recursively call the chain function with the
     // the next element in the array
@@ -75,6 +84,20 @@ function fixJS9ExtraStyles(next) {
 
     });
     // MAKE SQUARE
+    var checkExist2 = setInterval(function() {
+        if (document.querySelectorAll(".JS9Magnifier").length) {
+            clearInterval(checkExist2);
+            let plugins = document.querySelectorAll(".JS9Magnifier");
+
+            plugins.forEach(function(plugin) {
+                plugin.style.height = plugin.offsetWidth + 'px';
+            });
+        }
+    }, 100); // check every 100ms
+    setTimeout(() => {
+        next()
+    }, 2000);
+    // MAKE SQUARE
     var checkExist = setInterval(function() {
         if (document.querySelectorAll(".ImExamRadialProj").length) {
             clearInterval(checkExist);
@@ -88,6 +111,22 @@ function fixJS9ExtraStyles(next) {
     setTimeout(() => {
         next()
     }, 2000);
+
+    // MAKE SQUARE
+    var checkExist3 = setInterval(function() {
+        if (document.querySelectorAll(".ImExam3dPlot").length) {
+            clearInterval(checkExist3);
+            let plugins = document.querySelectorAll(".ImExam3dPlot");
+
+            plugins.forEach(function(plugin) {
+                plugin.style.height = plugin.offsetWidth + 'px';
+            });
+        }
+    }, 100); // check every 100ms
+    setTimeout(() => {
+        next()
+    }, 2000);
+
 }
 
 function loadFitsImages(next) {
@@ -162,4 +201,22 @@ function toggleJS9Menus() {
     for (var i = 0; i < menus.length; i++) {
         menus[i].classList.toggle('d-none');
     }
+}
+
+function JS9Popout(file, opts) {
+    var dobj = JS9.LookupDisplay("Stamp", false);
+    loadtype = "light";
+    var id, did, head, body, html, doc;
+    var myopts = opts || {};
+    myopts.onload = setDefaultParams;
+    myopts.id = "Stamp";
+    if (dobj == null) {
+
+        lastid = JS9.LoadWindow(file, myopts, "light");
+    } else {
+        JS9.RefreshImage(file, myopts, {
+            display: dobj
+        })
+    }
+
 }
