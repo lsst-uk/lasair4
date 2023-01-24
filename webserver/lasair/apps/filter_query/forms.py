@@ -44,7 +44,7 @@ class filterQueryForm(forms.ModelForm):
         # ADD WATCHMAP SELECTION TO THE FORM
         watchmapTypes, watchmapTypes2 = [], []
         if self.request.user.is_authenticated:
-            watchmapTypes[:] = [(w.ar_id, w.name + f" ({w.user})") for w in watchmaps if w.user.id == self.request.user.id]
+            watchmapTypes[:] = [(w.ar_id, w.name) for w in watchmaps if w.user.id == self.request.user.id]
         watchmapTypes2[:] = [(w.ar_id, w.name + f" ({w.user})") for w in watchmaps if w.user.id != self.request.user.id]
         watchmapTypes = [("My Watchmap", watchmapTypes)] + [("Public Gallery", watchmapTypes2)]
         self.fields['watchmaps'].required = False
@@ -54,7 +54,7 @@ class filterQueryForm(forms.ModelForm):
         # ADD ANNOTATOR SELECTION TO THE FORM
         annotatorTypes, annotatorTypes2 = [], []
         if self.request.user.is_authenticated:
-            annotatorTypes[:] = [(w.topic, w.topic + f" ({w.user})") for w in annotators if w.user.id == self.request.user.id]
+            annotatorTypes[:] = [(w.topic, w.topic) for w in annotators if w.user.id == self.request.user.id]
         annotatorTypes2[:] = [(w.topic, w.topic + f" ({w.user})") for w in annotators if w.user.id != self.request.user.id]
         annotatorTypes = [("My Annotators", annotatorTypes)] + [("Public Gallery", annotatorTypes2)]
         self.fields['annotators'].required = False
