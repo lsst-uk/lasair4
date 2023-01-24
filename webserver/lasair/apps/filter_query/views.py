@@ -211,8 +211,8 @@ def filter_query_create(request):
         selected = request.POST.get('selected')
         conditions = request.POST.get('conditions')
         watchlists = request.POST.get('watchlists')
-        watchmaps = request.POST.get('watchmaps')
-        annotators = request.POST.get('annotators')
+        watchmaps = request.POST.getlist('watchmaps')
+        annotators = request.POST.getlist('annotators')
         name = request.POST.get('name')
         description = request.POST.get('description')
         if request.POST.get('public'):
@@ -233,9 +233,9 @@ def filter_query_create(request):
         if watchlists:
             tables += f", watchlist:{watchlists}"
         if watchmaps:
-            tables += f", area:{watchmaps}"
+            tables += f", area:{('&').join(watchmaps)}"
         if annotators:
-            tables += f", annotator:{annotators}"
+            tables += f", annotator:{('&').join(annotators)}"
 
         # RUN?
         if action and action.lower() == "run":
@@ -252,7 +252,9 @@ def filter_query_create(request):
             if error:
                 messages.error(request, error)
 
-            return render(request, 'filter_query/filter_query_create.html', {'schemas': schemas, 'form': form, 'table': table, 'schema': tableSchema, 'limit': str(limit)})
+            sqlquery_real = sqlparse.format(build_query(selected, tables, conditions), reindent=True, keyword_case='upper', strip_comments=True)
+
+            return render(request, 'filter_query/filter_query_create.html', {'schemas': schemas, 'form': form, 'table': table, 'schema': tableSchema, 'limit': str(limit), 'real_sql': sqlquery_real})
 
         # OR SAVE?
         elif action and action.lower() == "save" and len(name):

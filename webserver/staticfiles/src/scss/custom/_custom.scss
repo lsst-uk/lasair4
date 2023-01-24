@@ -1,3 +1,5 @@
+@import "_variables";
+
 div.JS9Magnifier, div.ImExamPlugin {
     width: 100% !important;
     padding-bottom: 100%;
@@ -193,7 +195,7 @@ pre.prism-live {
     pointer-events: none;
     overflow: hidden;
     min-height: 200px;
-    max-height: 100%;
+    max-height: 100%;   
     --scrollbar-width: 17px;
     padding-bottom: var(--scrollbar-width);
     padding-right: var(--scrollbar-width);
@@ -213,6 +215,7 @@ pre.prism-live {
     }
 }
 
+
 $border-radius     : .5rem !default;
 div.search-bar input {
     border-top-right-radius: $border-radius !important;
@@ -223,4 +226,33 @@ div.search-bar input {
         font-size: $font-size-base*1.2 !important;
 }
 
+.popover {
+    border-width: $popover-border-width !important;
+    border-style: solid  !important;
+    border-color: $popover-border-color !important;
+}
 
+.popover-header {
+    border-width: $popover-border-width !important;
+    border-color: $popover-border-color !important;
+}
+
+.multiselect-container {
+  width: 100%;
+    &.dropdown-menu span {
+    width: 100%;
+}
+}
+
+.multiselect-container svg {
+  display: none;
+}
+
+
+.multiselect-container .multiselect-filter > input.multiselect-search {
+
+  margin-left: 0 !important;
+
+
+
+}

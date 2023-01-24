@@ -19,16 +19,21 @@
         <div class="row mt-4">
 
             <div class="col-12 mb-4">
-                {% include "includes/widgets/widget_filter_query_create_header.html" %}
+                {% include "includes/widgets/widget_filter_query_create_header.html"  %}
             </div>
+
 
             <div class="col-12 mb-4">
                 {% include "includes/widgets/widget_filter_creation_form.html" %}
             </div>
-
             <div class="col-12 mb-4">
-                {% include "includes/widgets/widget_objectlist_table.html" with zerotext="Zero objects have been matched against this filter so far. Check back later to see if any new objects have been matched, or amend the filtering criteria to catch more objects." table=table header="Filter Results"  desc="Here are the filtered objects, limited to "|add:limit|add:" objects" %}
+
+
+                {% include "includes/widgets/widget_objectlist_table.html" with zerotext="Zero objects have been matched against this filter so far. Check back later to see if any new objects have been matched, or amend the filtering criteria to catch more objects." table=table header="Filter Results"  desc="Here are the filtered objects, limited to "|add:limit|add:" objects" real_sql=real_sql  %}
             </div>
+
+
+
 
 
 
@@ -146,9 +151,15 @@
             for (i = 0; i < tableList.length; i++) {
                 var table = tableList[i];
                 if (selectText.indexOf(table+".") >= 0) {
-                      fromContent.push(table);         
+                    fromContent.push(table);
                 }
             }
+
+            var e = document.getElementById("id_watchlists");
+            if (e.value) {
+                fromContent.push(e.options[e.selectedIndex].text);
+            }
+
             // ARRAY TO COMMA SEPARATED LIST
             fromContent = fromContent.toString().replaceAll(",",", ");
             document.getElementById("from_box").innerHTML = fromContent;
@@ -158,6 +169,66 @@
         document.addEventListener('DOMContentLoaded', function() {
             updateFrom();
         }, false);
+
+        $(document).ready(function () {
+            $('#example-getting-started').multiselect({
+                buttonClass: 'form-select',
+                nonSelectedText: 'None selected',
+                enableCaseInsensitiveFiltering: true,
+                templates: {
+                    button: '<button type="button" class="multiselect dropdown-toggle" data-bs-toggle="dropdown"><span class="multiselect-selected-text"></span></button>',
+                }
+            });
+        });
+
+        $(document).ready(function () {
+            $('#id_watchlists').multiselect({
+                buttonClass: 'form-select',
+                nonSelectedText: 'None selected',
+                buttonWidth: '300px',
+                maxHeight: 500,
+                enableCaseInsensitiveFiltering: true,
+                templates: {
+                    button: '<button type="button" class="multiselect dropdown-toggle" data-bs-toggle="dropdown"><span class="multiselect-selected-text"></span></button>',
+                },
+                onChange: function() {
+                    updateFrom();
+                }
+            });
+        });
+
+        $(document).ready(function () {
+            $('#id_watchmaps').multiselect({
+                buttonClass: 'form-select',
+                buttonWidth: '300px',
+                maxHeight: 500,
+                enableCaseInsensitiveFiltering: true,
+                templates: {
+                    button: '<button type="button" class="multiselect dropdown-toggle" data-bs-toggle="dropdown"><span class="multiselect-selected-text"></span></button>',
+                },
+                nonSelectedText: 'No Watchmap Selected',
+                onChange: function() {
+                    updateFrom();
+                }
+            });
+        });
+
+        $(document).ready(function () {
+            $('#id_annotators').multiselect({
+                buttonClass: 'form-select',
+                buttonWidth: '300px',
+                maxHeight: 500,
+                enableCaseInsensitiveFiltering: true,
+                templates: {
+                    button: '<button type="button" class="multiselect dropdown-toggle" data-bs-toggle="dropdown"><span class="multiselect-selected-text"></span></button>',
+                },
+                nonSelectedText: 'No Annotator Selected',
+                onChange: function() {
+                    updateFrom();
+                }
+            });
+        });
+
 
     </script>
 {% endblock javascripts %}

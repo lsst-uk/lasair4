@@ -1,21 +1,21 @@
 """
 Lasair Query Builder
 These functions are to convert a user's query int sanitised SQL that can run on the database.
-The SQL looks like 
-    SELECT <select_expression> 
-    FROM <from_expression> 
-    WHERE <where_condition> 
+The SQL looks like
+    SELECT <select_expression>
+    FROM <from_expression>
+    WHERE <where_condition>
 Note that this part of query is added outside of this code
     LIMIT <limit> OFFSET <offset>
 Example:
     select_expression = 'objectId'
     from_expression   = 'objects'
-    where_condition   = 'mag < 14 ORDER BY jd' 
+    where_condition   = 'mag < 14 ORDER BY jd'
 The syntax checking happens in two stages, first in this code and then in the SQL engine.
-The limit and offset are checked here that they are integers. 
+The limit and offset are checked here that they are integers.
 
-The select_expression and where conditions are checked for forbidden characters 
-and words that could be used for injection attacks on Lasair, 
+The select_expression and where conditions are checked for forbidden characters
+and words that could be used for injection attacks on Lasair,
 or that indicate the user is not understanding what to do, and the input
 rejected if these are found, with an error message returned.
 """
@@ -152,9 +152,9 @@ def build_query(select_expression, from_expression, where_condition):
 
     sherlock_classifications = False  # using sherlock_classifications
     crossmatch_tns = False  # using crossmatch tns, but not combined with watchlist
-    annotation_topics = []  # topics of chosen annotations
+    annotation_topics = None  # topics of chosen annotations
     watchlist_id = None     # wl_id of the chosen watchlist, if any
-    area_id = None     # wl_id of the chosen watchlist, if any
+    area_ids = None     # wl_id of the chosen watchlist, if any
 
     tables = from_expression.split(',')
     for _table in tables:
@@ -173,14 +173,14 @@ def build_query(select_expression, from_expression, where_condition):
         if table.startswith('area'):
             w = table.split(':')
             try:
-                area_id = int(w[1])
+                area_ids = w[1].split('&')
             except:
                 raise QueryBuilderError('Error in FROM list, %s not of the form area:nnn' % table)
 
         if table.startswith('annotator'):
             w = table.split(':')
             try:
-                annotation_topics.append(w[1])
+                annotation_topics = w[1].split('&')
             except:
                 raise QueryBuilderError('Error in FROM list, %s not of the form annotation:topic' % table)
 
@@ -198,13 +198,19 @@ def build_query(select_expression, from_expression, where_condition):
         from_table_list.append('sherlock_classifications')
     if watchlist_id:
         from_table_list.append('watchlist_hits')
-    if area_id:
-        from_table_list.append('area_hits')
+    if area_ids:
+        if len(area_ids) == 1:
+            from_table_list.append('area_hits')
+        else:
+            for i, a in enumerate(area_ids):
+                from_table_list.append(f'area_hits as ar{i}')
+
     if crossmatch_tns:
         from_table_list.append('watchlist_hits')
         from_table_list.append('crossmatch_tns')
-    for at in annotation_topics:
-        from_table_list.append('annotations AS ' + at)
+    if annotation_topics:
+        for at in annotation_topics:
+            from_table_list.append('annotations AS ' + at)
 
     # Extra clauses of the WHERE expression to make the JOINs
     where_clauses = []
@@ -213,16 +219,22 @@ def build_query(select_expression, from_expression, where_condition):
     if watchlist_id:
         where_clauses.append('objects.objectId=watchlist_hits.objectId')
         where_clauses.append('watchlist_hits.wl_id=%s' % watchlist_id)
-    if area_id:
-        where_clauses.append('objects.objectId=area_hits.objectId')
-        where_clauses.append('area_hits.ar_id=%s' % area_id)
+    if area_ids:
+        if len(area_ids) == 1:
+            where_clauses.append('objects.objectId=area_hits.objectId')
+            where_clauses.append(f'area_hits.ar_id={area_ids[0]}')
+        else:
+            for i, a in enumerate(area_ids):
+                where_clauses.append(f'objects.objectId=ar{i}.objectId')
+                where_clauses.append(f'ar{i}.ar_id={a}')
     if crossmatch_tns:
         where_clauses.append('objects.objectId=watchlist_hits.objectId')
         where_clauses.append('watchlist_hits.wl_id=%d' % settings.TNS_WATCHLIST_ID)
         where_clauses.append('watchlist_hits.name=crossmatch_tns.tns_name')
-    for at in annotation_topics:
-        where_clauses.append('objects.objectId=%s.objectId' % at)
-        where_clauses.append('%s.topic="%s"' % (at, at))
+    if annotation_topics:
+        for at in annotation_topics:
+            where_clauses.append('objects.objectId=%s.objectId' % at)
+            where_clauses.append('%s.topic="%s"' % (at, at))
 
     # if the WHERE is just an ORDER BY, then we mustn't have AND before it
     order_condition = ''

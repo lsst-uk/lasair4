@@ -84,6 +84,20 @@ function fixJS9ExtraStyles(next) {
 
     });
     // MAKE SQUARE
+    var checkExist2 = setInterval(function() {
+        if (document.querySelectorAll(".JS9Magnifier").length) {
+            clearInterval(checkExist2);
+            let plugins = document.querySelectorAll(".JS9Magnifier");
+
+            plugins.forEach(function(plugin) {
+                plugin.style.height = plugin.offsetWidth + 'px';
+            });
+        }
+    }, 100); // check every 100ms
+    setTimeout(() => {
+        next()
+    }, 2000);
+    // MAKE SQUARE
     var checkExist = setInterval(function() {
         if (document.querySelectorAll(".ImExamRadialProj").length) {
             clearInterval(checkExist);
@@ -97,6 +111,22 @@ function fixJS9ExtraStyles(next) {
     setTimeout(() => {
         next()
     }, 2000);
+
+    // MAKE SQUARE
+    var checkExist3 = setInterval(function() {
+        if (document.querySelectorAll(".ImExam3dPlot").length) {
+            clearInterval(checkExist3);
+            let plugins = document.querySelectorAll(".ImExam3dPlot");
+
+            plugins.forEach(function(plugin) {
+                plugin.style.height = plugin.offsetWidth + 'px';
+            });
+        }
+    }, 100); // check every 100ms
+    setTimeout(() => {
+        next()
+    }, 2000);
+
 }
 
 function loadFitsImages(next) {
@@ -174,11 +204,19 @@ function toggleJS9Menus() {
 }
 
 function JS9Popout(file, opts) {
+    var dobj = JS9.LookupDisplay("Stamp", false);
     loadtype = "light";
     var id, did, head, body, html, doc;
     var myopts = opts || {};
     myopts.onload = setDefaultParams;
-    myopts.id = "mylight" + nwin++;
-    lastid = JS9.LoadWindow(file, myopts, "light");
+    myopts.id = "Stamp";
+    if (dobj == null) {
+
+        lastid = JS9.LoadWindow(file, myopts, "light");
+    } else {
+        JS9.RefreshImage(file, myopts, {
+            display: dobj
+        })
+    }
 
 }

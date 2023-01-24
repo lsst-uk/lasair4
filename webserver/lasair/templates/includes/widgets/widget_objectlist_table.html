@@ -4,30 +4,57 @@
 
 
     {% if header %}
-        <div class="card-header d-sm-flex flex-row align-items-start flex-0 mb-0 pb-0 border-0">
-            <div class="d-block mb-sm-0">
-                <div class="icon-shape icon-shape-tertiary rounded me-4 me-sm-0">
-                    {% include "includes/icons/icon_object_list.html" %}
+        <div class="card-header border-0 ">
+            <div class="row d-flex align-items-start">
+                <div class="col-2 col-md-1 text-xl-center mb-3 justify-content-xl-start">
+                    <div class="icon-shape icon-shape-tertiary rounded me-sm-0">
+                        {% include "includes/icons/icon_object_list.html" %}
+
+                    </div>
+
 
                 </div>
 
-
-            </div>
-
-            <div class="d-flex ms-4">
-                <div class="row d-block d-xl-flex align-items-start">
-                    <h3 class="fw-extrabold mb-2">{{header}}</h3>
-                    {% if table|length > 0 %}
-                        <small class="text-gray-500">
-                            {% if desc %}
-                                {{desc}}
-                            {% endif %}
-                        </small>
-                    {% endif %}
+                <div class="col-7 col-md-8 px-xl-0">
+                    <div>
+                        <h2 class="h3 fw-extrabold mb-0 ps-2">{{header}}</h2>
+                        {% if table|length > 0 %}
+                            <small class="text-gray-500">
+                                {% if desc %}
+                                    {{desc}}
+                                {% endif %}
+                            </small>
+                        {% endif %}
+                    </div>
                 </div>
+
+                {% if real_sql %}
+
+                    <div class="col-3  px-xl-1 float-end d-none d-md-block">
+                        <span class="float-end me-2">
+                            {% include "includes/go_deeper_button.html" with collapseId="collapseOne" %}
+                        </span>
+                    </div>
+                    <div class="accordion accordion-flush" id="accordionExample">
+                        <div class="accordion-item">
+
+                            <div id="collapseOne" class="accordion-collapse collapse" aria-labelledby="headinOne" data-bs-parent="#accordionExample">
+                                <div class="accordion-body p-3 ">
+                                    <p class="text-gray-500">
+                                        The following query was used to produce these filter results:
+                                    </p>
+                                    <p><pre><code class="language-sql">{{real_sql}}</code></pre></p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                {% endif %}
+
             </div>
 
         </div>
+
 
     {% endif %}
 
