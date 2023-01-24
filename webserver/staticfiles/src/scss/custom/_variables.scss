@@ -197,3 +197,13 @@ $container-max-widths: (sm: 748px,
     xl: 1140px) !default;
 
 $font-size-base: 1rem !default; // Assumes the browser default, typically `16px`
+
+$border-width      : .0625rem !default;
+$border-width-md   : 0.125rem !default;
+$border-width-lg   : 0.25rem !default;
+$border-width-xl   : 0.375rem !default;
+$border-color-white: $white !default;
+$border-color      : $gray-200 !default;
+$popover-border-width       : $border-width !default;
+$popover-border-color       : $gray-400 !default;
+$popover-max-width: 500px;

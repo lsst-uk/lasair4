@@ -13,8 +13,8 @@ class filterQueryForm(forms.ModelForm):
     msl = db_connect.readonly()
     cursor = msl.cursor(buffered=True, dictionary=True)
     watchlists = forms.ChoiceField(widget=forms.Select)
-    watchmaps = forms.ChoiceField(widget=forms.Select)
-    annotators = forms.ChoiceField(widget=forms.Select)
+    watchmaps = forms.MultipleChoiceField(widget=forms.SelectMultiple)
+    annotators = forms.MultipleChoiceField(widget=forms.SelectMultiple)
 
     def __init__(self, *args, **kwargs):
         self.request = kwargs.pop('request', None)
@@ -34,9 +34,9 @@ class filterQueryForm(forms.ModelForm):
         # ADD WATCHLIST SELECTION TO THE FORM
         watchlistTypes, watchlistTypes2 = [], []
         if self.request.user.is_authenticated:
-            watchlistTypes[:] = [(w.wl_id, w.name + f" ({w.user})") for w in watchlists if w.user.id == self.request.user.id]
+            watchlistTypes[:] = [(w.wl_id, w.name) for w in watchlists if w.user.id == self.request.user.id]
         watchlistTypes2[:] = [(w.wl_id, w.name + f" ({w.user})") for w in watchlists if w.user.id != self.request.user.id]
-        watchlistTypes = [(None, "Select a Watchlist    ")] + watchlistTypes + watchlistTypes2
+        watchlistTypes = [(None, "No Watchlist Selected    ")] + [("My Watchlists", watchlistTypes)] + [("Public Gallery", watchlistTypes2)]
         self.fields['watchlists'].required = False
         self.fields['watchlists'].choices = watchlistTypes
         self.fields['watchlists'].widget.choices = watchlistTypes
@@ -45,8 +45,8 @@ class filterQueryForm(forms.ModelForm):
         watchmapTypes, watchmapTypes2 = [], []
         if self.request.user.is_authenticated:
             watchmapTypes[:] = [(w.ar_id, w.name + f" ({w.user})") for w in watchmaps if w.user.id == self.request.user.id]
-        watchlistTypes2[:] = [(w.ar_id, w.name + f" ({w.user})") for w in watchmaps if w.user.id != self.request.user.id]
-        watchmapTypes = [(None, "Select a Watchmap    ")] + watchmapTypes + watchlistTypes2
+        watchmapTypes2[:] = [(w.ar_id, w.name + f" ({w.user})") for w in watchmaps if w.user.id != self.request.user.id]
+        watchmapTypes = [("My Watchmap", watchmapTypes)] + [("Public Gallery", watchmapTypes2)]
         self.fields['watchmaps'].required = False
         self.fields['watchmaps'].choices = watchmapTypes
         self.fields['watchmaps'].widget.choices = watchmapTypes
@@ -56,10 +56,13 @@ class filterQueryForm(forms.ModelForm):
         if self.request.user.is_authenticated:
             annotatorTypes[:] = [(w.topic, w.topic + f" ({w.user})") for w in annotators if w.user.id == self.request.user.id]
         annotatorTypes2[:] = [(w.topic, w.topic + f" ({w.user})") for w in annotators if w.user.id != self.request.user.id]
-        annotatorTypes = [(None, "Select an Annotator")] + annotatorTypes + annotatorTypes2
+        annotatorTypes = [("My Annotators", annotatorTypes)] + [("Public Gallery", annotatorTypes2)]
         self.fields['annotators'].required = False
         self.fields['annotators'].choices = annotatorTypes
         self.fields['annotators'].widget.choices = annotatorTypes
+
+        self.fields['conditions'].required = False
+        self.fields['conditions'].widget.required = False
 
     class Meta:
 
@@ -125,4 +128,5 @@ class UpdateFilterQueryForm(forms.ModelForm):
                     self.initial[i] = False
             else:
                 self.fields[i].widget.attrs['value'] = instance.__dict__[i]
+
             # self.fields[i].initial = instance.__dict__[i]
