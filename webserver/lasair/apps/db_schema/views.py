@@ -21,7 +21,8 @@ def schema_index(request):
     schemas = {
         'objects': get_schema('objects'),
         'sherlock_classifications': get_schema('sherlock_classifications'),
-        'crossmatch_tns': get_schema('crossmatch_tns'),
-        'annotations': get_schema('annotations'),
+        # 'crossmatch_tns': get_schema('crossmatch_tns'),
+        '<annotator>': get_schema('annotations'),
+        'watchlist_hits': get_schema('watchlist_hits'),
     }
     return render(request, 'db_schema/schema_index.html', {'schemas': schemas})
