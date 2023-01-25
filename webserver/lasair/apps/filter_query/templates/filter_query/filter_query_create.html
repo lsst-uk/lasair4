@@ -157,7 +157,7 @@
 
             var e = document.getElementById("id_watchlists");
             if (e.value) {
-                fromContent.push(e.options[e.selectedIndex].text.replace(/ *\([^)]*\) */g, "").concat(" (watchlist)"));
+                fromContent.push("'".concat(e.options[e.selectedIndex].text.replace(/ *\([^)]*\) */g, ""),"' as watchlist_hits"));
 
         }
 
