@@ -372,7 +372,9 @@ def filter_query_delete(request, mq_id):
     """
     msl = db_connect.readonly()
     cursor = msl.cursor(buffered=True, dictionary=True)
+    print(mq_id)
     filterQuery = get_object_or_404(filter_query, mq_id=mq_id)
+    print(filterQuery)
     name = filterQuery.name
 
     # DELETE FILTER
