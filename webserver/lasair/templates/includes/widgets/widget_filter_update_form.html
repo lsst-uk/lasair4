@@ -4,7 +4,7 @@
 
 
 
-<div class="modal fade" id="editFilterForm" tabindex="-1" role="dialog" aria-hidden="true">
+<div class="modal fade " id="editFilterForm" tabindex="-1" role="dialog" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered" role="document">
         <div class="modal-content">
             <div class="modal-header border-0">
@@ -61,9 +61,11 @@
                 </div>
             </form>
 
-            <div class="text-center mt-3">
-                <a data-bs-toggle="modal" data-bs-dismiss="modal" href="#areYouSureModal"><small>delete filter</small></a>
-            </div>
+            {% if filterQ %}
+                <div class="text-center mt-3">
+                    <a data-bs-toggle="modal" data-bs-dismiss="modal" href="#areYouSureModal"><small>delete filter</small></a>
+                </div>
+            {% endif %}
         </div>
     </div>
 </div>
@@ -71,7 +73,7 @@
 
 {% if filterQ %}
     <!-- DELETE MODAL -->
-    <div class="modal fade" id="areYouSureModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="areYouSureModalLabel" aria-hidden="true">
+    <div class="modal fade " id="areYouSureModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="areYouSureModalLabel" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
