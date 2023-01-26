@@ -5,6 +5,9 @@ export PYTHONPATH="$PYTHONPATH:/home/ubuntu/lasair4/common/"
 $APACHEPATH/apachectl stop
 sleep 5
 
+python3 manage.py collectstatic --settings lasair.settings
+sleep 1
+
 mod_wsgi-express setup-server \
 --user ubuntu \
 --group ubuntu \
