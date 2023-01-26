@@ -189,10 +189,12 @@ def filter_query_create(request):
     """
 
     # BUILD CONTENT FOR THE CREATION FORM
-    schemas = {
+    schemas_core = {
         'objects': get_schema('objects'),
-        'sherlock_classifications': get_schema('sherlock_classifications'),
-        'crossmatch_tns': get_schema('crossmatch_tns'),
+        'sherlock_classifications': get_schema('sherlock_classifications')
+    }
+    schemas_addtional = {
+        'watchlist_hits': get_schema('watchlist_hits'),
         'annotations': get_schema('annotations'),
     }
     form = filterQueryForm(request.POST, request.FILES, request=request)
@@ -203,8 +205,6 @@ def filter_query_create(request):
 
     # SUBMISSION OF NEW FILTER - EITHER SIMPLE RUN OR SAVE
     if request.method == 'POST':
-        if form.is_valid():
-            form.save()
 
         # COLLECT FORM CONTENT
         action = request.POST.get('action')
@@ -254,39 +254,40 @@ def filter_query_create(request):
 
             sqlquery_real = sqlparse.format(build_query(selected, tables, conditions), reindent=True, keyword_case='upper', strip_comments=True)
 
-            return render(request, 'filter_query/filter_query_create.html', {'schemas': schemas, 'form': form, 'table': table, 'schema': tableSchema, 'limit': str(limit), 'real_sql': sqlquery_real})
+            return render(request, 'filter_query/filter_query_create.html', {'schemas_core': schemas_core, 'schemas_addtional': schemas_addtional, 'form': form, 'table': table, 'schema': tableSchema, 'limit': str(limit), 'real_sql': sqlquery_real})
 
         # OR SAVE?
         elif action and action.lower() == "save" and len(name):
 
-            e = check_query(selected, tables, conditions)
-            if e:
-                return render(request, 'error.html', {'message': e})
+            if form.is_valid():
+                e = check_query(selected, tables, conditions)
+                if e:
+                    return render(request, 'error.html', {'message': e})
 
-            sqlquery_real = build_query(selected, tables, conditions)
-            e = check_query_zero_limit(sqlquery_real)
-            if e:
-                return render(request, 'error.html', {'message': e})
+                sqlquery_real = build_query(selected, tables, conditions)
+                e = check_query_zero_limit(sqlquery_real)
+                if e:
+                    return render(request, 'error.html', {'message': e})
 
-            tn = topic_name(request.user.id, name)
+                tn = topic_name(request.user.id, name)
 
-            mq = filter_query(user=request.user,
-                              name=name, description=description,
-                              public=public, active=active,
-                              selected=selected, conditions=conditions, tables=tables,
-                              real_sql=sqlquery_real, topic_name=tn)
+                mq = filter_query(user=request.user,
+                                  name=name, description=description,
+                                  public=public, active=active,
+                                  selected=selected, conditions=conditions, tables=tables,
+                                  real_sql=sqlquery_real, topic_name=tn)
 
-            mq.save()
+                mq.save()
 
-            # AFTER SAVING, DELETE THE TOPIC AND PUSH SOME RECORDS FROM THE DATABASE
-            if mq.active == 2:
-                message.success(request, topic_refresh(mq.real_sql, tn, limit=10))
+                # AFTER SAVING, DELETE THE TOPIC AND PUSH SOME RECORDS FROM THE DATABASE
+                if mq.active == 2:
+                    message.success(request, topic_refresh(mq.real_sql, tn, limit=10))
 
-            filtername = form.cleaned_data.get('name')
-            messages.success(request, f'The "{filtername}" filter has been successfully created')
-            return redirect(f'filter_query_detail', mq.pk)
+                filtername = form.cleaned_data.get('name')
+                messages.success(request, f'The "{filtername}" filter has been successfully created')
+                return redirect(f'filter_query_detail', mq.pk)
 
-    return render(request, 'filter_query/filter_query_create.html', {'schemas': schemas, 'form': form, 'limit': None})
+    return render(request, 'filter_query/filter_query_create.html', {'schemas_core': schemas_core, 'schemas_additional': schemas_addtional, 'form': form, 'limit': None})
 
 
 def filter_log(request, topic):

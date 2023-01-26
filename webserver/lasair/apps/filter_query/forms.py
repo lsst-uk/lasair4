@@ -87,6 +87,13 @@ class filterQueryForm(forms.ModelForm):
         cleaned_data = super(filterQueryForm, self).clean()
         if self.request:
             action = self.request.POST.get('action')
+        name = self.cleaned_data.get('name')
+
+        if filter_query.objects.filter(Q(user=self.request.user) & Q(name=name)).exists():
+            msg = 'You already have a filter by that name, please choose another.'
+            self.add_error('name', msg)
+
+        return cleaned_data
 
     def save(self, commit=True):
         # do something with self.cleaned_data['temp_id']
