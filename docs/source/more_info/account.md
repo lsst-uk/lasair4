@@ -4,4 +4,4 @@ We encourage users to signup for a Lasair account. All you need is a valid email
 You will then be able to store queries and convert them to filters, 
 build watchlists and watchmaps, and use the Lasair API and client.
 
-[Click here to sign up for an account](https://lasair-ztf.lsst.ac.uk/signup)
+[Click here to sign up for an account]({%lasairurl%}/signup)
