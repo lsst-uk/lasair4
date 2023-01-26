@@ -1,0 +1,129 @@
+<nav class="navbar navbar-dark navbar-theme-primary px-4 col-12 d-lg-none">
+    <a class="navbar-brand me-lg-5" href="/">
+        <img class="navbar-brand-dark" src="{{ ASSETS_ROOT }}/img/brand/icon.svg" alt="Volt logo" /> <img class="navbar-brand-light" src="{{ ASSETS_ROOT }}/img/brand/dark.svg" alt="Volt logo" />
+    </a>
+    <div class="d-flex align-items-center">
+        <button class="navbar-toggler d-lg-none collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#sidebarMenu" aria-controls="sidebarMenu" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+    </div>
+</nav>
+
+<nav id="sidebarMenu" class="sidebar d-lg-block bg-gray-800 text-white collapse" data-simplebar>
+    <div class="sidebar-inner px-2 pt-3">
+        <div class="user-card d-flex d-md-none align-items-center justify-content-between justify-content-md-center pb-4">
+            <div class="d-flex align-items-center">
+                {% if user.is_authenticated %}
+
+                    <a href="{% url 'profile' %}">
+                        <div class="avatar-lg me-4">
+                            <img src="data:image/png;base64,{{ request.user.profile.image_b64 }}" class="card-img-top rounded-circle border-white"
+                                alt="user profile image">
+                        </div>
+                    </a>
+                    <div class="d-block">
+                        <a href="{% url 'profile' %}">
+                            <h2 class="h5 mb-3">{{ request.user.username }}</h2>
+                        </a>
+                        <a href="{% url 'logout' %}" class="btn btn-secondary btn-sm d-inline-flex align-items-center">
+                            <svg class="icon icon-xxs me-1" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"></path></svg>
+                            Sign Out
+                        </a>
+                    </div>
+
+                {% else %}
+
+                    <a href="{% url 'login' %}" class="btn btn-info">Sign In</a>
+
+                {% endif %}
+
+            </div>
+            <div class="collapse-close d-md-none">
+                <a href="#sidebarMenu" data-bs-toggle="collapse"
+                    data-bs-target="#sidebarMenu" aria-controls="sidebarMenu" aria-expanded="true"
+                    aria-label="Toggle navigation">
+                    <svg class="icon icon-xs mb-1" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd"></path></svg>
+                </a>
+            </div>
+        </div>
+        <ul class="nav flex-column pt-3 pt-md-0">
+
+            <li class="nav-item">
+                <a href="/" class="nav-link d-flex align-items-center">
+                    <img src="{{ ASSETS_ROOT }}/img/brand/logo_light.svg" alt="brand logo">
+                </a>
+            </li>
+
+            <li class="nav-item pt-3">
+
+                <li class="nav-item {% if 'watchlists' in request.path %} active {% endif %}">
+                    <a class="nav-link" href="{% url 'watchlist_index' %}">
+                        <span class="sidebar-icon">
+                            <svg class="icon icon-xs mb-1 me-1" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path d="M9 2a1 1 0 000 2h2a1 1 0 100-2H9z"></path><path fill-rule="evenodd" d="M4 5a2 2 0 012-2 3 3 0 003 3h2a3 3 0 003-3 2 2 0 012 2v11a2 2 0 01-2 2H6a2 2 0 01-2-2V5zm3 4a1 1 0 000 2h.01a1 1 0 100-2H7zm3 0a1 1 0 000 2h3a1 1 0 100-2h-3zm-3 4a1 1 0 100 2h.01a1 1 0 100-2H7zm3 0a1 1 0 100 2h3a1 1 0 100-2h-3z" clip-rule="evenodd"></path></svg>
+                        </span>
+                        <span class="sidebar-text">Watchlists</span>
+                        {% include "includes/info_tooltip.html" with info="Transients matched within a given radius of a pre-defined catalogue of sky-positions" position="auto" link=docroot|add:"/core_functions/watchlists.html" %}
+                    </a>
+                </li>
+
+
+                <li class="nav-item {% if 'watchmap' in request.path %} active {% endif %}">
+
+                    <a class="nav-link" href="{% url 'watchmap_index' %}">
+                        <span class="sidebar-icon">
+                            <svg class="icon icon-xs mb-1 me-1" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L15 4m0 13V4m0 0L9 7"></path></svg>
+
+                        </span>
+                        <span class="sidebar-text">Watchmaps</span>
+                        {% include "includes/info_tooltip.html" with info="Transients found within a defined sky-region" position="auto" link=docroot|add:"/core_functions/watchmaps.html" %}
+                    </a>
+                </li>
+
+
+                <li class="nav-item {% if 'filters' in request.path %} active {% endif %}">
+                    <a class="nav-link" href="{% url 'filter_query_index' %}">
+                        <span class="sidebar-icon">
+                            <svg class="icon icon-xs mb-1 me-1" fill="currentColor" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+                                <path d="m56.25 75c3.4531 0 6.25 2.7969 6.25 6.25s-2.7969 6.25-6.25 6.25h-12.5c-3.4531 0-6.25-2.7969-6.25-6.25s2.7969-6.25 6.25-6.25zm18.75-31.25c3.4531 0 6.25 2.7969 6.25 6.25s-2.7969 6.25-6.25 6.25h-50c-3.4531 0-6.25-2.7969-6.25-6.25s2.7969-6.25 6.25-6.25zm18.75-31.25c3.4531 0 6.25 2.7969 6.25 6.25s-2.7969 6.25-6.25 6.25h-87.5c-3.4531 0-6.25-2.7969-6.25-6.25s2.7969-6.25 6.25-6.25z"/>
+                            </svg>
+
+                        </span>
+                        <span class="sidebar-text">Filters</span>
+                        {% include "includes/info_tooltip.html" with info="Transients dynamically matched against a pre-defined set of filtering criteria" position="auto" link=docroot|add:"/core_functions/make_filter.html" %}
+                    </a>
+                </li>
+
+                <li><hr></li>
+
+                <li class="nav-item {% if 'schema' in request.path %} active {% endif %}">
+
+                    <a class="nav-link" href="{% url 'schema_index' %}">
+                        <span class="sidebar-icon">
+                            <svg class="icon icon-xs mb-1 me-1" fill="currentColor" viewBox="0 0 90 90" xmlns="http://www.w3.org/2000/svg">
+
+
+                                <g>
+                                    <path d="m35.891 23.109h-17.336c-0.89063 0-1.5547 0.66797-1.5547 1.5547 0 0.89063 0.66797 1.5547 1.5547 1.5547h17.445c0.89062 0 1.5547-0.66797 1.5547-1.5547-0.10938-0.88672-0.77734-1.5547-1.6641-1.5547z"/>
+                                    <path d="m35.891 30.891h-17.336c-0.89063 0-1.5547 0.66797-1.5547 1.5547 0 0.89063 0.66797 1.5547 1.5547 1.5547h17.445c0.89062 0 1.5547-0.66797 1.5547-1.5547-0.10938-0.89062-0.77734-1.5547-1.6641-1.5547z"/>
+                                    <path d="m40.891 69.109h17.445c0.89062 0 1.5547-0.66797 1.5547-1.5547 0-0.89063-0.66797-1.5547-1.5547-1.5547h-17.445c-0.89062 0-1.5547 0.66797-1.5547 1.5547-0.003907 0.89062 0.66406 1.5547 1.5547 1.5547z"/>
+                                    <path d="m40.891 76.891h17.445c0.89062 0 1.5547-0.66797 1.5547-1.5547 0-0.89063-0.66797-1.5547-1.5547-1.5547l-17.445-0.003906c-0.89062 0-1.5547 0.66797-1.5547 1.5547-0.003907 0.89062 0.66406 1.5586 1.5547 1.5586z"/>
+                                    <path d="m87.223 16.223h-29c-2.4453 0-4.4453 1.8906-4.4453 4.4453v15.777c0 2.4453 1.8906 4.4453 4.4453 4.4453h12.887v7.2227l-42.332-0.003906v-7.2227h13c2.4453 0 4.4453-1.8906 4.4453-4.4453v-15.773c-0.10938-2.4453-2-4.4453-4.4453-4.4453h-29c-2.4453 0-4.4453 1.8906-4.4453 4.4453v15.777c0 2.4453 1.8906 4.4453 4.4453 4.4453h13v8.7773c0 0.89062 0.66797 1.5547 1.5547 1.5547h21.223v8.1094h-13.332c-2.4453 0-4.4453 1.8906-4.4453 4.4453v15.777c0 2.4453 1.8906 4.4453 4.4453 4.4453h29.109c2.4453 0 4.4453-1.8906 4.4453-4.4453v-16c-0.10938-2.4453-2-4.4453-4.4453-4.4453h-12.777v-8h21.223c0.89062 0 1.5547-0.66797 1.5547-1.5547v-8.7773h13c2.4453 0 4.4453-1.8906 4.4453-4.4453v-15.664c-0.22266-2.4453-2.1094-4.4453-4.5547-4.4453zm-75.777 20.223v-15.777c0-0.66797 0.55469-1.332 1.332-1.332h29c0.66797 0 1.332 0.55469 1.332 1.332v15.777c0 0.66797-0.55469 1.332-1.332 1.332h-29c-0.77734-0.10938-1.332-0.66797-1.332-1.332zm53.887 27.109v15.777c0 0.66797-0.55469 1.332-1.332 1.332l-28.891 0.003907c-0.66797 0-1.332-0.55469-1.332-1.332v-15.781c0-0.66797 0.55469-1.332 1.332-1.332h29c0.66797 0.10938 1.2227 0.66797 1.2227 1.332zm23.223-27.109c0 0.66797-0.55469 1.332-1.332 1.332h-29c-0.66797 0-1.332-0.55469-1.332-1.332v-15.777c0-0.66797 0.55469-1.332 1.332-1.332h29c0.66797 0 1.332 0.55469 1.332 1.332z"/>
+                                    <path d="m81.445 23.109h-17.445c-0.89062 0-1.5547 0.66797-1.5547 1.5547 0 0.89063 0.66797 1.5547 1.5547 1.5547h17.445c0.89063 0 1.5547-0.66797 1.5547-1.5547 0-0.88672-0.77734-1.5547-1.5547-1.5547z"/>
+                                    <path d="m81.445 30.891h-17.445c-0.89062 0-1.5547 0.66797-1.5547 1.5547 0 0.89063 0.66797 1.5547 1.5547 1.5547h17.445c0.89063 0 1.5547-0.66797 1.5547-1.5547 0-0.89062-0.77734-1.5547-1.5547-1.5547z"/>
+                                </g>
+                            </svg>
+
+                        </span>
+                        <span class="sidebar-text">Schema Browser</span>
+                        {% include "includes/info_tooltip.html" with info="Search the Lasair Databasae Schema" position="auto" %}
+                    </a>
+                </li>
+
+            </ul>
+
+            <li role="separator" class="dropdown-divider mt-4 mb-3 border-gray-700"></li>
+
+
+        </ul>
+    </div>
+</nav>

@@ -1,40 +1,46 @@
 """
 Lasair Query Builder
 These functions are to convert a user's query int sanitised SQL that can run on the database.
-The SQL looks like 
-    SELECT <select_expression> 
-    FROM <from_expression> 
-    WHERE <where_condition> 
+The SQL looks like
+    SELECT <select_expression>
+    FROM <from_expression>
+    WHERE <where_condition>
 Note that this part of query is added outside of this code
     LIMIT <limit> OFFSET <offset>
 Example:
     select_expression = 'objectId'
     from_expression   = 'objects'
-    where_condition   = 'mag < 14 ORDER BY jd' 
+    where_condition   = 'mag < 14 ORDER BY jd'
 The syntax checking happens in two stages, first in this code and then in the SQL engine.
-The limit and offset are checked here that they are integers. 
+The limit and offset are checked here that they are integers.
 
-The select_expression and where conditions are checked for forbidden characters 
-and words that could be used for injection attacks on Lasair, 
+The select_expression and where conditions are checked for forbidden characters
+and words that could be used for injection attacks on Lasair,
 or that indicate the user is not understanding what to do, and the input
 rejected if these are found, with an error message returned.
 """
+import json
+import random
+import string
+import re
+from src import db_connect
+import settings
 import sys
 sys.path.append('../../../common')
-import settings
-from src import db_connect
-import re
 max_execution_time = 300000  # maximum execution time in milliseconds
-max_query_rows     = 1000    # default LIMIT if none specified
+max_query_rows = 1000    # default LIMIT if none specified
+
 
 class QueryBuilderError(Exception):
     """ Thrown when parsing encounters an error
     """
+
     def __init__(self, message):
         self.message = message
 
+
 # These strings have no reason to be in the query
-forbidden_string_list = [ '#', '/*', '*/', ';', '||', '\\']
+forbidden_string_list = ['#', '/*', '*/', ';', '||', '\\']
 
 # These words have no reason to be in the select_expression
 select_forbidden_word_list = [
@@ -45,6 +51,7 @@ select_forbidden_word_list = [
     'sql_no_cache', 'sql_calc_found_rows',
 ]
 
+
 def check_select_forbidden(select_expression):
     """ Check the select expression for bad things
     """
@@ -54,7 +61,7 @@ def check_select_forbidden(select_expression):
 
     # Check no forbidden strings
     for s in forbidden_string_list:
-        if select_expression.find(s)>=0: 
+        if select_expression.find(s) >= 0:
             return ('Cannot use %s in the SELECT clause' % s)
 
     # Want to split on whitespace, parentheses, curlys
@@ -66,14 +73,17 @@ def check_select_forbidden(select_expression):
             return ('Cannot use the word %s in the SELECT clause' % s.upper())
     return None
 
+
 # These words have no reason to be in the where_condition
 where_forbidden_word_list = [
     'create',
     'select', 'union', 'exists', 'window',
-#    'having', 'group', 'groupby',    # until after broker workshop
+    #    'having', 'group', 'groupby',    # until after broker workshop
     'for',
     'into', 'outfile', 'dumpfile',
 ]
+
+
 def check_where_forbidden(where_condition):
     """ Check the select expression for bad things
     """
@@ -81,8 +91,14 @@ def check_where_forbidden(where_condition):
         return None
     # Check no forbidden strings
     for s in forbidden_string_list:
-        if where_condition and where_condition.find(s)>=0: 
+        if where_condition and where_condition.find(s) >= 0:
             return('Cannot use %s in the WHERE clause' % s)
+
+    # REMOVE COMMENTS
+    if where_condition:
+        regex = re.compile(r'^\S*\-+\s*.*')
+        where_condition = regex.sub("", where_condition)
+        print(where_condition)
 
     # Want to split on whitespace, parentheses, curlys
     wc = re.split('\s|\(|\)|\{|\}', where_condition.lower())
@@ -91,28 +107,33 @@ def check_where_forbidden(where_condition):
             return('Cannot use the word %s in the WHERE clause' % w.upper())
 
     # Check they havent put LIMIT or OFFSET in where_condition, they should be elsewhere
-    if where_condition.find('limit')>=0:
+    if where_condition.find('limit') >= 0:
         return('Dont put LIMIT in the WHERE clause, use the parameter in the form/API instead')
-    if where_condition.find('offset')>=0:
+    if where_condition.find('offset') >= 0:
         return('Dont put OFFSET in the WHERE clause, use the parameter in the form/API instead')
 
     return None
+
 
 def check_query(select_expression, from_expression, where_condition):
     """ Check the query arguments with the functions above
     """
     # check if the select expression is OK
     s = check_select_forbidden(select_expression)
-    if s: return s
+    if s:
+        return s
 
     # check if the where conditions is OK
     s = check_where_forbidden(where_condition)
-    if s: return s
+    if s:
+        return s
 
     return None
 
+
 def sanitise(expression):
     return expression.replace("'", '"')
+
 
 def build_query(select_expression, from_expression, where_condition):
     """ Build a real SQL query from the pre-sanitised input
@@ -120,9 +141,9 @@ def build_query(select_expression, from_expression, where_condition):
     if select_expression:
         select_expression = sanitise(select_expression)
     if where_condition:
-        where_condition  = sanitise(where_condition)
+        where_condition = sanitise(where_condition)
 
-    # ----- Handle the from_expression. 
+    # ----- Handle the from_expression.
     # This is a comma-separated list, of very restricted form
     # Implicitly includes 'objects', dont care if they includid it or not.
     # Can include 'sherlock_classifications' and 'tns_crossmatch' and 'annotations'
@@ -130,10 +151,10 @@ def build_query(select_expression, from_expression, where_condition):
     # Cannot have both watchlist and crossmatch_tns (the latter IS a watchlist)
 
     sherlock_classifications = False  # using sherlock_classifications
-    crossmatch_tns           = False  # using crossmatch tns, but not combined with watchlist
-    annotation_topics        = []  # topics of chosen annotations
+    crossmatch_tns = False  # using crossmatch tns, but not combined with watchlist
+    annotation_topics = None  # topics of chosen annotations
     watchlist_id = None     # wl_id of the chosen watchlist, if any
-    area_id      = None     # wl_id of the chosen watchlist, if any
+    area_ids = None     # wl_id of the chosen watchlist, if any
 
     tables = from_expression.split(',')
     for _table in tables:
@@ -152,14 +173,14 @@ def build_query(select_expression, from_expression, where_condition):
         if table.startswith('area'):
             w = table.split(':')
             try:
-                area_id = int(w[1])
+                area_ids = w[1].split('&')
             except:
                 raise QueryBuilderError('Error in FROM list, %s not of the form area:nnn' % table)
 
         if table.startswith('annotator'):
             w = table.split(':')
             try:
-                annotation_topics.append(w[1])
+                annotation_topics = w[1].split('&')
             except:
                 raise QueryBuilderError('Error in FROM list, %s not of the form annotation:topic' % table)
 
@@ -177,13 +198,19 @@ def build_query(select_expression, from_expression, where_condition):
         from_table_list.append('sherlock_classifications')
     if watchlist_id:
         from_table_list.append('watchlist_hits')
-    if area_id:
-        from_table_list.append('area_hits')
+    if area_ids:
+        if len(area_ids) == 1:
+            from_table_list.append('area_hits')
+        else:
+            for i, a in enumerate(area_ids):
+                from_table_list.append(f'area_hits as ar{i}')
+
     if crossmatch_tns:
         from_table_list.append('watchlist_hits')
         from_table_list.append('crossmatch_tns')
-    for at in annotation_topics:
-        from_table_list.append('annotations AS ' + at)
+    if annotation_topics:
+        for at in annotation_topics:
+            from_table_list.append('annotations AS ' + at)
 
     # Extra clauses of the WHERE expression to make the JOINs
     where_clauses = []
@@ -192,16 +219,22 @@ def build_query(select_expression, from_expression, where_condition):
     if watchlist_id:
         where_clauses.append('objects.objectId=watchlist_hits.objectId')
         where_clauses.append('watchlist_hits.wl_id=%s' % watchlist_id)
-    if area_id:
-        where_clauses.append('objects.objectId=area_hits.objectId')
-        where_clauses.append('area_hits.ar_id=%s' % area_id)
+    if area_ids:
+        if len(area_ids) == 1:
+            where_clauses.append('objects.objectId=area_hits.objectId')
+            where_clauses.append(f'area_hits.ar_id={area_ids[0]}')
+        else:
+            for i, a in enumerate(area_ids):
+                where_clauses.append(f'objects.objectId=ar{i}.objectId')
+                where_clauses.append(f'ar{i}.ar_id={a}')
     if crossmatch_tns:
         where_clauses.append('objects.objectId=watchlist_hits.objectId')
         where_clauses.append('watchlist_hits.wl_id=%d' % settings.TNS_WATCHLIST_ID)
         where_clauses.append('watchlist_hits.name=crossmatch_tns.tns_name')
-    for at in annotation_topics:
-        where_clauses.append('objects.objectId=%s.objectId' % at)
-        where_clauses.append('%s.topic="%s"' % (at, at))
+    if annotation_topics:
+        for at in annotation_topics:
+            where_clauses.append('objects.objectId=%s.objectId' % at)
+            where_clauses.append('%s.topic="%s"' % (at, at))
 
     # if the WHERE is just an ORDER BY, then we mustn't have AND before it
     order_condition = ''
@@ -228,7 +261,6 @@ def build_query(select_expression, from_expression, where_condition):
 
     return sql
 
-import string, random, json
 
 if __name__ == "__main__":
     import sys

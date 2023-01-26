@@ -1,9 +1,5 @@
 # Watchlists
 
-**Easter Egg for Roy**
-
-{%lasairurl%}
-
 A watchlist is a set of points in the sky, together with a radius in arcseconds, which 
 can be the same for all sources, or different for each. 
 It is assumed to be a list of "interesting" sources, so that any transient that 
@@ -35,11 +31,16 @@ watchlist “public”, so other Lasair users can see it and use it in queries,
 and you can make your watchlist “active”, meaning that the crossmatch (see below) 
 is done automatically every day.
 
-The following is how to make the corect file format from [Vizier](http://vizier.u-strasbg.fr/viz-bin/VizieR).
+The following is how to make the correct file format from [Vizier](http://vizier.u-strasbg.fr/viz-bin/VizieR).
 
 <img src="../_images/watchlist/vizier.png" width="600px"/>
 
-Once you have selected your catalogue,
+First you select a catalogue, which may consist of a number of tables. Select JUST ONE TABLE, 
+so that there is just a single list of attributes. For example, 
+<a href=https://vizier.unistra.fr/viz-bin/VizieR?-source=J/MNRAS/482/98&-to=3>this link</a> 
+has two tables, but <a href=https://vizier.unistra.fr/viz-bin/VizieR-3?-source=J/MNRAS/482/98/table1>this link</a> is for a single table.
+
+Once you have selected your table,
 
 1. Deselect all the columns
 
@@ -50,9 +51,13 @@ These need to be unique and not empty: if not, you must edit the resulting file 
 
 4. Choose “|-separated” for the format
 
-5. Click submit to download the file.
+5. Select "unlimited" or however many you want in your watchlist
+
+6. Click submit to download the file.
 
 Once you have the file, you can paste it into a form, or upload the file directly.
+There may be error messages about unparsable lines, which can be eliminated by
+editing the file so every non-numerical line begins with the # symbol.
 The upload form is shown here:
 <img src="../_images/watchlist/create.png" width="400px"/>
 
