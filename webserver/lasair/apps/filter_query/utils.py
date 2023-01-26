@@ -2,6 +2,8 @@ from lasair.query_builder import check_query, build_query
 from src import db_connect
 from lasair.apps.db_schema.utils import get_schema, get_schema_dict, get_schema_for_query_selected
 from lasair.utils import datetime_converter
+import settings
+import os
 
 
 def add_filter_query_metadata(
