@@ -35,8 +35,7 @@ def add_filter_query_metadata(
             fqDict['profile_image'] = fq.user.profile.image_b64
             updatedFilterQueryLists.append(fqDict)
             real_sql.append(fq.real_sql)
-        else:
-            print("GONE")
+
     return updatedFilterQueryLists
 
 
