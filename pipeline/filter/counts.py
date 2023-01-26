@@ -14,8 +14,10 @@ def batch_statistics():
     jdnow = (time.time()/86400 + 2440587.5)
     midnight = math.floor(jdnow - 0.5) + 0.5
 
-    msl = db_connect.readonly()
-    cursor = msl.cursor(buffered=True, dictionary=True)
+    msl_main = db_connect.readonly()
+    cursor = msl_main.cursor(buffered=True, dictionary=True)
+
+    # objects modified since last midnight
     query = 'SELECT count(*) AS count FROM objects WHERE jdmax > %.1f' % midnight
     try:
         cursor.execute(query)
@@ -25,6 +27,22 @@ def batch_statistics():
     except:
         count = -1
 
+    # total number of objects
+    query = 'SELECT count(*) AS total_count FROM objects'
+    try:
+        cursor.execute(query)
+        for row in cursor:
+            total_count = row['total_count']
+            break
+    except:
+        total_count = -1
+
+    # statistics for most recent batch
+    min_delay = -1
+    avg_delay = -1
+    max_delay = -1
+    msl_local = db_connect.local()
+    cursor = msl_local.cursor(buffered=True, dictionary=True)
     query = 'SELECT '
     query += 'jdnow()-max(jdmax) AS min_delay, '
     query += 'jdnow()-avg(jdmax) AS avg_delay, '
@@ -38,18 +56,8 @@ def batch_statistics():
             max_delay = 24*60*float(row['max_delay']) # minutes
             break
     except:
-        min_delay = -1
-        avg_delay = -1
-        max_delay = -1
+        pass
 
-    query = 'SELECT count(*) AS total_count FROM objects'
-    try:
-        cursor.execute(query)
-        for row in cursor:
-            total_count = row['total_count']
-            break
-    except:
-        total_count = -1
     return {
         'total_count':total_count, # number of objects in database
         'count':count,             # number of objects updated since midnight
@@ -76,7 +84,7 @@ def grafana_today():
         today_candidates_ztf = int(alertsstr)//4
     except Exception as e:
         log = lasairLogging.getLogger("filter")
-        log.info('Cannot parse grafana: %s: %s' % (str(result), str(e)))
+        log.info('Cannot parse grafana: %s' % str(e))
         today_candidates_ztf = -1
 
     return today_candidates_ztf
@@ -86,3 +94,4 @@ if __name__ == "__main__":
     log = lasairLogging.getLogger("ingest_runner")
 
     print('Grafana today:', grafana_today())
+    print('Batch statistics:', batch_statistics())
