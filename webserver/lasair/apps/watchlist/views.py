@@ -123,6 +123,8 @@ def watchlist_detail(request, wl_id):
     for row in cursor:
         number_cones = row['count']
 
+    resultCap = 5000
+
     # GRAB ALL WATCHLIST MATCHES
     query_hit = f"""
 SELECT
@@ -130,12 +132,31 @@ h.name as "Catalogue ID", h.arcsec as "separation (arcsec)",c.cone_id, o.objectI
 FROM watchlist_cones AS c
 NATURAL JOIN watchlist_hits as h
 NATURAL JOIN objects AS o
-WHERE c.wl_id={wl_id}
+WHERE c.wl_id={wl_id} limit {resultCap}
 """
 
     cursor.execute(query_hit)
     table = cursor.fetchall()
     count = len(table)
+
+    if count == resultCap:
+        limit = resultCap
+        countQuery = f"""
+        SELECT count(*) as count
+        FROM objects AS o, watchlist_hits as h
+        WHERE h.wl_id={wl_id}
+        AND o.objectId=h.objectId
+        """
+        cursor.execute(countQuery)
+        count = cursor.fetchone()["count"]
+
+        if settings.DEBUG:
+            apiUrl = "https://lasair.readthedocs.io/en/develop/core_functions/rest-api.html"
+        else:
+            apiUrl = "https://lasair.readthedocs.io/en/main/core_functions/rest-api.html"
+        messages.info(request, f"We are only displaying the first <b>{resultCap}</b> of {count} objects matched against this watchlist. But don't worry! You can access all {count} results via the <a class='alert-link' href='{apiUrl}' target='_blank'>Lasair API</a>.")
+    else:
+        limit = False
 
     # ADD SCHEMA
     schema = get_schema_dict("objects")
@@ -153,6 +174,7 @@ WHERE c.wl_id={wl_id}
         'schema': schema,
         'form': form,
         'number_cones': number_cones,
+        'limit': limit
     })
 
 
