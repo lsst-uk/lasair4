@@ -25,6 +25,7 @@ sys.path.append('../common')
 
 def index(request):
     context = {
-        'web_domain': settings.WEB_DOMAIN
+        'web_domain': settings.WEB_DOMAIN,
+        'message'   : 'hello'
     }
     return render(request, 'index.html', context)
