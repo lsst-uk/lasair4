@@ -236,6 +236,7 @@ def run_filter(args):
     f.write(s)
     f.close()
     log.info('\n' + s)
+    time.sleep(30)
 
     log.info('Return status %d' % rc)
     if rc > 0: return(1)

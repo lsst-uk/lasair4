@@ -7,7 +7,7 @@ from unittest import TestCase, expectedFailure
 import json
 from time import sleep
 import context
-
+sys.path.append('../../../../common/src')
 sys.path.append('../../../../services')
 import my_cmd
 

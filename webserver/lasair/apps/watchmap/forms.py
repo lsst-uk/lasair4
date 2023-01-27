@@ -1,0 +1,60 @@
+from django import forms
+from .models import Watchmap
+from crispy_forms.helper import FormHelper
+
+
+class WatchmapForm(forms.ModelForm):
+
+    watchmap_file = forms.FileField()
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.helper = FormHelper()
+        self.fields['watchmap_file'].required = True
+
+    class Meta:
+        model = Watchmap
+        widgets = {
+            'name': forms.TextInput(attrs={'size': 80, 'placeholder': 'Make it memorable'}),
+            'description': forms.Textarea(attrs={'rows': 3, 'placeholder': 'A detailed description of your watchmap.'}),
+        }
+        fields = ['name', 'description', 'active', 'public', 'watchmap_file']
+
+    def clean(self):
+        cleaned_data = super(WatchmapForm, self).clean()
+
+    def save(self, commit=True):
+        # do something with self.cleaned_data['temp_id']
+        return super(WatchmapForm, self).save(commit=commit)
+
+
+class UpdateWatchmapForm(forms.ModelForm):
+
+    class Meta:
+        model = Watchmap
+        widgets = {
+            'name': forms.TextInput(attrs={'size': 80, 'placeholder': 'Make it memorable'}),
+            'description': forms.Textarea(attrs={'rows': 4, 'placeholder': 'A detailed description of your watchmap.'}),
+            'public': forms.CheckboxInput(),
+            'active': forms.CheckboxInput()
+        }
+        fields = ['name', 'description', 'active', 'public']
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.helper = FormHelper()
+
+        instance = kwargs.get('instance', {})
+
+        for i in self.fields:
+            # print(instance.__dict__[i])
+
+            if i in ["public", "active"]:
+                if instance.__dict__[i]:
+                    self.initial[i] = True
+                else:
+                    self.initial[i] = False
+
+            else:
+                self.fields[i].widget.attrs['value'] = instance.__dict__[i]
+            # self.fields[i].initial = instance.__dict__[i]
