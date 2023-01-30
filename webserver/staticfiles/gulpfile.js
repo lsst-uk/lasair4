@@ -77,7 +77,9 @@ gulp.task('scss', function() {
         }))
         .pipe(sourcemaps.write('.'))
         .pipe(gulp.dest(paths.temp.css))
+        .pipe(touch())
         .pipe(browserSync.stream());
+
 });
 
 // MOVE FILES AND IMAGES
@@ -102,6 +104,7 @@ gulp.task('beautify:css', function() {
         ])
         .pipe(cssbeautify())
         .pipe(gulp.dest(paths.dist.css))
+        .pipe(touch())
 });
 
 // MINIFY CSS
@@ -111,6 +114,7 @@ gulp.task('minify:css', function() {
         ])
         .pipe(cleanCss())
         .pipe(gulp.dest(paths.dist.css))
+        .pipe(touch())
 });
 
 // CONCAT AND MINIFY VENDOR CSS
@@ -133,6 +137,7 @@ gulp.task('concat:vendor:css', function() {
         .pipe(concat('vendor.css'))
         .pipe(sourcemaps.write('.'))
         .pipe(gulp.dest(paths.dist.css))
+        .pipe(touch())
 });
 
 // CONCAT AND MINIFY LASAIR JS
@@ -151,6 +156,7 @@ gulp.task('concat:dist:js', function() {
         .pipe(uglify())
         .pipe(sourcemaps.write('.'))
         .pipe(gulp.dest(paths.dist.js))
+        .pipe(touch())
 });
 
 // CONCAT AND MINIFY VENDOR JS - MAKE SURE ORDER IS CORRECT FOR DEPENDENCIES
@@ -185,6 +191,7 @@ gulp.task('concat:vendor:js', function() {
         .pipe(uglify())
         .pipe(sourcemaps.write('.'))
         .pipe(gulp.dest(paths.dist.js))
+        .pipe(touch())
 });
 
 // Clean
@@ -205,6 +212,7 @@ gulp.task('copy:dist:css', function() {
         .pipe(cleanCss())
         .pipe(sourcemaps.write('.'))
         .pipe(gulp.dest(paths.dist.css))
+        .pipe(touch())
 });
 
 // COPY FILES
