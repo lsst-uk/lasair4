@@ -1,9 +1,14 @@
-import sys
-from subprocess import Popen, PIPE
-sys.path.append('../common')
 import settings
+import sys
+sys.path.append('../common')
 sys.path.append('../common/src')
-import slack_webhook, lasairLogging
+
+import slack_webhook
+import lasairLogging
+
+from subprocess import Popen, PIPE
+
+
 
 def execute_cmd(cmd, logfile=None):
     """ Executes a command like os.system, puts stdout into the log file
@@ -31,6 +36,7 @@ def execute_cmd(cmd, logfile=None):
 
     return process.returncode
 
+
 if __name__ == "__main__":
     lasairLogging.basicConfig(
         filename='/home/ubuntu/logs/svc.log',
@@ -49,4 +55,3 @@ if __name__ == "__main__":
     cmd = 'ls -l /mnt/nosuchdirectory'
     ret = execute_cmd(cmd, 'junk')
     print('returns ', ret)
-
