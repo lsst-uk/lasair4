@@ -142,7 +142,7 @@ def filter_query_detail(request, mq_id):
         real_sql = row['real_sql']
         filterQuery.real_sql = sqlparse.format(filterQuery.real_sql, reindent=True, keyword_case='upper', strip_comments=True)
 
-    limit = 1000
+    limit = 5000
     offset = 0
 
     form = UpdateFilterQueryForm(instance=filterQuery)
@@ -155,6 +155,15 @@ def filter_query_detail(request, mq_id):
         offset=offset,
         mq_id=mq_id,
         query_name=filterQuery.name)
+
+    if count > limit:
+        if settings.DEBUG:
+            apiUrl = "https://lasair.readthedocs.io/en/develop/core_functions/rest-api.html"
+        else:
+            apiUrl = "https://lasair.readthedocs.io/en/main/core_functions/rest-api.html"
+        messages.info(request, f"We are only displaying the first <b>{limit}</b> of {count} objects matched against this filter. But don't worry! You can access all {count} results via the <a class='alert-link' href='{apiUrl}' target='_blank'>Lasair API</a>.")
+    else:
+        limit = False
 
     if error:
         messages.error(request, error)
