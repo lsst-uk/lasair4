@@ -1,8 +1,18 @@
 # Managing Lasair Assets with Gulp
 
+## Extra Installs Needed for a Fresh Dev Build
+
+```bash
+sudo apt install nodejs
+sudo apt install npm
+sudo npm install --global gulp-cli
+```
+
+## Gulp Build
+
 Vendor Javascript and CSS codes can typically be installed and managed with the Node Package Manager. Node and NPM are quick to install (see here for [Ubuntu install instructions](https://www.digitalocean.com/community/tutorials/how-to-install-node-js-on-ubuntu-20-04).)
 
-We then use Gulp to automate several tasks when it comes bundling out web assets (compile SCSS to CSS, combine and minify CSS and JS). Gulp is alos easy to install (`npm install --global gulp-cli`).
+We then use Gulp to automate several tasks when it comes bundling out web assets (compile SCSS to CSS, combine and minify CSS and JS). Gulp is also easy to install (`npm install --global gulp-cli`).
 
 To build the static assets simply:
 

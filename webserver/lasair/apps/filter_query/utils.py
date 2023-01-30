@@ -78,10 +78,13 @@ def run_filter(
         error = 'Your query:<br/><b>' + sqlquery_limit + '</b><br/>returned the error<br/><i>' + str(e) + '</i>'
         return None, None, None, None, error
 
-    table = []
-    for row in cursor:
-        table.append(row)
-        nalert += 1
+    table = cursor.fetchall()
+    count = len(table)
+
+    if count == limit:
+        countQuery = build_query("count(*) as count", tables, conditions)
+        cursor.execute(countQuery)
+        count = cursor.fetchone()["count"]
 
     tableSchema = get_schema_for_query_selected(selected)
     if len(table):
@@ -89,21 +92,21 @@ def run_filter(
             if k not in tableSchema:
                 tableSchema[k] = "custom column"
 
-    return table, tableSchema, nalert, topic, error
+    return table, tableSchema, count, topic, error
 
     if json_checked:
         return HttpResponse(json.dumps(table, indent=2), content_type="application/json")
     else:
         return render(request, 'filter_query/filter_query_detail.html',
-                      {'table': table, 'nalert': nalert,
+                      {'table': table, 'nalert': count,
                        'topic': topic,
                        'title': query_name,
                        'mq_id': mq_id,
                        'selected': selected,
                        'tables': tables,
                        'conditions': conditions,
-                       'nalert': nalert,
-                       'ps': offset, 'pe': offset + nalert,
+                       'nalert': count,
+                       'ps': offset, 'pe': offset + count,
                        'limit': limit, 'offset': offset,
                        'message': message,
                        "schema": tableSchema})
