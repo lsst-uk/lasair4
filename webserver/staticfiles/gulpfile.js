@@ -31,6 +31,7 @@ var fileinclude = require('gulp-file-include');
 var concat = require('gulp-concat');
 var rename = require('gulp-rename');
 var uglify = require('gulp-uglify');
+var touch = require('gulp-touch-fd');
 
 // Define paths
 
