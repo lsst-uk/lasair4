@@ -24,14 +24,16 @@ sys.path.append('../common')
 
 
 def index(request):
+    colormap = {"SN":0, "CV":1, "NT":2, "AGN":3}
     query = """
        SELECT objects.objectId,
+           objects.ramean, objects.decmean,
            objects.gmag, objects.rmag, jdnow()-objects.jdmax AS age,
-           sherlock_classifications.classification AS CLASS
+           sherlock_classifications.classification AS class
        FROM objects, sherlock_classifications
        WHERE objects.objectId=sherlock_classifications.objectId
-           AND objects.jdmax > jdnow()-14
-           AND (objects.gmag < 18 OR objects.rmag < 18)
+           AND objects.jdmax > jdnow()-20
+           AND (objects.gmag < 17 OR objects.rmag < 17)
            AND objects.ncandgp > 3
            AND sherlock_classifications.classification in ("AGN", "CV", "NT", "SN")
     """
@@ -39,9 +41,29 @@ def index(request):
     msl = db_connect.readonly()
     cursor = msl.cursor(buffered=True, dictionary=True)
     cursor.execute (query)
-    alerts = [alert for alert in cursor]
+    alerts = []
+    for row in cursor:
+        if row['gmag']:
+            if row['rmag']: mag = min(row['gmag'], row['rmag'])
+            else:           mag = row['gmag']
+        else:
+            if row['rmag']: mag = row['rmag']
+            else:           continue
+
+        alerts.append({
+            'size'       : int(5*(18-mag)),  # in pixels
+            'color'      : colormap[row['class']],
+            'age'        : row['age']/20,   # 0 is brightest to 1 is transparent
+            'coordinates': [row['ramean'], row['decmean']]
+        })
+
     message = str(alerts)[:300]
-    news = open('/home/ubuntu/news.txt').read()
+
+    try:
+        news = open('/home/ubuntu/news.txt').read()
+    except:
+        news = 'Cannot open news file'
+
     context = {
         'web_domain': settings.WEB_DOMAIN,
         'alerts'    : alerts,
