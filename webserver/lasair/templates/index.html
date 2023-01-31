@@ -160,8 +160,7 @@ function runCelestial(){
           // draw on canvas
           // Set object styles
 	  var alpha = 1-d.age;
-          rgb = HSBToRGB(60*d.color, 100, 100, alpha);
-          //pointStyle = {fill:   "rgba(255, 0, 0, 1.0)"};
+          rgb = HSBToRGB(60*d.color, 100, 100*alpha, alpha);
           Celestial.setStyle({fill: rgb});
           // Start the drawing path
           Celestial.context.beginPath();
