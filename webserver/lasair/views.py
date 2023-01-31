@@ -32,7 +32,7 @@ def index(request):
            sherlock_classifications.classification AS class
        FROM objects, sherlock_classifications
        WHERE objects.objectId=sherlock_classifications.objectId
-           AND objects.jdmax > jdnow()-20
+           AND objects.jdmax > jdnow()-10
            AND (objects.gmag < 17 OR objects.rmag < 17)
            AND objects.ncandgp > 3
            AND sherlock_classifications.classification in ("AGN", "CV", "NT", "SN")
@@ -50,10 +50,12 @@ def index(request):
             if row['rmag']: mag = row['rmag']
             else:           continue
 
+        age = math.sqrt(row['age']/10)   # last 10 days
+
         alerts.append({
             'size'       : int(5*(18-mag)),  # in pixels
             'color'      : colormap[row['class']],
-            'age'        : row['age']/20,   # 0 is brightest to 1 is transparent
+            'age'        : age,            # 0 is brightest to 1 is transparent
             'coordinates': [row['ramean'], row['decmean']]
         })
 
