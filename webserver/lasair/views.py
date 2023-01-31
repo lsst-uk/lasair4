@@ -50,7 +50,7 @@ def index(request):
             if row['rmag']: mag = row['rmag']
             else:           continue
 
-        age = math.sqrt(row['age']/10)   # last 10 days
+        age = row['age']/10   # last 10 days
 
         alerts.append({
             'size'       : int(5*(18-mag)),  # in pixels
