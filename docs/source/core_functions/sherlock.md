@@ -81,7 +81,7 @@ For spectroscopic redshifts we use the
 
 - GLADE Galaxy Catalogue v2.3 (Dálya et al. 2018) and the 
 
-- NED-D Galaxy Catalogue v13.1[1](https://lasair-ztf.lsst.ac.uk/sherlock#fn1). 
+- NED-D Galaxy Catalogue v13.1
 
 _Sherlock_ also has the ability to remotely query the NASA/IPAC Extragalactic Database, caching results locally to speed up future searches targeting the same region of sky, and in this way we have built up an almost complete local copy of the NED catalogue. More catalogues are continually being added to the library as they are published and become publicly available.
 
@@ -103,7 +103,7 @@ At a base-level of matching _Sherlock_ distinguishes between transient objects _
     
 For Lasair the synonym radius is set at 1.5″. This is the crossmatch-radius used to assign predictions of VS, CV, AGN and NT. The process of attempting to associate a transient with a catalogued galaxy is relatively nuanced compared with other crossmatches as there are often a variety of data assigned to the galaxy that help to greater inform the decision to associate the transient with the galaxy or not. The location of the core of each galaxy is recorded so we will always be able to calculate the angular separation between the transient and the galaxy. However we may also have measurements of the galaxy morphology including the angular size of its semi-major axis. For Lasair we reject associations if a transient is separated more than 2.4 times the semi-major axis from the galaxy, if the semi-major axis measurement is available for a galaxy. We may also have a distance measurement or redshift for the galaxy enabling us to convert angular separations between transients and galaxies to (projected) physical-distance separations. If a transient is found more than 50 Kpc from a galaxy core the association is rejected.
 
-Once each transient has a set of independently crossmatched synonyms and associations, we need to self-crossmatch these and select the most likely classification. The details of this will be presented in a future paper (Young et al. in prep). Finally the last step is to calculate some value added parameters for the transients, such as absolute peak magnitude if a distance can be assigned from a matched catalogued source, and the predicted nature of each transient is presented to the user along with the lightcurve and other information (see Figure [1](https://lasair-ztf.lsst.ac.uk/sherlock#fig:webcandidatepage2019tua)).
+Once each transient has a set of independently crossmatched synonyms and associations, we need to self-crossmatch these and select the most likely classification. The details of this will be presented in a future paper (Young et al. in prep). Finally the last step is to calculate some value added parameters for the transients, such as absolute peak magnitude if a distance can be assigned from a matched catalogued source, and the predicted nature of each transient is presented to the user along with the lightcurve and other information.
 
 We have constructed a multi-billion row database which contains all these catalogues. It currently consumes about 4.5TB and sits on a separate, similarly specified machine to that of the Lasair database. It will grow significantly as new catalogues are added (e.g. Pan-STARRS 3_π_ DR2, VST and VISTA surveys, future Gaia releases etc).
 
@@ -149,4 +149,4 @@ Véron-Cetty, M P, and P Véron. 2010. “A catalogue of quasars and active nucl
 
 * * *
 
-1.  https://ned.ipac.caltech.edu/Library/Distances/[↩](https://lasair-ztf.lsst.ac.uk/sherlock#fnref1)
+1.  https://ned.ipac.caltech.edu/Library/Distances/
