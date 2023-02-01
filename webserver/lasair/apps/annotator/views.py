@@ -2,7 +2,7 @@ from django.shortcuts import render
 from .models import Annotators
 
 
-def annotators(request):
+def annotator_index(request):
     anns = Annotators.objects.filter().order_by('topic')
     annotators = []
     for a in anns:
