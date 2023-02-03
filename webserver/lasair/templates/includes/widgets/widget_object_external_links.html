@@ -16,9 +16,9 @@
                 </div>
             </div>
 
-            <div class="col-10 col-md-11  pe-xxl-2 ps-xxl-5">
+            <div class="col-10 col-md-11  pe-lg-2 ps-lg-5">
                 <div class="d-block">
-                    <h2 class="h6 text-gray-400 mb-1 ps-2 ps-xxl-0">External Resources{% include "includes/info_tooltip.html" with info="Links to external services providing further context information at the location of the transient" position="auto" %}</h2>
+                    <h2 class="h6 text-gray-400 mb-1 ps-2 ps-lg-0">External Resources{% include "includes/info_tooltip.html" with info="Links to external services providing further context information at the location of the transient" position="auto" %}</h2>
                 </div>
                 <a href="http://simbad.u-strasbg.fr/simbad/sim-coo?Coord={{ data.objectData.ramean }}%20{{ data.objectData.decmean }}&Radius=0.08" class="btn btn-sm btn-secondary d-inline-flex align-items-center m-2 ms-xxl-0">
                     <img src="{{ ASSETS_ROOT }}/img/icons/simbad.png" class="image-fluid image-xs">
@@ -26,14 +26,12 @@
                 <a href="http://ned.ipac.caltech.edu/cgi-bin/nph-objsearch?lon={{ data.objectData.ramean|floatformat:6 }}d&lat={{ data.objectData.decmean|floatformat:6 }}d&radius=2&search_type=Near+Position+Search" class="btn btn-sm btn-secondary d-inline-flex align-items-center m-2  ms-0">
                     <img src="{{ ASSETS_ROOT }}/img/icons/ned.png" class="image-fluid image-xs">
                 </a>
-                <a href="https://wis-tns.org/search?ra={{ data.objectData.ramean }}&decl={{ data.objectData.decmean }}&radius=5&coords_unit=arcsec" class="btn btn-sm btn-secondary d-inline-flex align-items-center m-2  ms-0">
-                    <img src="{{ ASSETS_ROOT }}/img/icons/tns.png" class="image-fluid image-xs me-1">
-                    TNS
-                </a>
+
                 <a href="https://www.legacysurvey.org/viewer?ra={{ data.objectData.ramean }}&dec={{ data.objectData.decmean }}&zoom=16&mark={{ data.objectData.ramean }},{{ data.objectData.decmean }}" class="btn btn-sm btn-secondary d-inline-flex align-items-center m-2  ms-0">
                     <img src="{{ ASSETS_ROOT }}/img/icons/decals.png" class="image-fluid image-xs me-1">
                     DECaLS Sky Browser
                 </a>
+
                 <a href="http://nedwww.ipac.caltech.edu/cgi-bin/nph-calc?in_csys=Equatorial&in_equinox=J2000.0&obs_epoch=2000.0&lon={{ data.objectData.ramean }}d&lat={{ data.objectData.decmean }}&pa=0.0&out_csys=Equatorial&out_equinox=J2000.0" class="btn btn-sm btn-secondary d-inline-flex align-items-center m-2  ms-0">
 
                     <svg class="icon icon-sm me-2" fill="currentColor" stroke="currentColor" stroke-width="2" viewBox="0 0 100 100"  xmlns="http://www.w3.org/2000/svg">
