@@ -8,7 +8,7 @@ At the top of every Lasair page is a form that can be filled in to do a search
 on the sky. You can enter several different kinds of search term, as illustrated
 in the screenshot above:
 
-- A Lasair object name, for example <a href=https://lasair-ztf.lsst.ac.uk/object/ZTF22aafxzfb>ZTF22aafxzfb</a>.
+- A Lasair object name
 
 - The name of an entry in the 
 <a href=https://www.wis-tns.org/>Transient Name Server (TNS)</a>, for example 
