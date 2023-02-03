@@ -49,6 +49,8 @@ def object_detail(request, objectId):
         for k, v in {"NT": "Nuclear Transient", "BS": "Bright Star", "VS": "Variable Star", "SN": "Supernova", "CV": "Cataclysmic Variable", "AGN": "AGN"}.items():
             if data['sherlock']['classification_expanded'] == k:
                 data['sherlock']['classification_expanded'] = v
+        if data['sherlock']['classification_expanded'] == "ORPHAN":
+            data['sherlock']['description'] = "The transient is not obviously associated with any catalogued galaxy nor is it coincident with a known stellar source."
     data2 = data.copy()
     if 'sherlock' in data2:
         data2.pop('sherlock')
