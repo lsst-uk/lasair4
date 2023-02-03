@@ -22,6 +22,7 @@ Please start here to discover the key ideas of Lasair:
    concepts/sky-context
    concepts/sky-search
    concepts/querying
+   concepts/coding
    concepts/added-value
    concepts/annotations
 ```

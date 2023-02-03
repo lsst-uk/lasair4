@@ -38,3 +38,7 @@ query from web or API. As noted above, a given object can be reported multiple t
 the streaming filter is operating, but only once in the select query. The other difference
 is that the ordering of results from a streaming filter will *always* by time order, so the 
 `ORDER BY` part of the `WHERE` clause is ignored.
+
+## Cookbook
+
+For instructions on how to make a filter, see [Make a Lasair Filter](../core_functions/make_filter.html).
