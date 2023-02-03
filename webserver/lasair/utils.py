@@ -246,8 +246,6 @@ def objjson(objectId):
     df.sort_values(['mjd'],
                    ascending=[True], inplace=True)
     detections = df.loc[(df['candid'] > 0)].head(1)
-    from tabulate import tabulate
-    print(tabulate(detections, headers='keys', tablefmt='psql'))
 
     objectData["discMjd"] = detections["mjd"].values[0]
     objectData["discUtc"] = detections["utc"].values[0]
