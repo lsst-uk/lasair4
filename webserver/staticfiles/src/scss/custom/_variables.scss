@@ -196,7 +196,9 @@ $container-max-widths: (sm: 748px,
     lg: 960px,
     xl: 1140px) !default;
 
-$font-size-base: 1rem !default; // Assumes the browser default, typically `16px`
+$font-size-base: 1.05rem !default; // Assumes the browser default, typically `16px`
+$small-font-size: .95em !default;
+
 
 $border-width      : .0625rem !default;
 $border-width-md   : 0.125rem !default;
