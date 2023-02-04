@@ -35,6 +35,5 @@ admin/
 /lasair.sublime-project
 /lasair.sublime-workspace
 node_modules
-webserver/staticfiles/build/
-webserver/staticfiles/build/streams2/
+#webserver/staticfiles/build/
 /docs/build
