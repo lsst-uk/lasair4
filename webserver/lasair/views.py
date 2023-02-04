@@ -24,7 +24,9 @@ sys.path.append('../common')
 
 
 def index(request):
-    colormap = {"SN":0, "CV":1, "NT":2, "AGN":3}
+    sherlock_classes = ['SN',     'NT',     'CV',     'AGN']
+    base_colors =      ['FF0000', 'FF00FF', '1E90FF', '32cd32']
+
     query = """
        SELECT objects.objectId,
            objects.ramean, objects.decmean,
@@ -35,13 +37,32 @@ def index(request):
            AND objects.jdmax > jdnow()-10
            AND (objects.gmag < 17 OR objects.rmag < 17)
            AND objects.ncandgp > 3
-           AND sherlock_classifications.classification in ("AGN", "CV", "NT", "SN")
+           AND sherlock_classifications.classification in
     """
+    S = ['"' + sherlock_class + '"' for sherlock_class in sherlock_classes]
+    query += '(' + ','.join(S) + ')'
 
     msl = db_connect.readonly()
     cursor = msl.cursor(buffered=True, dictionary=True)
     cursor.execute (query)
-    alerts = []
+
+    nclass = len(sherlock_classes)
+    nage = 5
+
+    # 2D array of colors by class and age
+    colors = [[] for iclass in range(nclass)]
+    for iclass in range(nclass):
+        for iage in range(nage):
+            r = int(int(base_colors[iclass][0:2], 16) * (0.8 ** iage))
+            g = int(int(base_colors[iclass][2:4], 16) * (0.8 ** iage))
+            b = int(int(base_colors[iclass][4:6], 16) * (0.8 ** iage))
+            colors[iclass].append('#%06x' % (256*(256*r + g) + b))
+
+    # 2D array of alerts by class and age
+    alerts = [[] for iclass in range(nclass)]
+    for iclass in range(nclass):
+        alerts[iclass] = [[] for iage in range(nage)]
+
     for row in cursor:
         if row['gmag']:
             if row['rmag']: mag = min(row['gmag'], row['rmag'])
@@ -50,16 +71,24 @@ def index(request):
             if row['rmag']: mag = row['rmag']
             else:           continue
 
-        age = row['age']/10   # last 10 days
+        iclass = sherlock_classes.index(row['class'])
 
-        alerts.append({
-            'size'       : int(5*(18-mag)),  # in pixels
-            'color'      : colormap[row['class']],
-            'age'        : age,            # 0 is brightest to 1 is transparent
+        age = row['age']
+        if age < 2:    iage = 0
+        elif age < 5:  iage = 1
+        elif age < 8:  iage = 2
+        elif age < 10: iage = 3
+        else:          iage = 4
+
+
+        alerts[iclass][iage].append({
+            'objectId'   : row['objectId'],
+            'age'        : row['age'],
+            'class'      : row['class'],
             'coordinates': [row['ramean'], row['decmean']]
         })
 
-    message = str(alerts)[:300]
+    message = str(alerts[0][0])[:300]
 
     try:
         news = open('/home/ubuntu/news.txt').read()
@@ -68,7 +97,8 @@ def index(request):
 
     context = {
         'web_domain': settings.WEB_DOMAIN,
-        'alerts'    : alerts,
+        'alerts'    : str(alerts),
+        'colors'    : str(colors),
         'news'      : news,
         'message'   : message
     }
