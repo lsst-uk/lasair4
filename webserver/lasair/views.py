@@ -24,9 +24,16 @@ sys.path.append('../common')
 
 
 def index(request):
+    """
+    Get the most recent events siutable for display on front page.
+    The events are grouped by class and age into sets that will all be the same 
+    colour and size, for example iclass=0 means SN and iage=2 means age between 2 and 5 days.
+    Note that age is time since the most recent alert.
+    """
     sherlock_classes = ['SN',     'NT',     'CV',     'AGN']
-    base_colors =      ['FF0000', 'FF00FF', '1E90FF', '32cd32']
+    base_colors =      ['FF0000', 'FF00FF', '1E90FF', 'FFC20A']
 
+    # query finds only mag<17 alerts with at least 2 in light curve, with age < 7
     query = """
        SELECT objects.objectId,
            objects.ramean, objects.decmean,
@@ -34,9 +41,9 @@ def index(request):
            sherlock_classifications.classification AS class
        FROM objects, sherlock_classifications
        WHERE objects.objectId=sherlock_classifications.objectId
-           AND objects.jdmax > jdnow()-10
+           AND objects.jdmax > jdnow()-7
            AND (objects.gmag < 17 OR objects.rmag < 17)
-           AND objects.ncandgp > 3
+           AND objects.ncandgp > 1
            AND sherlock_classifications.classification in
     """
     S = ['"' + sherlock_class + '"' for sherlock_class in sherlock_classes]
@@ -74,10 +81,10 @@ def index(request):
         iclass = sherlock_classes.index(row['class'])
 
         age = row['age']
-        if age < 2:    iage = 0
-        elif age < 5:  iage = 1
-        elif age < 8:  iage = 2
-        elif age < 10: iage = 3
+        if age < 1:    iage = 0
+        elif age < 2:  iage = 1
+        elif age < 3:  iage = 2
+        elif age < 4:  iage = 3
         else:          iage = 4
 
 
@@ -85,6 +92,7 @@ def index(request):
             'objectId'   : row['objectId'],
             'age'        : row['age'],
             'class'      : row['class'],
+            'mag'        : mag,
             'coordinates': [row['ramean'], row['decmean']]
         })
 
@@ -103,3 +111,37 @@ def index(request):
         'message'   : message
     }
     return render(request, 'index.html', context)
+
+
+def status_today(request):
+    nid  = date_nid.nid_now()
+    return status(request, nid)
+
+def status(request, nid):
+    message = ''
+    web_domain = settings.WEB_DOMAIN
+    try:
+        filename = '%s_%d.json' % (settings.SYSTEM_STATUS, nid)
+        jsonstr = open(filename).read()
+    except:
+        jsonstr = ''
+        return render(request, 'error.html', {'message': 'Cannot open status file for nid=%d'%nid})
+
+    if 1:
+#    try:
+        status = json.loads(jsonstr)
+        return(render(request, 'error.html', {'message': str(status)}))
+
+
+#    except:
+#        status = None
+#        return render(request, 'error.html', {'message': 'Cannot parse status file for nid=%d'%nid})
+
+    if status and 'today_filter' in status:
+        status['today_singleton'] = \
+            status['today_filter'] - status['today_filter_out'] - status['today_filter_ss']
+
+    date = date_nid.nid_to_date(nid)
+    return render(request, 'status.html', 
+            {'web_domain': web_domain, 'status':status, 'date':date, 'message':message})
+
