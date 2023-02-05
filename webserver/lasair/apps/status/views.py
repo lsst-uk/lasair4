@@ -1,3 +1,4 @@
+import json
 from django.shortcuts import render
 import src.date_nid as date_nid
 import settings
@@ -62,5 +63,5 @@ def status(request, nid):
             status['today_filter'] - status['today_filter_out'] - status['today_filter_ss']
 
     date = date_nid.nid_to_date(nid)
-    return render(request, 'status/status.html',
+    return render(request, 'status.html',
                   {'web_domain': web_domain, 'status': status, 'date': date, 'message': message})
