@@ -13,7 +13,7 @@ from lasair.apps.db_schema.utils import get_schema, get_schema_dict, get_schema_
 from .models import filter_query
 from .forms import filterQueryForm, UpdateFilterQueryForm
 from lasair.query_builder import check_query, build_query
-import settings
+from lasair import settings
 import json
 import re
 import time
