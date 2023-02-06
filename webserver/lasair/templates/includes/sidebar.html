@@ -56,6 +56,31 @@
 
             <li class="nav-item pt-3">
 
+                <li class="nav-item {% if 'readthedocs' in request.path %} active {% endif %}">
+                    <a class="nav-link" href="https://lasair.readthedocs.io/en/develop/">
+                        <span class="sidebar-icon">
+                            <svg class="icon icon-xs mb-1 me-1" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path d="M9 2a1 1 0 000 2h2a1 1 0 100-2H9z"></path><path fill-rule="evenodd" d="M4 5a2 2 0 012-2 3 3 0 003 3h2a3 3 0 003-3 2 2 0 012 2v11a2 2 0 01-2 2H6a2 2 0 01-2-2V5zm3 4a1 1 0 000 2h.01a1 1 0 100-2H7zm3 0a1 1 0 000 2h3a1 1 0 100-2h-3zm-3 4a1 1 0 100 2h.01a1 1 0 100-2H7zm3 0a1 1 0 100 2h3a1 1 0 100-2h-3z" clip-rule="evenodd"></path></svg>
+                        </span>
+                        <span class="sidebar-text">Read About Lasair</span>
+                        {% include "includes/info_tooltip.html" with info="Lasair concepts, cookbook, and manual" position="auto" link=docroot|add:"/" %}
+                    </a>
+		</li>
+
+
+                <li class="nav-item {% if 'filters' in request.path %} active {% endif %}">
+                    <a class="nav-link" href="{% url 'filter_query_index' %}">
+                        <span class="sidebar-icon">
+                            <svg class="icon icon-xs mb-1 me-1" fill="currentColor" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+                                <path d="m56.25 75c3.4531 0 6.25 2.7969 6.25 6.25s-2.7969 6.25-6.25 6.25h-12.5c-3.4531 0-6.25-2.7969-6.25-6.25s2.7969-6.25 6.25-6.25zm18.75-31.25c3.4531 0 6.25 2.7969 6.25 6.25s-2.7969 6.25-6.25 6.25h-50c-3.4531 0-6.25-2.7969-6.25-6.25s2.7969-6.25 6.25-6.25zm18.75-31.25c3.4531 0 6.25 2.7969 6.25 6.25s-2.7969 6.25-6.25 6.25h-87.5c-3.4531 0-6.25-2.7969-6.25-6.25s2.7969-6.25 6.25-6.25z"/>
+                            </svg>
+
+                        </span>
+                        <span class="sidebar-text">Filters</span>
+                        {% include "includes/info_tooltip.html" with info="Transients dynamically matched against a pre-defined set of filtering criteria" position="auto" link=docroot|add:"/concepts/querying.html" %}
+                    </a>
+                </li>
+
+
                 <li class="nav-item {% if 'watchlists' in request.path %} active {% endif %}">
                     <a class="nav-link" href="{% url 'watchlist_index' %}">
                         <span class="sidebar-icon">
@@ -65,6 +90,10 @@
                         {% include "includes/info_tooltip.html" with info="Transients matched within a given radius of a pre-defined catalogue of sky-positions" position="auto" link=docroot|add:"/core_functions/watchlists.html" %}
                     </a>
                 </li>
+
+
+
+
 
 
                 <li class="nav-item {% if 'watchmap' in request.path %} active {% endif %}">
@@ -80,20 +109,17 @@
                 </li>
 
 
-                <li class="nav-item {% if 'filters' in request.path %} active {% endif %}">
-                    <a class="nav-link" href="{% url 'filter_query_index' %}">
+                <li class="nav-item {% if 'annotator' in request.path %} active {% endif %}">
+
+                    <a class="nav-link" href="{% url 'annotator_index' %}">
                         <span class="sidebar-icon">
-                            <svg class="icon icon-xs mb-1 me-1" fill="currentColor" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
-                                <path d="m56.25 75c3.4531 0 6.25 2.7969 6.25 6.25s-2.7969 6.25-6.25 6.25h-12.5c-3.4531 0-6.25-2.7969-6.25-6.25s2.7969-6.25 6.25-6.25zm18.75-31.25c3.4531 0 6.25 2.7969 6.25 6.25s-2.7969 6.25-6.25 6.25h-50c-3.4531 0-6.25-2.7969-6.25-6.25s2.7969-6.25 6.25-6.25zm18.75-31.25c3.4531 0 6.25 2.7969 6.25 6.25s-2.7969 6.25-6.25 6.25h-87.5c-3.4531 0-6.25-2.7969-6.25-6.25s2.7969-6.25 6.25-6.25z"/>
-                            </svg>
+                            <svg class="icon icon-xs mb-1 me-1" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L15 4m0 13V4m0 0L9 7"></path></svg>
 
                         </span>
-                        <span class="sidebar-text">Filters</span>
-                        {% include "includes/info_tooltip.html" with info="Transients dynamically matched against a pre-defined set of filtering criteria" position="auto" link=docroot|add:"/core_functions/make_filter.html" %}
+                        <span class="sidebar-text">Annotators</span>
+                        {% include "includes/info_tooltip.html" with info="External information and classification" position="auto" link=docroot|add:"/concepts/annotations.html" %}
                     </a>
                 </li>
-
-                <li><hr></li>
 
                 <li class="nav-item {% if 'schema' in request.path %} active {% endif %}">
 
@@ -114,10 +140,30 @@
                             </svg>
 
                         </span>
-                        <span class="sidebar-text">Schema Browser With Extra</span>
-                        {% include "includes/info_tooltip.html" with info="Search the Lasair Databasae Schema" position="auto" %}
+                        <span class="sidebar-text">Schema Browser</span>
+                        {% include "includes/info_tooltip.html" with info="Search the Lasair Database Schema" position="auto" %}
                     </a>
                 </li>
+
+                <li class="nav-item {% if 'readthedocs' in request.path %} active {% endif %}">
+                    <a class="nav-link" href="https://lasair.readthedocs.io/en/develop/concepts/coding.html">
+                        <span class="sidebar-icon">
+                            <svg class="icon icon-xs mb-1 me-1" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path d="M9 2a1 1 0 000 2h2a1 1 0 100-2H9z"></path><path fill-rule="evenodd" d="M4 5a2 2 0 012-2 3 3 0 003 3h2a3 3 0 003-3 2 2 0 012 2v11a2 2 0 01-2 2H6a2 2 0 01-2-2V5zm3 4a1 1 0 000 2h.01a1 1 0 100-2H7zm3 0a1 1 0 000 2h3a1 1 0 100-2h-3zm-3 4a1 1 0 100 2h.01a1 1 0 100-2H7zm3 0a1 1 0 100 2h3a1 1 0 100-2h-3z" clip-rule="evenodd"></path></svg>
+                        </span>
+                        <span class="sidebar-text">Coding with Lasair</span>
+                        {% include "includes/info_tooltip.html" with info="Lasair client, API, and notebooks" position="auto" %}
+                    </a>
+		</li>
+
+                <li class="nav-item {% if 'readthedocs' in request.path %} active {% endif %}">
+                    <a class="nav-link" href="https://lasair.readthedocs.io/en/develop/more_info/faqs.html">
+                        <span class="sidebar-icon">
+                            <svg class="icon icon-xs mb-1 me-1" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path d="M9 2a1 1 0 000 2h2a1 1 0 100-2H9z"></path><path fill-rule="evenodd" d="M4 5a2 2 0 012-2 3 3 0 003 3h2a3 3 0 003-3 2 2 0 012 2v11a2 2 0 01-2 2H6a2 2 0 01-2-2V5zm3 4a1 1 0 000 2h.01a1 1 0 100-2H7zm3 0a1 1 0 000 2h3a1 1 0 100-2h-3zm-3 4a1 1 0 100 2h.01a1 1 0 100-2H7zm3 0a1 1 0 100 2h3a1 1 0 100-2h-3z" clip-rule="evenodd"></path></svg>
+                        </span>
+                        <span class="sidebar-text">Lasair FAQ</span>
+                        {% include "includes/info_tooltip.html" with info="Questions and Answers about Lasair" position="auto" %}
+       		</a>
+		</li>
 
             </ul>
 
