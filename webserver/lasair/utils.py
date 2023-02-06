@@ -245,6 +245,7 @@ def objjson(objectId):
     # SORT BY COLUMN NAME
     df.sort_values(['mjd'],
                    ascending=[True], inplace=True)
+
     detections = df.loc[(df['candid'] > 0)]
 
     # DISC MAGS
