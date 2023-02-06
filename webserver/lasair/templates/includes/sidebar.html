@@ -64,7 +64,7 @@
                         <span class="sidebar-text">Read About Lasair</span>
                         {% include "includes/info_tooltip.html" with info="Lasair concepts, cookbook, and manual" position="auto" link=docroot|add:"/" %}
                     </a>
-		</li>
+                </li>
 
 
                 <li class="nav-item {% if 'filters' in request.path %} active {% endif %}">
@@ -111,7 +111,7 @@
 
                 <li class="nav-item {% if 'annotator' in request.path %} active {% endif %}">
 
-                    <a class="nav-link" href="{% url 'annotator_index' %}">
+                    <a class="nav-link" href="#">
                         <span class="sidebar-icon">
                             <svg class="icon icon-xs mb-1 me-1" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L15 4m0 13V4m0 0L9 7"></path></svg>
 
@@ -153,7 +153,7 @@
                         <span class="sidebar-text">Coding with Lasair</span>
                         {% include "includes/info_tooltip.html" with info="Lasair client, API, and notebooks" position="auto" %}
                     </a>
-		</li>
+                </li>
 
                 <li class="nav-item {% if 'readthedocs' in request.path %} active {% endif %}">
                     <a class="nav-link" href="https://lasair.readthedocs.io/en/develop/more_info/faqs.html">
@@ -162,8 +162,8 @@
                         </span>
                         <span class="sidebar-text">Lasair FAQ</span>
                         {% include "includes/info_tooltip.html" with info="Questions and Answers about Lasair" position="auto" %}
-       		</a>
-		</li>
+                    </a>
+                </li>
 
             </ul>
 
