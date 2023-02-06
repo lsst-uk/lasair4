@@ -218,7 +218,7 @@ def objjson(objectId):
                 ssnamenr = cand['ssnamenr']
                 if ssnamenr == 'null':
                     ssnamenr = None
-            if cand['isdiffpos'] == 'f' or cand['isdiffpos'] == '0':
+            if cand['isdiffpos'] == 't' or cand['isdiffpos'] == '1':
                 count_isdiffpos += 1
         else:
             count_noncandidate += 1
@@ -245,10 +245,10 @@ def objjson(objectId):
     # SORT BY COLUMN NAME
     df.sort_values(['mjd'],
                    ascending=[True], inplace=True)
-    detections = df.loc[(df['candid'] > 0)].head(1)
-    from tabulate import tabulate
-    print(tabulate(detections, headers='keys', tablefmt='psql'))
 
+    detections = df.loc[(df['candid'] > 0)]
+
+    # DISC MAGS
     objectData["discMjd"] = detections["mjd"].values[0]
     objectData["discUtc"] = detections["utc"].values[0]
     objectData["discMag"] = f"{detections['magpsf'].values[0]:.2f}±{detections['sigmapsf'].values[0]:.2f}"
@@ -257,10 +257,30 @@ def objjson(objectId):
     else:
         objectData["discFilter"] = "r"
 
+    # LATEST MAGS
+    objectData["latestMjd"] = detections["mjd"].values[-1]
+    objectData["latestUtc"] = detections["utc"].values[-1]
+    objectData["latestMag"] = f"{detections['magpsf'].values[-1]:.2f}±{detections['sigmapsf'].values[-1]:.2f}"
+    if detections['fid'].values[-1] == 1:
+        objectData["latestFilter"] = "g"
+    else:
+        objectData["latestFilter"] = "r"
+
+    # PEAK MAG
+    peakMag = detections[detections['magpsf'] == detections['magpsf'].min()]
+    objectData["peakMjd"] = peakMag["mjd"].values[0]
+    objectData["peakUtc"] = peakMag["utc"].values[0]
+    objectData["peakMag"] = f"{peakMag['magpsf'].values[0]:.2f}±{peakMag['sigmapsf'].values[0]:.2f}"
+    if peakMag['fid'].values[0] == 1:
+        objectData["peakFilter"] = "g"
+    else:
+        objectData["peakFilter"] = "r"
+
     data = {'objectId': objectId,
             'objectData': objectData,
             'candidates': candidates,
             'count_isdiffpos': count_isdiffpos,
+            'count_isdiffneg': count_all_candidates - count_isdiffpos,
             'count_all_candidates': count_all_candidates,
             'count_noncandidate': count_noncandidate,
             'sherlock': sherlock,
