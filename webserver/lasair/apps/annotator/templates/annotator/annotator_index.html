@@ -1,22 +1,45 @@
 {% extends "layouts/base.html" %}
+{% load static %}
 {% block content %}
 
-    <div class="row">
-        <p>
-            An annotator adds extra information, called annotations to Lasair objects.
-        </p>
-
-        <div class="col-xs-12">
-            <h3>Annotators</h3>
-            <ul>
-                {% for ann in annotators %}
-                    <li><b>{{ ann.topic }}</b><br/>
-                        {{ ann.description | safe }}<br/>
-                        <i>responsible user: {{ ann.usersname }}</i>
-                    </li>
-                {% endfor %}
-            </ul>
+<div class="container">
+  <div class="row mt-4">
+    <div class="col-12  mb-4">
+      <div class="card border-0 shadow h-100">
+        <div class="card-body">
+          <div class="row d-block d-xl-flex">
+            <div class="col-1 text-xl-center mb-3 mb-xl-0 d-flex justify-content-xl-start">
+              <div class="icon-shape icon-shape-tertiary rounded me-4 me-sm-0">
+                {% include "includes/icons/icon_watchmap.html" %}
+              </div>
+            </div>
+            <div class="col-11  px-xl-1">
+              <div class="d-flex flex-row ms-2">
+                <div class="flex-shrink-1">
+                  <h2 class="fw-extrabold mb-2">Annotators</h2>
+                  <small class="text-gray-500">
+An annotator adds extra information, called annotations to Lasair objects.
+                  </small>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
+      </div>
     </div>
+  </div>
+
+
+
+{% if user.is_authenticated %}
+  <div class="col-12 mb-4">
+{% include "includes/widgets/widget_annotator_table.html" with type="my" position="auto" %}
+  </div>
+{% endif %}
+
+  <div class="col-12 mb-4">
+{% include "includes/widgets/widget_annotator_table.html" with type="public" position="auto" %}
+  </div>
+</div>
 
 {% endblock %}
