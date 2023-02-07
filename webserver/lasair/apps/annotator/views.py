@@ -1,3 +1,4 @@
+from src import db_connect
 import sys
 from django.contrib import messages
 from django.shortcuts import render
@@ -9,9 +10,6 @@ from django.shortcuts import render, get_object_or_404, redirect
 from lasair.apps.db_schema.utils import get_schema_dict
 from .utils import add_annotator_metadata
 sys.path.append('../common')
-from src import db_connect
-
-
 
 
 @csrf_exempt
@@ -44,10 +42,11 @@ def annotator_index(request):
     else:
         myAnnotators = None
 
-    return render(request, 'annotator/annotator_index.html', 
-            {'myAnnotators': myAnnotators,
-            'publicAnnotators': publicAnnotators,
-            'authenticated': request.user.is_authenticated})
+    return render(request, 'annotator/annotator_index.html',
+                  {'myAnnotators': myAnnotators,
+                   'publicAnnotators': publicAnnotators,
+                   'authenticated': request.user.is_authenticated})
+
 
 def annotator_detail(request, topic):
     """*return the resulting matches of a annotator*
@@ -113,7 +112,7 @@ LIMIT {resultCap}
         limit = False
 
     # ADD SCHEMA
-    schema = get_schema_dict("objects")
+    schema = get_schema_dict("annotations")
 
     if len(table):
         for k in table[0].keys():
