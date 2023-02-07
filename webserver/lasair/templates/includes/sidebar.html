@@ -48,6 +48,8 @@
         </div>
         <ul class="nav flex-column pt-3 pt-md-0">
 
+
+
             <li class="nav-item">
                 <a href="/" class="nav-link align-items-center">
                     <img src="{{ ASSETS_ROOT }}/img/brand/logo_light.svg" alt="brand logo">
@@ -56,15 +58,7 @@
 
             <li class="nav-item pt-3">
 
-                <li class="nav-item {% if 'readthedocs' in request.path %} active {% endif %}">
-                    <a class="nav-link" href="https://lasair.readthedocs.io/en/develop/">
-                        <span class="sidebar-icon">
-                            <svg class="icon icon-xs mb-1 me-1" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path d="M9 2a1 1 0 000 2h2a1 1 0 100-2H9z"></path><path fill-rule="evenodd" d="M4 5a2 2 0 012-2 3 3 0 003 3h2a3 3 0 003-3 2 2 0 012 2v11a2 2 0 01-2 2H6a2 2 0 01-2-2V5zm3 4a1 1 0 000 2h.01a1 1 0 100-2H7zm3 0a1 1 0 000 2h3a1 1 0 100-2h-3zm-3 4a1 1 0 100 2h.01a1 1 0 100-2H7zm3 0a1 1 0 100 2h3a1 1 0 100-2h-3z" clip-rule="evenodd"></path></svg>
-                        </span>
-                        <span class="sidebar-text">Read About Lasair</span>
-                        {% include "includes/info_tooltip.html" with info="Lasair concepts, cookbook, and manual" position="auto" link=docroot|add:"/" %}
-                    </a>
-                </li>
+
 
 
                 <li class="nav-item {% if 'filters' in request.path %} active {% endif %}">
@@ -113,11 +107,12 @@
 
                     <a class="nav-link" href="#">
                         <span class="sidebar-icon">
-                            <svg class="icon icon-xs mb-1 me-1" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L15 4m0 13V4m0 0L9 7"></path></svg>
-
+                            <svg class="icon icon-xs mb-1 me-1" fill="currentColor" stroke="none" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+                                <path d="m90.668 47.168l-34.836-34.836c-4.832-4.832-11.5-7.332-18.332-7l-19.168 1c-6.5 0.33594-11.664 5.5-12 12l-1 19.168c-0.33203 6.832 2.168 13.5 7 18.332l34.832 34.832c2.668 2.668 6.168 4.168 10 4.168 3.832 0 7.332-1.5 10-4.168l23.5-23.5c2.668-2.668 4.168-6.168 4.168-10 0-3.832-1.5-7.332-4.1641-9.9961zm-56.836-13.336c-2.668 2.668-6.832 2.668-9.5 0s-2.668-6.832 0-9.5c1.332-1.332 3-2 4.668-2s3.332 0.66797 4.668 2c2.832 2.668 2.832 7 0.16406 9.5z"/>
+                            </svg>
                         </span>
                         <span class="sidebar-text">Annotators</span>
-                        {% include "includes/info_tooltip.html" with info="External information and classification" position="auto" link=docroot|add:"/concepts/annotations.html" %}
+                        {% include "includes/info_tooltip.html" with info="Value added metadata from third party and user supplied codes" position="auto" link=docroot|add:"/concepts/annotations.html" %}
                     </a>
                 </li>
 
@@ -145,29 +140,73 @@
                     </a>
                 </li>
 
-                <li class="nav-item {% if 'readthedocs' in request.path %} active {% endif %}">
-                    <a class="nav-link" href="https://lasair.readthedocs.io/en/develop/concepts/coding.html">
-                        <span class="sidebar-icon">
-                            <svg class="icon icon-xs mb-1 me-1" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path d="M9 2a1 1 0 000 2h2a1 1 0 100-2H9z"></path><path fill-rule="evenodd" d="M4 5a2 2 0 012-2 3 3 0 003 3h2a3 3 0 003-3 2 2 0 012 2v11a2 2 0 01-2 2H6a2 2 0 01-2-2V5zm3 4a1 1 0 000 2h.01a1 1 0 100-2H7zm3 0a1 1 0 000 2h3a1 1 0 100-2h-3zm-3 4a1 1 0 100 2h.01a1 1 0 100-2H7zm3 0a1 1 0 100 2h3a1 1 0 100-2h-3z" clip-rule="evenodd"></path></svg>
+                <li role="separator" class="dropdown-divider mt-4 mb-5 border-gray-700"><hr></li>
+
+
+
+
+                <li class="nav-item">
+                    <span
+                        class="nav-link collapsed d-flex justify-content-between align-items-center"
+                        data-bs-toggle="collapse" data-bs-target="#submenu-pages">
+                        <span>
+                            <span class="sidebar-icon">
+                                <svg class="icon icon-xs me-2" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M2 5a2 2 0 012-2h8a2 2 0 012 2v10a2 2 0 002 2H4a2 2 0 01-2-2V5zm3 1h6v4H5V6zm6 6H5v2h6v-2z" clip-rule="evenodd"></path><path d="M15 7h1a2 2 0 012 2v5.5a1.5 1.5 0 01-3 0V7z"></path></svg>
+                            </span>
+                            <span class="sidebar-text">Documentation</span>
                         </span>
-                        <span class="sidebar-text">Coding with Lasair</span>
-                        {% include "includes/info_tooltip.html" with info="Lasair client, API, and notebooks" position="auto" %}
+                        <span class="link-arrow">
+                            <svg class="icon icon-sm" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd"></path></svg>
+                        </span>
+                    </span>
+
+
+
+                    <div class="multi-level collapse" role="list"
+                        id="submenu-pages" aria-expanded="false">
+                        <ul class="flex-column nav">
+
+                            <li class="nav-item">
+                                <a class="nav-link" target="_blank" href="{{docroot}}">
+                                    <span class="sidebar-text">Quickstart Guide</span>
+                                </a>
+                            </li>
+
+                            <li class="nav-item">
+                                <a class="nav-link"  target="_blank" href="{{docroot}}/concepts/coding.html">
+                                    <span class="sidebar-text">API & Notebooks</span>
+
+                                </a>
+                            </li>
+
+                            <li class="nav-item">
+                                <a class="nav-link"  target="_blank" href="{{docroot}}/more_info/faqs.html">
+                                    <span class="sidebar-text">FAQ</span>
+                                </a>
+                            </li>
+
+
+
+                        </ul>
+                    </div>
+                </li>
+
+                <li class="nav-item {% if 'about' in request.path %} active {% endif %}">
+
+                    <a class="nav-link" href="#">
+                        <span class="sidebar-icon">
+                            <svg class="icon icon-xs mb-1 me-1" fill="currentColor" stroke="none" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+
+                                <path d="m50 5c-11.934 0-23.379 4.7422-31.82 13.18-8.4375 8.4414-13.18 19.887-13.18 31.82s4.7422 23.379 13.18 31.82c8.4414 8.4375 19.887 13.18 31.82 13.18s23.379-4.7422 31.82-13.18c8.4375-8.4414 13.18-19.887 13.18-31.82s-4.7422-23.379-13.18-31.82c-8.4414-8.4375-19.887-13.18-31.82-13.18zm5 65c0 2.7617-2.2383 5-5 5s-5-2.2383-5-5v-20c-2.7617 0-5-2.2383-5-5s2.2383-5 5-5h5c1.3242 0 2.5977 0.52734 3.5352 1.4648s1.4648 2.2109 1.4648 3.5352zm-5-35c-2.0234 0-3.8438-1.2188-4.6211-3.0859-0.77344-1.8672-0.34375-4.0195 1.0859-5.4492 1.4297-1.4297 3.582-1.8594 5.4492-1.0859 1.8672 0.77734 3.0859 2.5977 3.0859 4.6211 0 1.3242-0.52734 2.5977-1.4648 3.5352s-2.2109 1.4648-3.5352 1.4648z"/>
+                            </svg>
+                        </span>
+                        <span class="sidebar-text">About</span>
                     </a>
                 </li>
 
-                <li class="nav-item {% if 'readthedocs' in request.path %} active {% endif %}">
-                    <a class="nav-link" href="https://lasair.readthedocs.io/en/develop/more_info/faqs.html">
-                        <span class="sidebar-icon">
-                            <svg class="icon icon-xs mb-1 me-1" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path d="M9 2a1 1 0 000 2h2a1 1 0 100-2H9z"></path><path fill-rule="evenodd" d="M4 5a2 2 0 012-2 3 3 0 003 3h2a3 3 0 003-3 2 2 0 012 2v11a2 2 0 01-2 2H6a2 2 0 01-2-2V5zm3 4a1 1 0 000 2h.01a1 1 0 100-2H7zm3 0a1 1 0 000 2h3a1 1 0 100-2h-3zm-3 4a1 1 0 100 2h.01a1 1 0 100-2H7zm3 0a1 1 0 100 2h3a1 1 0 100-2h-3z" clip-rule="evenodd"></path></svg>
-                        </span>
-                        <span class="sidebar-text">Lasair FAQ</span>
-                        {% include "includes/info_tooltip.html" with info="Questions and Answers about Lasair" position="auto" %}
-                    </a>
-                </li>
+
 
             </ul>
-
-            <li role="separator" class="dropdown-divider mt-4 mb-3 border-gray-700"></li>
 
 
         </ul>
