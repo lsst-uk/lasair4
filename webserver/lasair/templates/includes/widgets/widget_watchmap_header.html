@@ -52,10 +52,13 @@
             </div>
 
             <div class="col-4  px-xl-1">
+                <div class="float-end">
+                    <div class="d-flex ms-2">
 
-                <div class="d-flex ms-2">
 
-                    <div class=" ms-auto ps-1">
+                        <form  method="post" class="d-flex flex-row align-items-center flex-wrap" action='{% url "watchmap_duplicate" watchmap.ar_id %}'>
+                            {% csrf_token %}
+                            <button type="submit" name="action" value="run" class="btn btn-sm btn-tertiary me-1 icon-sm" data-bs-toggle="tooltip" data-bs-placement="auto" data-bs-title="copy this watchmap to My Watchmaps">{% include "includes/icons/icon_copy.html" %}<span class="align-middle">Duplicate</span></button></form>
                         {# <div class="btn-group" role="group" aria-label="Basic button group"> #}
                         {% if user.is_authenticated and watchmap.user.id == user.id %}
                             <span data-bs-toggle="tooltip" data-bs-placement="auto" data-bs-title="edit the watchmap settings">
@@ -67,17 +70,18 @@
 
 
                         {# </div> #}
-                    </div>
 
-                    <div class="dropdown ps-1">
-                        <button class="btn btn-sm btn-dark dropdown-toggle" type="button" id="exportDropdown" data-bs-toggle="dropdown" aria-expanded="false">
-                            export<svg class="icon icon-xs" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd"></path></svg>
-                        </button>
-                        <ul class="dropdown-menu" aria-labelledby="exportDropdown">
-                            <li><a class="dropdown-item export" data-table="filter-results" href="#" data-type="csv" data-filename="{{watchmap.name}}_watchmap_results">csv</a></li>
-                            <li><a class="dropdown-item export" data-table="filter-results" href="#" data-type="json" data-filename="{{watchmap.name}}_watchmap_results">json</a></li>
-                            <li><a class="dropdown-item export" href="{% url 'watchmap_download' watchmap.ar_id %}">Original MOC file</a></li>
-                        </ul>
+
+                        <div class="dropdown ps-1">
+                            <button class="btn btn-sm btn-dark dropdown-toggle" type="button" id="exportDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+                                export<svg class="icon icon-xs" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd"></path></svg>
+                            </button>
+                            <ul class="dropdown-menu" aria-labelledby="exportDropdown">
+                                <li><a class="dropdown-item export" data-table="filter-results" href="#" data-type="csv" data-filename="{{watchmap.name}}_watchmap_results">csv</a></li>
+                                <li><a class="dropdown-item export" data-table="filter-results" href="#" data-type="json" data-filename="{{watchmap.name}}_watchmap_results">json</a></li>
+                                <li><a class="dropdown-item export" href="{% url 'watchmap_download' watchmap.ar_id %}">Original MOC file</a></li>
+                            </ul>
+                        </div>
                     </div>
                 </div>
             </div>

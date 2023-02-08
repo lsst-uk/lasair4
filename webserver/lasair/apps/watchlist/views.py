@@ -1,5 +1,5 @@
 from django.contrib.auth.decorators import login_required
-from .forms import WatchlistForm, UpdateWatchlistForm
+from .forms import WatchlistForm, UpdateWatchlistForm, DuplicateWatchlistForm
 import time
 import random
 import json
@@ -17,6 +17,7 @@ from src import db_connect
 import sys
 from lasair.apps.db_schema.utils import get_schema_dict
 from .utils import handle_uploaded_file, add_watchlist_metadata
+
 sys.path.append('../common')
 
 
@@ -117,6 +118,8 @@ def watchlist_detail(request, wl_id):
         elif action == 'run':
             hits = run_crossmatch.run_crossmatch(msl, watchlist.radius, watchlist.wl_id)
             messages.success(request, f'{hits} crossmatches found')
+        elif action == "copy":
+            messages.success(request, f'watchlist copied')
 
     # FIND THE COUNT OF WATCHLIST MATCHES
     cursor.execute('SELECT count(*) AS count FROM watchlist_cones WHERE wl_id=%d' % wl_id)
@@ -165,14 +168,17 @@ WHERE c.wl_id={wl_id} limit {resultCap}
             if k not in schema:
                 schema[k] = "custom column"
 
+    duplicateForm = DuplicateWatchlistForm(request.POST, instance=watchlist, request=request)
     form = UpdateWatchlistForm(instance=watchlist)
 
+    watchlist = get_object_or_404(Watchlist, wl_id=wl_id)
     return render(request, 'watchlist/watchlist_detail.html', {
         'watchlist': watchlist,
         'table': table,
         'count': count,
         'schema': schema,
         'form': form,
+        'duplicateForm': duplicateForm,
         'number_cones': number_cones,
         'limit': limit
     })
@@ -341,5 +347,52 @@ def watchlist_delete(request, wl_id):
         messages.success(request, f'The "{name}" watchlist has been successfully deleted')
     else:
         messages.error(request, f'You must be the owner to delete this watchlist')
+
+    return redirect('watchlist_index')
+
+
+@login_required
+def watchlist_duplicate(request, wl_id):
+    """*duplicate a watchlist
+
+    **Key Arguments:**
+
+    - `request` -- the original request
+    - `wl_id` -- the watchlist UUID
+
+    **Usage:**
+
+    ```python
+    urlpatterns = [
+        ...
+        path('watchlists/<int:wl_id>/duplicate/', views.watchlist_duplicate, name='watchlist_duplicate'),
+        ...
+    ]
+    ```
+    """
+    msl = db_connect.remote()
+    cursor = msl.cursor(buffered=True, dictionary=True)
+    watchlist = get_object_or_404(Watchlist, wl_id=wl_id)
+    name = watchlist.name
+
+    if request.method == "POST":
+        form = DuplicateWatchlistForm(request.POST, instance=watchlist, request=request)
+        print(form.is_valid())
+        print(form.cleaned_data.get('active'))
+        print(form.errors)
+
+    # # DELETE WATCHLIST
+    # if request.method == 'POST' and request.user.is_authenticated and watchlist.user.id == request.user.id and request.POST.get('action') == "delete":
+    #     # DELETE ALL THE CONES OF THIS WATCHLIST
+    #     WatchlistCone.objects.filter(wl_id=wl_id).delete()
+    #     # DELETE ALL THE HITS OF THIS WATCHLIST
+    #     query = 'DELETE from watchlist_hits WHERE wl_id=%d' % wl_id
+    #     cursor.execute(query)
+    #     msl.commit()
+    #     # DELETE THE WATCHLIST
+    #     watchlist.delete()
+    #     messages.success(request, f'The "{name}" watchlist has been successfully deleted')
+    # else:
+    #     messages.error(request, f'You must be the owner to delete this watchlist')
 
     return redirect('watchlist_index')

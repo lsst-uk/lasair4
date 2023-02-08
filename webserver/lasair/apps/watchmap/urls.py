@@ -6,5 +6,6 @@ urlpatterns = [
     path('watchmaps/create/', views.watchmap_create, name='watchmap_create'),
     path('watchmaps/<int:ar_id>/', views.watchmap_detail, name='watchmap_detail'),
     path('watchmaps/<int:ar_id>/file/', views.watchmap_download, name='watchmap_download'),
-    path('watchmaps/<int:ar_id>/delete/', views.watchmap_delete, name='watchmap_delete')
+    path('watchmaps/<int:ar_id>/delete/', views.watchmap_delete, name='watchmap_delete'),
+    path('watchmaps/<int:ar_id>/duplicate/', views.watchmap_duplicate, name='watchmap_duplicate')
 ]
