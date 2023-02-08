@@ -89,10 +89,14 @@ class DuplicateWatchlistForm(forms.ModelForm):
     def clean(self):
         cleaned_data = super(DuplicateWatchlistForm, self).clean()
         name = self.cleaned_data.get('name')
+        if self.request:
+            action = self.request.POST.get('action')
 
-        if Watchlist.objects.filter(Q(user=self.request.user) & Q(name=name)).exists():
-            msg = 'You already have a watchlist by that name, please choose another.'
-            self.add_error('name', msg)
+        print(action)
+        if action == "copy":
+            if Watchlist.objects.filter(Q(user=self.request.user) & Q(name=name)).exists():
+                msg = 'You already have a watchlist by that name, please choose another.'
+                self.add_error('name', msg)
 
         return cleaned_data
 
