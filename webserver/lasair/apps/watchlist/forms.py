@@ -1,6 +1,7 @@
 from django import forms
 from .models import Watchlist
 from crispy_forms.helper import FormHelper
+from django.db.models import Q
 
 
 class WatchlistForm(forms.ModelForm):
@@ -19,6 +20,8 @@ class WatchlistForm(forms.ModelForm):
         widgets = {
             'name': forms.TextInput(attrs={'size': 80, 'placeholder': 'Make it memorable'}),
             'description': forms.Textarea(attrs={'rows': 3, 'placeholder': 'A detailed description of your watchlist. Remember to add a citation to the original data source.'}),
+            'public': forms.CheckboxInput(),
+            'active': forms.CheckboxInput()
         }
         fields = ['name', 'description', 'active', 'public', 'radius', 'cones_textarea', 'cones_file']
 
@@ -63,4 +66,47 @@ class UpdateWatchlistForm(forms.ModelForm):
 
             else:
                 self.fields[i].widget.attrs['value'] = instance.__dict__[i]
-            # self.fields[i].initial = instance.__dict__[i]
+
+
+class DuplicateWatchlistForm(forms.ModelForm):
+
+    class Meta:
+        model = Watchlist
+        widgets = {
+            'name': forms.TextInput(attrs={'size': 80, 'placeholder': 'Make it memorable'}),
+            'description': forms.Textarea(attrs={'rows': 4, 'placeholder': 'A detailed description of your watchlist. Remember to add a citation to the original data source.'}),
+            'public': forms.CheckboxInput(),
+            'active': forms.CheckboxInput()
+        }
+        fields = ['name', 'description', 'active', 'public', 'radius']
+
+    def clean_public(self):
+        return 1 if self.cleaned_data['public'] else 0
+
+    def clean_active(self):
+        return 1 if self.cleaned_data['active'] else 0
+
+    def clean(self):
+        cleaned_data = super(DuplicateWatchlistForm, self).clean()
+        name = self.cleaned_data.get('name')
+
+        if Watchlist.objects.filter(Q(user=self.request.user) & Q(name=name)).exists():
+            msg = 'You already have a watchlist by that name, please choose another.'
+            self.add_error('name', msg)
+
+        return cleaned_data
+
+    def __init__(self, *args, **kwargs):
+        self.request = kwargs.pop('request', None)
+        super().__init__(*args, **kwargs)
+        self.helper = FormHelper()
+
+        instance = kwargs.get('instance', {})
+
+        for i in self.fields:
+            if i in ["public", "active"]:
+                self.initial[i] = False
+            else:
+                self.fields[i].widget.attrs['value'] = instance.__dict__[i]
+
+        # self.fields[i].initial = instance.__dict__[i]

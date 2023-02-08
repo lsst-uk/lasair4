@@ -287,3 +287,37 @@ def watchmap_delete(request, ar_id):
         messages.error(request, f'You must be the owner to delete this watchmap')
 
     return redirect('watchmap_index')
+
+
+@login_required
+def watchmap_duplicate(request, ar_id):
+    """*duplicate a watchmap
+
+    **Key Arguments:**
+
+    - `request` -- the original request
+    - `ar_id` -- the watchmap UUID
+
+    **Usage:**
+
+    ```python
+    urlpatterns = [
+        ...
+        path('watchmaps/<int:ar_id>/duplicate/', views.watchmap_duplicate, name='watchmap_duplicate'),
+        ...
+    ]
+    ```
+    """
+    # msl = db_connect.readonly()
+    # cursor = msl.cursor(buffered=True, dictionary=True)
+    # watchmap = get_object_or_404(Watchmap, ar_id=ar_id)
+    # name = watchmap.name
+
+    # # DELETE WATCHMAP
+    # if request.method == 'POST' and request.user.is_authenticated and watchmap.user.id == request.user.id and request.POST.get('action') == "delete":
+    #     watchmap.delete()
+    #     messages.success(request, f'The "{name}" watchmap has been successfully deleted')
+    # else:
+    #     messages.error(request, f'You must be the owner to delete this watchmap')
+
+    return redirect('watchmap_index')

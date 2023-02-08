@@ -56,48 +56,62 @@
             <div class="col-4  px-xl-1">
                 <div class="float-end">
                     <div class="d-flex ms-2 ">
-                        {# <div class="btn-group" role="group" aria-label="Basic button group"> #}
-                        <form  method="post" class="d-flex flex-row align-items-center flex-wrap">
-                            {% csrf_token %}
-                            <button type="submit" name="action" value="run" class="btn btn-sm btn-tertiary me-1 icon-sm" data-bs-toggle="tooltip" data-bs-placement="auto" data-bs-title="run the filter to give live results">{% include "includes/icons/icon_run.html" %}<span class="align-middle">Refresh</span></button></form>
-                        {% if "filter/log/" not in request.path %}
 
-                            {% if user.is_authenticated and watchlist.user.id == user.id %}
-                                <span data-bs-toggle="tooltip" data-bs-placement="auto" data-bs-title="edit the watchlist settings">
-                                    <a class="btn btn-sm btn-gray-600 me-1 align-middle " href='#' data-bs-toggle="modal" data-bs-target="#editWatchlistForm">
-                                        {% include "includes/icons/icon_edit.html" %}
-                                        <span class="align-middle">Settings</span></a>
-                                </span>
+                        <nobr>
+                            {% if user.is_authenticated %}
+                                <a class="btn btn-sm btn-tertiary me-1 ms-auto"  data-bs-toggle="modal" data-bs-target="#duplicateWatchlistForm">
+                            {% else %}
+                                <a class="btn btn-sm btn-tertiary me-1 ms-auto"  href="{% url 'login' %}?next={{request.path}}">
                             {% endif %}
-                        {% else %}
 
+                            {% include "includes/icons/icon_copy.html" %}
+                            <span class="align-middle">Duplicate</span></a></nobr>
+
+
+
+                    {# <div class="btn-group" role="group" aria-label="Basic button group"> #}
+                    <form  method="post" class="d-flex flex-row align-items-center flex-wrap">
+                        {% csrf_token %}
+                        <button type="submit" name="action" value="run" class="btn btn-sm btn-tertiary me-1 icon-sm" data-bs-toggle="tooltip" data-bs-placement="auto" data-bs-title="run the filter to give live results">{% include "includes/icons/icon_run.html" %}<span class="align-middle">Refresh</span></button></form>
+
+                    {% if "filter/log/" not in request.path %}
+
+                        {% if user.is_authenticated and watchlist.user.id == user.id %}
+                            <span data-bs-toggle="tooltip" data-bs-placement="auto" data-bs-title="edit the watchlist settings">
+                                <a class="btn btn-sm btn-gray-600 me-1 align-middle " href='#' data-bs-toggle="modal" data-bs-target="#editWatchlistForm">
+                                    {% include "includes/icons/icon_edit.html" %}
+                                    <span class="align-middle">Settings</span></a>
+                            </span>
                         {% endif %}
+                    {% else %}
+
+                    {% endif %}
 
 
-                        {# </div> #}
+                    {# </div> #}
 
 
-                        <div class="dropdown ps-1">
-                            <button class="btn btn-sm btn-dark dropdown-toggle" type="button" id="exportDropdown" data-bs-toggle="dropdown" aria-expanded="false">
-                                export<svg class="icon icon-xs" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd"></path></svg>
-                            </button>
-                            <ul class="dropdown-menu" aria-labelledby="exportDropdown">
-                                <li><a class="dropdown-item export" data-table="filter-results" href="#" data-type="csv" data-filename="{{watchlist.name}}_watchlist_results">csv</a></li>
-                                <li><a class="dropdown-item export" data-table="filter-results" href="#" data-type="json" data-filename="{{watchlist.name}}_watchlist_results">json</a></li>
-                                <li><a class="dropdown-item export" href="{% url 'watchlist_download' watchlist.wl_id %}">Original Watchlist File</a></li>
-                            </ul>
-                        </div>
+                    <div class="dropdown ps-1">
+                        <button class="btn btn-sm btn-dark dropdown-toggle" type="button" id="exportDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+                            export<svg class="icon icon-xs" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd"></path></svg>
+                        </button>
+                        <ul class="dropdown-menu" aria-labelledby="exportDropdown">
+                            <li><a class="dropdown-item export" data-table="filter-results" href="#" data-type="csv" data-filename="{{watchlist.name}}_watchlist_results">csv</a></li>
+                            <li><a class="dropdown-item export" data-table="filter-results" href="#" data-type="json" data-filename="{{watchlist.name}}_watchlist_results">json</a></li>
+                            <li><a class="dropdown-item export" href="{% url 'watchlist_download' watchlist.wl_id %}">Original Watchlist File</a></li>
+                        </ul>
                     </div>
                 </div>
             </div>
-
         </div>
 
-
-
     </div>
+
+
+
+</div>
 </div>
 
-
+{% include "includes/widgets/widget_watchlist_duplicate_form.html" %}
 {% include "includes/widgets/widget_watchlist_update_form.html" %}
 

@@ -22,7 +22,7 @@
                 </div>
             </div>
 
-            <div class="col-7  px-xl-1">
+            <div class="col-6  px-xl-1">
 
                 <div class="d-flex ms-2">
                     <div class="flex-grow-1">
@@ -62,7 +62,7 @@
                     </div>
                 </div>
 
-                <div class="col-4  px-xl-1">
+                <div class="col-5  px-xl-1">
                     <div class="float-end">
 
                         <div class="d-flex ms-2">
@@ -70,6 +70,10 @@
 
                             <a class="btn btn-sm btn-tertiary me-1" href='{% url "filter_query_detail" filterQ.mq_id %}' data-bs-toggle="tooltip" data-bs-placement="auto" data-bs-title="run the filter to give live results">
                                 {% include "includes/icons/icon_run.html" %}<span class="align-middle">Run Filter</span></a>
+
+                            <form  method="post" class="d-flex flex-row align-items-center flex-wrap" action='{% url "filter_query_duplicate" filterQ.mq_id %}'>
+                                {% csrf_token %}
+                                <button type="submit" name="action" value="run" class="btn btn-sm btn-tertiary me-1 icon-sm" data-bs-toggle="tooltip" data-bs-placement="auto" data-bs-title="copy this filter to My Filters">{% include "includes/icons/icon_copy.html" %}<span class="align-middle">Duplicate</span></button></form>
 
                             {% if "filter/log/" not in request.path %}
                                 <a class="btn btn-sm btn-gray-600 me-1 align-middle" href='{% url "filter_log" filterQ.topic_name %}' data-bs-toggle="tooltip" data-bs-placement="auto" data-bs-title="listing all transients passing filter since its creation"><?xml version="1.0" encoding="UTF-8"?>
