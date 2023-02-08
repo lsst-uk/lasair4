@@ -18,8 +18,8 @@ class WatchlistForm(forms.ModelForm):
     class Meta:
         model = Watchlist
         widgets = {
-            'name': forms.TextInput(attrs={'size': 80, 'placeholder': 'Make it memorable'}),
-            'description': forms.Textarea(attrs={'rows': 3, 'placeholder': 'A detailed description of your watchlist. Remember to add a citation to the original data source.'}),
+            'name': forms.TextInput(attrs={'size': 80, 'placeholder': 'Make it memorable', 'required': True}),
+            'description': forms.Textarea(attrs={'rows': 3, 'placeholder': 'A detailed description of your watchlist. Remember to add a citation to the original data source.', 'required': True}),
             'public': forms.CheckboxInput(),
             'active': forms.CheckboxInput()
         }
@@ -42,8 +42,8 @@ class UpdateWatchlistForm(forms.ModelForm):
     class Meta:
         model = Watchlist
         widgets = {
-            'name': forms.TextInput(attrs={'size': 80, 'placeholder': 'Make it memorable'}),
-            'description': forms.Textarea(attrs={'rows': 4, 'placeholder': 'A detailed description of your watchlist. Remember to add a citation to the original data source.'}),
+            'name': forms.TextInput(attrs={'size': 80, 'placeholder': 'Make it memorable', 'required': True}),
+            'description': forms.Textarea(attrs={'rows': 4, 'placeholder': 'A detailed description of your watchlist. Remember to add a citation to the original data source.', 'required': True}),
             'public': forms.CheckboxInput(),
             'active': forms.CheckboxInput()
         }
@@ -73,18 +73,18 @@ class DuplicateWatchlistForm(forms.ModelForm):
     class Meta:
         model = Watchlist
         widgets = {
-            'name': forms.TextInput(attrs={'size': 80, 'placeholder': 'Make it memorable'}),
-            'description': forms.Textarea(attrs={'rows': 4, 'placeholder': 'A detailed description of your watchlist. Remember to add a citation to the original data source.'}),
+            'active': forms.CheckboxInput(),
+            'name': forms.TextInput(attrs={'size': 80, 'placeholder': 'Make it memorable', 'required': True}),
+            'description': forms.Textarea(attrs={'rows': 4, 'placeholder': 'A detailed description of your watchlist. Remember to add a citation to the original data source.', 'required': True}),
             'public': forms.CheckboxInput(),
-            'active': forms.CheckboxInput()
         }
-        fields = ['name', 'description', 'active', 'public', 'radius']
-
-    def clean_public(self):
-        return 1 if self.cleaned_data['public'] else 0
+        fields = ['name', 'description', 'active', 'public']
 
     def clean_active(self):
         return 1 if self.cleaned_data['active'] else 0
+
+    def clean_public(self):
+        return 1 if self.cleaned_data['public'] else 0
 
     def clean(self):
         cleaned_data = super(DuplicateWatchlistForm, self).clean()
@@ -92,7 +92,6 @@ class DuplicateWatchlistForm(forms.ModelForm):
         if self.request:
             action = self.request.POST.get('action')
 
-        print(action)
         if action == "copy":
             if Watchlist.objects.filter(Q(user=self.request.user) & Q(name=name)).exists():
                 msg = 'You already have a watchlist by that name, please choose another.'

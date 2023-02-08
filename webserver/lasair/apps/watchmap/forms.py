@@ -15,8 +15,10 @@ class WatchmapForm(forms.ModelForm):
     class Meta:
         model = Watchmap
         widgets = {
-            'name': forms.TextInput(attrs={'size': 80, 'placeholder': 'Make it memorable'}),
-            'description': forms.Textarea(attrs={'rows': 3, 'placeholder': 'A detailed description of your watchmap.'}),
+            'name': forms.TextInput(attrs={'size': 80, 'placeholder': 'Make it memorable', 'required': True}),
+            'description': forms.Textarea(attrs={'rows': 3, 'placeholder': 'A detailed description of your watchmap.', 'required': True}),
+            'public': forms.CheckboxInput(),
+            'active': forms.CheckboxInput()
         }
         fields = ['name', 'description', 'active', 'public', 'watchmap_file']
 
@@ -33,8 +35,8 @@ class UpdateWatchmapForm(forms.ModelForm):
     class Meta:
         model = Watchmap
         widgets = {
-            'name': forms.TextInput(attrs={'size': 80, 'placeholder': 'Make it memorable'}),
-            'description': forms.Textarea(attrs={'rows': 4, 'placeholder': 'A detailed description of your watchmap.'}),
+            'name': forms.TextInput(attrs={'size': 80, 'placeholder': 'Make it memorable', 'required': True}),
+            'description': forms.Textarea(attrs={'rows': 4, 'placeholder': 'A detailed description of your watchmap.', 'required': True}),
             'public': forms.CheckboxInput(),
             'active': forms.CheckboxInput()
         }

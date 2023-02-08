@@ -190,25 +190,36 @@ def watchmap_create(request):
     # SUBMISSION OF NEW WATCHMAP
     if request.method == "POST":
         form = WatchmapForm(request.POST, request.FILES)
-        if form.is_valid():
-            form.save()
+        if not form.is_valid():
+            messages.error(request, f'{form.errors}')
+            return redirect(f'watchmap_index')
 
+        if form.is_valid():
             # GET WATCHMAP PARAMETERS
             t = time.time()
             name = request.POST.get('name')
             description = request.POST.get('description')
 
+            if request.POST.get('public'):
+                public = True
+            else:
+                public = False
+            if request.POST.get('active'):
+                active = True
+            else:
+                active = False
+
             if 'watchmap_file' in request.FILES:
                 fits_bytes = (request.FILES['watchmap_file']).read()
                 fits_string = bytes2string(fits_bytes)
-                png_bytes = make_image_of_MOC(fits_bytes)
+                png_bytes = make_image_of_MOC(fits_bytes, request=request)
                 png_string = bytes2string(png_bytes)
 
                 wm = Watchmap(user=request.user, name=name, description=description,
-                              moc=fits_string, mocimage=png_string, active=0)
+                              moc=fits_string, mocimage=png_string, active=active, public=public)
                 wm.save()
                 watchmapname = form.cleaned_data.get('name')
-                messages.success(request, f'The {watchmapname} watchlist has been successfully created')
+                messages.success(request, f"The '{watchmapname}' watchmap has been successfully created")
                 return redirect(f'watchmap_detail', wm.pk)
 
 

@@ -15,6 +15,7 @@ import settings
 from django.contrib import messages
 from src import db_connect
 import sys
+import copy
 from lasair.apps.db_schema.utils import get_schema_dict
 from .utils import handle_uploaded_file, add_watchlist_metadata
 
@@ -84,6 +85,9 @@ def watchlist_detail(request, wl_id):
     cursor = msl.cursor(buffered=True, dictionary=True)
     watchlist = get_object_or_404(Watchlist, wl_id=wl_id)
 
+    duplicateForm = DuplicateWatchlistForm(request.POST, instance=watchlist, request=request)
+    form = UpdateWatchlistForm(instance=watchlist)
+
     # IS USER ALLOWED TO SEE THIS RESOURCE?
     is_owner = (request.user.is_authenticated) and (request.user.id == watchlist.user.id)
     is_public = (watchlist.public == 1)
@@ -119,7 +123,45 @@ def watchlist_detail(request, wl_id):
             hits = run_crossmatch.run_crossmatch(msl, watchlist.radius, watchlist.wl_id)
             messages.success(request, f'{hits} crossmatches found')
         elif action == "copy":
-            messages.success(request, f'watchlist copied')
+            if duplicateForm.is_valid():
+
+                oldName = copy.deepcopy(watchlist.name)
+                name = request.POST.get('name')
+                description = request.POST.get('description')
+                newWl = watchlist
+                newWl.pk = None
+                newWl.user = request.user
+                newWl.name = request.POST.get('name')
+                newWl.description = request.POST.get('description')
+                if request.POST.get('active'):
+                    newWl.active = True
+                else:
+                    newWl.active = False
+
+                if request.POST.get('public'):
+                    newWl.public = True
+                else:
+                    newWl.public = False
+                newWl.save()
+                wl = newWl
+
+                # COPY ALL CONES
+                query = f"""CREATE TEMPORARY TABLE watchlist{wl_id} AS SELECT * FROM watchlist_cones  WHERE wl_id = {wl_id};
+                ALTER TABLE watchlist{wl_id} MODIFY cone_id INT DEFAULT 0;
+                UPDATE watchlist{wl_id} SET cone_id=NULL, wl_id={wl.pk};
+                INSERT INTO watchlist_cones SELECT * FROM watchlist{wl_id};
+                drop TEMPORARY table if exists watchlist{wl_id};"""
+
+                queries = cursor.execute(query, multi=True)
+                # ITERATE OVER QUERIES
+                for i in queries:
+                    pass
+                msl.commit()
+
+                wl_id = wl.pk
+
+                messages.success(request, f'You have successfully copied the "{oldName}" watchlist to My Watchlists. The results table is initially empty, but should start to fill as new transient detections match again sources in your watchlist.')
+                return redirect(f'watchlist_detail', wl_id)
 
     # FIND THE COUNT OF WATCHLIST MATCHES
     cursor.execute('SELECT count(*) AS count FROM watchlist_cones WHERE wl_id=%d' % wl_id)
@@ -168,9 +210,6 @@ WHERE c.wl_id={wl_id} limit {resultCap}
             if k not in schema:
                 schema[k] = "custom column"
 
-    duplicateForm = DuplicateWatchlistForm(request.POST, instance=watchlist, request=request)
-    form = UpdateWatchlistForm(instance=watchlist)
-
     watchlist = get_object_or_404(Watchlist, wl_id=wl_id)
     return render(request, 'watchlist/watchlist_detail.html', {
         'watchlist': watchlist,
@@ -212,6 +251,15 @@ def watchlist_create(request):
             t = time.time()
             name = request.POST.get('name')
             description = request.POST.get('description')
+            if request.POST.get('public'):
+                public = True
+            else:
+                public = False
+            if request.POST.get('active'):
+                active = True
+            else:
+                active = False
+
             d_radius = request.POST.get('radius')
             cones = request.POST.get('cones_textarea')
             if 'cones_file' in request.FILES:
@@ -244,7 +292,7 @@ def watchlist_create(request):
                 except Exception as e:
                     messages.error(request, f'Bad line {len(cone_list)}: {line}\n{str(e)}')
 
-            wl = Watchlist(user=request.user, name=name, description=description, active=0, radius=default_radius)
+            wl = Watchlist(user=request.user, name=name, description=description, active=active, public=public, radius=default_radius)
             wl.save()
             cones = []
             for cone in cone_list:
@@ -258,7 +306,7 @@ def watchlist_create(request):
                 WatchlistCone.objects.bulk_create(cones[(i * 50000): ((i + 1) * 50000)])
 
             watchlistname = form.cleaned_data.get('name')
-            messages.success(request, f'The {watchlistname} catalogue watchlist has been successfully created')
+            messages.success(request, f"The '{watchlistname}' watchlist has been successfully created")
             return redirect(f'watchlist_detail', wl.pk)
 
 
