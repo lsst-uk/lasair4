@@ -12,7 +12,7 @@ class Watchmap(models.Model):
     description = models.TextField(max_length=4096, blank=True, null=True)
     moc = models.TextField(blank=True, null=True)
     mocimage = models.TextField(blank=True, null=True)
-    active = models.IntegerField(blank=True, null=True)
+    active = models.BooleanField(blank=True, null=True)
     public = models.BooleanField(blank=True, null=True)
     timestamp = models.DateTimeField(auto_now=True, editable=False, blank=True, null=True)
     date_created = models.DateTimeField(auto_now=True, editable=False, blank=True, null=True)
