@@ -15,7 +15,7 @@ import codecs
 extensions = ['sphinx.ext.autodoc', 'sphinx.ext.todo',
               'sphinx.ext.mathjax', 'sphinx.ext.autosummary',
               'sphinx.ext.coverage', 'sphinx.ext.linkcode',
-              'sphinxcontrib.mermaid', 'sphinx_search.extension']
+              'sphinxcontrib.mermaid', 'sphinx_search.extension', 'sphinx_design']
 
 
 class Mock(MagicMock):
