@@ -90,7 +90,7 @@ class filterQueryForm(forms.ModelForm):
         name = self.cleaned_data.get('name')
 
         if action == "save":
-            if filter_query.objects.filter(Q(user=self.request.user) & Q(name=name)).exists():
+            if filter_query.objects.filter(Q(user=self.request.user) & Q(name__iexact=name.strip().lower())).exists():
                 msg = 'You already have a filter by that name, please choose another.'
                 self.add_error('name', msg)
 
@@ -121,20 +121,30 @@ class UpdateFilterQueryForm(forms.ModelForm):
         }
         fields = ['name', 'description', 'active', 'public', 'selected', 'conditions', 'real_sql']
 
+    def clean(self):
+        cleaned_data = super(UpdateFilterQueryForm, self).clean()
+        if self.request:
+            action = self.request.POST.get('action')
+        name = self.cleaned_data.get('name')
+
+        if action == "save":
+            if filter_query.objects.filter(Q(user=self.request.user) & Q(name__iexact=name.strip().lower())).exists():
+                msg = 'You already have a filter by that name, please choose another.'
+                self.add_error('name', msg)
+        return cleaned_data
+
     def __init__(self, *args, **kwargs):
         self.request = kwargs.pop('request', None)
         super().__init__(*args, **kwargs)
         self.helper = FormHelper()
 
-        instance = kwargs.get('instance', {})
+        self.instance = kwargs.get('instance', {})
 
         for i in self.fields:
             if i in ["public"]:
-                if instance.__dict__[i]:
+                if self.instance.__dict__[i]:
                     self.initial[i] = True
                 else:
                     self.initial[i] = False
             else:
-                self.fields[i].widget.attrs['value'] = instance.__dict__[i]
-
-            # self.fields[i].initial = instance.__dict__[i]
+                self.fields[i].widget.attrs['value'] = self.instance.__dict__[i]

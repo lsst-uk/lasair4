@@ -96,6 +96,7 @@ def filter_query_detail(request, mq_id):
         return render(request, 'error.html')
 
     if request.method == 'POST' and is_owner:
+        form = UpdateFilterQueryForm(request.POST, instance=filterQuery, request=request)
         # UPDATING SETTINGS?
         filterQuery.name = request.POST.get('name')
         filterQuery.description = request.POST.get('description')
@@ -132,6 +133,8 @@ def filter_query_detail(request, mq_id):
                 messages.error(request, f'The kafa topic could not be refreshed for this filter. {e}')
         filterQuery.save()
         messages.success(request, f'Your filter has been successfully updated')
+    else:
+        form = UpdateFilterQueryForm(instance=filterQuery, request=request)
 
     cursor.execute(f'SELECT name, selected, tables, conditions, real_sql FROM myqueries WHERE mq_id={mq_id}')
     for row in cursor:
@@ -144,8 +147,6 @@ def filter_query_detail(request, mq_id):
 
     limit = 5000
     offset = 0
-
-    form = UpdateFilterQueryForm(instance=filterQuery)
 
     table, schema, count, topic, error = run_filter(
         selected=filterQuery.selected,

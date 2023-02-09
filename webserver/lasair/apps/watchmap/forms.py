@@ -32,7 +32,7 @@ class WatchmapForm(forms.ModelForm):
             action = self.request.POST.get('action')
 
         if action == "save":
-            if Watchmap.objects.filter(Q(user=self.request.user) & Q(name=name)).exists():
+            if Watchmap.objects.filter(Q(user=self.request.user) & Q(name__iexact=name.strip().lower())).exists():
                 msg = 'You already have a watchmap by that name, please choose another.'
                 self.add_error('name', msg)
 
@@ -61,7 +61,7 @@ class UpdateWatchmapForm(forms.ModelForm):
             action = self.request.POST.get('action')
 
         if action == "save":
-            if Watchmap.objects.filter(Q(user=self.request.user) & Q(name=name)).exists() and self.instance.name != name:
+            if Watchmap.objects.filter(Q(user=self.request.user) & Q(name__iexact=name.strip().lower())).exists() and self.instance.name != name:
                 msg = 'You already have a watchmap by that name, please choose another.'
                 self.add_error('name', msg)
 

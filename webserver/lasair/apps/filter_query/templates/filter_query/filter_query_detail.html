@@ -43,6 +43,14 @@
 <!-- Specific Page JS goes HERE  -->
 {% block javascripts %}
 
+    <script>
+        {% if form.name.errors %}
+            $(document).ready(function(){
+                $("#editFilterForm").modal('show');
+            });
+        {% endif %}
+    </script>
+
 {% endblock javascripts %}
 
 
