@@ -153,9 +153,6 @@ def watchlist_detail(request, wl_id):
     cursor = msl.cursor(buffered=True, dictionary=True)
     watchlist = get_object_or_404(Watchlist, wl_id=wl_id)
 
-    duplicateForm = DuplicateWatchlistForm(request.POST, instance=watchlist, request=request)
-    form = UpdateWatchlistForm(instance=watchlist, request=request)
-
     # IS USER ALLOWED TO SEE THIS RESOURCE?
     is_owner = (request.user.is_authenticated) and (request.user.id == watchlist.user.id)
     is_public = (watchlist.public == 1)
@@ -165,27 +162,32 @@ def watchlist_detail(request, wl_id):
         return render(request, 'error.html')
 
     if request.method == 'POST' and is_owner:
+
+        duplicateForm = DuplicateWatchlistForm(request.POST, instance=watchlist, request=request)
+        form = UpdateWatchlistForm(request.POST, instance=watchlist, request=request)
+
         action = request.POST.get('action')
         # UPDATING SETTINGS?
         if action == 'save':
-            watchlist.name = request.POST.get('name')
-            watchlist.description = request.POST.get('description')
+            if form.is_valid():
+                watchlist.name = request.POST.get('name')
+                watchlist.description = request.POST.get('description')
 
-            if request.POST.get('active'):
-                watchlist.active = 1
-            else:
-                watchlist.active = 0
+                if request.POST.get('active'):
+                    watchlist.active = 1
+                else:
+                    watchlist.active = 0
 
-            if request.POST.get('public'):
-                watchlist.public = 1
-            else:
-                watchlist.public = 0
+                if request.POST.get('public'):
+                    watchlist.public = 1
+                else:
+                    watchlist.public = 0
 
-            watchlist.radius = float(request.POST.get('radius'))
-            if watchlist.radius > 360:
-                watchlist.radius = 360
-            watchlist.save()
-            messages.success(request, f'Your watchlist has been successfully updated')
+                watchlist.radius = float(request.POST.get('radius'))
+                if watchlist.radius > 360:
+                    watchlist.radius = 360
+                watchlist.save()
+                messages.success(request, f'Your watchlist has been successfully updated')
         # REQUEST TO REFRESH THE WATCHLIST MATCHES
         elif action == 'run':
             hits = run_crossmatch.run_crossmatch(msl, watchlist.radius, watchlist.wl_id)
@@ -230,6 +232,9 @@ def watchlist_detail(request, wl_id):
 
                 messages.success(request, f'You have successfully copied the "{oldName}" watchlist to My Watchlists. The results table is initially empty, but should start to fill as new transient detections match again sources in your watchlist.')
                 return redirect(f'watchlist_detail', wl_id)
+    else:
+        duplicateForm = DuplicateWatchlistForm(instance=watchlist, request=request)
+        form = UpdateWatchlistForm(instance=watchlist, request=request)
 
     # FIND THE COUNT OF WATCHLIST MATCHES
     cursor.execute('SELECT count(*) AS count FROM watchlist_cones WHERE wl_id=%d' % wl_id)

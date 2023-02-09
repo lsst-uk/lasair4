@@ -132,21 +132,25 @@ def watchmap_detail(request, ar_id):
         return render(request, 'error.html')
 
     if request.method == 'POST' and is_owner:
-        # UPDATING SETTINGS?
-        if 'name' in request.POST:
-            watchmap.name = request.POST.get('name')
-            watchmap.description = request.POST.get('description')
-            if request.POST.get('active'):
-                watchmap.active = 1
-            else:
-                watchmap.active = 0
+        form = UpdateWatchmapForm(request.POST, instance=watchmap, request=request)
+        if form.is_valid():
+            # UPDATING SETTINGS?
+            if 'name' in request.POST:
+                watchmap.name = request.POST.get('name')
+                watchmap.description = request.POST.get('description')
+                if request.POST.get('active'):
+                    watchmap.active = 1
+                else:
+                    watchmap.active = 0
 
-            if request.POST.get('public'):
-                watchmap.public = 1
-            else:
-                watchmap.public = 0
-            watchmap.save()
-            messages.success(request, f'Your watchmap has been successfully updated')
+                if request.POST.get('public'):
+                    watchmap.public = 1
+                else:
+                    watchmap.public = 0
+                watchmap.save()
+                messages.success(request, f'Your watchmap has been successfully updated')
+    else:
+        form = UpdateWatchmapForm(instance=watchmap, request=request)
 
     # GRAB ALL WATCHMAP MATCHES
     query_hit = f"""
@@ -188,8 +192,6 @@ limit {resultCap}
         for k in table[0].keys():
             if k not in schema:
                 schema[k] = "custom column"
-
-    form = UpdateWatchmapForm(instance=watchmap, request=request)
 
     return render(request, 'watchmap/watchmap_detail.html', {
         'watchmap': watchmap,

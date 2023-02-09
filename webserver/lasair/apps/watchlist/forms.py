@@ -72,7 +72,7 @@ class UpdateWatchlistForm(forms.ModelForm):
             action = self.request.POST.get('action')
 
         if action == "save":
-            if Watchlist.objects.filter(Q(user=self.request.user) & Q(name=name)).exists():
+            if Watchlist.objects.filter(Q(user=self.request.user) & Q(name=name)).exists() and name != self.instance.name:
                 msg = 'You already have a watchlist by that name, please choose another.'
                 self.add_error('name', msg)
 
@@ -83,19 +83,19 @@ class UpdateWatchlistForm(forms.ModelForm):
         super().__init__(*args, **kwargs)
         self.helper = FormHelper()
 
-        instance = kwargs.get('instance', {})
+        self.instance = kwargs.get('instance', {})
 
         for i in self.fields:
             # print(instance.__dict__[i])
 
             if i in ["public", "active"]:
-                if instance.__dict__[i]:
+                if self.instance.__dict__[i]:
                     self.initial[i] = True
                 else:
                     self.initial[i] = False
 
             else:
-                self.fields[i].widget.attrs['value'] = instance.__dict__[i]
+                self.fields[i].widget.attrs['value'] = self.instance.__dict__[i]
 
 
 class DuplicateWatchlistForm(forms.ModelForm):

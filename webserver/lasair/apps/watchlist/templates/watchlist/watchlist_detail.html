@@ -40,6 +40,12 @@
                 $("#duplicateWatchlistForm").modal('show');
             });
         {% endif %}
+
+        {% if form.name.errors %}
+            $(document).ready(function(){
+                $("#editWatchlistForm").modal('show');
+            });
+        {% endif %}
     </script>
 {% endblock javascripts %}
 
