@@ -1,6 +1,7 @@
 from django import forms
 from .models import Watchmap
 from crispy_forms.helper import FormHelper
+from django.db.models import Q
 
 
 class WatchmapForm(forms.ModelForm):
@@ -25,6 +26,15 @@ class WatchmapForm(forms.ModelForm):
 
     def clean(self):
         cleaned_data = super(WatchmapForm, self).clean()
+
+        name = self.cleaned_data.get('name')
+        if self.request:
+            action = self.request.POST.get('action')
+
+        if action == "save":
+            if Watchmap.objects.filter(Q(user=self.request.user) & Q(name=name)).exists():
+                msg = 'You already have a watchmap by that name, please choose another.'
+                self.add_error('name', msg)
 
     def save(self, commit=True):
         # do something with self.cleaned_data['temp_id']
