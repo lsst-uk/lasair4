@@ -20,8 +20,9 @@ from django.template.context_processors import csrf
 from django.shortcuts import render, get_object_or_404, redirect
 from lasair.apps.db_schema.utils import get_schema_dict
 from src import db_connect
+import copy
 import sys
-from .forms import WatchmapForm, UpdateWatchmapForm
+from .forms import WatchmapForm, UpdateWatchmapForm, DuplicateWatchmapForm
 from .utils import make_image_of_MOC, add_watchmap_metadata
 from lasair.utils import bytes2string, string2bytes
 sys.path.append('../common')
@@ -133,24 +134,53 @@ def watchmap_detail(request, ar_id):
 
     if request.method == 'POST' and is_owner:
         form = UpdateWatchmapForm(request.POST, instance=watchmap, request=request)
-        if form.is_valid():
-            # UPDATING SETTINGS?
-            if 'name' in request.POST:
-                watchmap.name = request.POST.get('name')
-                watchmap.description = request.POST.get('description')
+        duplicateForm = DuplicateWatchmapForm(request.POST, instance=watchmap, request=request)
+
+        action = request.POST.get('action')
+        if action == "save":
+            if form.is_valid():
+                # UPDATING SETTINGS?
+                if 'name' in request.POST:
+                    watchmap.name = request.POST.get('name')
+                    watchmap.description = request.POST.get('description')
+                    if request.POST.get('active'):
+                        watchmap.active = 1
+                    else:
+                        watchmap.active = 0
+
+                    if request.POST.get('public'):
+                        watchmap.public = 1
+                    else:
+                        watchmap.public = 0
+                    watchmap.save()
+                    messages.success(request, f'Your watchmap has been successfully updated')
+        elif action == "copy":
+            if duplicateForm.is_valid():
+                oldName = copy.deepcopy(watchmap.name)
+                name = request.POST.get('name')
+                description = request.POST.get('description')
+                newWm = watchmap
+                newWm.pk = None
+                newWm.user = request.user
+                newWm.name = request.POST.get('name')
+                newWm.description = request.POST.get('description')
                 if request.POST.get('active'):
-                    watchmap.active = 1
+                    newWm.active = True
                 else:
-                    watchmap.active = 0
+                    newWm.active = False
 
                 if request.POST.get('public'):
-                    watchmap.public = 1
+                    newWm.public = True
                 else:
-                    watchmap.public = 0
-                watchmap.save()
-                messages.success(request, f'Your watchmap has been successfully updated')
+                    newWm.public = False
+                newWm.save()
+                wm = newWm
+                ar_id = wm.pk
+                messages.success(request, f'You have successfully copied the "{oldName}" watchmap to My Watchmaps. The results table is initially empty, but should start to fill as new transient detections are found within the map area.')
+                return redirect(f'watchmap_detail', ar_id)
     else:
         form = UpdateWatchmapForm(instance=watchmap, request=request)
+        duplicateForm = DuplicateWatchmapForm(instance=watchmap, request=request)
 
     # GRAB ALL WATCHMAP MATCHES
     query_hit = f"""
@@ -199,6 +229,7 @@ limit {resultCap}
         'count': count,
         'schema': schema,
         'form': form,
+        'duplicateForm': duplicateForm,
         'limit': limit})
 
 
