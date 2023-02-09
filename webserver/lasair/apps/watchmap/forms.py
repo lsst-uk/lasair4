@@ -8,6 +8,7 @@ class WatchmapForm(forms.ModelForm):
     watchmap_file = forms.FileField()
 
     def __init__(self, *args, **kwargs):
+        self.request = kwargs.pop('request', None)
         super().__init__(*args, **kwargs)
         self.helper = FormHelper()
         self.fields['watchmap_file'].required = True
@@ -43,6 +44,7 @@ class UpdateWatchmapForm(forms.ModelForm):
         fields = ['name', 'description', 'active', 'public']
 
     def __init__(self, *args, **kwargs):
+        self.request = kwargs.pop('request', None)
         super().__init__(*args, **kwargs)
         self.helper = FormHelper()
 

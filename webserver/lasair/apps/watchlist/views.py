@@ -5,7 +5,7 @@ import random
 import json
 from subprocess import Popen, PIPE
 from lasair.apps.watchlist.models import Watchlist, WatchlistCone
-from django.http import HttpResponse
+from django.http import HttpResponse, HttpResponseRedirect
 from django.contrib.auth.models import User
 from django.views.decorators.csrf import csrf_exempt
 from django.template.context_processors import csrf
@@ -41,6 +41,76 @@ def watchlist_index(request):
     ```
     """
 
+    # SUBMISSION OF NEW WATCHLIST
+    if request.method == "POST":
+        form = WatchlistForm(request.POST, request.FILES, request=request)
+
+        if form.is_valid():
+            # GET WATCHLIST PARAMETERS
+            t = time.time()
+            name = request.POST.get('name')
+            description = request.POST.get('description')
+            if request.POST.get('public'):
+                public = True
+            else:
+                public = False
+            if request.POST.get('active'):
+                active = True
+            else:
+                active = False
+
+            d_radius = request.POST.get('radius')
+            cones = request.POST.get('cones_textarea')
+            if 'cones_file' in request.FILES:
+                cones = handle_uploaded_file(request.FILES['cones_file'])
+            try:
+                default_radius = float(d_radius)
+            except:
+                messages.error(request, f'Cannot parse default radius {d_radius}')
+
+            cone_list = []
+            for line in cones.split('\n'):
+                if len(line) == 0:
+                    continue
+                if line[0] == '#':
+                    continue
+                line = line.replace('|', ',')
+                tok = line.split(',')
+                if len(tok) < 2:
+                    continue
+                try:
+                    if len(tok) >= 3:
+                        ra = float(tok[0])
+                        dec = float(tok[1])
+                        objectId = tok[2].strip()
+                        if len(tok) >= 4:
+                            radius = float(tok[3])
+                        else:
+                            radius = None
+                        cone_list.append([objectId, ra, dec, radius])
+                except Exception as e:
+                    messages.error(request, f'Bad line {len(cone_list)}: {line}\n{str(e)}')
+
+            wl = Watchlist(user=request.user, name=name, description=description, active=active, public=public, radius=default_radius)
+            wl.save()
+            cones = []
+            for cone in cone_list:
+                name = cone[0].encode('ascii', 'ignore').decode()
+                if name != cone[0]:
+                    messages.info(request, 'Non-ascii characters removed from name %s --> %s<br/>' % (cone[0], name))
+                wlc = WatchlistCone(wl=wl, name=name, ra=cone[1], decl=cone[2], radius=cone[3])
+                cones.append(wlc)
+            chunks = 1 + int(len(cones) / 50000)
+            for i in range(chunks):
+                WatchlistCone.objects.bulk_create(cones[(i * 50000): ((i + 1) * 50000)])
+
+            watchlistname = form.cleaned_data.get('name')
+            messages.success(request, f"The '{watchlistname}' watchlist has been successfully created")
+            return redirect(f'watchlist_detail', wl.pk)
+
+    else:
+        form = WatchlistForm(request=request)
+
     # PUBLIC WATCHLISTS
     publicWatchlists = Watchlist.objects.filter(public__gte=1)
     publicWatchlists = add_watchlist_metadata(publicWatchlists, remove_duplicates=True)
@@ -51,8 +121,6 @@ def watchlist_index(request):
         myWatchlists = add_watchlist_metadata(myWatchlists)
     else:
         myWatchlists = None
-
-    form = WatchlistForm()
 
     return render(request, 'watchlist/watchlist_index.html',
                   {'myWatchlists': myWatchlists,
@@ -86,7 +154,7 @@ def watchlist_detail(request, wl_id):
     watchlist = get_object_or_404(Watchlist, wl_id=wl_id)
 
     duplicateForm = DuplicateWatchlistForm(request.POST, instance=watchlist, request=request)
-    form = UpdateWatchlistForm(instance=watchlist)
+    form = UpdateWatchlistForm(instance=watchlist, request=request)
 
     # IS USER ALLOWED TO SEE THIS RESOURCE?
     is_owner = (request.user.is_authenticated) and (request.user.id == watchlist.user.id)
@@ -223,93 +291,6 @@ WHERE c.wl_id={wl_id} limit {resultCap}
     })
 
 
-@login_required
-def watchlist_create(request):
-    """*create a new watchlist*
-
-    **Key Arguments:**
-
-    - `request` -- the original request
-
-    **Usage:**
-
-    ```python
-    urlpatterns = [
-        ...
-        path('watchlists/create/', views.watchlist_create, name='watchlist_create'),
-        ...
-    ]
-    ```
-    """
-    # SUBMISSION OF NEW WATCHLIST
-    if request.method == "POST":
-        form = WatchlistForm(request.POST, request.FILES)
-        if form.is_valid():
-            form.save()
-
-            # GET WATCHLIST PARAMETERS
-            t = time.time()
-            name = request.POST.get('name')
-            description = request.POST.get('description')
-            if request.POST.get('public'):
-                public = True
-            else:
-                public = False
-            if request.POST.get('active'):
-                active = True
-            else:
-                active = False
-
-            d_radius = request.POST.get('radius')
-            cones = request.POST.get('cones_textarea')
-            if 'cones_file' in request.FILES:
-                cones = handle_uploaded_file(request.FILES['cones_file'])
-            try:
-                default_radius = float(d_radius)
-            except:
-                messages.error(request, f'Cannot parse default radius {d_radius}')
-
-            cone_list = []
-            for line in cones.split('\n'):
-                if len(line) == 0:
-                    continue
-                if line[0] == '#':
-                    continue
-                line = line.replace('|', ',')
-                tok = line.split(',')
-                if len(tok) < 2:
-                    continue
-                try:
-                    if len(tok) >= 3:
-                        ra = float(tok[0])
-                        dec = float(tok[1])
-                        objectId = tok[2].strip()
-                        if len(tok) >= 4:
-                            radius = float(tok[3])
-                        else:
-                            radius = None
-                        cone_list.append([objectId, ra, dec, radius])
-                except Exception as e:
-                    messages.error(request, f'Bad line {len(cone_list)}: {line}\n{str(e)}')
-
-            wl = Watchlist(user=request.user, name=name, description=description, active=active, public=public, radius=default_radius)
-            wl.save()
-            cones = []
-            for cone in cone_list:
-                name = cone[0].encode('ascii', 'ignore').decode()
-                if name != cone[0]:
-                    messages.info(request, 'Non-ascii characters removed from name %s --> %s<br/>' % (cone[0], name))
-                wlc = WatchlistCone(wl=wl, name=name, ra=cone[1], decl=cone[2], radius=cone[3])
-                cones.append(wlc)
-            chunks = 1 + int(len(cones) / 50000)
-            for i in range(chunks):
-                WatchlistCone.objects.bulk_create(cones[(i * 50000): ((i + 1) * 50000)])
-
-            watchlistname = form.cleaned_data.get('name')
-            messages.success(request, f"The '{watchlistname}' watchlist has been successfully created")
-            return redirect(f'watchlist_detail', wl.pk)
-
-
 def watchlist_download(request, wl_id):
     """*download the original watchlist*
 
@@ -358,7 +339,7 @@ def watchlist_download(request, wl_id):
     return response
 
 
-@login_required
+@ login_required
 def watchlist_delete(request, wl_id):
     """*delete a watchlist
 
@@ -399,7 +380,7 @@ def watchlist_delete(request, wl_id):
     return redirect('watchlist_index')
 
 
-@login_required
+@ login_required
 def watchlist_duplicate(request, wl_id):
     """*duplicate a watchlist
 
