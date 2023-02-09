@@ -53,22 +53,32 @@ class UpdateWatchmapForm(forms.ModelForm):
         }
         fields = ['name', 'description', 'active', 'public']
 
+    def clean(self):
+        cleaned_data = super(UpdateWatchmapForm, self).clean()
+
+        name = self.cleaned_data.get('name')
+        if self.request:
+            action = self.request.POST.get('action')
+
+        if action == "save":
+            if Watchmap.objects.filter(Q(user=self.request.user) & Q(name=name)).exists() and self.instance.name != name:
+                msg = 'You already have a watchmap by that name, please choose another.'
+                self.add_error('name', msg)
+
     def __init__(self, *args, **kwargs):
         self.request = kwargs.pop('request', None)
         super().__init__(*args, **kwargs)
         self.helper = FormHelper()
 
-        instance = kwargs.get('instance', {})
+        self.instance = kwargs.get('instance', {})
 
         for i in self.fields:
-            # print(instance.__dict__[i])
 
             if i in ["public", "active"]:
-                if instance.__dict__[i]:
+                if self.instance.__dict__[i]:
                     self.initial[i] = True
                 else:
                     self.initial[i] = False
 
             else:
-                self.fields[i].widget.attrs['value'] = instance.__dict__[i]
-            # self.fields[i].initial = instance.__dict__[i]
+                self.fields[i].widget.attrs['value'] = self.instance.__dict__[i]

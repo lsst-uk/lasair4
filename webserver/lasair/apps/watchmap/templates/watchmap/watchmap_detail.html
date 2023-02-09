@@ -28,3 +28,13 @@
 
 
 {% endblock %}
+
+{% block javascripts %}
+    <script>
+        {% if form.errors %}
+            $(document).ready(function(){
+                $("#editWatchmapForm").modal('show');
+            });
+        {% endif %}
+    </script>
+{% endblock javascripts %}
