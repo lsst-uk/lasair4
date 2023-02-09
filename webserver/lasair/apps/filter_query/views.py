@@ -1,4 +1,4 @@
-from .utils import add_filter_query_metadata, run_filter, topic_name, check_query_zero_limit, delete_stream_file
+from .utils import add_filter_query_metadata, run_filter, topic_name, check_query_zero_limit, delete_stream_file, topic_refresh
 import random
 from src import date_nid, db_connect
 from django.shortcuts import render
@@ -11,11 +11,12 @@ from confluent_kafka import Producer, KafkaError, admin
 from django.views.decorators.csrf import csrf_exempt
 from lasair.apps.db_schema.utils import get_schema, get_schema_dict, get_schema_for_query_selected
 from .models import filter_query
-from .forms import filterQueryForm, UpdateFilterQueryForm
+from .forms import filterQueryForm, UpdateFilterQueryForm, DuplicateFilterQueryForm
 from lasair.query_builder import check_query, build_query
 import settings
 import json
 import re
+import copy
 import time
 from datetime import datetime
 from django.contrib import messages
@@ -86,6 +87,7 @@ def filter_query_detail(request, mq_id):
     msl = db_connect.readonly()
     cursor = msl.cursor(buffered=True, dictionary=True)
     filterQuery = get_object_or_404(filter_query, mq_id=mq_id)
+    filterQuery.real_sql = build_query(filterQuery.selected, filterQuery.tables, filterQuery.conditions)
 
     # IS USER ALLOWED TO SEE THIS RESOURCE?
     is_owner = (request.user.is_authenticated) and (request.user.id == filterQuery.user.id)
@@ -96,45 +98,76 @@ def filter_query_detail(request, mq_id):
         return render(request, 'error.html')
 
     if request.method == 'POST' and is_owner:
+
         form = UpdateFilterQueryForm(request.POST, instance=filterQuery, request=request)
+        duplicateForm = DuplicateFilterQueryForm(request.POST, instance=filterQuery, request=request)
+
+        action = request.POST.get('action')
         # UPDATING SETTINGS?
-        filterQuery.name = request.POST.get('name')
-        filterQuery.description = request.POST.get('description')
+        if action == 'save' and form.is_valid():
+            # UPDATING SETTINGS?
+            filterQuery.name = request.POST.get('name')
+            filterQuery.description = request.POST.get('description')
 
-        if request.POST.get('active'):
-            filterQuery.active = int(request.POST.get('active'))
-        else:
-            filterQuery.active = 0
+            if request.POST.get('active'):
+                filterQuery.active = int(request.POST.get('active'))
+            else:
+                filterQuery.active = 0
 
-        if request.POST.get('public'):
-            filterQuery.public = 1
-        else:
-            filterQuery.public = 0
+            if request.POST.get('public'):
+                filterQuery.public = 1
+            else:
+                filterQuery.public = 0
 
-        # VERIFY QUERY WORKS
-        e = check_query(filterQuery.selected, filterQuery.tables, filterQuery.conditions)
-        if e:
-            messages.error(request, f"There was an error updating your filter.\n{e}")
-            return render(request, 'error.html')
-        filterQuery.real_sql = build_query(filterQuery.selected, filterQuery.tables, filterQuery.conditions)
-        e = check_query_zero_limit(filterQuery.real_sql)
-        if e:
-            messages.error(request, f"There was an error updating your filter.\n{e}")
-            return render(request, 'error.html')
+            # VERIFY QUERY WORKS
+            e = check_query(filterQuery.selected, filterQuery.tables, filterQuery.conditions)
+            if e:
+                messages.error(request, f"There was an error updating your filter.\n{e}")
+                return render(request, 'error.html')
 
-        # REFRESH STREAM
-        tn = topic_name(request.user.id, filterQuery.name)
-        filterQuery.topic_name = tn
-        delete_stream_file(request, filterQuery.name)
-        if filterQuery.active == 2:
-            try:
-                topic_refresh(filterQuery.real_sql, tn, limit=10)
-            except Exception as e:
-                messages.error(request, f'The kafa topic could not be refreshed for this filter. {e}')
-        filterQuery.save()
-        messages.success(request, f'Your filter has been successfully updated')
+            e = check_query_zero_limit(filterQuery.real_sql)
+            if e:
+                messages.error(request, f"There was an error updating your filter.\n{e}")
+                return render(request, 'error.html')
+
+            # REFRESH STREAM
+            tn = topic_name(request.user.id, filterQuery.name)
+            filterQuery.topic_name = tn
+            delete_stream_file(request, filterQuery.name)
+            if filterQuery.active == 2:
+                try:
+                    topic_refresh(filterQuery.real_sql, tn, limit=10)
+                except Exception as e:
+                    messages.error(request, f'The kafa topic could not be refreshed for this filter. {e}')
+            filterQuery.save()
+            messages.success(request, f'Your filter has been successfully updated')
+        elif action == 'copy' and duplicateForm.is_valid():
+            oldName = copy.deepcopy(filterQuery.name)
+            name = request.POST.get('name')
+            description = request.POST.get('description')
+            newFil = filterQuery
+            newFil.pk = None
+            newFil.user = request.user
+            newFil.name = request.POST.get('name')
+            newFil.description = request.POST.get('description')
+            newFil.active = request.POST.get('active')
+
+            if request.POST.get('public'):
+                newFil.public = True
+            else:
+                newFil.public = False
+            newFil.save()
+            filterQuery = newFil
+            mq_id = filterQuery.pk
+
+            messages.success(request, f'You have successfully copied the "{oldName}" filter to My Filters. The results table is initially empty, but should start to fill as new transient detections match against your filter.')
+            return redirect(f'filter_query_detail', mq_id)
     else:
         form = UpdateFilterQueryForm(instance=filterQuery, request=request)
+        duplicateForm = DuplicateFilterQueryForm(instance=filterQuery, request=request)
+
+    filterQuery = get_object_or_404(filter_query, mq_id=mq_id)
+    filterQuery.real_sql = build_query(filterQuery.selected, filterQuery.tables, filterQuery.conditions)
 
     cursor.execute(f'SELECT name, selected, tables, conditions, real_sql FROM myqueries WHERE mq_id={mq_id}')
     for row in cursor:
@@ -175,6 +208,7 @@ def filter_query_detail(request, mq_id):
         'count': count,
         "schema": schema,
         "form": form,
+        "duplicateForm": duplicateForm,
         'limit': str(limit)
     })
 
