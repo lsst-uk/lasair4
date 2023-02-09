@@ -41,7 +41,7 @@ class WatchlistForm(forms.ModelForm):
             action = self.request.POST.get('action')
 
         if action == "save":
-            if Watchlist.objects.filter(Q(user=self.request.user) & Q(name=name)).exists():
+            if Watchlist.objects.filter(Q(user=self.request.user) & Q(name__iexact=name.strip().lower())).exists():
                 msg = 'You already have a watchlist by that name, please choose another.'
                 self.add_error('name', msg)
 
@@ -72,7 +72,7 @@ class UpdateWatchlistForm(forms.ModelForm):
             action = self.request.POST.get('action')
 
         if action == "save":
-            if Watchlist.objects.filter(Q(user=self.request.user) & Q(name=name)).exists() and name != self.instance.name:
+            if Watchlist.objects.filter(Q(user=self.request.user) & Q(name__iexact=name.strip().lower())).exists() and name != self.instance.name:
                 msg = 'You already have a watchlist by that name, please choose another.'
                 self.add_error('name', msg)
 
@@ -123,7 +123,7 @@ class DuplicateWatchlistForm(forms.ModelForm):
             action = self.request.POST.get('action')
 
         if action == "copy":
-            if Watchlist.objects.filter(Q(user=self.request.user) & Q(name=name)).exists():
+            if Watchlist.objects.filter(Q(user=self.request.user) & Q(name__iexact=name.strip().lower())).exists():
                 msg = 'You already have a watchlist by that name, please choose another.'
                 self.add_error('name', msg)
 
