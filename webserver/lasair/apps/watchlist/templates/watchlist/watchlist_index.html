@@ -76,3 +76,15 @@
 
 
 {% endblock %}
+
+<!-- Specific Page JS goes HERE  -->
+{% block javascripts %}
+    <script>
+        {% if form.errors %}
+            $(document).ready(function(){
+                $("#createWatchlistForm").modal('show');
+            });
+        {% endif %}
+    </script>
+{% endblock javascripts %}
+

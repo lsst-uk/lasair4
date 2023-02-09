@@ -10,10 +10,12 @@ class WatchlistForm(forms.ModelForm):
     cones_file = forms.FileField()
 
     def __init__(self, *args, **kwargs):
+        self.request = kwargs.pop('request', None)
         super().__init__(*args, **kwargs)
         self.helper = FormHelper()
         self.fields['cones_textarea'].required = False
         self.fields['cones_file'].required = False
+        self.fields['cones_textarea'].required = False
 
     class Meta:
         model = Watchlist
@@ -21,7 +23,8 @@ class WatchlistForm(forms.ModelForm):
             'name': forms.TextInput(attrs={'size': 80, 'placeholder': 'Make it memorable', 'required': True}),
             'description': forms.Textarea(attrs={'rows': 3, 'placeholder': 'A detailed description of your watchlist. Remember to add a citation to the original data source.', 'required': True}),
             'public': forms.CheckboxInput(),
-            'active': forms.CheckboxInput()
+            'active': forms.CheckboxInput(),
+            'radius': forms.NumberInput(attrs={'required': True})
         }
         fields = ['name', 'description', 'active', 'public', 'radius', 'cones_textarea', 'cones_file']
 
@@ -29,8 +32,20 @@ class WatchlistForm(forms.ModelForm):
         cleaned_data = super(WatchlistForm, self).clean()
         conetext = cleaned_data.get("cones_textarea")
         conefile = cleaned_data.get("cones_file")
-        if not conetext and not conefile and 1 == 0:
-            raise forms.ValidationError("Please either paste your catalogue contents or upload a catalogue file.")
+        if not conetext and not conefile:
+            msg = "Please either paste your catalogue contents or upload a catalogue file."
+            self.add_error('cones_textarea', msg)
+
+        name = self.cleaned_data.get('name')
+        if self.request:
+            action = self.request.POST.get('action')
+
+        if action == "save":
+            if Watchlist.objects.filter(Q(user=self.request.user) & Q(name=name)).exists():
+                msg = 'You already have a watchlist by that name, please choose another.'
+                self.add_error('name', msg)
+
+        return cleaned_data
 
     def save(self, commit=True):
         # do something with self.cleaned_data['temp_id']
@@ -45,11 +60,26 @@ class UpdateWatchlistForm(forms.ModelForm):
             'name': forms.TextInput(attrs={'size': 80, 'placeholder': 'Make it memorable', 'required': True}),
             'description': forms.Textarea(attrs={'rows': 4, 'placeholder': 'A detailed description of your watchlist. Remember to add a citation to the original data source.', 'required': True}),
             'public': forms.CheckboxInput(),
-            'active': forms.CheckboxInput()
+            'active': forms.CheckboxInput(),
+            'radius': forms.NumberInput(attrs={'required': True})
         }
         fields = ['name', 'description', 'active', 'public', 'radius']
 
+    def clean(self):
+        cleaned_data = super(UpdateWatchlistForm, self).clean()
+        name = self.cleaned_data.get('name')
+        if self.request:
+            action = self.request.POST.get('action')
+
+        if action == "save":
+            if Watchlist.objects.filter(Q(user=self.request.user) & Q(name=name)).exists():
+                msg = 'You already have a watchlist by that name, please choose another.'
+                self.add_error('name', msg)
+
+        return cleaned_data
+
     def __init__(self, *args, **kwargs):
+        self.request = kwargs.pop('request', None)
         super().__init__(*args, **kwargs)
         self.helper = FormHelper()
 
