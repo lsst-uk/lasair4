@@ -141,5 +141,3 @@ class DuplicateWatchlistForm(forms.ModelForm):
                 self.initial[i] = False
             else:
                 self.fields[i].widget.attrs['value'] = instance.__dict__[i]
-
-        # self.fields[i].initial = instance.__dict__[i]

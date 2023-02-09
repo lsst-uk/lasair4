@@ -36,5 +36,10 @@
                 $("#editWatchmapForm").modal('show');
             });
         {% endif %}
+        {% if duplicateForm.errors %}
+            $(document).ready(function(){
+                $("#duplicateWatchmapForm").modal('show');
+            });
+        {% endif %}
     </script>
 {% endblock javascripts %}

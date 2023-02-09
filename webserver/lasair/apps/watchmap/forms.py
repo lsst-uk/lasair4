@@ -82,3 +82,48 @@ class UpdateWatchmapForm(forms.ModelForm):
 
             else:
                 self.fields[i].widget.attrs['value'] = self.instance.__dict__[i]
+
+
+class DuplicateWatchmapForm(forms.ModelForm):
+
+    class Meta:
+        model = Watchmap
+        widgets = {
+            'active': forms.CheckboxInput(),
+            'name': forms.TextInput(attrs={'size': 80, 'placeholder': 'Make it memorable', 'required': True}),
+            'description': forms.Textarea(attrs={'rows': 4, 'placeholder': 'A detailed description of your watchmap.', 'required': True}),
+            'public': forms.CheckboxInput(),
+        }
+        fields = ['name', 'description', 'active', 'public']
+
+    def clean_active(self):
+        return 1 if self.cleaned_data['active'] else 0
+
+    def clean_public(self):
+        return 1 if self.cleaned_data['public'] else 0
+
+    def clean(self):
+        cleaned_data = super(DuplicateWatchmapForm, self).clean()
+        name = self.cleaned_data.get('name')
+        if self.request:
+            action = self.request.POST.get('action')
+
+        if action == "copy":
+            if Watchmap.objects.filter(Q(user=self.request.user) & Q(name__iexact=name.strip().lower())).exists():
+                msg = 'You already have a watchmap by that name, please choose another.'
+                self.add_error('name', msg)
+
+        return cleaned_data
+
+    def __init__(self, *args, **kwargs):
+        self.request = kwargs.pop('request', None)
+        super().__init__(*args, **kwargs)
+        self.helper = FormHelper()
+
+        instance = kwargs.get('instance', {})
+
+        for i in self.fields:
+            if i in ["public", "active"]:
+                self.initial[i] = False
+            else:
+                self.fields[i].widget.attrs['value'] = instance.__dict__[i]
