@@ -230,7 +230,7 @@ def watchlist_detail(request, wl_id):
 
                 wl_id = wl.pk
 
-                messages.success(request, f'You have successfully copied the "{oldName}" watchlist to My Watchlists. The results table is initially empty, but should start to fill as new transient detections match again sources in your watchlist.')
+                messages.success(request, f'You have successfully copied the "{oldName}" watchlist to My Watchlists. The results table is initially empty, but should start to fill as new transient detections match against sources in your watchlist.')
                 return redirect(f'watchlist_detail', wl_id)
     else:
         duplicateForm = DuplicateWatchlistForm(instance=watchlist, request=request)

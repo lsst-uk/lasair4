@@ -49,6 +49,12 @@
                 $("#editFilterForm").modal('show');
             });
         {% endif %}
+
+        {% if duplicateForm.name.errors %}
+            $(document).ready(function(){
+                $("#duplicateFilterForm").modal('show');
+            });
+        {% endif %}
     </script>
 
 {% endblock javascripts %}
