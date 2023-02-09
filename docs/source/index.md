@@ -71,3 +71,15 @@ Lasair's core features are described in more detail here:
    more_info/status
    more_info/acknowledgements
 ```
+<<<<<<< HEAD
+=======
+
+
+```eval_rst
+.. dropdown:: A new trick for Roy
+
+    .. code:: python
+
+         Hi buddy!
+```
+>>>>>>> 39fc634d8b25141cb0badb3e56cb30d03e7faf88
