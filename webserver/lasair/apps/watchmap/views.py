@@ -45,6 +45,39 @@ def watchmap_index(request):
     ]
     ```           
     """
+    # SUBMISSION OF NEW WATCHMAP
+    if request.method == "POST":
+        form = WatchmapForm(request.POST, request.FILES, request=request)
+
+        if form.is_valid():
+            # GET WATCHMAP PARAMETERS
+            t = time.time()
+            name = request.POST.get('name')
+            description = request.POST.get('description')
+
+            if request.POST.get('public'):
+                public = True
+            else:
+                public = False
+            if request.POST.get('active'):
+                active = True
+            else:
+                active = False
+
+            if 'watchmap_file' in request.FILES:
+                fits_bytes = (request.FILES['watchmap_file']).read()
+                fits_string = bytes2string(fits_bytes)
+                png_bytes = make_image_of_MOC(fits_bytes, request=request)
+                png_string = bytes2string(png_bytes)
+
+                wm = Watchmap(user=request.user, name=name, description=description,
+                              moc=fits_string, mocimage=png_string, active=active, public=public)
+                wm.save()
+                watchmapname = form.cleaned_data.get('name')
+                messages.success(request, f"The '{watchmapname}' watchmap has been successfully created")
+                return redirect(f'watchmap_detail', wm.pk)
+    else:
+        form = WatchmapForm(request=request)
 
     # PUBLIC WATCHMAPS
     publicWatchmaps = Watchmap.objects.filter(public__gte=1)
@@ -56,8 +89,6 @@ def watchmap_index(request):
         myWatchmaps = add_watchmap_metadata(myWatchmaps)
     else:
         myWatchmaps = None
-
-    form = WatchmapForm()
 
     return render(request, 'watchmap/watchmap_index.html',
                   {'myWatchmaps': myWatchmaps,
@@ -158,7 +189,7 @@ limit {resultCap}
             if k not in schema:
                 schema[k] = "custom column"
 
-    form = UpdateWatchmapForm(instance=watchmap)
+    form = UpdateWatchmapForm(instance=watchmap, request=request)
 
     return render(request, 'watchmap/watchmap_detail.html', {
         'watchmap': watchmap,
@@ -189,7 +220,7 @@ def watchmap_create(request):
     """
     # SUBMISSION OF NEW WATCHMAP
     if request.method == "POST":
-        form = WatchmapForm(request.POST, request.FILES)
+        form = WatchmapForm(request.POST, request.FILES, request=request)
         if not form.is_valid():
             messages.error(request, f'{form.errors}')
             return redirect(f'watchmap_index')
