@@ -263,7 +263,16 @@ div.search-bar input {
     white-space: normal !important;
 }
 
+
 .dropdown-divider {
     height: 1px !important;
     overflow: visible !important;
+}
+
+.theme-settings {
+    max-width: 400px;
+    small a:hover {
+        color: darken($tertiary,10%)
+    }
+
 }
