@@ -2,6 +2,8 @@ import json
 from django.shortcuts import render
 import src.date_nid as date_nid
 import settings
+from astropy.time import Time
+import datetime
 
 
 def status_today(request):
@@ -75,6 +77,7 @@ def status(request, nid):
         'total_count': ("Total objects in database", ''),
         'min_delay': ('Since most recent alert, hours:minutes', ''),
         'nid': ('Night number (nid)', ''),
+        "mjd": ('MJD', ''),
         'countTNS': ('Number in TNS database', ''),
         'today_singleton': ('Singletons today', '')
     }
@@ -86,6 +89,13 @@ def status(request, nid):
         statusTable[:] = [(statusSchema[s][0], status[s], statusSchema[s][1]) for s in statusOrder]
 
     date = date_nid.nid_to_date(nid)
+
+    d0 = datetime.date(2017, 1, 1)
+    d1 = d0 + datetime.timedelta(days=nid)
+    d1 = datetime.datetime.combine(d1, datetime.datetime.min.time())
+
+    mjd = Time([d1], scale='utc').mjd[0]
+
     prettyDate = date_nid.nid_to_pretty_date(nid)
     daysAgo = date_nid.nid_to_days_ago(nid)
     return render(request, 'status.html', {
@@ -94,6 +104,7 @@ def status(request, nid):
         'date': date,
         'daysAgo': daysAgo,
         'nid': nid,
+        'mjd': int(mjd),
         'prettyDate': prettyDate,
         'lasair_grafana_url': settings.LASAIR_GRAFANA_URL,
         'message': message})
