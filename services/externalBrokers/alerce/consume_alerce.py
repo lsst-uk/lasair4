@@ -1,7 +1,7 @@
 # Pulls from the Alerce Stamp or LC Classifier and pushes into Lasair
 
 import sys
-sys.path.append('../../common')
+sys.path.append('../../../common')
 from confluent_kafka import Consumer, KafkaError
 from fastavro import reader
 import lasair
@@ -73,7 +73,8 @@ else:
         print('Unknown classifier, quitting')
         sys.exit()
 
-    L = lasair.lasair_client(settings.API_TOKEN)
+    L = lasair.lasair_client(settings.API_TOKEN, endpoint='https://lasair-dev.lsst.ac.uk/api')
+#    L = lasair.lasair_client(settings.API_TOKEN)
 
     streamReader.subscribe([topic])
     while 1:
