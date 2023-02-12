@@ -215,10 +215,11 @@ def run_filter(args):
         'today_ztf':grafana_today(), 
         'today_database':d['count'], 
         'total_count': d['total_count'],
-        'min_delay':int(d['min_delay']), 
+        'min_delay': '%.1f' % d['since'],  # hours since most recent alert
         'nid': nid}, 
         nid)
-    if rc > 0:
+    if rc > 0:  # minutes since telescope got it
+
         min_str = "{:d}".format(int(d['min_delay']*60))
         avg_str = "{:d}".format(int(d['avg_delay']*60))
         max_str = "{:d}".format(int(d['max_delay']*60))
