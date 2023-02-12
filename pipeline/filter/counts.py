@@ -29,6 +29,7 @@ def batch_statistics():
 
     # total number of objects
     query = 'SELECT count(*) AS total_count, jdnow()-max(jdmax) AS since FROM objects'
+
     try:
         cursor.execute(query)
         for row in cursor:

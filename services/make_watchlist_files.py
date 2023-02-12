@@ -181,11 +181,24 @@ if __name__ == "__main__":
     import sys
     sys.path.append('../../common')
     import settings
-    from src import date_nid
+    sys.path.append('../../common/src')
+    import date_nid, slack_webhook, lasairLogging
+    lasairLogging.basicConfig(
+        filename='/home/ubuntu/logs/svc.log',
+        webhook=slack_webhook.SlackWebhook(url=settings.SLACK_URL),
+        merge=True
+    )
+    log = lasairLogging.getLogger("ingest_runner")
+
     nid  = date_nid.nid_now()
     date = date_nid.nid_to_date(nid)
     logfile = settings.SERVICES_LOG +'/'+ date + '.log'
-    logf    = open(logfile, 'a')
+    try:
+        logf    = open(logfile, 'a')
+    except Exception as e:
+        log.error("ERROR %s" % str(e))
+        sys.exit(0)
+
     now = datetime.now()
     message = '\n-- make_watchlist_files at %s\n' % now.strftime("%d/%m/%Y %H:%M:%S")
     logf.write(message)
@@ -202,10 +215,6 @@ if __name__ == "__main__":
 #    try:
     msl = db_connect.readonly()
     watchlists = fetch_active_watchlists(msl, cache_dir)
-#    except:
-#        s = 'make_watchlist_files: Cannot fetch watchlists from database'
-#        slack_webhook.send(settings.SLACK_URL, s)
-#        sys.exit(1)
 
     for watchlist in watchlists['keep']:
         wl_id = watchlist['wl_id']
