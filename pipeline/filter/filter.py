@@ -219,6 +219,7 @@ def run_filter(args):
         'nid': nid}, 
         nid)
     if rc > 0:  # minutes since telescope got it
+
         min_str = "{:d}".format(int(d['min_delay']*60))
         avg_str = "{:d}".format(int(d['avg_delay']*60))
         max_str = "{:d}".format(int(d['max_delay']*60))
