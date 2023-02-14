@@ -1,9 +1,21 @@
 ## Contact Us
 
-We really value feedback, especially from our users. Please reach out to us with any issues, suggestions or feature requests by [raising an issue in our github repo](https://github.com/lsst-uk/lasair_api/issues). Alternatively, start a discussion with us on the [Rubin Community forum](https://community.lsst.org/c/support/support-lasair/55) under [Support > Lasair](https://community.lsst.org/c/support/support-lasair/55).
+We really value feedback, especially from our users. 
 
-```eval_rst
-.. todo::
+Please ask your question or report your bug  with the 
+[Rubin Community forum](https://community.lsst.org/c/support/support-lasair/55) 
+under [Support > Lasair](https://community.lsst.org/c/support/support-lasair/55).
+You will need to get an account there -- a simple process, give your email and 
+respond to a message sent there.
 
-    - Add button image to raise github issue and another to be directed to Rubin community forum
-```
+### The Lasair Team
+
+* University of Edinburgh
+    * Gareth Francis
+    * Andy Lawrence
+    * Terry Sloan
+    * Roy Williams
+* Queen's University Belfast
+    * Stephen Smartt
+    * Ken Smith
+    * Dave Young
