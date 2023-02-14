@@ -20,15 +20,52 @@
 
     </div>
 
-    <script type="text/javascript">
-        var colors = {{ colors|safe }};
-        var alerts = {{ alerts|safe }};
 
-        // These much match the code in ../views.py
-        var nclass = 4;   // Number of classe
-        var nage = 5;     // Number of age brackets
+    <div class="container">
+        <div class="row mt-4">
+            <div class="col-12  mb-4">
+                <table>
+                    <colgroup>
+                        <col span="1" style="width: 40%;">
+                        <col span="1" style="width: 60%;">
+                    </colgroup>
+                    <tbody>
+                        <tr><td>
+                            <span id="class0">&block;&block;&block;</span>  Possible Supernova <br/>
+                            <span id="class1">&block;&block;&block;</span>  Nuclear Transient <br/>
+                            <span id="class2">&block;&block;&block;</span>  Cataclysmic Variable <br/>
+                            <span id="class3">&block;&block;&block;</span>  Active Galaxy <br/>
+                        </td><td>
+                            Some of the brightest and most recent alerts are shown, classified by sky context.
+                            Smaller and darker markers show time since most recent alert (age), up to 7 days.<br/>
+                            Click on a marker for information about that object; <br/>
+                            then click on the 'ZTF' link for full information.
+                        </td></tr></tbody></table>
+                <hr/>
+                <small>Mellinger color optical survey - Copyright 2000-2017 Axel Mellinger. All rights reserved.</small>
+            </div>
+        </div>
+    </div>
+
+{% endblock %}
+
+
+
+
+<!-- Specific Page JS goes HERE  -->
+{% block javascripts %}
+
+    <script>
+
 
         document.addEventListener('DOMContentLoaded', function() {
+
+            var colors = {{ colors|safe }};
+            var alerts = {{ alerts|safe }};
+
+            // These much match the code in ../views.py
+            var nclass = 4;   // Number of classe
+            var nage = 5;     // Number of age brackets
 
             var imageSurvey = 'P/Mellinger/color'
 
@@ -74,31 +111,6 @@
 
     </script>
 
-    <div class="container">
-        <div class="row mt-4">
-            <div class="col-12  mb-4">
-                <table>
-                    <colgroup>
-                        <col span="1" style="width: 40%;">
-                        <col span="1" style="width: 60%;">
-                    </colgroup>
-                    <tbody>
-                        <tr><td>
-                            <span id="class0">&block;&block;&block;</span>  Possible Supernova <br/>
-                            <span id="class1">&block;&block;&block;</span>  Nuclear Transient <br/>
-                            <span id="class2">&block;&block;&block;</span>  Cataclysmic Variable <br/>
-                            <span id="class3">&block;&block;&block;</span>  Active Galaxy <br/>
-                        </td><td>
-                            Some of the brightest and most recent alerts are shown, classified by sky context.
-                            Smaller and darker markers show time since most recent alert (age), up to 7 days.<br/>
-                            Click on a marker for information about that object; <br/>
-                            then click on the 'ZTF' link for full information.
-                        </td></tr></tbody></table>
-                <hr/>
-                <small>Mellinger color optical survey - Copyright 2000-2017 Axel Mellinger. All rights reserved.</small>
-            </div>
-        </div>
-    </div>
 
     <script>
         for (var iclass = 0; iclass < nclass; iclass++){
@@ -107,4 +119,4 @@
         }
     </script>
 
-{% endblock %}
+{% endblock javascripts %}
