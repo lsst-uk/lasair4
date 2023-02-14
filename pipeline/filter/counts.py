@@ -28,11 +28,13 @@ def batch_statistics():
         count = -1
 
     # total number of objects
-    query = 'SELECT count(*) AS total_count FROM objects'
+    query = 'SELECT count(*) AS total_count, jdnow()-max(jdmax) AS since FROM objects'
+
     try:
         cursor.execute(query)
         for row in cursor:
             total_count = row['total_count']
+            since       = 24*float(row['since'])
             break
     except:
         total_count = -1
@@ -61,9 +63,10 @@ def batch_statistics():
     return {
         'total_count':total_count, # number of objects in database
         'count':count,             # number of objects updated since midnight
-        'min_delay':min_delay,     # min delay in this batch, since now
-        'avg_delay':avg_delay,     # avg delay in this batch, since now
-        'max_delay':max_delay,     # max delay in this batch, since now
+        'since':since,             # time since last object, hours
+        'min_delay':min_delay,     # min delay in this batch, minutes
+        'avg_delay':avg_delay,     # avg delay in this batch, minutes
+        'max_delay':max_delay,     # max delay in this batch, minutes
     }
 
 def grafana_today():

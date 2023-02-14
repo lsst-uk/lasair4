@@ -226,6 +226,8 @@ div.search-bar input {
         font-size: $font-size-base*1.2 !important;
 }
 
+
+
 .popover {
     border-width: $popover-border-width !important;
     border-style: solid  !important;
@@ -259,4 +261,18 @@ div.search-bar input {
 
 .sidebar .nav {
     white-space: normal !important;
+}
+
+
+.dropdown-divider {
+    height: 1px !important;
+    overflow: visible !important;
+}
+
+.theme-settings {
+    max-width: 400px;
+    small a:hover {
+        color: darken($tertiary,10%)
+    }
+
 }
