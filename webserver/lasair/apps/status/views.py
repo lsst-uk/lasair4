@@ -75,13 +75,13 @@ def status(request, nid):
         'today_ztf': ('Alerts sent by ZTF today', ''),
         'today_database': ('Updated objects in database today', ''),
         'total_count': ("Total objects in database", ''),
-        'min_delay': ('Since most recent alert, hours:minutes', ''),
+        'min_delay': ('Hours since most recent alert', ''),
         'nid': ('Night number (nid)', ''),
         "mjd": ('MJD', ''),
         'countTNS': ('Number in TNS database', ''),
         'today_singleton': ('Singletons today', '')
     }
-    statusOrder = ["total_count", "nid", "update_time", "today_ztf", "today_alert", "today_filter_out", "today_filter_ss", "today_filter", "today_singleton", "today_candidate", "today_database", "min_delay", "countTNS"]
+    statusOrder = ["total_count", "nid", "update_time", "today_ztf", "today_alert", "today_filter_out", "today_filter_ss", "today_filter", "today_candidate", "today_database", "min_delay", "countTNS"]
 
     statusTable = []
 
