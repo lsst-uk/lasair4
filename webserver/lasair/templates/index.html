@@ -57,15 +57,16 @@
 
     <script>
 
+        var colors = {{ colors|safe }};
+        var alerts = {{ alerts|safe }};
+
+        // These much match the code in ../views.py
+        var nclass = 4;   // Number of classe
+        var nage = 5;     // Number of age brackets
 
         document.addEventListener('DOMContentLoaded', function() {
 
-            var colors = {{ colors|safe }};
-            var alerts = {{ alerts|safe }};
 
-            // These much match the code in ../views.py
-            var nclass = 4;   // Number of classe
-            var nage = 5;     // Number of age brackets
 
             var imageSurvey = 'P/Mellinger/color'
 
