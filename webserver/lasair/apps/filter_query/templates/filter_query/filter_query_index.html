@@ -5,29 +5,22 @@
     <div class="container">
 
         <div class="row mt-4">
-
             <div class="col-12  mb-4">
                 <div class="card border-0 shadow h-100">
                     <div class="card-body">
-                        <div class="row d-block d-xl-flex">
+                        <div class="row d-flex">
 
-                            <div class="col-1 text-xl-center mb-3 mb-xl-0 d-flex justify-content-xl-start">
-                                <div class="icon-shape icon-shape-tertiary rounded me-4 me-sm-0">
 
+                            <div class="col-12 col-sm-11 mb-3 d-flex align-items-center">
+                                <div class="icon-shape icon-shape-tertiary rounded me-sm-0">
                                     {% include "includes/icons/icon_filter_query.html" %}
                                 </div>
+                                <h2 class="h1 fw-extrabold mb-0 d-inline ps-3">Filters</h2>
+
                             </div>
-                            <div class="col-11  px-xl-1">
 
-                                <div class="d-flex flex-row ms-2">
-                                    <div class="flex-shrink-1">
-
-                                        <h2 class="fw-extrabold mb-2">Filters</h3>
-
-                                        <small class="text-gray-500">
-                                            Filters are used to select out subsets of transients of interest to Lasair users. Filters are written as SQL queries, created by users, to  match against past transient events found in the Lasair database and saved filters will dyamically match against future events.
-                                        </small>
-                                    </div>
+                            <div class="col-1 float-end d-none d-sm-inline">
+                                <span class="float-end">
                                     <nobr><a class="btn btn-sm btn-tertiary me-1 ms-auto" href=' {% url "filter_create" %} ' data-bs-toggle="tooltip" data-bs-placement="auto" data-bs-title="create your own filter">
                                         <svg class="w-1 h-1 pe-1" style="height: 1.1rem;" fill="currentColor" stroke="currentColor" stroke-width="1"  viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
                                             <g>
@@ -36,8 +29,17 @@
                                             </g>
                                         </svg>
                                         <span class="align-middle">Create New</span></a></nobr>
-                                </div>
+                                </span>
                             </div>
+
+                            <div class="col-12 px-4">
+                                <small class="text-gray-500">
+                                    Filters are used to select out subsets of transients of interest to Lasair users. Filters are written as SQL queries, created by users, to  match against past transient events found in the Lasair database and saved filters will dyamically match against future events.
+                                </small>
+                            </div>
+
+
+
                         </div>
                     </div>
                 </div>
