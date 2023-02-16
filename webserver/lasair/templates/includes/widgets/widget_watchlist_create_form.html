@@ -14,7 +14,7 @@
                     A Watchlist is composed of a set of locations in the sky, together with an association radius in arcseconds. These locations are presumably coordinates of sources of specific interest to you. Use a Watchlist to be alerted of transient events found in association with any of these sources. Your Watchlists will appear in the </em>My Watchlists</em> of the Watchlists index.
             </small></p>
 
-        <form enctype="multipart/form-data" method="post" action="{% url 'watchlist_create' %}" class="mt-0 mb-3">
+        <form enctype="multipart/form-data" method="post" class="mt-0 mb-3">
 
             {% csrf_token %}
 
@@ -44,7 +44,8 @@
             </div>
 
             <label for="cones">Paste or Upload Catalogue List</label>
-
+            <span class="text-error">{{ form.cones_textarea.errors }}</span>
+            <span class="text-error">{{ form.cones_file.errors }}</span>
             <div class="accordion  mb-4" id="cones">
                 <div class="accordion-item">
                     <h2 class="accordion-header" id="headingOne">
@@ -58,7 +59,7 @@
                             <div class="input-group  accordion-body">
                                 {{ form.cones_textarea|add_class:"form-control" }}
                             </div>
-                            <span class="text-error">{{ form.cones_textarea.errors }}</span>
+
                         </div>
 
                     </div>
@@ -79,7 +80,6 @@ RA, Dec, ID &lt;,radius&gt;
                                 <div class="input-group mt-3">
                                     {{ form.cones_file|add_class:"form-control" }}
                                 </div>
-                                <span class="text-error">{{ form.cones_file.errors }}</span>
 
                             </div>
 
@@ -88,10 +88,29 @@ RA, Dec, ID &lt;,radius&gt;
                 </div>
             </div>
 
+            <div class="form-group mb-4">
+                <div class="form-check form-switch">
+                    <label for="active">active</label>
+                    {{ form.active|add_class:"form-check-input" }}
+                    <small class="d-flex align-items-center text-gray-500">Dynamically match incoming alerts against watchlist</small>
+                </div>
+                <span class="text-error">{{ form.active.errors }}</span>
+            </div>
+
+            <div class="form-group mb-4">
+                <div class="form-check form-switch">
+                    <label for="public">public</label>
+                    {{ form.public|add_class:"form-check-input" }}
+                    <small class="d-flex align-items-center text-gray-500">Submit watchlist to the public gallery</small>
+                </div>
+
+                <span class="text-error">{{ form.public.errors }}</span>
+            </div>
+
             <small class="text-danger">{{ form.non_field_errors }}</small>
             <div class="d-grid">
 
-                <button type="submit" name="register" class="btn btn-gray-800">Create</button>
+                <button type="submit" class="btn btn-gray-800" name="action" value="save">Create</button>
             </div>
         </form>
 

@@ -5,31 +5,20 @@
     <div class="container">
 
         <div class="row mt-4">
-
             <div class="col-12  mb-4">
                 <div class="card border-0 shadow h-100">
                     <div class="card-body">
-                        <div class="row d-block d-xl-flex">
+                        <div class="row d-flex">
 
-                            <div class="col-1 text-xl-center mb-3 mb-xl-0 d-flex justify-content-xl-start">
-                                <div class="icon-shape icon-shape-tertiary rounded me-4 me-sm-0">
+                            <div class="col-12 col-sm-11 mb-3 d-flex align-items-center">
+                                <div class="icon-shape icon-shape-tertiary rounded me-sm-0">
                                     {% include "includes/icons/icon_watchlist.html" %}
                                 </div>
+                                <h2 class="h1 fw-extrabold mb-0 d-inline ps-3">Watchlists</h2>
                             </div>
 
-                            <div class="col-11  px-xl-1">
-
-                                <div class="d-flex flex-row ms-2">
-                                    <div class="flex-shrink-1">
-
-                                        <h2 class="h3 fw-extrabold mb-0">Watchlists</h2>
-                                        <small class="text-gray-500">
-                                            A watchlist is generated from a set of points in the sky, together with an association radius. Each transient falling within an association radius of a watchlist source is flagged as <em>matched</em> against that watchlist.
-                                        </small>
-
-                                    </div>
-
-                                    {# <div class="btn-group" role="group" aria-label="Basic button group"> #}
+                            <div class="col-1 float-end d-none d-sm-inline">
+                                <span class="float-end">
                                     <nobr>
                                         {% if user.is_authenticated %}
                                             <a class="btn btn-sm btn-tertiary me-1 ms-auto"  data-bs-toggle="modal" data-bs-target="#createWatchlistForm">
@@ -45,28 +34,34 @@
                                         </svg>
                                         <span class="align-middle">Create New</span></a></nobr>
                                 {% include "includes/widgets/widget_watchlist_create_form.html" %}
-
-                            </div>
+                            </span>
                         </div>
 
+                        <div class="col-12 px-4">
+                            <small class="text-gray-500">
+                                A watchmap is based on a region file (MOC format) which defines a specific portion of the sky. Each transient falling within that region of the sky is flagged as <em>matched</em> against that watchmap.
+                            </small>
+                        </div>
                     </div>
-
 
                 </div>
 
+
             </div>
 
         </div>
 
-        {% if user.is_authenticated %}
-            <div class="col-12 mb-4">
-                {% include "includes/widgets/widget_watchlist_table.html" with type="my" position="auto" %}
-            </div>
-        {% endif %}
+    </div>
 
+    {% if user.is_authenticated %}
         <div class="col-12 mb-4">
-            {% include "includes/widgets/widget_watchlist_table.html" with type="public" position="auto" %}
+            {% include "includes/widgets/widget_watchlist_table.html" with type="my" position="auto" %}
         </div>
+    {% endif %}
+
+    <div class="col-12 mb-4">
+        {% include "includes/widgets/widget_watchlist_table.html" with type="public" position="auto" %}
+    </div>
 
 
 
@@ -76,3 +71,15 @@
 
 
 {% endblock %}
+
+<!-- Specific Page JS goes HERE  -->
+{% block javascripts %}
+    <script>
+        {% if form.errors %}
+            $(document).ready(function(){
+                $("#createWatchlistForm").modal('show');
+            });
+        {% endif %}
+    </script>
+{% endblock javascripts %}
+

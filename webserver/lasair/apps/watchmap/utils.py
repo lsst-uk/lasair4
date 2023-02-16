@@ -4,6 +4,7 @@ from mocpy import MOC, World2ScreenMPL
 import matplotlib.pyplot as plt
 from src import db_connect
 import astropy.units as u
+from django.shortcuts import render
 
 
 def add_watchmap_metadata(
@@ -45,7 +46,7 @@ def add_watchmap_metadata(
     return updatedWatchlists
 
 
-def make_image_of_MOC(fits_bytes):
+def make_image_of_MOC(fits_bytes, request):
     """*generate a skyplot of the MOC file*
 
     **Key Arguments:**

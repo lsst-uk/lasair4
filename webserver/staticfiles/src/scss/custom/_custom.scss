@@ -226,8 +226,6 @@ div.search-bar input {
         font-size: $font-size-base*1.2 !important;
 }
 
-
-
 .popover {
     border-width: $popover-border-width !important;
     border-style: solid  !important;
@@ -263,16 +261,23 @@ div.search-bar input {
     white-space: normal !important;
 }
 
-
-.dropdown-divider {
-    height: 1px !important;
-    overflow: visible !important;
+.form-control {
+    padding: .5rem 1rem !important;
 }
 
-.theme-settings {
-    max-width: 400px;
-    small a:hover {
-        color: darken($tertiary,10%)
-    }
+.text-error {
+    color: $lasair-red;
+}
 
+
+.dataTable-top {
+    justify-content: flex-end !important;
+}
+
+select, input[type=number], input[type=text] {
+    padding: .5rem 1rem !important;
+}
+
+.icon-shape {
+    min-width: 4rem;
 }

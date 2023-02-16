@@ -20,8 +20,9 @@ from django.template.context_processors import csrf
 from django.shortcuts import render, get_object_or_404, redirect
 from lasair.apps.db_schema.utils import get_schema_dict
 from src import db_connect
+import copy
 import sys
-from .forms import WatchmapForm, UpdateWatchmapForm
+from .forms import WatchmapForm, UpdateWatchmapForm, DuplicateWatchmapForm
 from .utils import make_image_of_MOC, add_watchmap_metadata
 from lasair.utils import bytes2string, string2bytes
 sys.path.append('../common')
@@ -45,6 +46,39 @@ def watchmap_index(request):
     ]
     ```           
     """
+    # SUBMISSION OF NEW WATCHMAP
+    if request.method == "POST":
+        form = WatchmapForm(request.POST, request.FILES, request=request)
+
+        if form.is_valid():
+            # GET WATCHMAP PARAMETERS
+            t = time.time()
+            name = request.POST.get('name')
+            description = request.POST.get('description')
+
+            if request.POST.get('public'):
+                public = True
+            else:
+                public = False
+            if request.POST.get('active'):
+                active = True
+            else:
+                active = False
+
+            if 'watchmap_file' in request.FILES:
+                fits_bytes = (request.FILES['watchmap_file']).read()
+                fits_string = bytes2string(fits_bytes)
+                png_bytes = make_image_of_MOC(fits_bytes, request=request)
+                png_string = bytes2string(png_bytes)
+
+                wm = Watchmap(user=request.user, name=name, description=description,
+                              moc=fits_string, mocimage=png_string, active=active, public=public)
+                wm.save()
+                watchmapname = form.cleaned_data.get('name')
+                messages.success(request, f"The '{watchmapname}' watchmap has been successfully created")
+                return redirect(f'watchmap_detail', wm.pk)
+    else:
+        form = WatchmapForm(request=request)
 
     # PUBLIC WATCHMAPS
     publicWatchmaps = Watchmap.objects.filter(public__gte=1)
@@ -56,8 +90,6 @@ def watchmap_index(request):
         myWatchmaps = add_watchmap_metadata(myWatchmaps)
     else:
         myWatchmaps = None
-
-    form = WatchmapForm()
 
     return render(request, 'watchmap/watchmap_index.html',
                   {'myWatchmaps': myWatchmaps,
@@ -101,21 +133,54 @@ def watchmap_detail(request, ar_id):
         return render(request, 'error.html')
 
     if request.method == 'POST' and is_owner:
-        # UPDATING SETTINGS?
-        if 'name' in request.POST:
-            watchmap.name = request.POST.get('name')
-            watchmap.description = request.POST.get('description')
-            if request.POST.get('active'):
-                watchmap.active = 1
-            else:
-                watchmap.active = 0
+        form = UpdateWatchmapForm(request.POST, instance=watchmap, request=request)
+        duplicateForm = DuplicateWatchmapForm(request.POST, instance=watchmap, request=request)
 
-            if request.POST.get('public'):
-                watchmap.public = 1
-            else:
-                watchmap.public = 0
-            watchmap.save()
-            messages.success(request, f'Your watchmap has been successfully updated')
+        action = request.POST.get('action')
+        if action == "save":
+            if form.is_valid():
+                # UPDATING SETTINGS?
+                if 'name' in request.POST:
+                    watchmap.name = request.POST.get('name')
+                    watchmap.description = request.POST.get('description')
+                    if request.POST.get('active'):
+                        watchmap.active = 1
+                    else:
+                        watchmap.active = 0
+
+                    if request.POST.get('public'):
+                        watchmap.public = 1
+                    else:
+                        watchmap.public = 0
+                    watchmap.save()
+                    messages.success(request, f'Your watchmap has been successfully updated')
+        elif action == "copy":
+            if duplicateForm.is_valid():
+                oldName = copy.deepcopy(watchmap.name)
+                name = request.POST.get('name')
+                description = request.POST.get('description')
+                newWm = watchmap
+                newWm.pk = None
+                newWm.user = request.user
+                newWm.name = request.POST.get('name')
+                newWm.description = request.POST.get('description')
+                if request.POST.get('active'):
+                    newWm.active = True
+                else:
+                    newWm.active = False
+
+                if request.POST.get('public'):
+                    newWm.public = True
+                else:
+                    newWm.public = False
+                newWm.save()
+                wm = newWm
+                ar_id = wm.pk
+                messages.success(request, f'You have successfully copied the "{oldName}" watchmap to My Watchmaps. The results table is initially empty, but should start to fill as new transient detections are found within the map area.')
+                return redirect(f'watchmap_detail', ar_id)
+    else:
+        form = UpdateWatchmapForm(instance=watchmap, request=request)
+        duplicateForm = DuplicateWatchmapForm(instance=watchmap, request=request)
 
     # GRAB ALL WATCHMAP MATCHES
     query_hit = f"""
@@ -158,14 +223,13 @@ limit {resultCap}
             if k not in schema:
                 schema[k] = "custom column"
 
-    form = UpdateWatchmapForm(instance=watchmap)
-
     return render(request, 'watchmap/watchmap_detail.html', {
         'watchmap': watchmap,
         'table': table,
         'count': count,
         'schema': schema,
         'form': form,
+        'duplicateForm': duplicateForm,
         'limit': limit})
 
 
@@ -189,26 +253,37 @@ def watchmap_create(request):
     """
     # SUBMISSION OF NEW WATCHMAP
     if request.method == "POST":
-        form = WatchmapForm(request.POST, request.FILES)
-        if form.is_valid():
-            form.save()
+        form = WatchmapForm(request.POST, request.FILES, request=request)
+        if not form.is_valid():
+            messages.error(request, f'{form.errors}')
+            return redirect(f'watchmap_index')
 
+        if form.is_valid():
             # GET WATCHMAP PARAMETERS
             t = time.time()
             name = request.POST.get('name')
             description = request.POST.get('description')
 
+            if request.POST.get('public'):
+                public = True
+            else:
+                public = False
+            if request.POST.get('active'):
+                active = True
+            else:
+                active = False
+
             if 'watchmap_file' in request.FILES:
                 fits_bytes = (request.FILES['watchmap_file']).read()
                 fits_string = bytes2string(fits_bytes)
-                png_bytes = make_image_of_MOC(fits_bytes)
+                png_bytes = make_image_of_MOC(fits_bytes, request=request)
                 png_string = bytes2string(png_bytes)
 
                 wm = Watchmap(user=request.user, name=name, description=description,
-                              moc=fits_string, mocimage=png_string, active=0)
+                              moc=fits_string, mocimage=png_string, active=active, public=public)
                 wm.save()
                 watchmapname = form.cleaned_data.get('name')
-                messages.success(request, f'The {watchmapname} watchlist has been successfully created')
+                messages.success(request, f"The '{watchmapname}' watchmap has been successfully created")
                 return redirect(f'watchmap_detail', wm.pk)
 
 
@@ -285,5 +360,39 @@ def watchmap_delete(request, ar_id):
         messages.success(request, f'The "{name}" watchmap has been successfully deleted')
     else:
         messages.error(request, f'You must be the owner to delete this watchmap')
+
+    return redirect('watchmap_index')
+
+
+@login_required
+def watchmap_duplicate(request, ar_id):
+    """*duplicate a watchmap
+
+    **Key Arguments:**
+
+    - `request` -- the original request
+    - `ar_id` -- the watchmap UUID
+
+    **Usage:**
+
+    ```python
+    urlpatterns = [
+        ...
+        path('watchmaps/<int:ar_id>/duplicate/', views.watchmap_duplicate, name='watchmap_duplicate'),
+        ...
+    ]
+    ```
+    """
+    # msl = db_connect.readonly()
+    # cursor = msl.cursor(buffered=True, dictionary=True)
+    # watchmap = get_object_or_404(Watchmap, ar_id=ar_id)
+    # name = watchmap.name
+
+    # # DELETE WATCHMAP
+    # if request.method == 'POST' and request.user.is_authenticated and watchmap.user.id == request.user.id and request.POST.get('action') == "delete":
+    #     watchmap.delete()
+    #     messages.success(request, f'The "{name}" watchmap has been successfully deleted')
+    # else:
+    #     messages.error(request, f'You must be the owner to delete this watchmap')
 
     return redirect('watchmap_index')
