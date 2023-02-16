@@ -97,12 +97,13 @@ def filter_query_detail(request, mq_id):
         messages.error(request, "This filter is private and not visible to you")
         return render(request, 'error.html')
 
-    if request.method == 'POST' and is_owner:
-
+    if request.method == 'POST':
         form = UpdateFilterQueryForm(request.POST, instance=filterQuery, request=request)
         duplicateForm = DuplicateFilterQueryForm(request.POST, instance=filterQuery, request=request)
-
         action = request.POST.get('action')
+
+    if request.method == 'POST' and is_owner:
+
         # UPDATING SETTINGS?
         if action == 'save' and form.is_valid():
             # UPDATING SETTINGS?
@@ -141,27 +142,27 @@ def filter_query_detail(request, mq_id):
                     messages.error(request, f'The kafa topic could not be refreshed for this filter. {e}')
             filterQuery.save()
             messages.success(request, f'Your filter has been successfully updated')
-        elif action == 'copy' and duplicateForm.is_valid():
-            oldName = copy.deepcopy(filterQuery.name)
-            name = request.POST.get('name')
-            description = request.POST.get('description')
-            newFil = filterQuery
-            newFil.pk = None
-            newFil.user = request.user
-            newFil.name = request.POST.get('name')
-            newFil.description = request.POST.get('description')
-            newFil.active = request.POST.get('active')
+    elif request.method == 'POST' and action == 'copy' and duplicateForm.is_valid():
+        oldName = copy.deepcopy(filterQuery.name)
+        name = request.POST.get('name')
+        description = request.POST.get('description')
+        newFil = filterQuery
+        newFil.pk = None
+        newFil.user = request.user
+        newFil.name = request.POST.get('name')
+        newFil.description = request.POST.get('description')
+        newFil.active = request.POST.get('active')
 
-            if request.POST.get('public'):
-                newFil.public = True
-            else:
-                newFil.public = False
-            newFil.save()
-            filterQuery = newFil
-            mq_id = filterQuery.pk
+        if request.POST.get('public'):
+            newFil.public = True
+        else:
+            newFil.public = False
+        newFil.save()
+        filterQuery = newFil
+        mq_id = filterQuery.pk
 
-            messages.success(request, f'You have successfully copied the "{oldName}" filter to My Filters. The results table is initially empty, but should start to fill as new transient detections match against your filter.')
-            return redirect(f'filter_query_detail', mq_id)
+        messages.success(request, f'You have successfully copied the "{oldName}" filter to My Filters. The results table is initially empty, but should start to fill as new transient detections match against your filter.')
+        return redirect(f'filter_query_detail', mq_id)
     else:
         form = UpdateFilterQueryForm(instance=filterQuery, request=request)
         duplicateForm = DuplicateFilterQueryForm(instance=filterQuery, request=request)
