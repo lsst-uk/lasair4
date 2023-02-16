@@ -132,11 +132,14 @@ def watchmap_detail(request, ar_id):
         messages.error(request, "This watchmap is private and not visible to you")
         return render(request, 'error.html')
 
-    if request.method == 'POST' and is_owner:
+    if request.method == 'POST':
         form = UpdateWatchmapForm(request.POST, instance=watchmap, request=request)
         duplicateForm = DuplicateWatchmapForm(request.POST, instance=watchmap, request=request)
 
         action = request.POST.get('action')
+
+    if request.method == 'POST' and is_owner:
+
         if action == "save":
             if form.is_valid():
                 # UPDATING SETTINGS?
@@ -154,30 +157,30 @@ def watchmap_detail(request, ar_id):
                         watchmap.public = 0
                     watchmap.save()
                     messages.success(request, f'Your watchmap has been successfully updated')
-        elif action == "copy":
-            if duplicateForm.is_valid():
-                oldName = copy.deepcopy(watchmap.name)
-                name = request.POST.get('name')
-                description = request.POST.get('description')
-                newWm = watchmap
-                newWm.pk = None
-                newWm.user = request.user
-                newWm.name = request.POST.get('name')
-                newWm.description = request.POST.get('description')
-                if request.POST.get('active'):
-                    newWm.active = True
-                else:
-                    newWm.active = False
+    elif request.method == 'POST' and action == "copy":
+        if duplicateForm.is_valid():
+            oldName = copy.deepcopy(watchmap.name)
+            name = request.POST.get('name')
+            description = request.POST.get('description')
+            newWm = watchmap
+            newWm.pk = None
+            newWm.user = request.user
+            newWm.name = request.POST.get('name')
+            newWm.description = request.POST.get('description')
+            if request.POST.get('active'):
+                newWm.active = True
+            else:
+                newWm.active = False
 
-                if request.POST.get('public'):
-                    newWm.public = True
-                else:
-                    newWm.public = False
-                newWm.save()
-                wm = newWm
-                ar_id = wm.pk
-                messages.success(request, f'You have successfully copied the "{oldName}" watchmap to My Watchmaps. The results table is initially empty, but should start to fill as new transient detections are found within the map area.')
-                return redirect(f'watchmap_detail', ar_id)
+            if request.POST.get('public'):
+                newWm.public = True
+            else:
+                newWm.public = False
+            newWm.save()
+            wm = newWm
+            ar_id = wm.pk
+            messages.success(request, f'You have successfully copied the "{oldName}" watchmap to My Watchmaps. The results table is initially empty, but should start to fill as new transient detections are found within the map area.')
+            return redirect(f'watchmap_detail', ar_id)
     else:
         form = UpdateWatchmapForm(instance=watchmap, request=request)
         duplicateForm = DuplicateWatchmapForm(instance=watchmap, request=request)
