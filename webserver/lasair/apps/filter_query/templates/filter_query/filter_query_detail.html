@@ -43,6 +43,20 @@
 <!-- Specific Page JS goes HERE  -->
 {% block javascripts %}
 
+    <script>
+        {% if form.name.errors %}
+            $(document).ready(function(){
+                $("#editFilterForm").modal('show');
+            });
+        {% endif %}
+
+        {% if duplicateForm.name.errors %}
+            $(document).ready(function(){
+                $("#duplicateFilterForm").modal('show');
+            });
+        {% endif %}
+    </script>
+
 {% endblock javascripts %}
 
 

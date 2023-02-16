@@ -28,3 +28,18 @@
 
 
 {% endblock %}
+
+{% block javascripts %}
+    <script>
+        {% if form.errors %}
+            $(document).ready(function(){
+                $("#editWatchmapForm").modal('show');
+            });
+        {% endif %}
+        {% if duplicateForm.errors %}
+            $(document).ready(function(){
+                $("#duplicateWatchmapForm").modal('show');
+            });
+        {% endif %}
+    </script>
+{% endblock javascripts %}
