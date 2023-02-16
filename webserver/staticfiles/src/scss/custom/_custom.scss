@@ -268,3 +268,16 @@ div.search-bar input {
 .text-error {
     color: $lasair-red;
 }
+
+
+.dataTable-top {
+    justify-content: flex-end !important;
+}
+
+select, input[type=number], input[type=text] {
+    padding: .5rem 1rem !important;
+}
+
+.icon-shape {
+    min-width: 4rem;
+}
