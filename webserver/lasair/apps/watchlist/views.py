@@ -83,7 +83,7 @@ def watchlist_index(request):
                         ra = float(tok[0])
                         dec = float(tok[1])
                         objectId = tok[2].strip()
-                        if len(tok) >= 4:
+                        if len(tok) >= 4 and len(tok[3].strip()) > 0 and tok[3].strip().lower() != "none":
                             radius = float(tok[3])
                         else:
                             radius = None
