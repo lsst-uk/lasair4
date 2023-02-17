@@ -73,6 +73,8 @@
                                         <td>{{object|keyvalue:key|floatformat:1 }}</td>
                                     {% elif key in 'UTC' %}
                                         <td data-type="date" data-format="YYYY-MMM-DD hh:mm:ss">{{object|keyvalue:key }} UTC</td>
+                                    {% elif key in 'classdict' %}
+                                        <td><code>{{object|keyvalue:key }}</code></td>
                                     {%else%}
                                         <td>{{ object|keyvalue:key }}</td>
                                     {% endif %}
