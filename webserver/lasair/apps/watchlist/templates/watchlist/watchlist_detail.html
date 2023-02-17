@@ -12,8 +12,6 @@
 
 {% block content %}
 
-
-
     <div class="container">
 
         <div class="row mt-4">
@@ -36,7 +34,19 @@
 
 <!-- Specific Page JS goes HERE  -->
 {% block javascripts %}
+    <script>
+        {% if duplicateForm.name.errors %}
+            $(document).ready(function(){
+                $("#duplicateWatchlistForm").modal('show');
+            });
+        {% endif %}
 
+        {% if form.name.errors %}
+            $(document).ready(function(){
+                $("#editWatchlistForm").modal('show');
+            });
+        {% endif %}
+    </script>
 {% endblock javascripts %}
 
 
