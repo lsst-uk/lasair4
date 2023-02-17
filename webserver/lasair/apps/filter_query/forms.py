@@ -89,9 +89,10 @@ class filterQueryForm(forms.ModelForm):
             action = self.request.POST.get('action')
         name = self.cleaned_data.get('name')
 
-        if filter_query.objects.filter(Q(user=self.request.user) & Q(name=name)).exists():
-            msg = 'You already have a filter by that name, please choose another.'
-            self.add_error('name', msg)
+        if action == "save":
+            if filter_query.objects.filter(Q(user=self.request.user) & Q(name__iexact=name.strip().lower())).exists():
+                msg = 'You already have a filter by that name, please choose another.'
+                self.add_error('name', msg)
 
         return cleaned_data
 
@@ -113,27 +114,80 @@ class UpdateFilterQueryForm(forms.ModelForm):
             'name': forms.TextInput(attrs={'size': 80, 'placeholder': 'Make it memorable', 'required': 'true', 'value': "Make it memorable"}),
             'description': forms.Textarea(attrs={'rows': 3, 'placeholder': 'A detailed description of your watchlist. Remember to add a citation to the original data source.', 'required': 'true'}),
             'public': forms.CheckboxInput(),
-            'selected': forms.Textarea(),
-            'conditions': forms.Textarea(),
-            'real_sql': forms.Textarea(),
             'active': forms.Select(choices=notificationTypes)
         }
-        fields = ['name', 'description', 'active', 'public', 'selected', 'conditions', 'real_sql']
+        fields = ['name', 'description', 'active', 'public']
+
+    def clean(self):
+        cleaned_data = super(UpdateFilterQueryForm, self).clean()
+        if self.request:
+            action = self.request.POST.get('action')
+        name = self.cleaned_data.get('name')
+
+        if action == "save":
+            if filter_query.objects.filter(Q(user=self.request.user) & Q(name__iexact=name.strip().lower())).exists() and self.instance.name != name:
+                msg = 'You already have a filter by that name, please choose another.'
+                self.add_error('name', msg)
+        return cleaned_data
 
     def __init__(self, *args, **kwargs):
         self.request = kwargs.pop('request', None)
         super().__init__(*args, **kwargs)
         self.helper = FormHelper()
 
-        instance = kwargs.get('instance', {})
+        self.instance = kwargs.get('instance', {})
 
         for i in self.fields:
             if i in ["public"]:
-                if instance.__dict__[i]:
+                if self.instance.__dict__[i]:
                     self.initial[i] = True
                 else:
                     self.initial[i] = False
             else:
-                self.fields[i].widget.attrs['value'] = instance.__dict__[i]
+                self.fields[i].widget.attrs['value'] = self.instance.__dict__[i]
 
-            # self.fields[i].initial = instance.__dict__[i]
+
+class DuplicateFilterQueryForm(forms.ModelForm):
+
+    class Meta:
+        notificationTypes = (
+            (0, 'muted'),
+            (1, 'email stream (daily)'),
+            (2, 'kafka stream')
+        )
+        model = filter_query
+        widgets = {
+            'name': forms.TextInput(attrs={'size': 80, 'placeholder': 'Make it memorable', 'required': 'true', 'value': "Make it memorable"}),
+            'description': forms.Textarea(attrs={'rows': 3, 'placeholder': 'A detailed description of your watchlist. Remember to add a citation to the original data source.', 'required': 'true'}),
+            'public': forms.CheckboxInput(),
+            'active': forms.Select(choices=notificationTypes)
+        }
+        fields = ['name', 'description', 'active', 'public']
+
+    def clean(self):
+        cleaned_data = super(DuplicateFilterQueryForm, self).clean()
+        if self.request:
+            action = self.request.POST.get('action')
+        name = self.cleaned_data.get('name')
+
+        if action == "copy":
+            if filter_query.objects.filter(Q(user=self.request.user) & Q(name__iexact=name.strip().lower())).exists():
+                msg = 'You already have a filter by that name, please choose another.'
+                self.add_error('name', msg)
+        return cleaned_data
+
+    def __init__(self, *args, **kwargs):
+        self.request = kwargs.pop('request', None)
+        super().__init__(*args, **kwargs)
+        self.helper = FormHelper()
+
+        self.instance = kwargs.get('instance', {})
+
+        for i in self.fields:
+            if i in ["public"]:
+                if self.instance.__dict__[i]:
+                    self.initial[i] = True
+                else:
+                    self.initial[i] = False
+            else:
+                self.fields[i].widget.attrs['value'] = self.instance.__dict__[i]

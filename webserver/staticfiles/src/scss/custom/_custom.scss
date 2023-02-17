@@ -260,3 +260,24 @@ div.search-bar input {
 .sidebar .nav {
     white-space: normal !important;
 }
+
+.form-control {
+    padding: .5rem 1rem !important;
+}
+
+.text-error {
+    color: $lasair-red;
+}
+
+
+.dataTable-top {
+    justify-content: flex-end !important;
+}
+
+select, input[type=number], input[type=text] {
+    padding: .5rem 1rem !important;
+}
+
+.icon-shape {
+    min-width: 4rem;
+}
