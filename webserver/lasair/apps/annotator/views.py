@@ -86,12 +86,13 @@ def annotator_detail(request, topic):
     query_hit = f"""
 SELECT 
 o.objectId, FORMAT(jdnow()-o.jdmax,1) as "days since",
-a.classification, a.classdict as classdict
+a.classification, CAST(a.classdict as varchar(10000)) as classdict
 FROM annotations AS a, objects AS o 
 WHERE a.topic='{topic}' 
 AND o.objectId=a.objectId 
 LIMIT {resultCap}
 """
+
     cursor.execute(query_hit)
     table = cursor.fetchall()
     count = len(table)
