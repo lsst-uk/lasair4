@@ -207,7 +207,7 @@ L = lasair.lasair_client(token)
 c = L.objects(objectIds)
 print(c)
 ```
-and the return is something like:
+and the return something like this:
 ```
 status= 200
 [
@@ -221,6 +221,11 @@ status= 200
 .... }
 ]
 ```
+
+The data includes everything on the object page, including the object and candidates, as well as the Sherlock and TNS information. The candidate section has bot detections, that have a `candid` attribute, and the much smaller non-detections (upper limits). Each candidate 
+has links to the cutout images that are shown on the object web page. A complete example
+is [shown here](ZTF23aabplmy.json).
+
 ### <a name="lightcurves"></a>/api/lightcurves/
 
 This method returns simple lightcurves for a number of objects. **NOTE:** these are difference magnitudes from a reference source, not apparent magnitudes. See [this python code](/lasair/static/mag.py) to convert the quantities below to apparent magnitude. Each lightcurve is a sequence of detections, or _candidates_, each of which has the quantities:
