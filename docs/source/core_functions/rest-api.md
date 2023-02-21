@@ -224,7 +224,7 @@ status= 200
 
 The data includes everything on the object page, including the object and candidates, as well as the Sherlock and TNS information. The candidate section has bot detections, that have a `candid` attribute, and the much smaller non-detections (upper limits). Each candidate 
 has links to the cutout images that are shown on the object web page. A complete example
-is [shown here](ZTF23aabplmy.json).
+is [shown here](ZTF23aabplmy.html).
 
 ### <a name="lightcurves"></a>/api/lightcurves/
 
