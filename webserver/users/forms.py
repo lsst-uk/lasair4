@@ -30,6 +30,11 @@ class UserRegisterForm(UserCreationForm):
             msg = 'A user with that email already exists.'
             self.add_error('email', msg)
 
+        username = self.cleaned_data.get('username')
+        if User.objects.filter(username=username).exists():
+            msg = 'This username is already taken, please try a different one.'
+            self.add_error('username', msg)
+
         return self.cleaned_data
 
 
