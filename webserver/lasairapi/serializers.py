@@ -126,7 +126,7 @@ class SherlockObjectsSerializer(serializers.Serializer):
         datadict = {}
 #        url = 'http://%s/object/%s' % (lasair_settings.SHERLOCK_SERVICE, objectIds)
 #        if lite: url += '?lite=true'
-        url += '?lite=true'
+#        url += '?lite=true'
 #        r = requests.get(url)
 
         data = {'lite': lite}
