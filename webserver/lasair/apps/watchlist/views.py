@@ -76,18 +76,18 @@ def watchlist_index(request):
                     continue
                 line = line.replace('|', ',')
                 tok = line.split(',')
-                if len(tok) < 2:
+                if len(tok) < 3:
+                    messages.error(request, f'Bad line (not RA,Dec,Name): {line}\n')
                     continue
                 try:
-                    if len(tok) >= 3:
-                        ra = float(tok[0])
-                        dec = float(tok[1])
-                        objectId = tok[2].strip()
-                        if len(tok) >= 4 and len(tok[3].strip()) > 0 and tok[3].strip().lower() != "none":
-                            radius = float(tok[3])
-                        else:
-                            radius = None
-                        cone_list.append([objectId, ra, dec, radius])
+                    ra = float(tok[0])
+                    dec = float(tok[1])
+                    objectId = tok[2].strip()
+                    if len(tok) >= 4 and len(tok[3].strip()) > 0 and tok[3].strip().lower() != "none":
+                        radius = float(tok[3])
+                    else:
+                        radius = None
+                    cone_list.append([objectId, ra, dec, radius])
                 except Exception as e:
                     messages.error(request, f'Bad line {len(cone_list)}: {line}\n{str(e)}')
 
