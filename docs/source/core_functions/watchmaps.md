@@ -41,11 +41,19 @@ One way to build this from python is this code:<br/>
 [Create a MOC from a Concave Polygon](https://cds-astro.github.io/mocpy/examples/examples.html#create-a-moc-from-a-concave-polygon)
 For the Orion Nebula, we choose a rectangle like this:
 ```
+import astropy.units as u
+import numpy as np
+from astropy.coordinates import Angle, SkyCoord
+from mocpy import MOC, WCS
+
 vertices = np.array([
     [83.4, -5.0],
     [84.1, -5.0],
     [84.1, -5.7],
     [83.4, -5.7]])
+skycoord = SkyCoord(vertices, unit="deg", frame="icrs")
+moc = MOC.from_polygon_skycoord(skycoord, max_depth=8)
+moc.write("polygon_moc.fits", format="fits", overwrite=True)
 ```
 and we may adjust the `max_depth`: smaller values give smaller files, but larger values 
 give more accurate edges. For a fluffy thing like the Orion Nebula, `max_depth=8` is quite
