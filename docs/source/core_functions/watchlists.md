@@ -17,7 +17,7 @@ an identifier, with optional radius in arcseconds. One way to do this is
 with [Vizier](http://vizier.u-strasbg.fr/viz-bin/VizieR) (see below) or with a spreadsheet 
 program such as Excel or Numbers. 
 
-Here is [an example of the data]({%lasairurl%}/lasair/static/BLLac.txt). The 42 entries are _BL Lac candidates for TeV observations (Massaro+, 2013)_
+Here is [an example of the data](BLLac.html). The 42 entries are _BL Lac candidates for TeV observations (Massaro+, 2013)_
 
 Note that you must be logged in to create a watchlist.
 
