@@ -34,6 +34,28 @@ class filterQueryForm(forms.ModelForm):
                     elif i not in ["watchlists", "watchmaps", "annotators"]:
                         self.fields[i].widget.attrs['value'] = self.instance.__dict__[i]
 
+                # PARSE WATCHLISTS, WATCHMAPS, ANNOTATORS
+                if "watchlist:" in self.instance.tables:
+                    try:
+                        self.initial["watchlists"] = int(self.instance.tables.split("watchlist:")[1].split(",")[0])
+                    except:
+                        pass
+
+                if "area:" in self.instance.tables:
+
+                    try:
+                        currentWatchmaps = self.instance.tables.split("area:")[1].split(",")[0].split("&")
+                        currentWatchmaps[:] = [int(m) for m in currentWatchmaps]
+                        self.initial["watchmaps"] = currentWatchmaps
+                    except:
+                        pass
+                if "annotator:" in self.instance.tables:
+                    try:
+                        currentAnnotators = self.instance.tables.split("annotator:")[1].split(",")[0].split("&")
+                        self.initial["annotators"] = currentAnnotators
+                    except:
+                        pass
+
         if self.request.user.is_authenticated:
             email = self.request.user.email
             watchlists = Watchlist.objects.filter(Q(user=self.request.user) | Q(public__gte=1))
