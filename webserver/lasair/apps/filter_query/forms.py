@@ -20,6 +20,20 @@ class filterQueryForm(forms.ModelForm):
         self.request = kwargs.pop('request', None)
         super().__init__(*args, **kwargs)
         self.helper = FormHelper()
+
+        if 'instance' in kwargs:
+            self.instance = kwargs.get('instance', None)
+
+            if self.instance:
+                for i in self.fields:
+                    if i in ["public"]:
+                        if self.instance.__dict__[i]:
+                            self.initial[i] = True
+                        else:
+                            self.initial[i] = False
+                    elif i not in ["watchlists", "watchmaps", "annotators"]:
+                        self.fields[i].widget.attrs['value'] = self.instance.__dict__[i]
+
         if self.request.user.is_authenticated:
             email = self.request.user.email
             watchlists = Watchlist.objects.filter(Q(user=self.request.user) | Q(public__gte=1))
