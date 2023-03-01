@@ -50,12 +50,14 @@
             // NEED TO REMOVE PRISM LIVE AND REINSTATE AT THE END OF THIS FUNCTION FOR TAB COMPLETE TO WORK
             document.querySelectorAll("div.prism-live").forEach(el=>el.replaceWith(el.querySelector("textarea.prism-live")));
 
-            // REMOVE ANY EXISTING TRIBUTES (TAB-COMPLETE)
-            var tribute = new Tribute({collection: []});
-            tribute.detach(document.querySelector("textarea#id_selected"));
-            tribute.detach(document.querySelector("textarea#id_selected"));
-            tribute.detach(document.querySelector("textarea#id_conditions"));
-            tribute.detach(document.querySelector("textarea#id_conditions"));
+            // QUICKEST CLEANEST WAY TO REGENERATE AUTOCOMPLETES
+            var old_element = document.querySelector("textarea#id_conditions");
+            var new_element = old_element.cloneNode(true);
+            old_element.parentNode.replaceChild(new_element, old_element);
+
+            var old_element = document.querySelector("textarea#id_selected");
+            var new_element = old_element.cloneNode(true);
+            old_element.parentNode.replaceChild(new_element, old_element);
 
             // DEFAULT, ALWAYS PRESENT AUTOCOMPLETE
             var justTypeCollectionValues = [
@@ -230,7 +232,6 @@
         };
 
 
-        updateAutocomplete();
 
 
 
@@ -269,7 +270,8 @@
         };
 
         document.addEventListener('DOMContentLoaded', function() {
-            updateFrom();
+            updateAutocomplete();
+
         }, false);
 
 

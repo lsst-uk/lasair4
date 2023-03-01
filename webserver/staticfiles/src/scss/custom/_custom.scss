@@ -161,13 +161,17 @@ textarea.prism-live {
     color: transparent;
     // color: hsla(0,0%,50%,.4);
     cursor: text;
-    white-space: pre;
+    // white-space: pre;
     border: 0;
     outline: none;
     background: transparent;
     resize: none;
     --selection-background: hsl(320, 80%, 25%);
     --selection-color: hsla(0, 0%, 100%, .8);
+}
+
+code[class*=language-], pre[class*=language-] {
+    white-space: pre-wrap !important;
 }
 
 @supports (not (caret-color: black)) and (-webkit-text-fill-color: black) {

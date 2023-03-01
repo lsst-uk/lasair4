@@ -215,19 +215,21 @@ def filter_query_detail(request, mq_id):
 
 
 @login_required
-def filter_query_create(request):
-    """*create a new filter*
+def filter_query_create(request, mq_id=False):
+    """*create or update a filter*
 
     **Key Arguments:**
 
     - `request` -- the original request
+    - `mq_id` -- the fitler query ID (if updating an existing filter)
 
     **Usage:**
 
     ```python
     urlpatterns = [
         ...
-        path('filters/create/', views.filter_query_create, name='filter_create'),
+        path('filters/create/', views.filter_query_create, name='filter_query_create'),
+        path('filters/<int:mq_id>/update/', views.filter_query_create, name='filter_query_update')
         ...
     ]
     ```
@@ -242,14 +244,10 @@ def filter_query_create(request):
         'watchlist_hits': get_schema('watchlist_hits'),
         'annotations': get_schema('annotations'),
     }
-    form = filterQueryForm(request.POST, request.FILES, request=request)
-    email = request.user.email
-    watchlists = Watchlist.objects.filter(Q(user=request.user) | Q(public__gte=1))
-    watchmaps = Watchmap.objects.filter(Q(user=request.user) | Q(public__gte=1))
-    annotators = Annotators.objects.filter(Q(user=request.user) | Q(public__gte=1))
 
     # SUBMISSION OF NEW FILTER - EITHER SIMPLE RUN OR SAVE
     if request.method == 'POST':
+        form = filterQueryForm(request.POST, request=request)
 
         # COLLECT FORM CONTENT
         action = request.POST.get('action')
@@ -331,11 +329,16 @@ def filter_query_create(request):
                 filtername = form.cleaned_data.get('name')
                 messages.success(request, f'The "{filtername}" filter has been successfully created')
                 return redirect(f'filter_query_detail', mq.pk)
+    elif mq_id:
+        filterQuery = get_object_or_404(filter_query, mq_id=mq_id)
+        form = filterQueryForm(request=request, instance=filterQuery)
+    else:
+        form = filterQueryForm(request=request)
 
     return render(request, 'filter_query/filter_query_create.html', {'schemas_core': schemas_core, 'schemas_additional': schemas_addtional, 'form': form, 'limit': None})
 
 
-def filter_log(request, topic):
+def filter_query_log(request, topic):
     """*return the log file content for the filter*
 
     **Key Arguments:**
@@ -348,7 +351,7 @@ def filter_log(request, topic):
     ```python
     urlpatterns = [
         ...
-        path('filters/log/<slug:topic>/', views.filter_log, name='filter_log'),
+        path('filters/log/<slug:topic>/', views.filter_query_log, name='filter_query_log'),
         ...
     ]
     ```
