@@ -62,7 +62,7 @@
                     {{filterQ.description}}
                 </small>
                 <small class="text-gray-500">
-                    The filter is <b>{% if not filterQ.active %}not active{% elif filterQ.active == 1%} streamed via email{% elif filterQ.active == 2%} streamed via kafka{% endif %}.</b> {% include "includes/info_tooltip.html" with info="when active, a filter will be dynamically matched against new transient alerts and the results streamed via email or kafka" position="auto" link=docroot|add:"/core_functions/make_filter.html" %}
+                    The filter is <b>{% if not filterQ.active %}not active{% elif filterQ.active == 1%} streamed via email{% elif filterQ.active == 2%} streamed via kafka</b> with the topic name <code>{{filterQ.topic_name}}</code><b>{% endif %}.</b> {% include "includes/info_tooltip.html" with info="when active, a filter will be dynamically matched against new transient alerts and the results streamed via email or kafka" position="auto" link=docroot|add:"/core_functions/make_filter.html" %}
                 </small>
             </div>
 
@@ -79,9 +79,13 @@
                     <a class="btn btn-sm btn-tertiary border-white" href='{% url "filter_query_detail" filterQ.mq_id %}' data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-title="run the filter to give live results">
                         {% include "includes/icons/icon_run.html" %}<span class="align-middle d-none d-md-inline">Run Filter</span></a>
 
-
+                    {% if user.is_authenticated %}
+                        <a class="btn btn-sm btn-tertiary border-white" href='{% url "filter_query_update" filterQ.mq_id %}' data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-title="edit this filter">
+                            {% include "includes/icons/icon_edit2.html" %}<span class="align-middle d-none d-md-inline">Edit Filter</span></a>
+                    {% endif %}
 
                     {% if user.is_authenticated %}
+
                         <a class="btn btn-sm btn-tertiary border-white" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-title="copy this filter into My Filters list">
                             <span class="align-middle"  data-bs-toggle="modal" data-bs-target="#duplicateFilterForm">
                     {% else %}

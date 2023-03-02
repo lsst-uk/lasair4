@@ -3,9 +3,11 @@ import sys
 from cassandra.cluster import Cluster
 from cassandra.query import dict_factory
 
+
 class lightcurve_fetcher_error(Exception):
     def __init__(self, message):
         self.message = message
+
 
 class lightcurve_fetcher():
     def __init__(self, cassandra_hosts=None, fileroot=None):
@@ -33,8 +35,10 @@ class lightcurve_fetcher():
             ret = self.session.execute(query)
             candidates = []
             for cand in ret:
-                if cand['isdiffpos'] == '1': cand['isdiffpos'] = 't'
-                if cand['isdiffpos'] == '0': cand['isdiffpos'] = 'f'
+                if cand['isdiffpos'] == '1':
+                    cand['isdiffpos'] = 't'
+                if cand['isdiffpos'] == '0':
+                    cand['isdiffpos'] = 'f'
                 candidates.append(cand)
 
             query = "SELECT jd, fid, diffmaglim "
@@ -44,11 +48,11 @@ class lightcurve_fetcher():
                 candidates.append(cand)
             return candidates
         else:
-            store = objectStore(suffix = 'json', fileroot=self.fileroot)
+            store = objectStore(suffix='json', fileroot=self.fileroot)
             lc = store.getObject(objectId)
 
             if not lc:
-                raise lightcurve_fetcher_error('Object %s does not exist'%objectId)
+                raise lightcurve_fetcher_error('Object %s does not exist' % objectId)
 
             try:
                 candlist = json.loads(lc)
@@ -62,8 +66,8 @@ class lightcurve_fetcher():
         if self.session:
             self.cluster.shutdown()
 
+
 if __name__ == "__main__":
-    LF = lightcurve_fetcher(cassandra_hosts = ['192.168.0.11'])
+    LF = lightcurve_fetcher(cassandra_hosts=['192.168.0.11'])
 
     candidates = LF.fetch('ZTF21abcmlzt')
-    print(candidates)
