@@ -149,6 +149,10 @@ class filterQueryForm(forms.ModelForm):
                     msg = e.split("syntax to use near '")[1].split("' at line")[0]
                 except:
                     msg = e
+                try:
+                    msg = e.split("returned the error")[1].split(": ")[1].replace("</i>", "")
+                except:
+                    msg = e
                 self.add_error('selected', msg)
 
             sqlquery_real = build_query(selected, tables, conditions)
@@ -156,6 +160,10 @@ class filterQueryForm(forms.ModelForm):
             if e:
                 try:
                     msg = e.split("syntax to use near '")[1].split("' at line")[0]
+                except:
+                    msg = e
+                try:
+                    msg = e.split("returned the error")[1].split(": ")[1].replace("</i>", "")
                 except:
                     msg = e
                 self.add_error('selected', msg)

@@ -73,11 +73,16 @@ def get_schema_for_query_selected(
     tableSchema["mjdmax"] = "most recent detection in alert packet"
     tableSchema["UTC"] = "time Lasair issued detection alert"
 
+    print(selected)
     for select in selected.split(","):
         select = select.strip()
         if " " not in select:
             select = select.split(".")
             if len(select) == 2:
-                tableSchema[select[1]] = schemas[select[0]][select[1]]
+                if select[1] == "*":
+                    for k, v in schemas[select[0]].items():
+                        tableSchema[k] = v
+                else:
+                    tableSchema[select[1]] = schemas[select[0]][select[1]]
 
     return tableSchema
