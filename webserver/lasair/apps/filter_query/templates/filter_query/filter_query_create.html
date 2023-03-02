@@ -35,6 +35,8 @@
 
 
 
+
+
         </div>
     </div>
     <hr/>
@@ -61,68 +63,60 @@
 
             // DEFAULT, ALWAYS PRESENT AUTOCOMPLETE
             var justTypeCollectionValues = [
-                { key : "MYSQL > jdnow", value: "jdnow()", info: "readme now"},
-                { key : "MYSQL > as", value: "as", info: "readme now"},
-                { key : "MYSQL > BETWEEN", value: "BETWEEN xx AND xx", info: "readme now"},
-                { key : "MYSQL > LIKE", value: "LIKE `%xx%`", info: "readme now"}
+                { key : "MYSQL > jdnow", value: "jdnow()", info: "The current time in Julian Days"},
+                { key : "MYSQL > as", value: "as", info: false},
+                { key : "MYSQL > BETWEEN", value: "BETWEEN xx AND xx", info: ""},
+                { key : "MYSQL > LIKE", value: "LIKE `%xx%`", info: ""}
             ];
             var tableColumns = [];
             {% for schema_name, schema_content in schemas_core.items %}
-                justTypeCollectionValues.push({ key : "TABLE > {{schema_name}}", value: "{{schema_name}}", info: "readme now"})
+                justTypeCollectionValues.push({ key : "TABLE > {{schema_name}}", value: "{{schema_name}}", info: ""})
                 var theseColumns = {
                     trigger: "{{schema_name}}".concat("."),
                     values: [],
                     noMatchTemplate: "",
                     spaceSelectsMatch: false,
                     selectTemplate: function(item) {
-                        if (typeof item === "undefined") return null;
-                        if (this.range.isContentEditable(this.current.element)) {
-                            return (
-                                '<span contenteditable="false"><a>' +
-                                item.original.key +
-                                "NOPE</a>"+`{% include "includes/info_tooltip.html" with info="Powered by Aladin Lite" position="auto" %}`+"</span>"
-                            );
-                        }
-
                         return item.original.value;
                     },
                     menuItemTemplate: function(item) {
-                        return item.string;
+                        if (item.original.info.length > 0) {
+                            return item.string + `{% include "includes/info_tooltip.html" with info="`+item.original.info+`" position="top" %}`;
+                        } else {
+                            return item.string
+                        }
+
                     }
                 }
 
                 {% for row in schema_content %}
-                    theseColumns.values.push({ key : "COLUMN > {{schema_name}}.{{row.name}}", value: "{{schema_name}}.{{row.name}}", info: "readme now"})
+                    theseColumns.values.push({ key : "COLUMN > {{schema_name}}.{{row.name}}", value: "{{schema_name}}.{{row.name}}", info: "{{row.doc}}"})
                 {% endfor %}
                 tableColumns.push(theseColumns)
             {% endfor %}
 
             var e = document.getElementById("id_watchlists");
             if (e.value) {
-                justTypeCollectionValues.push({ key : "TABLE > watchlist_hits", value: "watchlist_hits", info: "readme now"})
+                justTypeCollectionValues.push({ key : "TABLE > watchlist_hits", value: "watchlist_hits", info: ""})
                 var theseColumns = {
                     trigger: "watchlist_hits.",
                     values: [],
                     noMatchTemplate: "",
                     spaceSelectsMatch: false,
                     selectTemplate: function(item) {
-                        if (typeof item === "undefined") return null;
-                        if (this.range.isContentEditable(this.current.element)) {
-                            return (
-                                '<span contenteditable="false"><a>' +
-                                item.original.key +
-                                "NOPE</a>"+`{% include "includes/info_tooltip.html" with info="Powered by Aladin Lite" position="auto" %}`+"</span>"
-                            );
-                        }
-
                         return item.original.value;
                     },
                     menuItemTemplate: function(item) {
-                        return item.string;
+                        if (item.original.info.length > 0) {
+                            return item.string + `{% include "includes/info_tooltip.html" with info="`+item.original.info+`" position="top" %}`;
+                        } else {
+                            return item.string
+                        }
+
                     }
                 }
                 {% for row in schemas_additional.watchlist_hits %}
-                    theseColumns.values.push({ key : "COLUMN > watchlist_hits.{{row.name}}", value: "watchlist_hits.{{row.name}}", info: "readme now"})
+                    theseColumns.values.push({ key : "COLUMN > watchlist_hits.{{row.name}}", value: "watchlist_hits.{{row.name}}", info: "{{row.doc}}"})
                 {% endfor %}
                 tableColumns.push(theseColumns)
             }
@@ -130,30 +124,26 @@
             // ANNOTATORS
             var avalues = document.getElementById("id_annotators").selectedOptions;
             for (i = 0; i < avalues.length; i++) {
-                justTypeCollectionValues.push({ key : "TABLE > ".concat(avalues[i].value), value: avalues[i].value, info: "readme now"})
+                justTypeCollectionValues.push({ key : "TABLE > ".concat(avalues[i].value), value: avalues[i].value, info: "{{row.doc}}"})
                 var theseColumns = {
                     trigger:  avalues[i].value.concat("."),
                     values: [],
                     noMatchTemplate: "",
                     spaceSelectsMatch: false,
                     selectTemplate: function(item) {
-                        if (typeof item === "undefined") return null;
-                        if (this.range.isContentEditable(this.current.element)) {
-                            return (
-                                '<span contenteditable="false"><a>' +
-                                item.original.key +
-                                "NOPE</a>"+`{% include "includes/info_tooltip.html" with info="Powered by Aladin Lite" position="auto" %}`+"</span>"
-                            );
-                        }
-
                         return item.original.value;
                     },
                     menuItemTemplate: function(item) {
-                        return item.string;
+                        if (item.original.info.length > 0) {
+                            return item.string + `{% include "includes/info_tooltip.html" with info="`+item.original.info+`" position="top" %}`;
+                        } else {
+                            return item.string
+                        }
+
                     }
                 }
                 {% for row in schemas_additional.annotations %}
-                    theseColumns.values.push({ key : "COLUMN > ".concat(avalues[i].value,".{{row.name}}"), value: avalues[i].value.concat(".{{row.name}}"), info: "readme now"})
+                    theseColumns.values.push({ key : "COLUMN > ".concat(avalues[i].value,".{{row.name}}"), value: avalues[i].value.concat(".{{row.name}}"), info: "{{row.doc}}"})
                 {% endfor %}
                 tableColumns.push(theseColumns)
             }
@@ -161,15 +151,6 @@
             var justTypeCollection = {
                 values: justTypeCollectionValues,
                 selectTemplate: function(item) {
-                    if (typeof item === "undefined") return null;
-                    if (this.range.isContentEditable(this.current.element)) {
-                        return (
-                            '<span contenteditable="false"><a>' +
-                            item.original.key +
-                            "</a></span>"
-                        );
-                    }
-
                     if (item.original.key.includes("MYSQL >")) {
                         return item.original.value+" ";
 
@@ -179,7 +160,12 @@
 
                 },
                 menuItemTemplate: function(item) {
-                    return item.string;
+                    if (item.original.info.length > 0) {
+                        return item.string + `{% include "includes/info_tooltip.html" with info="`+item.original.info+`" position="top" %}`;
+                    } else {
+                        return item.string
+                    }
+
                 }
             };
 
@@ -330,6 +316,20 @@
                 $("#editFilterForm").modal('show');
             });
         {% endif %}
+
+
+        var body = $('body');
+        body.on('mouseover', '[data-bs-toggle="tooltip"]', function (e) {
+            e.stopPropagation();
+            return new bootstrap.Tooltip(this).show();
+        });
+
+        body.on('mouseleave', '[data-bs-toggle="tooltip"]', function (e) {
+            $('[role="tooltip"]').fadeOut(function () {
+                e.stopPropagation();
+                $(this).remove();
+            });
+        });
 
 
     </script>
