@@ -182,7 +182,6 @@ def topic_refresh(real_sql, topic, limit=10):
         recorddict = dict(record)
         now_number = datetime.utcnow()
         recorddict['UTC'] = now_number.strftime("%Y-%m-%d %H:%M:%S")
-        print(recorddict)
         recent.append(recorddict)
 
     conf = {

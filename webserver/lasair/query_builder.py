@@ -98,7 +98,6 @@ def check_where_forbidden(where_condition):
     if where_condition:
         regex = re.compile(r'^\S*\-+\s*.*')
         where_condition = regex.sub("", where_condition)
-        print(where_condition)
 
     # Want to split on whitespace, parentheses, curlys
     wc = re.split('\s|\(|\)|\{|\}', where_condition.lower())

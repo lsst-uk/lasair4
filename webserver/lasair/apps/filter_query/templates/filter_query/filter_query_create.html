@@ -325,7 +325,7 @@
             });
         });
 
-        {% if form.errors %}
+        {% if form.errors and not form.selected.errors %}
             $(document).ready(function(){
                 $("#editFilterForm").modal('show');
             });

@@ -6,6 +6,9 @@ from lasair.apps.annotator.models import Annotators
 from lasair.apps.watchmap.models import Watchmap
 from lasair.apps.watchlist.models import Watchlist
 from django.db.models import Q
+from lasair.query_builder import check_query, build_query
+from .utils import check_query_zero_limit
+import re
 
 
 class filterQueryForm(forms.ModelForm):
@@ -120,15 +123,42 @@ class filterQueryForm(forms.ModelForm):
         fields = ['name', 'description', 'active', 'public', 'selected', 'conditions', 'real_sql', 'watchlists', 'watchmaps']
 
     def clean(self):
+
         cleaned_data = super(filterQueryForm, self).clean()
+
         if self.request:
             action = self.request.POST.get('action')
         name = self.cleaned_data.get('name')
 
         if action == "save":
-            if filter_query.objects.filter(Q(user=self.request.user) & Q(name__iexact=name.strip().lower())).exists():
+            if filter_query.objects.filter(Q(user=self.request.user) & Q(name__iexact=name.strip().lower())).exists() and self.instance.name != name:
                 msg = 'You already have a filter by that name, please choose another.'
                 self.add_error('name', msg)
+
+        if action in ["run", "save"]:
+            selected = self.cleaned_data.get('selected')
+            conditions = self.cleaned_data.get('conditions')
+            # FIND THE TABLES THAT NEED TO BE QUIERIED FROM THE SELECT STATEMENT
+            matchObjectList = re.findall(r'([a-zA-Z0-9_\-]*)\.([a-zA-Z0-9_\-]*)', selected)
+            tables = [m[0] for m in matchObjectList]
+            tables = (",").join(set(tables))
+
+            e = check_query(selected, tables, conditions)
+            if e:
+                try:
+                    msg = e.split("syntax to use near '")[1].split("' at line")[0]
+                except:
+                    msg = e
+                self.add_error('selected', msg)
+
+            sqlquery_real = build_query(selected, tables, conditions)
+            e = check_query_zero_limit(sqlquery_real)
+            if e:
+                try:
+                    msg = e.split("syntax to use near '")[1].split("' at line")[0]
+                except:
+                    msg = e
+                self.add_error('selected', msg)
 
         return cleaned_data
 
