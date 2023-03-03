@@ -12,7 +12,11 @@
             <div class="col-1 text-xl-center mb-3 mb-xl-0 d-flex justify-content-xl-start">
                 <div class="icon-shape icon-shape-tertiary rounded me-4 me-sm-0">
 
-                    {% include "includes/icons/icon_filter_query.html" %}
+                    {% if filterQ %}
+                        {% include "includes/icons/icon_edit2.html" %}
+                    {%else%}
+                        {% include "includes/icons/icon_filter_query.html" %}
+                    {%endif%}
 
                 </div>
             </div>
@@ -21,7 +25,17 @@
 
                 <div class="d-flex ms-2">
                     <div class="flex-grow-1">
-                        <h2 class="h3 fw-extrabold mb-0">Filter Builder</h2>
+                        <h2 class="h3 fw-extrabold mb-0">
+                            {% if filterQ %}
+                                Editing the '{{filterQ.name}}' Filter
+                            {%else%}
+                                Filter Builder
+                            {%endif%}
+
+
+
+                        </h2>
+
                         <small class="text-gray-500">
                             Use the <a href="{% url 'schema_index' %}" target="_blank">Lasair Schema Browser</a> to find the attributes you would like to use to build your filter.
                         </small>
