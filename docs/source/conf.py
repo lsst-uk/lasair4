@@ -91,8 +91,8 @@ html_theme_options = {
     'strap_line': "Documentation for the Lasair Transient Science Platform"
 }
 html_theme_path = ['_static/whistles-theme/sphinx/_themes']
-# html_title = None
-# html_short_title = None
+html_title = None
+html_short_title = None
 # html_sidebars = {}
 # html_last_updated_fmt = '%b %d, %Y'
 # html_additional_pages = {}
