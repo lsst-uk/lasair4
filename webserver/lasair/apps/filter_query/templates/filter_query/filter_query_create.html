@@ -197,6 +197,7 @@
 
 
             document.querySelector("textarea#id_selected").addEventListener('keydown', function(e) {
+                updateFrom()
                 if (e.key == 'Tab') {
                     if (tributeAutocompleteSelectArea.isActive | tributeAutocompleteTestAreaColumns.isActive) {
                         e.stopImmediatePropagation()
