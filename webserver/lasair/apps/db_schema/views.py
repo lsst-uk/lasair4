@@ -20,6 +20,7 @@ def schema_index(request):
     """
     schemas = {
         'objects': get_schema('objects'),
+        'crossmatch_tns': get_schema('crossmatch_tns'),
         'sherlock_classifications': get_schema('sherlock_classifications'),
         # 'crossmatch_tns': get_schema('crossmatch_tns'),
         '<annotator>': get_schema('annotations'),

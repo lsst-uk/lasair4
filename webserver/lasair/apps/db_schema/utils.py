@@ -65,6 +65,7 @@ def get_schema_for_query_selected(
         'sherlock_classifications': get_schema_dict('sherlock_classifications'),
         'crossmatch_tns': get_schema_dict('crossmatch_tns'),
         'annotations': get_schema_dict('annotations'),
+        'crossmatch_tns': get_schema_dict('crossmatch_tns')
     }
 
     # GENERATE A TABLE SPECIFIC SCHEMA
@@ -77,7 +78,11 @@ def get_schema_for_query_selected(
         select = select.strip()
         if " " not in select:
             select = select.split(".")
-            if len(select) == 2:
-                tableSchema[select[1]] = schemas[select[0]][select[1]]
+            if len(select) == 2 and select[0] in schemas.keys():
+                if select[1] == "*":
+                    for k, v in schemas[select[0]].items():
+                        tableSchema[k] = v
+                else:
+                    tableSchema[select[1]] = schemas[select[0]][select[1]]
 
     return tableSchema

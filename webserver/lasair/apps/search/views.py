@@ -87,7 +87,6 @@ def do_search(
         queries.append(f"SELECT {objectColumns} FROM objects o, sherlock_classifications s where s.objectId=o.objectId and o.objectId = '{objectName}'")
 
         for q in queries:
-            # print(q)
             cursor.execute(q)
             results += cursor.fetchall()
     else:
@@ -120,7 +119,6 @@ def do_search(
             radius = float(query[2])
         else:
             radius = 5.
-        print(radius)
 
         # Is there an object within RADIUS arcsec of this object? - KWS - need to fix the gkhtm code!!
         message, matches = coneSearchHTM(ra, dec, radius, 'objects', queryType=QUICK, conn=connection, django=True, prefix='htm', suffix='')

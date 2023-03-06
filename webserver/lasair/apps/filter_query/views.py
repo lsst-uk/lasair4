@@ -13,7 +13,7 @@ from lasair.apps.db_schema.utils import get_schema, get_schema_dict, get_schema_
 from .models import filter_query
 from .forms import filterQueryForm, UpdateFilterQueryForm, DuplicateFilterQueryForm
 from lasair.query_builder import check_query, build_query
-import settings
+from django.conf import settings
 import json
 import re
 import copy
@@ -102,7 +102,7 @@ def filter_query_detail(request, mq_id):
         duplicateForm = DuplicateFilterQueryForm(request.POST, instance=filterQuery, request=request)
         action = request.POST.get('action')
 
-    if request.method == 'POST' and is_owner:
+    if request.method == 'POST' and is_owner and action == 'save':
 
         # UPDATING SETTINGS?
         if action == 'save' and form.is_valid():
@@ -120,17 +120,6 @@ def filter_query_detail(request, mq_id):
             else:
                 filterQuery.public = 0
 
-            # VERIFY QUERY WORKS
-            e = check_query(filterQuery.selected, filterQuery.tables, filterQuery.conditions)
-            if e:
-                messages.error(request, f"There was an error updating your filter.\n{e}")
-                return render(request, 'error.html')
-
-            e = check_query_zero_limit(filterQuery.real_sql)
-            if e:
-                messages.error(request, f"There was an error updating your filter.\n{e}")
-                return render(request, 'error.html')
-
             # REFRESH STREAM
             tn = topic_name(request.user.id, filterQuery.name)
             filterQuery.topic_name = tn
@@ -139,10 +128,11 @@ def filter_query_detail(request, mq_id):
                 try:
                     topic_refresh(filterQuery.real_sql, tn, limit=10)
                 except Exception as e:
-                    messages.error(request, f'The kafa topic could not be refreshed for this filter. {e}')
+                    messages.error(request, f'The kafka topic could not be refreshed for this filter. {e}')
             filterQuery.save()
             messages.success(request, f'Your filter has been successfully updated')
     elif request.method == 'POST' and action == 'copy' and duplicateForm.is_valid():
+
         oldName = copy.deepcopy(filterQuery.name)
         name = request.POST.get('name')
         description = request.POST.get('description')
@@ -215,19 +205,21 @@ def filter_query_detail(request, mq_id):
 
 
 @login_required
-def filter_query_create(request):
-    """*create a new filter*
+def filter_query_create(request, mq_id=False):
+    """*create or update a filter*
 
     **Key Arguments:**
 
     - `request` -- the original request
+    - `mq_id` -- the fitler query ID (if updating an existing filter)
 
     **Usage:**
 
     ```python
     urlpatterns = [
         ...
-        path('filters/create/', views.filter_query_create, name='filter_create'),
+        path('filters/create/', views.filter_query_create, name='filter_query_create'),
+        path('filters/<int:mq_id>/update/', views.filter_query_create, name='filter_query_update')
         ...
     ]
     ```
@@ -236,35 +228,57 @@ def filter_query_create(request):
     # BUILD CONTENT FOR THE CREATION FORM
     schemas_core = {
         'objects': get_schema('objects'),
+        'crossmatch_tns': get_schema('crossmatch_tns'),
         'sherlock_classifications': get_schema('sherlock_classifications')
     }
     schemas_addtional = {
         'watchlist_hits': get_schema('watchlist_hits'),
         'annotations': get_schema('annotations'),
     }
-    form = filterQueryForm(request.POST, request.FILES, request=request)
-    email = request.user.email
-    watchlists = Watchlist.objects.filter(Q(user=request.user) | Q(public__gte=1))
-    watchmaps = Watchmap.objects.filter(Q(user=request.user) | Q(public__gte=1))
-    annotators = Annotators.objects.filter(Q(user=request.user) | Q(public__gte=1))
 
-    # SUBMISSION OF NEW FILTER - EITHER SIMPLE RUN OR SAVE
-    if request.method == 'POST':
+    filterQuery = None
 
-        # COLLECT FORM CONTENT
-        action = request.POST.get('action')
-        selected = request.POST.get('selected')
-        conditions = request.POST.get('conditions')
-        watchlists = request.POST.get('watchlists')
-        watchmaps = request.POST.getlist('watchmaps')
-        annotators = request.POST.getlist('annotators')
-        name = request.POST.get('name')
-        description = request.POST.get('description')
-        if request.POST.get('public'):
-            public = 1
-        else:
-            public = 0
-        active = request.POST.get('active')
+    if request.method == 'POST' or mq_id:
+        if request.method == 'POST':
+            if mq_id:
+                filterQuery = get_object_or_404(filter_query, mq_id=mq_id)
+                form = filterQueryForm(request.POST, request=request, instance=filterQuery)
+            else:
+                form = filterQueryForm(request.POST, request=request)
+            # COLLECT FORM CONTENT
+            action = request.POST.get('action')
+            selected = request.POST.get('selected')
+            conditions = request.POST.get('conditions')
+            watchlists = request.POST.get('watchlists')
+            watchmaps = request.POST.getlist('watchmaps')
+            annotators = request.POST.getlist('annotators')
+            name = request.POST.get('name')
+            description = request.POST.get('description')
+            if request.POST.get('public'):
+                public = 1
+            else:
+                public = 0
+            active = request.POST.get('active')
+
+        elif request.method != 'POST' and mq_id:
+            filterQuery = get_object_or_404(filter_query, mq_id=mq_id)
+            form = filterQueryForm(request=request, instance=filterQuery)
+            # COLLECT FORM CONTENT
+            action = "run"
+            selected = form.fields['selected'].widget.attrs['value']
+            conditions = form.fields['conditions'].widget.attrs['value']
+            watchmaps, watchlists, annotators = None, None, None
+            if "watchlists" in form.initial:
+                watchlists = form.initial["watchlists"]
+            if "watchmaps" in form.initial:
+                watchmaps = form.initial["watchmaps"]
+            if "annotators" in form.initial:
+                annotators = form.initial["annotators"]
+
+            name = form.fields['name'].widget.attrs['value']
+            description = form.fields['description'].widget.attrs['value']
+            public = form.initial["public"]
+            active = form.initial["active"]
 
         # EXTRA DEFAULTS
         tables = "objects"
@@ -278,6 +292,7 @@ def filter_query_create(request):
         if watchlists:
             tables += f", watchlist:{watchlists}"
         if watchmaps:
+            watchmaps[:] = [str(w) for w in watchmaps]
             tables += f", area:{('&').join(watchmaps)}"
         if annotators:
             tables += f", annotator:{('&').join(annotators)}"
@@ -294,48 +309,66 @@ def filter_query_create(request):
                 mq_id=None,
                 query_name=False)
 
-            if error:
-                messages.error(request, error)
-
             sqlquery_real = sqlparse.format(build_query(selected, tables, conditions), reindent=True, keyword_case='upper', strip_comments=True)
 
-            return render(request, 'filter_query/filter_query_create.html', {'schemas_core': schemas_core, 'schemas_addtional': schemas_addtional, 'form': form, 'table': table, 'schema': tableSchema, 'limit': str(limit), 'real_sql': sqlquery_real})
+            return render(request, 'filter_query/filter_query_create.html', {'schemas_core': schemas_core, 'schemas_addtional': schemas_addtional, 'form': form, 'table': table, 'schema': tableSchema, 'limit': str(limit), 'real_sql': sqlquery_real, "filterQ": filterQuery})
 
         # OR SAVE?
-        elif action and action.lower() == "save" and len(name):
+        elif action and action.lower() == "save" and len(name) and form.is_valid():
 
-            if form.is_valid():
-                e = check_query(selected, tables, conditions)
-                if e:
-                    return render(request, 'error.html', {'message': e})
+            sqlquery_real = sqlparse.format(build_query(selected, tables, conditions), reindent=True, keyword_case='upper', strip_comments=True)
+            if filterQuery:
+                filterQuery.name = name
+                filterQuery.description = description
+                if request.POST.get('active'):
+                    filterQuery.active = int(request.POST.get('active'))
+                else:
+                    filterQuery.active = 0
 
-                sqlquery_real = build_query(selected, tables, conditions)
-                e = check_query_zero_limit(sqlquery_real)
-                if e:
-                    return render(request, 'error.html', {'message': e})
+                if request.POST.get('public'):
+                    filterQuery.public = 1
+                else:
+                    filterQuery.public = 0
+                filterQuery.selected = selected
+                filterQuery.tables = tables
+                filterQuery.conditions = conditions
+                filterQuery.real_sql = sqlquery_real
+                # REFRESH STREAM
+                tn = topic_name(request.user.id, filterQuery.name)
+                filterQuery.topic_name = tn
+                delete_stream_file(request, filterQuery.name)
+                verb = "updated"
 
+            else:
+                sqlquery_real = sqlparse.format(build_query(selected, tables, conditions), reindent=True, keyword_case='upper', strip_comments=True)
                 tn = topic_name(request.user.id, name)
+                filterQuery = filter_query(user=request.user,
+                                           name=name, description=description,
+                                           public=public, active=active,
+                                           selected=selected, conditions=conditions, tables=tables,
+                                           real_sql=sqlquery_real, topic_name=tn)
+                verb = "created"
 
-                mq = filter_query(user=request.user,
-                                  name=name, description=description,
-                                  public=public, active=active,
-                                  selected=selected, conditions=conditions, tables=tables,
-                                  real_sql=sqlquery_real, topic_name=tn)
+            filterQuery.save()
 
-                mq.save()
+            # AFTER SAVING, DELETE THE TOPIC AND PUSH SOME RECORDS FROM THE DATABASE
+            if filterQuery.active == 2:
+                try:
+                    topic_refresh(filterQuery.real_sql, tn, limit=10)
+                except Exception as e:
+                    messages.error(request, f'The kafka topic could not be refreshed for this filter. {e}')
 
-                # AFTER SAVING, DELETE THE TOPIC AND PUSH SOME RECORDS FROM THE DATABASE
-                if mq.active == 2:
-                    message.success(request, topic_refresh(mq.real_sql, tn, limit=10))
+            filtername = form.cleaned_data.get('name')
+            messages.success(request, f'The "{filtername}" filter has been successfully {verb}')
+            return redirect(f'filter_query_detail', filterQuery.pk)
 
-                filtername = form.cleaned_data.get('name')
-                messages.success(request, f'The "{filtername}" filter has been successfully created')
-                return redirect(f'filter_query_detail', mq.pk)
+    else:
+        form = filterQueryForm(request=request)
 
     return render(request, 'filter_query/filter_query_create.html', {'schemas_core': schemas_core, 'schemas_additional': schemas_addtional, 'form': form, 'limit': None})
 
 
-def filter_log(request, topic):
+def filter_query_log(request, topic):
     """*return the log file content for the filter*
 
     **Key Arguments:**
@@ -348,7 +381,7 @@ def filter_log(request, topic):
     ```python
     urlpatterns = [
         ...
-        path('filters/log/<slug:topic>/', views.filter_log, name='filter_log'),
+        path('filters/log/<slug:topic>/', views.filter_query_log, name='filter_query_log'),
         ...
     ]
     ```
@@ -396,7 +429,7 @@ def filter_log(request, topic):
     })
 
 
-@login_required
+@ login_required
 def filter_query_delete(request, mq_id):
     """*delete a filter query*
 
@@ -417,9 +450,7 @@ def filter_query_delete(request, mq_id):
     """
     msl = db_connect.readonly()
     cursor = msl.cursor(buffered=True, dictionary=True)
-    print(mq_id)
     filterQuery = get_object_or_404(filter_query, mq_id=mq_id)
-    print(filterQuery)
     name = filterQuery.name
 
     # DELETE FILTER
@@ -429,40 +460,4 @@ def filter_query_delete(request, mq_id):
         messages.success(request, f'The "{name}" filter has been successfully deleted')
     else:
         messages.error(request, f'You must be the owner to delete this filter')
-    return redirect('filter_query_index')
-
-
-@login_required
-def filter_query_duplicate(request, mq_id):
-    """*duplicate a filter query*
-
-    **Key Arguments:**
-
-    - `request` -- the original request
-    - `mq_id` -- the filter UUID
-
-    **Usage:**
-
-    ```python
-    urlpatterns = [
-        ...
-        path('filters/<int:mq_id>/duplicate/', views.filter_query_duplicate, name='filter_query_duplicate'),
-        ...
-    ]
-    ```
-    """
-    # msl = db_connect.readonly()
-    # cursor = msl.cursor(buffered=True, dictionary=True)
-    # print(mq_id)
-    # filterQuery = get_object_or_404(filter_query, mq_id=mq_id)
-    # print(filterQuery)
-    # name = filterQuery.name
-
-    # # DELETE FILTER
-    # if request.method == 'POST' and request.user.is_authenticated and filterQuery.user.id == request.user.id and request.POST.get('action') == "delete":
-    #     filterQuery.delete()
-    #     delete_stream_file(request, filterQuery.name)
-    #     messages.success(request, f'The "{name}" filter has been successfully deleted')
-    # else:
-    #     messages.error(request, f'You must be the owner to delete this filter')
     return redirect('filter_query_index')

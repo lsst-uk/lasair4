@@ -166,7 +166,7 @@ def watchlist_detail(request, wl_id):
         form = UpdateWatchlistForm(request.POST, instance=watchlist, request=request)
         action = request.POST.get('action')
 
-    if request.method == 'POST' and is_owner:
+    if request.method == 'POST' and is_owner and action == 'save':
         # UPDATING SETTINGS?
         if action == 'save':
             if form.is_valid():
@@ -196,8 +196,6 @@ def watchlist_detail(request, wl_id):
     elif request.method == 'POST' and action == "copy":
 
         if duplicateForm.is_valid():
-
-            print("SHIHIHIHIH")
 
             oldName = copy.deepcopy(watchlist.name)
             name = request.POST.get('name')
@@ -388,52 +386,5 @@ def watchlist_delete(request, wl_id):
         messages.success(request, f'The "{name}" watchlist has been successfully deleted')
     else:
         messages.error(request, f'You must be the owner to delete this watchlist')
-
-    return redirect('watchlist_index')
-
-
-@ login_required
-def watchlist_duplicate(request, wl_id):
-    """*duplicate a watchlist
-
-    **Key Arguments:**
-
-    - `request` -- the original request
-    - `wl_id` -- the watchlist UUID
-
-    **Usage:**
-
-    ```python
-    urlpatterns = [
-        ...
-        path('watchlists/<int:wl_id>/duplicate/', views.watchlist_duplicate, name='watchlist_duplicate'),
-        ...
-    ]
-    ```
-    """
-    msl = db_connect.remote()
-    cursor = msl.cursor(buffered=True, dictionary=True)
-    watchlist = get_object_or_404(Watchlist, wl_id=wl_id)
-    name = watchlist.name
-
-    if request.method == "POST":
-        form = DuplicateWatchlistForm(request.POST, instance=watchlist, request=request)
-        print(form.is_valid())
-        print(form.cleaned_data.get('active'))
-        print(form.errors)
-
-    # # DELETE WATCHLIST
-    # if request.method == 'POST' and request.user.is_authenticated and watchlist.user.id == request.user.id and request.POST.get('action') == "delete":
-    #     # DELETE ALL THE CONES OF THIS WATCHLIST
-    #     WatchlistCone.objects.filter(wl_id=wl_id).delete()
-    #     # DELETE ALL THE HITS OF THIS WATCHLIST
-    #     query = 'DELETE from watchlist_hits WHERE wl_id=%d' % wl_id
-    #     cursor.execute(query)
-    #     msl.commit()
-    #     # DELETE THE WATCHLIST
-    #     watchlist.delete()
-    #     messages.success(request, f'The "{name}" watchlist has been successfully deleted')
-    # else:
-    #     messages.error(request, f'You must be the owner to delete this watchlist')
 
     return redirect('watchlist_index')
