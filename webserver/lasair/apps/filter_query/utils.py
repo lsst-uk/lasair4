@@ -4,6 +4,7 @@ from lasair.apps.db_schema.utils import get_schema, get_schema_dict, get_schema_
 from lasair.utils import datetime_converter
 import settings
 import os
+import datetime
 
 
 def add_filter_query_metadata(

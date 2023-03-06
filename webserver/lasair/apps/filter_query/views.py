@@ -128,7 +128,7 @@ def filter_query_detail(request, mq_id):
                 try:
                     topic_refresh(filterQuery.real_sql, tn, limit=10)
                 except Exception as e:
-                    messages.error(request, f'The kafa topic could not be refreshed for this filter. {e}')
+                    messages.error(request, f'The kafka topic could not be refreshed for this filter. {e}')
             filterQuery.save()
             messages.success(request, f'Your filter has been successfully updated')
     elif request.method == 'POST' and action == 'copy' and duplicateForm.is_valid():
@@ -355,7 +355,7 @@ def filter_query_create(request, mq_id=False):
                 try:
                     topic_refresh(filterQuery.real_sql, tn, limit=10)
                 except Exception as e:
-                    messages.error(request, f'The kafa topic could not be refreshed for this filter. {e}')
+                    messages.error(request, f'The kafka topic could not be refreshed for this filter. {e}')
 
             filtername = form.cleaned_data.get('name')
             messages.success(request, f'The "{filtername}" filter has been successfully {verb}')
