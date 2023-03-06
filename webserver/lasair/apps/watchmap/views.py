@@ -138,7 +138,7 @@ def watchmap_detail(request, ar_id):
 
         action = request.POST.get('action')
 
-    if request.method == 'POST' and is_owner:
+    if request.method == 'POST' and is_owner and action == 'save':
 
         if action == "save":
             if form.is_valid():

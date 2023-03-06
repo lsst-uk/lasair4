@@ -102,7 +102,7 @@ def filter_query_detail(request, mq_id):
         duplicateForm = DuplicateFilterQueryForm(request.POST, instance=filterQuery, request=request)
         action = request.POST.get('action')
 
-    if request.method == 'POST' and is_owner:
+    if request.method == 'POST' and is_owner and action == 'save':
 
         # UPDATING SETTINGS?
         if action == 'save' and form.is_valid():
@@ -132,6 +132,7 @@ def filter_query_detail(request, mq_id):
             filterQuery.save()
             messages.success(request, f'Your filter has been successfully updated')
     elif request.method == 'POST' and action == 'copy' and duplicateForm.is_valid():
+
         oldName = copy.deepcopy(filterQuery.name)
         name = request.POST.get('name')
         description = request.POST.get('description')
