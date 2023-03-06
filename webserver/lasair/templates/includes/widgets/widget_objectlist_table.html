@@ -1,0 +1,100 @@
+{% load customtags %}
+
+<div class="card border-0 shadow h-100">
+
+
+    {% if header %}
+        <div class="card-header border-0 pb-1">
+            <div class="row d-flex">
+                <div class="col-12 col-sm-11 mb-3 d-flex align-items-center">
+                    <div class="icon-shape icon-shape-tertiary rounded me-sm-0">
+                        {% include "includes/icons/icon_object_list.html" %}
+                    </div>
+                    <h2 class="h3 fw-extrabold mb-0 ps-2">{{header}}</h2>
+
+                </div>
+
+                <div class="col-12 px-4">
+
+                    {% if table|length > 0 %}
+                        <small class="text-gray-500">
+                            {% if desc %}
+                                {{desc}}
+                            {% endif %}
+                        </small>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+
+
+    {% endif %}
+
+
+    <div class="card-body pt-0">
+
+        {% if table|length > 0 %}
+
+
+            <div class="table-responsive p-1 pt-0">
+                <table  class="table table-flush datatable" data-perPage=50 id="filter-results">
+                    <thead class="thead-light">
+                        <tr>
+
+                            {% for key in table.0.keys %}
+
+                                {% if key == "UTC" %}
+                                    <th data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="{{schema|keyvalue:key}}" >Alert Time</th>
+                                {%else%}
+                                    <th data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="{{schema|keyvalue:key}}" >{{key}}</th>
+                                {% endif %}
+
+                            {% endfor %}
+
+                        </tr></thead>
+                    <tbody>
+                        {% for object in table %}
+
+                            <tr>
+                                {% for key in object.keys %}
+
+                                    {% if key == "objectId" %}
+                                        <td><a href='{% url "object_detail" object.objectId %}'>{{ object.objectId }}</a></td>
+
+                                    {% elif key in 'decmean' %}
+                                        <td>{{object|keyvalue:key|floatformat:6 }}</td>
+                                    {% elif key in 'ramean' %}
+                                        <td>{{object|keyvalue:key|floatformat:5 }}</td>
+                                    {% elif 'mjd' in key %}
+                                        <td>{{object|keyvalue:key|floatformat:4 }}</td>
+                                    {% elif 'mag' in key %}
+                                        <td>{{object|keyvalue:key|floatformat:3 }}</td>
+                                    {% elif 'last detected' in key %}
+                                        <td>{{object|keyvalue:key|floatformat:1 }}</td>
+                                    {% elif key in 'UTC' %}
+                                        <td data-type="date" data-format="YYYY-MMM-DD hh:mm:ss">{{object|keyvalue:key }} UTC</td>
+                                    {% elif key in 'classdict' %}
+                                        <td><code>{{object|keyvalue:key }}</code></td>
+                                    {%else%}
+                                        <td>{{ object|keyvalue:key }}</td>
+                                    {% endif %}
+
+                                {% endfor %}
+
+                            </tr>
+
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+
+
+            </div>
+
+        {% else %}
+            {% include "includes/widgets/widget_zero_matches_card.html" with info=zerotext %}
+        {% endif %}
+
+    </div>
+</div>
+

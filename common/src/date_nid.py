@@ -1,13 +1,14 @@
 import datetime
 from time import gmtime
 
+
 def date_to_nid(d):
     """ Converts date string yyyymmdd to ZTF night id (nid)
     """
     try:
-        year  = int(d[0:4])
+        year = int(d[0:4])
         month = int(d[4:6])
-        day   = int(d[6:8])
+        day = int(d[6:8])
     except:
         print("Date %s not in format yyyymmdd" % d)
         return -1
@@ -16,11 +17,13 @@ def date_to_nid(d):
     nid = (d1 - d0).days
     return nid
 
+
 def nid_now():
     """ Converts date string yyyymmdd (in UTC) to ZTF night id (nid)
     """
     g = gmtime()
     return date_to_nid("%4s%2s%2s" % (g.tm_year, g.tm_mon, g.tm_mday))
+
 
 def nid_to_date(nid):
     """ Converts ZTF night id (nid) to date string yyyymmdd (in UTC)
@@ -28,6 +31,22 @@ def nid_to_date(nid):
     d0 = datetime.date(2017, 1, 1)
     d1 = d0 + datetime.timedelta(days=nid)
     return d1.strftime("%Y%m%d")
+
+
+def nid_to_days_ago(nid):
+    """ Converts ZTF night id (nid) to number of days ago
+    """
+    g = gmtime()
+    return date_to_nid("%4s%2s%2s" % (g.tm_year, g.tm_mon, g.tm_mday)) - nid
+
+
+def nid_to_pretty_date(nid):
+    """ Converts ZTF night id (nid) to pretty date (in UTC)
+    """
+    d0 = datetime.date(2017, 1, 1)
+    d1 = d0 + datetime.timedelta(days=nid)
+    return d1.strftime("%a, %-m %B %Y")
+
 
 if __name__ == "__main__":
     nid = nid_now()
@@ -38,4 +57,3 @@ if __name__ == "__main__":
 
     nid = date_to_nid(date)
     print("nid is: %d" % nid)
-

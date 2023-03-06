@@ -1,385 +1,121 @@
-import sys
-sys.path.append('../common')
-import settings
-from django.shortcuts import render, get_object_or_404, redirect
-from django.http import HttpResponseRedirect, HttpResponse
-from django.template.context_processors import csrf
-from django.views.decorators.csrf import csrf_exempt
-from django.db import connection
-from django.db.models import Q
-from lasair.models import Myqueries, Annotators
-import json, math, time
-import src.date_nid as date_nid
-from lasair.objects import obj
-
-from django.contrib.auth.models import User
+import importlib
+import random
+import time
+import math
+import string
+import json
 from django.contrib.auth import login, authenticate
-import string, random, importlib
+from django.contrib.auth.models import User
+import src.date_nid as date_nid
 
-def id_generator(size=10):
-    """id_generator.
+from django.db.models import Q
+from django.db import connection
+from django.views.decorators.csrf import csrf_exempt
+from django.template.context_processors import csrf
+from django.http import HttpResponseRedirect, HttpResponse
+from django.shortcuts import render, get_object_or_404, redirect
+import settings
+from lasair.apps.db_schema.utils import get_schema, get_schema_dict, get_schema_for_query_selected
+from src import db_connect
+import re
+import sys
 
-    Args:
-        size:
-    """
-    chars = string.ascii_lowercase + string.ascii_uppercase + string.digits
-    return ''.join(random.choice(chars) for _ in range(size))
+sys.path.append('../common')
 
-def signup(request):
-    """signup.
-
-    Args:
-        request:
-    """
-    if request.method == 'POST':
-        first_name    = request.POST['first_name']
-        last_name     = request.POST['last_name']
-        username      = request.POST['username']
-        email         = request.POST['email']
-        password      = id_generator(10)
-        user = User.objects.create_user(username=username, first_name=first_name,last_name=last_name, email=email, password=password)
-        user.save()
-        return redirect('/accounts/password_reset/')
-    else:
-        return render(request, 'signup.html')
-
-def status_today(request):
-    nid  = date_nid.nid_now()
-    return status(request, nid)
-
-def status(request, nid):
-    message = ''
-    web_domain = settings.WEB_DOMAIN
-    try:
-        filename = '%s_%d.json' % (settings.SYSTEM_STATUS, nid)
-        jsonstr = open(filename).read()
-    except:
-        jsonstr = ''
-        return render(request, 'error.html', {'message': 'Cannot open status file for nid=%d'%nid})
-
-    try:
-        status = json.loads(jsonstr)
-    except:
-        status = None
-        return render(request, 'error.html', {'message': 'Cannot parse status file for nid=%d'%nid})
-
-    if status and 'today_filter' in status:
-        status['today_singleton'] = \
-            status['today_filter'] - status['today_filter_out'] - status['today_filter_ss']
-
-    date = date_nid.nid_to_date(nid)
-    return render(request, 'status.html', 
-            {'web_domain': web_domain, 'status':status, 'date':date, 'message':message})
 
 def index(request):
-    """index.
-    Args:
-        request:
     """
-    web_domain = settings.WEB_DOMAIN
-    return render(request, 'index.html', {'web_domain': web_domain})
-
-def index2(request):
-    """index.
-
-    Args:
-        request:
+    Get the most recent events siutable for display on front page.
+    The events are grouped by class and age into sets that will all be the same 
+    colour and size, for example iclass=0 means SN and iage=2 means age between 2 and 5 days.
+    Note that age is time since the most recent alert.
     """
-    web_domain = settings.WEB_DOMAIN
-    topic = 'lasair_2BrightSNe'
-    try:
-        jsonstreamdata = open(settings.KAFKA_STREAMS +'/'+ topic, 'r').read()
-        streamdata = json.loads(jsonstreamdata)
-    except:
-        return redirect('/')
+    sherlock_classes = ['SN', 'NT', 'CV', 'AGN']
+    base_colors = ['FF0000', 'FF00FF', '1E90FF', 'FFC20A']
 
-    objectIds = []
-    for s in streamdata['digest']:
-        objectId = s['objectId']
-        if not objectId in objectIds:
-            objectIds.append(objectId)
-            if len(objectIds) >= 3:
-                break
+    # query finds only mag<17 alerts with at least 2 in light curve, with age < 7
+    query = """
+       SELECT objects.objectId,
+           objects.ramean, objects.decmean,
+           objects.gmag, objects.rmag, jdnow()-objects.jdmax AS age,
+           sherlock_classifications.classification AS class
+       FROM objects, sherlock_classifications
+       WHERE objects.objectId=sherlock_classifications.objectId
+           AND objects.jdmax > jdnow()-7
+           AND (objects.gmag < 17 OR objects.rmag < 17)
+           AND objects.ncandgp > 1
+           AND sherlock_classifications.classification in
+    """
+    S = ['"' + sherlock_class + '"' for sherlock_class in sherlock_classes]
+    query += '(' + ','.join(S) + ')'
 
-    datas = []
-    json_datas = []
-    jdnow = time.time()/86400 + 2440587.5
-    message = ''
-    for objectId in objectIds:
-        d = obj(objectId)
-        fewcand = []
-        for c in d['candidates']:
-            if 'candid' in c:
-                if len(fewcand) > 9 or jdnow - c['jd'] > 30:
-                    break
-                fewcand.append(c)
-                mjdmin_ago = jdnow - c['jd']
-        d['candidates'] = fewcand
-        d['objectData']['mjdmin_ago'] = mjdmin_ago
-        if 'sherlock' in d:
-            d['sherlock']['description'] = ''
-        if len(fewcand) > 1:
-            d['json'] = json.dumps(d)
-            datas.append(d)
+    msl = db_connect.readonly()
+    cursor = msl.cursor(buffered=True, dictionary=True)
+    cursor.execute(query)
 
-    return render(request, 'index2.html', {
-        'datas':datas, 'message':message,
+    nclass = len(sherlock_classes)
+    nage = 5
+
+    # 2D array of colors by class and age
+    colors = [[] for iclass in range(nclass)]
+    for iclass in range(nclass):
+        for iage in range(nage):
+            r = int(int(base_colors[iclass][0:2], 16) * (0.8 ** iage))
+            g = int(int(base_colors[iclass][2:4], 16) * (0.8 ** iage))
+            b = int(int(base_colors[iclass][4:6], 16) * (0.8 ** iage))
+            colors[iclass].append('#%06x' % (256 * (256 * r + g) + b))
+
+    # 2D array of alerts by class and age
+    alerts = [[] for iclass in range(nclass)]
+    for iclass in range(nclass):
+        alerts[iclass] = [[] for iage in range(nage)]
+
+    for row in cursor:
+        if row['gmag']:
+            if row['rmag']:
+                mag = min(row['gmag'], row['rmag'])
+            else:
+                mag = row['gmag']
+        else:
+            if row['rmag']:
+                mag = row['rmag']
+            else:
+                continue
+
+        iclass = sherlock_classes.index(row['class'])
+
+        age = row['age']
+        if age < 1:
+            iage = 0
+        elif age < 2:
+            iage = 1
+        elif age < 3:
+            iage = 2
+        elif age < 4:
+            iage = 3
+        else:
+            iage = 4
+
+        alerts[iclass][iage].append({
+            'objectId': row['objectId'],
+            'age': row['age'],
+            'class': row['class'],
+            'mag': mag,
+            'coordinates': [row['ramean'], row['decmean']]
         })
 
-def about(request):
-    """about.
+    message = str(alerts[0][0])[:300]
 
-    Args:
-        request:
-    """
-    return render(request, 'about.html')
-
-def cookbook(request, topic):
-    """cookbook.
-
-    Args:
-        request:
-        topic:
-    """
-    return render(request, 'cookbook/%s.html'%topic, {'topic':topic})
-
-def distance(ra1, de1, ra2, de2):
-    """distance.
-
-    Args:
-        ra1:
-        de1:
-        ra2:
-        de2:
-    """
-    dra = (ra1 - ra2)*math.cos(de1*math.pi/180)
-    dde = (de1 - de2)
-    return math.sqrt(dra*dra + dde*dde)
-
-def sexra(tok):
-    """sexra.
-
-    Args:
-        tok:
-    """
-    return 15*(float(tok[0]) + (float(tok[1]) + float(tok[2])/60)/60)
-
-def sexde(tok):
-    """sexde.
-
-    Args:
-        tok:
-    """
-    if tok[0].startswith('-'):
-        de = (float(tok[0]) - (float(tok[1]) + float(tok[2])/60)/60)
-    else:
-        de = (float(tok[0]) + (float(tok[1]) + float(tok[2])/60)/60)
-    return de
-
-def readcone(cone):
-    """readcone.
-
-    Args:
-        cone:
-    """
-    error = False
-    message = ''
-    cone = cone.replace(',', ' ').replace('\t',' ').replace(';',' ').replace('|',' ')
-    tok = cone.strip().split()
-#    message += str(tok)
-
-# if tokens begin with 'SN' or 'AT', must be TNS identifier
-    TNSname = None
-    if len(tok) == 1:
-        t = tok[0]
-        if t[0:2] == 'SN' or t[0:2] == 'AT':
-            return {'TNSprefix':t[0:2], 'TNSname': t[2:]}
-        if t[0:2] == '20':
-            return {'TNSprefix': '',      'TNSname': t}
-        if t[0:3] == 'ZTF':
-            return {'objectIds': tok}
-
-# if odd number of tokens, must end with radius in arcsec
-    radius = 5.0
-    if len(tok)%2 == 1:
-        try:
-           radius = float(tok[-1])
-        except:
-            error = True
-        tok = tok[:-1]
-
-# remaining options tok=2 and tok=6
-#   radegrees decdegrees
-#   h:m:s   d:m:s
-#   h m s   d m s
-    if len(tok) == 2:
-        try:
-            ra = float(tok[0])
-            de = float(tok[1])
-        except:
-            try:
-                ra = sexra(tok[0].split(':'))
-                de = sexde(tok[1].split(':'))
-            except:
-                error = True
-
-    if len(tok) == 6:
-        try:
-            ra = sexra(tok[0:3])
-            de = sexde(tok[3:6])
-        except:
-            error = True
-
-    if error:
-        return {'message': 'cannot parse ' + cone + ' ' + message}
-    else:
-        message += 'RA,Dec,radius=%.5f,%.5f,%.1f' % (ra, de, radius)
-        return {'ra':ra, 'dec':de, 'radius':radius, 'message':message}
-
-def fitsview(request, filename):
-    """fitsview.
-
-    Args:
-        request:
-    """
-    return render(request, 'fitsview.html', {'filename':filename})
-
-def conesearch(request):
-    """conesearch.
-
-    Args:
-        request:
-    """
-    if request.method == 'POST':
-        cone = request.POST['cone']
-        json_checked = False
-        if 'json' in request.POST and request.POST['json'] == 'on':
-            json_checked = True
-
-        data = conesearch_impl(cone)
-        if json_checked:
-            return HttpResponse(json.dumps(data, indent=2), content_type="application/json")
-        else:
-            return render(request, 'conesearch.html', {'data':data})
-    else:
-        return render(request, 'conesearch.html', {})
-
-def conesearch_impl(cone):
-    """conesearch_impl.
-
-    Args:
-        cone:
-    """
-    ra = dec = radius = 0.0
-#    hitdict = {}
-    hitlist = []
-    d = readcone(cone)
-
-    if 'objectIds' in d:
-        data = {'cone':cone, 'hitlist': d['objectIds'], 
-            'message': 'Found ZTF object names'}
-        return data
-
-    if 'TNSname' in d:
-        cursor = connection.cursor()
-        query = 'SELECT objectId FROM watchlist_hits WHERE wl_id=%d AND name="%s"' 
-        query = query % (settings.TNS_WATCHLIST_ID, d['TNSname'])
-        cursor.execute(query)
-        hits = cursor.fetchall()
-        message = '%s not found in TNS'%cone
-        for hit in hits:
-            hitlist.append(hit[0])
-            message = '%s found in TNS'%cone
-        data = {'TNSname':d['TNSname'], 'hitlist': hitlist, 'message': message}
-        return data
-            
-    if 'ra' in d:
-        ra = d['ra']
-        dec = d['dec']
-        radius = d['radius']
-        dra = radius/(3600*math.cos(dec*math.pi/180))
-        dde = radius/3600
-        cursor = connection.cursor()
-        query = 'SELECT objectId,ramean,decmean FROM objects WHERE ramean BETWEEN %f and %f AND decmean BETWEEN %f and %f' % (ra-dra, ra+dra, dec-dde, dec+dde)
-#        query = 'SELECT DISTINCT objectId FROM candidates WHERE ra BETWEEN %f and %f AND decl BETWEEN %f and %f' % (ra-dra, ra+dra, dec-dde, dec+dde)
-        cursor.execute(query)
-        hits = cursor.fetchall()
-        for hit in hits:
-#            dist = distance(ra, dec, hit[1], hit[2]) * 3600.0
-#            if dist < radius:
-#                hitdict[hit[0]] = (hit[1], hit[2], dist)
-             hitlist.append(hit[0])
-        message = d['message'] + '<br/>%d objects found in cone' % len(hitlist)
-        data = {'ra':ra, 'dec':dec, 'radius':radius, 'cone':cone,
-                'hitlist': hitlist, 'message': message}
-        return data
-    else:
-        data = {'cone':cone, 'message': d['message']}
-        return data
-
-def coverage(request):
-    """coverage.
-
-    Args:
-        request:
-    """
-    # if this is a POST request we need to process the form data
-    if request.method == 'POST':
-        date1 = request.POST['date1'].strip()
-        date2 = request.POST['date2'].strip()
-        if date1 == 'today': date1 = date_nid.nid_to_date(date_nid.nid_now())
-        if date2 == 'today': date2 = date_nid.nid_to_date(date_nid.nid_now())
-    else:
-#        date1 = '20180528'
-        date2 = date_nid.nid_to_date(date_nid.nid_now())
-        date1 = '20180528'
-
-    nid1 = date_nid.date_to_nid(date1)
-    nid2 = date_nid.date_to_nid(date2)
-    return render(request, 'coverage.html',{'nid1':nid1, 'nid2': nid2, 'date1':date1, 'date2':date2})
-
-def get_schema(schema_name):
-    schema_package = importlib.import_module('schema.' + schema_name)
-    return schema_package.schema['fields']
-
-def schema(request):
-    """schema
-
-    Args:
-        request:
-    """
-    schemas = {
-        'objects'                 : get_schema('objects'),
-        'sherlock_classifications': get_schema('sherlock_classifications'),
-        'crossmatch_tns'          : get_schema('crossmatch_tns'),
-        'annotations'             : get_schema('annotations'),
-    }
-    return render(request, 'schema.html', {'schemas':schemas})
-
-def streams(request, topic):
-    """stream.
-
-    Args:
-        request:
-        topic:
-    """
     try:
-        data = open(settings.KAFKA_STREAMS +'/'+ topic, 'r').read()
+        news = open('/home/ubuntu/news.txt').read()
     except:
-        return render(request, 'error.html', {'message': 'Cannot find log file for ' + topic})
-    table = json.loads(data)['digest']
-    n = len(table)
-    return render(request, 'streams.html', {'topic':topic, 'n':n, 'table':table})
+        news = 'Cannot open news file'
 
-def annotators(request):
-    anns = Annotators.objects.filter().order_by('topic')
-    annotators = []
-    for a in anns:
-        d = {
-            'usersname'  :a.user.first_name +' '+ a.user.last_name,
-            'topic'       :a.topic,
-            'description':a.description
-        }
-        annotators.append(d)
-
-    return render(request, 'annotators.html', {'annotators': annotators})
+    context = {
+        'web_domain': settings.WEB_DOMAIN,
+        'alerts': str(alerts),
+        'colors': str(colors),
+        'news': news,
+        'message': message
+    }
+    return render(request, 'index.html', context)
