@@ -54,12 +54,12 @@ schema = {
         {
             "name": "dmdt_g",
             "type": "float",
-            "doc": "most recent increase in g magnitude divided by time difference, (brightening = positive). Units are Mags per day, and measurement can have large errors (dmdt_g_err)."
+            "doc": "Most recent increase in g magnitude divided by time difference, (brightening = positive). Units are Mags per day, and measurement can have large errors (dmdt_g_err)."
         },
         {
             "name": "dmdt_g_2",
             "type": "float",
-            "doc": "deprecated -- always Null"
+            "doc": "Deprecated -- always Null"
         },
         {
             "name": "mag_g02",
@@ -118,17 +118,17 @@ schema = {
         {
             "name": "rmag",
             "type": "float",
-            "doc": "latest r magnitude"
+            "doc": "Latest r magnitude"
         },
         {
             "name": "dmdt_r",
             "type": "float",
-            "doc": "most recent increase in r magnitude divided by time difference, (brightening = positive). Units are Mags per day, and measurement can have large errors (dmdt_r_err)."
+            "doc": "Most recent increase in r magnitude divided by time difference, (brightening = positive). Units are Mags per day, and measurement can have large errors (dmdt_r_err)."
         },
         {
             "name": "dmdt_r_2",
             "type": "float",
-            "doc": "deprecated -- always Null"
+            "doc": "Deprecated -- always Null"
         },
         {
             "name": "magrmax",

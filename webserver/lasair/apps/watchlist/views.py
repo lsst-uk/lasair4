@@ -281,7 +281,10 @@ WHERE c.wl_id={wl_id} limit {resultCap}
         limit = False
 
     # ADD SCHEMA
-    schema = get_schema_dict("objects")
+    schema = {**get_schema_dict("objects"), **get_schema_dict("watchlist_hits")}
+    schema["Catalogue ID"] = schema["name"]
+    schema["separation (arcsec)"] = schema["arcsec"]
+    schema["last detected (days ago)"] = "When was object last detected"
     if len(table):
         for k in table[0].keys():
             if k not in schema:

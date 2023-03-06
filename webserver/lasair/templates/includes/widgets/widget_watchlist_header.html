@@ -53,7 +53,7 @@
                     {{watchlist.description}}
                 </small>
                 <small class="text-gray-500">
-                    The watchlist contains {{number_cones}} sources with a default association radius of <b>{{watchlist.radius}} arcsec</b>. The watchlist is <b>{% if not watchlist.active %}not {% endif %} active</b> {% include "includes/info_tooltip.html" with info="when active, a watchlist will be dynamically matched against new transient alerts. See the watchlist settings to make changes" position="auto" link=docroot|add:"/core_functions/watchlists.html" %}.
+                    The watchlist contains {{number_cones}} sources with a default association radius of <b>{{watchlist.radius}} arcsec</b>. The watchlist is <b>{% if not watchlist.active %}not {% endif %} active</b> {% include "includes/info_tooltip.html" with info="When active, a watchlist will be dynamically matched against new transient alerts. See the watchlist settings to make changes" position="auto" link=docroot|add:"/core_functions/watchlists.html" %}.
                 </small>
             </div>
 
@@ -96,8 +96,10 @@
                 <span class="align-middle  d-none d-md-inline">Export</span><svg class="icon icon-xs" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd"></path></svg>
             </button>
             <ul class="dropdown-menu" aria-labelledby="exportDropdown">
-                <li><a class="dropdown-item export" data-table="filter-results" href="#" data-type="csv" data-filename="{{watchlist.name}}_watchlist_results">csv</a></li>
-                <li><a class="dropdown-item export" data-table="filter-results" href="#" data-type="json" data-filename="{{watchlist.name}}_watchlist_results">json</a></li>
+                {%if count > 0%}
+                    <li><a class="dropdown-item export" data-table="filter-results" href="#" data-type="csv" data-filename="{{watchlist.name}}_watchlist_results">CSV</a></li>
+                    <li><a class="dropdown-item export" data-table="filter-results" href="#" data-type="json" data-filename="{{watchlist.name}}_watchlist_results">JSON</a></li>
+                {%endif%}
                 <li><a class="dropdown-item export" href="{% url 'watchlist_download' watchlist.wl_id %}">Original Watchlist File</a></li>
             </ul>
         </div>
