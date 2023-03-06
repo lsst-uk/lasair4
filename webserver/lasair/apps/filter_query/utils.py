@@ -4,7 +4,8 @@ from lasair.apps.db_schema.utils import get_schema, get_schema_dict, get_schema_
 from lasair.utils import datetime_converter
 import settings
 import os
-
+from datetime import datetime
+from confluent_kafka import admin
 
 def add_filter_query_metadata(
         filter_queries,
@@ -167,23 +168,22 @@ def topic_refresh(real_sql, topic, limit=10):
     ```
     """
     message = ''
-    msl = db_connect.readonly()
-    cursor = msl.cursor(buffered=True, dictionary=True)
-    query = real_sql + ' LIMIT %d' % limit
+#    msl = db_connect.readonly()
+#    cursor = msl.cursor(buffered=True, dictionary=True)
+#    query = real_sql + ' LIMIT %d' % limit
 
-    try:
-        cursor.execute(query)
-    except Exception as e:
-        message += 'Your query:<br/><b>' + query + '</b><br/>returned the error<br/><i>' + str(e) + '</i><br/>'
-        return message
+#    try:
+#        cursor.execute(query)
+#    except Exception as e:
+#        message += 'Your query:<br/><b>' + query + '</b><br/>returned the error<br/><i>' + str(e) + '</i><br/>'
+#        return message
 
-    recent = []
-    for record in cursor:
-        recorddict = dict(record)
-        now_number = datetime.utcnow()
-        recorddict['UTC'] = now_number.strftime("%Y-%m-%d %H:%M:%S")
-        print(recorddict)
-        recent.append(recorddict)
+#    recent = []
+#    for record in cursor:
+#        recorddict = dict(record)
+#        now_number = datetime.utcnow()
+#        recorddict['UTC'] = now_number.strftime("%Y-%m-%d %H:%M:%S")
+#        recent.append(recorddict)
 
     conf = {
         'bootstrap.servers': settings.PUBLIC_KAFKA_SERVER,
@@ -206,15 +206,15 @@ def topic_refresh(real_sql, topic, limit=10):
         message += str(e) + '<br/>'
 
     # pushing in new messages will remake the topic
-    try:
-        p = Producer(conf)
-        for out in recent:
-            jsonout = json.dumps(out, default=datetime_converter)
-            p.produce(topic, value=jsonout)
-        p.flush(10.0)   # 10 second timeout
-        message += '%d new messages produced to topic %s<br/>' % (limit, topic)
-    except Exception as e:
-        message += "ERROR in queries/topic_refresh: cannot produce to public kafka<br/>" + str(e) + '<br/>'
+#    try:
+#        p = Producer(conf)
+#        for out in recent:
+#            jsonout = json.dumps(out, default=datetime_converter)
+#            p.produce(topic, value=jsonout)
+#        p.flush(10.0)   # 10 second timeout
+#        message += '%d new messages produced to topic %s<br/>' % (limit, topic)
+#    except Exception as e:
+#        message += "ERROR in queries/topic_refresh: cannot produce to public kafka<br/>" + str(e) + '<br/>'
     return message
 
 

@@ -6,6 +6,9 @@ from lasair.apps.annotator.models import Annotators
 from lasair.apps.watchmap.models import Watchmap
 from lasair.apps.watchlist.models import Watchlist
 from django.db.models import Q
+from lasair.query_builder import check_query, build_query
+from .utils import check_query_zero_limit
+import re
 
 
 class filterQueryForm(forms.ModelForm):
@@ -20,6 +23,42 @@ class filterQueryForm(forms.ModelForm):
         self.request = kwargs.pop('request', None)
         super().__init__(*args, **kwargs)
         self.helper = FormHelper()
+
+        if 'instance' in kwargs:
+            self.instance = kwargs.get('instance', None)
+
+            if self.instance:
+                for i in self.fields:
+                    if i in ["public"]:
+                        if self.instance.__dict__[i]:
+                            self.initial[i] = True
+                        else:
+                            self.initial[i] = False
+                    elif i not in ["watchlists", "watchmaps", "annotators"]:
+                        self.fields[i].widget.attrs['value'] = self.instance.__dict__[i]
+
+                # PARSE WATCHLISTS, WATCHMAPS, ANNOTATORS
+                if "watchlist:" in self.instance.tables:
+                    try:
+                        self.initial["watchlists"] = int(self.instance.tables.split("watchlist:")[1].split(",")[0])
+                    except:
+                        pass
+
+                if "area:" in self.instance.tables:
+
+                    try:
+                        currentWatchmaps = self.instance.tables.split("area:")[1].split(",")[0].split("&")
+                        currentWatchmaps[:] = [int(m) for m in currentWatchmaps]
+                        self.initial["watchmaps"] = currentWatchmaps
+                    except:
+                        pass
+                if "annotator:" in self.instance.tables:
+                    try:
+                        currentAnnotators = self.instance.tables.split("annotator:")[1].split(",")[0].split("&")
+                        self.initial["annotators"] = currentAnnotators
+                    except:
+                        pass
+
         if self.request.user.is_authenticated:
             email = self.request.user.email
             watchlists = Watchlist.objects.filter(Q(user=self.request.user) | Q(public__gte=1))
@@ -84,15 +123,50 @@ class filterQueryForm(forms.ModelForm):
         fields = ['name', 'description', 'active', 'public', 'selected', 'conditions', 'real_sql', 'watchlists', 'watchmaps']
 
     def clean(self):
+
         cleaned_data = super(filterQueryForm, self).clean()
+
         if self.request:
             action = self.request.POST.get('action')
         name = self.cleaned_data.get('name')
 
         if action == "save":
-            if filter_query.objects.filter(Q(user=self.request.user) & Q(name__iexact=name.strip().lower())).exists():
+            if filter_query.objects.filter(Q(user=self.request.user) & Q(name__iexact=name.strip().lower())).exists() and self.instance.name != name:
                 msg = 'You already have a filter by that name, please choose another.'
                 self.add_error('name', msg)
+
+        if action in ["run", "save"]:
+            selected = self.cleaned_data.get('selected')
+            conditions = self.cleaned_data.get('conditions')
+            # FIND THE TABLES THAT NEED TO BE QUIERIED FROM THE SELECT STATEMENT
+            matchObjectList = re.findall(r'([a-zA-Z0-9_\-]*)\.([a-zA-Z0-9_\-]*)', selected)
+            tables = [m[0] for m in matchObjectList]
+            tables = (",").join(set(tables))
+
+            e = check_query(selected, tables, conditions)
+            if e:
+                try:
+                    msg = e.split("syntax to use near '")[1].split("' at line")[0]
+                except:
+                    msg = e
+                try:
+                    msg = e.split("returned the error")[1].split(": ")[1].replace("</i>", "")
+                except:
+                    msg = e
+                self.add_error('selected', msg)
+
+            sqlquery_real = build_query(selected, tables, conditions)
+            e = check_query_zero_limit(sqlquery_real)
+            if e:
+                try:
+                    msg = e.split("syntax to use near '")[1].split("' at line")[0]
+                except:
+                    msg = e
+                try:
+                    msg = e.split("returned the error")[1].split(": ")[1].replace("</i>", "")
+                except:
+                    msg = e
+                self.add_error('selected', msg)
 
         return cleaned_data
 

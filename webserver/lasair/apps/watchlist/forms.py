@@ -112,7 +112,6 @@ class UpdateWatchlistForm(forms.ModelForm):
         self.instance = kwargs.get('instance', {})
 
         for i in self.fields:
-            # print(instance.__dict__[i])
 
             if i in ["public", "active"]:
                 if self.instance.__dict__[i]:
