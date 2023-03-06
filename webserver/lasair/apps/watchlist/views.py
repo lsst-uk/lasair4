@@ -166,8 +166,9 @@ def watchlist_detail(request, wl_id):
         form = UpdateWatchlistForm(request.POST, instance=watchlist, request=request)
         action = request.POST.get('action')
 
-    if request.method == 'POST' and is_owner:
-        # UPDATING SETTINGS?
+    if request.method == 'POST' and is_owner and action == 'save':
+        :
+            # UPDATING SETTINGS?
         if action == 'save':
             if form.is_valid():
                 watchlist.name = request.POST.get('name')
