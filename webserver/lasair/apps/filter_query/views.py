@@ -340,6 +340,7 @@ def filter_query_create(request, mq_id=False):
                 verb = "updated"
 
             else:
+                sqlquery_real = sqlparse.format(build_query(selected, tables, conditions), reindent=True, keyword_case='upper', strip_comments=True)
                 tn = topic_name(request.user.id, name)
                 filterQuery = filter_query(user=request.user,
                                            name=name, description=description,
