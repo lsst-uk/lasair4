@@ -316,6 +316,7 @@ def filter_query_create(request, mq_id=False):
         # OR SAVE?
         elif action and action.lower() == "save" and len(name) and form.is_valid():
 
+            sqlquery_real = sqlparse.format(build_query(selected, tables, conditions), reindent=True, keyword_case='upper', strip_comments=True)
             if filterQuery:
                 filterQuery.name = name
                 filterQuery.description = description
@@ -328,7 +329,6 @@ def filter_query_create(request, mq_id=False):
                     filterQuery.public = 1
                 else:
                     filterQuery.public = 0
-                sqlquery_real = sqlparse.format(build_query(selected, tables, conditions), reindent=True, keyword_case='upper', strip_comments=True)
                 filterQuery.selected = selected
                 filterQuery.tables = tables
                 filterQuery.conditions = conditions
