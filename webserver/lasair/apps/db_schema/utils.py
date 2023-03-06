@@ -65,6 +65,7 @@ def get_schema_for_query_selected(
         'sherlock_classifications': get_schema_dict('sherlock_classifications'),
         'crossmatch_tns': get_schema_dict('crossmatch_tns'),
         'annotations': get_schema_dict('annotations'),
+        'crossmatch_tns': get_schema_dict('crossmatch_tns')
     }
 
     # GENERATE A TABLE SPECIFIC SCHEMA
