@@ -1,6 +1,6 @@
 <img src="_images/lasair_logo_transparent.png" width=500>
 
-# A UK Alert Stream Broker and Transient Science Platform.
+# Lasair: A UK Alert Stream Broker
 
 *Lasair* is being developed by The University of Edinburgh and Queen\'s University Belfast with the ultimate goal of serving transient alerts from the future [Rubin Legacy Survey of Space and Time (LSST)](https://www.lsst.org) to the astronomical community. *Lasair* (pronounced '*L-AH-s-uh-r*') means flame or flash in Scots and Irish gaelic. To prototype functionality needed to process transient event alerts from LSST, Lasair is currently processing and serving data from the public stream of the [Zwicky Transient Facility (ZTF)](http://www.ztf.caltech.edu/), which is releasing a transient alert stream in a format similar to that envisaged for LSST. We thank ZTF for access to this valuable public data stream.
 

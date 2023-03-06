@@ -24,8 +24,20 @@ If you make use of Lasair in any of your work, please remember to cite our paper
 *[Lasair: The Transient Alert Broker for LSST:UK](https://doi.org/10.3847/2515-5172/ab020f)*, K. W. Smith, R. D. Williams et. al., Research Notes AAS, **3**,26 (2019).
 
 Documentation for Lasair is hosted on [Read the Docs](https://lasair.readthedocs.io/en/main/). The code lives on [github](https://github.com/orgs/lsst-uk/repositories?q=lasair&type=all&language=&sort=). 
+<hr/>
+Copyright 2023 University of Edinburgh and Queens University Belfast
 
+   Licensed under the Apache License, Version 2.0 (the "License");
+   you may not use this file except in compliance with the License.
+   You may obtain a copy of the License at
 
+       http://www.apache.org/licenses/LICENSE-2.0
+
+   Unless required by applicable law or agreed to in writing, software
+   distributed under the License is distributed on an "AS IS" BASIS,
+   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+   See the License for the specific language governing permissions and
+   limitations under the License.
 
 
 

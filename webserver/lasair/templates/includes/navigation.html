@@ -59,7 +59,7 @@
                 {% else %}
 
                     <li class="nav-item dropdown ms-lg-3">
-                        <a href="{% url 'login' %}" class="btn btn-info">Sign In</a>
+                        <a href="{% url 'login' %}?next={{ request.get_full_path }}" class="btn btn-info">Sign In</a>
                     </li>
 
 
