@@ -1,88 +1,72 @@
-import os,sys, time
-sys.path.append('../../common')
-from datetime import datetime
-from subprocess import Popen, PIPE
-import settings
-from src import date_nid, slack_webhook
-import signal
-
-""" Fire up the the ingestion and keep the results in a log file
-    the start it again afte a minute or so
 """
+Ingest proess runner. Takes the --nprocess arg and starts that many versions of ingest.py, 
+with other arguments sent there, also logs the outputs. 
+If maxalert is specified, it does that many for each process then exits,
+otherwise maxalert is the largest possible. 
+SIGTERM is passed to those children and dealt with properly.
+Usage:
+    ingest.py [--maxalert=MAX]
+              [--nprocess=nprocess]
+              [--group_id=GID]
+              [--topic_in=TIN | --nid=NID]
+              [--topic_out=TOUT]
 
-# If we catch a SIGTERM, set a flag
-sigterm_raised = False
+Options:
+    --maxalert=MAX     Number of alerts to process, default is infinite
+    --nprocess=nprocess  Number of processes
+    --group_id=GID     Group ID for kafka, default is from settings
+    --topic_in=TIN     Kafka topic to use, or
+    --nid=NID          ZTF night number to use (default today)
+    --topic_out=TOUT   Kafka topic for output [default:ztf_sherlock]
+"""
+import os,sys, time
+from datetime import datetime
+from docopt import docopt
+from multiprocessing import Process, Manager
 
-def sigterm_handler(signum, frame):
-    global sigterm_raised
-    sigterm_raised = True
+log = None
+from ingest import run_ingest
 
-signal.signal(signal.SIGTERM, sigterm_handler)
+sys.path.append('../../common')
+import settings
 
-def now():
-    # current UTC as string
-    return datetime.utcnow().strftime("%Y/%m/%dT%H:%M:%S")
+sys.path.append('../../common/src')
+import date_nid, slack_webhook, lasairLogging
 
-while 1:
-    if len(sys.argv) > 1:
-        nid = int(sys.argv[1])
-    else:
-        nid  = date_nid.nid_now()
-    date = date_nid.nid_to_date(nid)
-    topic  = 'ztf_' + date + '_programid1'
-    log = open('/home/ubuntu/logs/' + topic + '.log', 'a')
-    if sigterm_raised:
-        log.write("Caught SIGTERM, exiting.\n")
-        sys.exit(0)
+# Set up the logger
+lasairLogging.basicConfig(
+    filename='/home/ubuntu/logs/ingest.log',
+    webhook=slack_webhook.SlackWebhook(url=settings.SLACK_URL),
+    merge=True
+)
+log = lasairLogging.getLogger("ingest_runner")
 
-    if os.path.isfile(settings.LOCKFILE):
-        args = ['python3', 'ingest.py', '--nid=%d'%nid]
+# Our processes
+process_list = []
 
-        process = Popen(args, stdout=PIPE, stderr=PIPE)
+# Deal with arguments
+args = docopt(__doc__)
 
-        while 1:
-            # when the worker terminates, readline returns zero
-            rbin = process.stdout.readline()
-            if len(rbin) == 0: break
-    
-            # if the worher uses 'print', there will be at least the newline
-            rtxt = rbin.decode('utf-8').rstrip()
-            log.write(rtxt + '\n')
-            log.flush()
+# The nprocess argument is used in this module
+if args['--nprocess']:
+    nprocess = int(args['--nprocess'])
+    log.error('Sorry the multiprocessing option doesnt work yet')
+    sys.exit()
+else:
+    nprocess = 1
+log.info('ingest_runner with %d processes' % nprocess)
 
-            # scream to the humans if ERROR
-            if 'ERROR' in rtxt:
-                slack_webhook.send(settings.SLACK_URL, rtxt)
-                time.sleep(settings.WAIT_TIME)
+# Start up the processes
+process_list = []
+manager = Manager()
+t = time.time()
+log.info('Starting processes')
+for t in range(nprocess):
+    p = Process(target=run_ingest, args=(args,))
+    process_list.append(p)
+    p.start()
 
-        while 1:
-            # same with stderr
-            rbin = process.stderr.readline()
-            if len(rbin) == 0: break
-
-            # if the worher uses 'print', there will be at least the newline
-            rtxt = 'stderr:' + rbin.decode('utf-8').rstrip()
-            log.write(rtxt + '\n')
-            log.flush()
-            print(rtxt)
-
-        process.wait()
-        rc = process.returncode
-    
-        if rc == 0:  # no more to get
-            log.write("END waiting %d seconds ...\n\n" % settings.WAIT_TIME)
-            for i in range(settings.WAIT_TIME):
-                if sigterm_raised:
-                    log.write("Caught SIGTERM, exiting.\n")
-                    sys.exit(0)
-                time.sleep(1)
-        else:
-            log.write("END getting more ...\n\n")
-        log.close()
-    else:
-        # wait until the lockfile reappears
-        rtxt = 'Waiting for lockfile ' + now()
-        print(rtxt)
-        log.write(rtxt + '\n')
-        log.flush()
-        time.sleep(settings.WAIT_TIME)
+log.info('Wait for processes to exit')
+for p in process_list:
+    p.join()
+log.info('All done, ingest_runner exiting')

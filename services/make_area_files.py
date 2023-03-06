@@ -44,7 +44,7 @@ def write_cache_file(msl, ar_id, cache_dir):
     # Build lists of all the data from the database
     for row in cursor:
         txtmoc = row['moc']
-        logfile.write('caching area %s\n' % row['name'])
+        logf.write('caching area %s\n' % row['name'])
     moc = string2bytes(txtmoc)
 
     area_file = cache_dir + '/ar_%d.fits' % ar_id

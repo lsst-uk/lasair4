@@ -1,8 +1,14 @@
-import sys
-from subprocess import Popen, PIPE
-sys.path.append('../common')
 import settings
-from src import slack_webhook
+import sys
+sys.path.append('../common')
+sys.path.append('../common/src')
+
+import slack_webhook
+import lasairLogging
+
+from subprocess import Popen, PIPE
+
+
 
 def execute_cmd(cmd, logfile=None):
     """ Executes a command like os.system, puts stdout into the log file
@@ -13,21 +19,33 @@ def execute_cmd(cmd, logfile=None):
     out, err = process.communicate()
     out = out.decode('utf8')
     err = err.decode('utf8')
+    log = lasairLogging.getLogger("svc")
 
     if logfile:
-        f = open(logfile, 'a')
+        try:
+            f = open(logfile, 'a')
+        except:
+            log.error("ERROR: Cannot open system logfile %s:%s" % (logfile, str(e)))
         f.write(out)
         f.close
     else:
         print('%s' % out)
 
     if len(err) > 0:
-        s = 'ERROR:' + err
-        slack_webhook.send(settings.SLACK_URL, s)
+        log.error("ERROR: %s" % err)
 
     return process.returncode
 
+
 if __name__ == "__main__":
+    lasairLogging.basicConfig(
+        filename='/home/ubuntu/logs/svc.log',
+        webhook=slack_webhook.SlackWebhook(url=settings.SLACK_URL),
+        merge=True
+    )
+
+    log = lasairLogging.getLogger("svc")
+
     # run smoothly
     cmd = 'ls -l /mnt/cephfs/lasair'
     ret = execute_cmd(cmd, 'junk')
@@ -37,4 +55,3 @@ if __name__ == "__main__":
     cmd = 'ls -l /mnt/nosuchdirectory'
     ret = execute_cmd(cmd, 'junk')
     print('returns ', ret)
-

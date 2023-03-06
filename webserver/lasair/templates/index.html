@@ -1,0 +1,123 @@
+{% extends "layouts/base.html" %}
+{% block title %} Home {% endblock %}
+{% load static %}
+{% block content %}
+
+    <!--{{ message }} -->
+    <div class="container">
+        <div class="row mt-4">
+            <div class="col-12  mb-4">
+                <div class="alert alert-success" role="alert">
+                    {{ news }}
+                </div>
+            </div>
+        </div>
+
+        <div style="overflow:hidden;margin:0 auto;">
+            <div id="aladin-lite-div" style='width: 1000;height: 800px;'>
+            </div>
+        </div>
+
+    </div>
+
+
+    <div class="container">
+        <div class="row mt-4">
+            <div class="col-12  mb-4">
+                <table>
+                    <colgroup>
+                        <col span="1" style="width: 40%;">
+                        <col span="1" style="width: 60%;">
+                    </colgroup>
+                    <tbody>
+                        <tr><td>
+                            <span id="class0">&block;&block;&block;</span>  Possible Supernova <br/>
+                            <span id="class1">&block;&block;&block;</span>  Nuclear Transient <br/>
+                            <span id="class2">&block;&block;&block;</span>  Cataclysmic Variable <br/>
+                            <span id="class3">&block;&block;&block;</span>  Active Galaxy <br/>
+                        </td><td>
+                            Some of the brightest and most recent alerts are shown, classified by sky context.
+                            Smaller and darker markers show time since most recent alert (age), up to 7 days.<br/>
+                            Click on a marker for information about that object; <br/>
+                            then click on the 'ZTF' link for full information.
+                        </td></tr></tbody></table>
+                <hr/>
+                <small>Mellinger color optical survey - Copyright 2000-2017 Axel Mellinger. All rights reserved.</small>
+            </div>
+        </div>
+    </div>
+
+{% endblock %}
+
+
+
+
+<!-- Specific Page JS goes HERE  -->
+{% block javascripts %}
+
+    <script>
+
+        var colors = {{ colors|safe }};
+        var alerts = {{ alerts|safe }};
+
+        // These much match the code in ../views.py
+        var nclass = 4;   // Number of classe
+        var nage = 5;     // Number of age brackets
+
+        document.addEventListener('DOMContentLoaded', function() {
+
+
+
+            var imageSurvey = 'P/Mellinger/color'
+
+            var aladin;
+            A.init.then(() => {
+                aladin = A.aladin('#aladin-lite-div', {
+                    fov:360,
+                    cooFrame: 'ICRSd',
+                    projection: 'AIT',
+                    target: 'Arp 240',
+                    showReticle: false,
+                    showCooGrid: false,
+                    showCooGridControl: true,
+                    showFullscreenControl: false,
+                    showProjectionControl: false,
+                    showLayersControl: false,
+                    showFrame: false,
+                    showGotoControl: false
+                });
+
+                aladin.setBaseImageLayer(aladin.newImageSurvey(imageSurvey ));
+
+                for (iclass = 0; iclass < nclass; iclass++) {
+                    for (iage = 0; iage < nage; iage++) {
+                        // For each class and age bracket, make a catalog and insert the markers
+                        var size = 28 - 5*iage;
+                        var color = colors[iclass][iage];
+                        var markers = A.catalog({name: 'markers'+iclass+iage, sourceSize: size, color:color});
+                        aladin.addCatalog(markers);
+                        console.log(iclass, iage, alerts[iclass][iage].length);
+                        L = new Array;
+                        for(k=0; k<alerts[iclass][iage].length; k++){
+                            a = alerts[iclass][iage][k];
+                            var title = '<a href="/objects/' + a.objectId + '/" target="_blank">' + a.objectId + '</a>';
+                            var desc = 'Class:' + a.class + ' Mag:' + a.mag.toFixed(1) + ' Age:' + a.age.toFixed(1) +' days';
+                            L.push(A.marker(a.coordinates[0], a.coordinates[1], {popupTitle: title, popupDesc: desc}));
+                        }
+                        markers.addSources(L);
+                    }
+                }
+            });
+        });
+
+    </script>
+
+
+    <script>
+        for (var iclass = 0; iclass < nclass; iclass++){
+            console.log(colors[iclass][0]);
+            document.getElementById("class"+iclass).style.color = colors[iclass][0];
+        }
+    </script>
+
+{% endblock javascripts %}
