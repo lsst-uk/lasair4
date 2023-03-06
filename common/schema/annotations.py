@@ -6,7 +6,7 @@ schema = {
             "name": "annotationID",
             "type": "int",
             "extra": "NOT NULL AUTO_INCREMENT",
-            "doc": "auto increment counter"
+            "doc": "Auto increment counter"
         },
         {
             "name": "objectId",
