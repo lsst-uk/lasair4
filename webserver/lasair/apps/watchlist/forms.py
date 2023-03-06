@@ -36,6 +36,32 @@ class WatchlistForm(forms.ModelForm):
             msg = "Please either paste your catalogue contents or upload a catalogue file."
             self.add_error('cones_textarea', msg)
 
+        if conetext:
+            cone_list = []
+            for line in conetext.split('\n'):
+                if len(line) == 0:
+                    continue
+                if line[0] == '#':
+                    continue
+                line = line.replace('|', ',')
+                tok = line.split(',')
+                if len(tok) < 3:
+                    msg = 'Lines must be in the format RA,DEC,ID<,radius>'
+                    self.add_error('cones_textarea', msg)
+                    continue
+                try:
+                    ra = float(tok[0])
+                    dec = float(tok[1])
+                    objectId = tok[2].strip()
+                    if len(tok) >= 4 and len(tok[3].strip()) > 0 and tok[3].strip().lower() != "none":
+                        radius = float(tok[3])
+                    else:
+                        radius = None
+                    cone_list.append([objectId, ra, dec, radius])
+                except Exception as e:
+                    msg = 'Lines must be in the format RA,DEC,ID <,radius>'
+                    self.add_error('cones_textarea', msg)
+
         name = self.cleaned_data.get('name')
         if self.request:
             action = self.request.POST.get('action')
