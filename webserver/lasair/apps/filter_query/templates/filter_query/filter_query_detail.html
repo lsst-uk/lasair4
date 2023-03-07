@@ -6,7 +6,7 @@
 
 
 {% block title %}
-    {{ filterQ.name }}
+    Filter: {{ filterQ.name }}
 {% endblock title %}
 
 
@@ -28,7 +28,7 @@
                 </div>
             {% else %}
                 <div class="col-12 mb-4">
-                    {% include "includes/widgets/widget_objectlist_table.html" with zerotext="Zero objects have been matched against this filter so far. Check back later to see if any new objects have been matched, or amend the filtering criteria to catch more objects." table=table header="Filter Results"  desc="A log of objects passing the '"|add:filterQ.name|add:"' filter." %}
+                    {% include "includes/widgets/widget_objectlist_table.html" with zerotext="Zero objects have been matched against this filter so far. Check back later to see if any new objects have been matched, or amend the filtering criteria to catch more objects." table=table header="Filter Results"  desc="A log of objects passing the '"|add:filterQ.name|add:"' filter."  export_name=filterQ.topic_name|add:"_filter_results" %}
                 </div>
 
 

@@ -19,7 +19,7 @@
 
 
 
-                <div class="h2 fw-extrabold mb-0 ms-2 d-none d-sm-inline">'{{ watchmap.name }}' Watched watchmap Associations{% if watchmap.public %}
+                <div class="h2 fw-extrabold mb-0 ms-2 d-none d-sm-inline">'{{ watchmap.name }}' Watchmap Associations{% if watchmap.public %}
                     <span class="icon icon-md mx-2 text-gray-400 " data-bs-toggle="tooltip" data-bs-title="public list">
                         {% include "includes/icons/icon_padlock_open.html" %}
                     </span>
@@ -30,7 +30,7 @@
                     </span>
 
                 {% endif %}</div>
-                <div class="h5 fw-extrabold mb-0 ms-2 d-sm-none">'{{ watchmap.name }}' Watched watchmap Associations{% if watchmap.public %}
+                <div class="h5 fw-extrabold mb-0 ms-2 d-sm-none">'{{ watchmap.name }}' Watchmap Associations{% if watchmap.public %}
                     <span class="icon icon-md mx-2 text-gray-400 " data-bs-toggle="tooltip" data-bs-title="public list">
                         {% include "includes/icons/icon_padlock_open.html" %}
                     </span>
@@ -98,10 +98,6 @@
                     <span class="align-middle  d-none d-md-inline">Export</span><svg class="icon icon-xs" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd"></path></svg>
                 </button>
                 <ul class="dropdown-menu" aria-labelledby="exportDropdown">
-                    {%if count > 0%}
-                        <li><a class="dropdown-item export" data-table="filter-results" href="#" data-type="csv" data-filename="{{watchmap.name}}_watchmap_results">CSV</a></li>
-                        <li><a class="dropdown-item export" data-table="filter-results" href="#" data-type="json" data-filename="{{watchmap.name}}_watchmap_results">JSON</a></li>
-                    {% endif %}
                     <li><a class="dropdown-item export" href="{% url 'watchmap_download' watchmap.ar_id %}">Original MOC file</a></li>
                 </ul>
             </div>
