@@ -107,9 +107,12 @@ def index(request):
     message = str(alerts[0][0])[:300]
 
     try:
-        news = open('/home/ubuntu/news.txt').read()
+        # MAKE RELATIVE HOME PATH ABSOLUTE
+        from os.path import expanduser
+        home = expanduser("~")
+        news = open(f'{home}/news.txt').read()
     except:
-        news = 'Cannot open news file'
+        news = ''
 
     context = {
         'web_domain': settings.WEB_DOMAIN,
