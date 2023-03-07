@@ -51,3 +51,8 @@ class ProfileUpdateForm(forms.ModelForm):
     class Meta:
         model = Profile
         fields = ['image']
+
+    def clean(self):
+        image = self.cleaned_data.get('image')
+
+        return self.cleaned_data
