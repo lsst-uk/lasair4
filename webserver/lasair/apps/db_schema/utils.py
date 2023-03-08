@@ -38,7 +38,7 @@ def get_schema_dict(schema_name):
     schemaDict = get_schema_dict("objects")
     ```           
     """
-    schemaDict = {k["name"]: k["doc"] for k in get_schema(schema_name)}
+    schemaDict = {k["name"].lower(): k["doc"] for k in get_schema(schema_name)}
     return schemaDict
 
 
@@ -83,6 +83,6 @@ def get_schema_for_query_selected(
                     for k, v in schemas[select[0]].items():
                         tableSchema[k] = v
                 else:
-                    tableSchema[select[1]] = schemas[select[0]][select[1]]
+                    tableSchema[select[1].lower()] = schemas[select[0]][select[1].lower()]
 
     return tableSchema
