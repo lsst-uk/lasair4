@@ -26,11 +26,14 @@ class lightcurve_fetcher():
         else:
             raise lightcurve_fetcher_error('Must give either cassandra_hosts or fileroot')
 
-    def fetch(self, objectId):
+    def fetch(self, objectId, full=False):
         if self.using_cassandra:
-            query = "SELECT candid, jd, ra, dec, fid, nid, magpsf, sigmapsf, "
-            query += "magnr,sigmagnr, magzpsci, "
-            query += "isdiffpos, ssdistnr, ssnamenr, drb "
+            if full:
+                query = "SELECT * "
+            else:
+                query = "SELECT candid, jd, ra, dec, fid, nid, magpsf, sigmapsf, "
+                query += "magnr,sigmagnr, magzpsci, "
+                query += "isdiffpos, ssdistnr, ssnamenr, drb "
             query += "from candidates where objectId = '%s'" % objectId
             ret = self.session.execute(query)
             candidates = []

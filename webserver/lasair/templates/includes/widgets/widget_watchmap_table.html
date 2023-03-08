@@ -79,7 +79,7 @@
                                     <td  style="white-space: normal;">{% if watchmap.description|length > 60 %}
                                         {{ watchmap.description|slice:"0:60" }} ...
 
-                                        <a href="#" class="link-primary disable" data-bs-container="body" data-bs-toggle="popover" data-bs-trigger="focus" data-bs-placement="top" data-bs-content="{{watchmap.description}}">more</a>
+                                        <a tabindex="0"  class="link-primary disable" data-bs-container="body" data-bs-toggle="popover" data-bs-trigger="focus" data-bs-placement="top" data-bs-content="{{watchmap.description}}">more</a>
 
                                     {% else %} {{ watchmap.description|slice:"0:100" }}{% endif %} </td>
                                     <td>{{watchmap.count|intcomma}}</td>
@@ -104,7 +104,7 @@
                                     <td  style="white-space: normal;">{% if watchmap.description|length > 60 %}
                                         {{ watchmap.description|slice:"0:60" }} ...
 
-                                        <a href="#" class="link-primary disable" data-bs-container="body" data-bs-toggle="popover" data-bs-trigger="focus" data-bs-placement="top" data-bs-content="{{watchmap.description}}">more</a>
+                                        <a tabindex="0"  class="link-primary disable" data-bs-container="body" data-bs-toggle="popover" data-bs-trigger="focus" data-bs-placement="top" data-bs-content="{{watchmap.description}}">more</a>
 
                                     {% else %} {{ watchmap.description|slice:"0:100" }}{% endif %} </td>
                                     <td>{{watchmap.count|intcomma}}</td>
