@@ -48,6 +48,7 @@ In this case, the `group_id` should remain constant, so you won't get any alerts
 
 Here is the sample code
 ```
+import json
 from lasair import lasair_consumer
 
 kafka_server = 'kafka.lsst.ac.uk:9092'
