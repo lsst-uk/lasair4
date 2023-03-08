@@ -23,9 +23,9 @@ and other information before making a classification decision.
 This information is collected up as the annotation and sent back to Lasair,
 where it will be available for others to query.
 
-The settings file that is needed with the code looks like:
+There should be a file `settings.py` file to accomany the code below with these variables defined::
 
-   * `TOPIC_IN`: The name of your streaming query as seen in the 'more info' button of your filter
+   * `TOPIC_IN`: The name of your streaming query as seen in the filter detail, where it says "The filter is streamed via kafka with the topic name"
    * `GROUP_ID`: Choose a new one evey run when testing; keep it constant for long-term running
    * `API_TOKEN`: As found in 'My Profile' top right of the web page
    * `TOPIC_OUT`: The name of your annotator as agreed with the Lasair team (above)
@@ -99,7 +99,7 @@ topic_out = settings.TOPIC_OUT
 # just get a few to start
 max_alert = 5
 
-n_annotate = 0
+n_alert = n_annotate = 0
 while n_alert < max_alert:
     msg = consumer.poll(timeout=20)
     if msg is None:
@@ -109,7 +109,8 @@ while n_alert < max_alert:
         break
     jsonmsg = json.loads(msg.value())
     objectId       = jsonmsg['objectId']
+    n_alert += 1
     n_annotate += handle_object(objectId, L, topic_out)
 
-print('Annotated %d objects' % n_annotate)
+print('Annotated %d of %d objects' % (n_annotate, n_alert))
 ```
