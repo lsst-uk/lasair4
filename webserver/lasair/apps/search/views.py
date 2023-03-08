@@ -27,7 +27,7 @@ def search(
         path('conesearch/', views.conesearch, name='conesearch'),
         ...
     ]
-    ```           
+    ```
     """
     if request.method == 'POST':
         query = request.POST['query']
@@ -58,8 +58,8 @@ def do_search(
     **Usage:**
 
     ```python
-    usage code 
-    ```           
+    usage code
+    ```
     """
 
     objectColumns = 'o.objectId, o.ramean,o.decmean, o.rmag, o.gmag, jdnow()-o.jdmax as "last detected (days ago)"'
@@ -82,11 +82,12 @@ def do_search(
         objectName = objectMatch.group()
 
         queries.append(f"select {objectColumns} from objects o where o.objectId = '{objectName}'")
-#        queries.append(f"SELECT {objectColumns} FROM objects o, crossmatch_tns t, watchlist_cones w, watchlist_hits h where w.wl_id = {settings.TNS_WATCHLIST_ID} and w.cone_id=h.cone_id and h.objectId=o.objectId and t.tns_name = w.name and (w.name = '{objectName.replace('AT','').replace('SN','').replace('KN','')}' or LOCATE('{objectName}' ,t.disc_int_name))")
-        queries.append(f"SELECT {objectColumns} FROM objects o, watchlist_hits h where h.wl_id = {settings.TNS_WATCHLIST_ID} AND h.objectId=o.objectId AND h.name = '{objectName.replace('AT','').replace('SN','').replace('KN','')}' ")
+        queries.append(f"SELECT {objectColumns} FROM objects o, crossmatch_tns t, watchlist_cones w, watchlist_hits h where w.wl_id = {settings.TNS_WATCHLIST_ID} and w.cone_id=h.cone_id and h.objectId=o.objectId and t.tns_name = w.name and (w.name = '{objectName.replace('AT','').replace('SN','').replace('KN','')}' or LOCATE('{objectName}' ,t.disc_int_name))")
+        # queries.append(f"SELECT {objectColumns} FROM objects o, watchlist_hits h where h.wl_id = {settings.TNS_WATCHLIST_ID} AND h.objectId=o.objectId AND h.name = '{objectName.replace('AT','').replace('SN','').replace('KN','')}' ")
         queries.append(f"SELECT {objectColumns} FROM objects o, sherlock_classifications s where s.objectId=o.objectId and o.objectId = '{objectName}'")
 
         for q in queries:
+            print(q)
             cursor.execute(q)
             results += cursor.fetchall()
     else:
