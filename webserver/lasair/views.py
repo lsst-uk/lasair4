@@ -128,8 +128,6 @@ def index(request):
             'coordinates': [row['ramean'], row['decmean']]
         })
 
-    message = str(alerts[0][0])[:300]
-
     try:
         # MAKE RELATIVE HOME PATH ABSOLUTE
         from os.path import expanduser
@@ -143,7 +141,6 @@ def index(request):
         'alerts': str(alerts),
         'colors': str(colors),
         'news': news,
-        'message': message,
         'table': table,
         'schema': schema
     }

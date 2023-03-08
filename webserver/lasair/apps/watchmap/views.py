@@ -308,7 +308,6 @@ def watchmap_download(request, ar_id):
     ]
     ```           
     """
-    message = ''
     watchmap = get_object_or_404(Watchmap, ar_id=ar_id)
 
     # IS USER ALLOWED TO SEE THIS RESOURCE?
