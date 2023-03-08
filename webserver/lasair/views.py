@@ -31,14 +31,14 @@ def index(request):
     Note that age is time since the most recent alert.
     """
     sherlock_classes = ['SN', 'NT', 'CV', 'AGN']
-    base_colors = ['FF0000', 'FF00FF', '1E90FF', 'FFC20A']
+    base_colors = ['dc322f', '268bd2', '2aa198', 'b58900']
 
     # query finds only mag<17 alerts with at least 2 in light curve, with age < 7
     query = """
        SELECT objects.objectId,
            objects.ramean, objects.decmean,
-           objects.gmag, objects.rmag, jdnow()-objects.jdmax AS age,
-           sherlock_classifications.classification AS class
+           objects.gmag, objects.rmag, jdnow()-objects.jdmax AS "last detected",
+           sherlock_classifications.classification AS "predicted type"
        FROM objects, sherlock_classifications
        WHERE objects.objectId=sherlock_classifications.objectId
            AND objects.jdmax > jdnow()-7
@@ -46,12 +46,36 @@ def index(request):
            AND objects.ncandgp > 1
            AND sherlock_classifications.classification in
     """
+    # USE THE QUERY BELOW TO DEBUG
+    # query = """
+    #    SELECT objects.objectId,
+    #        objects.ramean, objects.decmean,
+    #        objects.gmag, objects.rmag, jdnow()-objects.jdmax-600 AS "last detected",
+    #        sherlock_classifications.classification AS "predicted type"
+    #    FROM objects, sherlock_classifications
+    #    WHERE objects.objectId=sherlock_classifications.objectId
+    #        AND objects.jdmax > jdnow()-607
+    #        AND (objects.gmag < 20 OR objects.rmag < 20)
+    #        AND objects.ncandgp > 1
+    #        AND sherlock_classifications.classification in
+    # """
     S = ['"' + sherlock_class + '"' for sherlock_class in sherlock_classes]
     query += '(' + ','.join(S) + ')'
 
     msl = db_connect.readonly()
     cursor = msl.cursor(buffered=True, dictionary=True)
     cursor.execute(query)
+
+    table = cursor.fetchall()
+    # ADD SCHEMA
+    schema = get_schema_dict("objects")
+
+    if len(table):
+        for k in table[0].keys():
+            if k not in schema:
+                schema[k] = "custom column"
+    schema["last detected"] = "Days since last detection"
+    schema["predicted type"] = "Predicted classification based on contextual information"
 
     nclass = len(sherlock_classes)
     nage = 5
@@ -70,7 +94,7 @@ def index(request):
     for iclass in range(nclass):
         alerts[iclass] = [[] for iage in range(nage)]
 
-    for row in cursor:
+    for row in table:
         if row['gmag']:
             if row['rmag']:
                 mag = min(row['gmag'], row['rmag'])
@@ -82,9 +106,9 @@ def index(request):
             else:
                 continue
 
-        iclass = sherlock_classes.index(row['class'])
+        iclass = sherlock_classes.index(row["predicted type"])
 
-        age = row['age']
+        age = row["last detected"]
         if age < 1:
             iage = 0
         elif age < 2:
@@ -98,8 +122,8 @@ def index(request):
 
         alerts[iclass][iage].append({
             'objectId': row['objectId'],
-            'age': row['age'],
-            'class': row['class'],
+            'age': row["last detected"],
+            'class': row["predicted type"],
             'mag': mag,
             'coordinates': [row['ramean'], row['decmean']]
         })
@@ -107,15 +131,20 @@ def index(request):
     message = str(alerts[0][0])[:300]
 
     try:
-        news = open('/home/ubuntu/news.txt').read()
+        # MAKE RELATIVE HOME PATH ABSOLUTE
+        from os.path import expanduser
+        home = expanduser("~")
+        news = open(f'{home}/news.txt').read()
     except:
-        news = 'Cannot open news file'
+        news = ''
 
     context = {
         'web_domain': settings.WEB_DOMAIN,
         'alerts': str(alerts),
         'colors': str(colors),
         'news': news,
-        'message': message
+        'message': message,
+        'table': table,
+        'schema': schema
     }
     return render(request, 'index.html', context)
