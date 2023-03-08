@@ -1,9 +1,5 @@
 # Questions and Answers
 
-**Table of Contents**
-
-{{TOC}}
-
 ## What are Lasair-ZTF and Lasair-LSST?
 
 See [ZTF and LSST](../about.html#ztf-and-lsst)
@@ -100,9 +96,13 @@ The Lasair client is described [here](../core_functions/rest-api.html).
 
 This is explained [here](../concepts/objects_sources.html).
 
+## How do search for an object by position in the sky?
+
+This is called a "cone search". See next question.
+
 ## What is a cone-search and can Lasair do this?
 
-A *cone* in this contect means a point in the sky with an angular tolerance -- the opening
+A *cone* in this context means a point in the sky with an angular tolerance -- the opening
 angle of the cone, as explained [here](../concepts/sky-search.html). 
 You can use the [Lasair Sky Search](../core_functions/sky-search.html)
 to do this.
