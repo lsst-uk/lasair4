@@ -87,7 +87,6 @@ def do_search(
         queries.append(f"SELECT {objectColumns} FROM objects o, sherlock_classifications s where s.objectId=o.objectId and o.objectId = '{objectName}'")
 
         for q in queries:
-            print(q)
             cursor.execute(q)
             results += cursor.fetchall()
     else:
