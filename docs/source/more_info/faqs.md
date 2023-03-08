@@ -46,7 +46,7 @@ Choosing interesting alerts can be based on several criteria: The characteristic
 
 ## Why should I register on the Lasair website?
 
-Registration is easy, and just requires a valid email (signup [here]({%lasairurl%}/signup)). You can then build and save queries, watchlists, and sky areas, convert those to real-time slert treams, and use the Lasair API.
+Registration is easy, and just requires a valid email (signup [here]({%lasairurl%}/signup)). You can then build and save queries, watchlists, and watchmaps (sky areas), convert those to real-time slert treams, and use the Lasair API.
 
 ## Besides Lasair, what other websites carry astronommical transients?
 
@@ -59,7 +59,7 @@ Operation with LSST will start in 2023.
 
 ## Can I get alerts from a particular region of the sky?
 
-Lasair supports "sky areas", defined by a [MOC](https://cds-astro.github.io/mocpy/), that you build yourself.
+Lasair supports "watchmaps", defined by a [MOC](https://cds-astro.github.io/mocpy/), that you build yourself.
 
 ## Can I get alerts associated with my favourite sources?
 
