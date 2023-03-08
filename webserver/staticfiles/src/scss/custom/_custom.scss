@@ -285,3 +285,10 @@ select, input[type=number], input[type=text] {
 .icon-shape {
     min-width: 4rem;
 }
+
+
+.popover-body {
+    max-height: 500px;
+    overflow-y: auto;
+    white-space:pre-wrap;
+}
