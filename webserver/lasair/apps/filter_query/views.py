@@ -264,7 +264,7 @@ def filter_query_create(request, mq_id=False):
             filterQuery = get_object_or_404(filter_query, mq_id=mq_id)
             form = filterQueryForm(request=request, instance=filterQuery)
             # COLLECT FORM CONTENT
-            action = "run"
+            action = False
             selected = form.fields['selected'].widget.attrs['value']
             conditions = form.fields['conditions'].widget.attrs['value']
             watchmaps, watchlists, annotators = None, None, None
