@@ -83,7 +83,7 @@
                     <a class="btn btn-sm btn-tertiary border-white" href='{% url "filter_query_detail_run" filterQ.mq_id "run" %}' data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-title="run the filter to give live results">
                         {% include "includes/icons/icon_run.html" %}<span class="align-middle d-none d-md-inline">Run Filter</span></a>
 
-                    {% if user.is_authenticated %}
+                    {% if user.is_authenticated and user.id == filterQ.user.id %}
                         <a class="btn btn-sm btn-tertiary border-white" href='{% url "filter_query_update" filterQ.mq_id %}' data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-title="edit this filter">
                             {% include "includes/icons/icon_edit2.html" %}<span class="align-middle d-none d-md-inline">Edit Filter</span></a>
                     {% endif %}
