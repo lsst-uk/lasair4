@@ -242,10 +242,6 @@ def filter_query_create(request, mq_id=False):
 
     filterQuery = None
 
-    if mq_id and mq_id.user.id != request.user.id:
-        messages.error(request, f'You can not edit a filter you do not own.')
-        return redirect(f'filter_query_detail', mq_id.pk)
-
     if request.method == 'POST' or mq_id:
         if request.method == 'POST':
             if mq_id:
@@ -271,6 +267,10 @@ def filter_query_create(request, mq_id=False):
         elif request.method != 'POST' and mq_id:
             filterQuery = get_object_or_404(filter_query, mq_id=mq_id)
             form = filterQueryForm(request=request, instance=filterQuery)
+            if filterQuery.user.id != request.user.id:
+                messages.error(request, f'You can not edit a filter you do not own.')
+                return redirect(f'filter_query_detail', filterQuery.pk)
+
             # COLLECT FORM CONTENT
             action = False
             selected = form.fields['selected'].widget.attrs['value']
