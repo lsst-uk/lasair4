@@ -242,6 +242,10 @@ def filter_query_create(request, mq_id=False):
 
     filterQuery = None
 
+    if mq_id and mq_id.user.id != request.user.id:
+        messages.error(request, f'You can not edit a filter you do not own.')
+        return redirect(f'filter_query_detail', mq_id.pk)
+
     if request.method == 'POST' or mq_id:
         if request.method == 'POST':
             if mq_id:
