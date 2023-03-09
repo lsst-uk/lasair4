@@ -16,5 +16,5 @@ def create_profile(sender, instance, created, **kwargs):
 def save_profile(sender, instance, **kwargs):
     recent = datetime.datetime.now() - datetime.timedelta(seconds=15)
     utc = pytz.UTC
-    if instance.last_login.replace(tzinfo=utc) < recent.replace(tzinfo=utc):
+    if not instance.last_login or instance.last_login.replace(tzinfo=utc) < recent.replace(tzinfo=utc):
         instance.profile.save()
