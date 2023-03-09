@@ -41,7 +41,6 @@ Please start here to discover the key ideas of Lasair:
    concepts/objects_sources
    concepts/lightcurve
    concepts/sky-context
-   concepts/sky-search
    concepts/querying
    concepts/coding
    concepts/added-value

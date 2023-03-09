@@ -5,7 +5,14 @@ Annotation means that external users push information to the Lasair database.
 Therefore it requires that user to inform the Lasair team and be approved
 before it will work. The team will use the admin interface to create an `annotator`
 object in the database, which is a conneciton between the API token of that user
-with the name (`topic`) assigned to the annotator. Here we see that admin interface:
+with the name (`topic`) assigned to the annotator. 
+
+In the first case, write to 
+<a href="mailto:lasair-help@lists.roe.ac.uk?subject=New Annotator">Lasair Team</a>
+to propose your annotator.
+
+Here we see that admin interface that the Lasair team uses to make your annotator,
+if it is approved.:
 
 <img src="../_images/make_annotator/fastfinder.png" width="500px"/>
 
