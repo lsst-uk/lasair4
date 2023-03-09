@@ -38,7 +38,7 @@ def get_schema_dict(schema_name):
     schemaDict = get_schema_dict("objects")
     ```           
     """
-    schemaDict = {k["name"].lower(): k["doc"] for k in get_schema(schema_name)}
+    schemaDict = {k["name"]: k["doc"] for k in get_schema(schema_name)}
     return schemaDict
 
 
@@ -78,11 +78,12 @@ def get_schema_for_query_selected(
         select = select.strip()
         if " " not in select:
             select = select.split(".")
-            if len(select) == 2 and select[0] in schemas.keys():
+            listName = []
+            if len(select) == 2 and select[0].lower() in [k.lower() for k in schemas.keys()]:
                 if select[1] == "*":
                     for k, v in schemas[select[0]].items():
                         tableSchema[k] = v
                 else:
-                    tableSchema[select[1].lower()] = schemas[select[0]][select[1].lower()]
+                    tableSchema[select[1]] = schemas[select[0]][select[1]]
 
     return tableSchema
