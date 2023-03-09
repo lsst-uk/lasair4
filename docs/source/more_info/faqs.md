@@ -57,6 +57,12 @@ There are seven community brokers that will receive and process LSST alerts in r
 Lasair has been processing, storing, and distributing alerts from the ZTF survey since 2018.
 Operation with LSST will start in 2023.
 
+## Why are there no alerts on the Lasair front page?
+
+The front page shows alerts from the last seven days. Sometimes no alerts have been received
+in that time, and so none are shown. Reasons may be weather or equipment failure.
+More information is available in the green news bar at the top of the front page.
+
 ## Can I get alerts from a particular region of the sky?
 
 Lasair supports "watchmaps", defined by a [MOC](https://cds-astro.github.io/mocpy/), that you build yourself.
