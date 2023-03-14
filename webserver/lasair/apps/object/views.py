@@ -38,7 +38,7 @@ def object_detail(request, objectId):
     ]
     ```           
     """
-    data = objjson(objectId)
+    data = objjson(objectId, full=True)
 
     if not data:
         return render(request, 'error.html',

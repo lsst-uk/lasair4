@@ -1,10 +1,18 @@
 <img src="_images/lasair_logo_transparent.png" width=500>
 
-# Lasair: A UK Alert Stream Broker
+# [Lasair: A UK Alert Stream Broker]({%lasairurl%})
 
-*Lasair* is being developed by The University of Edinburgh and Queen\'s University Belfast with the ultimate goal of serving transient alerts from the future [Rubin Legacy Survey of Space and Time (LSST)](https://www.lsst.org) to the astronomical community. *Lasair* (pronounced '*L-AH-s-uh-r*') means flame or flash in Scots and Irish gaelic. To prototype functionality needed to process transient event alerts from LSST, Lasair is currently processing and serving data from the public stream of the [Zwicky Transient Facility (ZTF)](http://www.ztf.caltech.edu/), which is releasing a transient alert stream in a format similar to that envisaged for LSST. We thank ZTF for access to this valuable public data stream.
+[*Lasair*]({%lasairurl%}) is being developed by The University of Edinburgh, Queen\'s University Belfast,
+and Oxford University with the ultimate goal of serving transient alerts from the 
+future [Rubin Legacy Survey of Space and Time (LSST)](https://www.lsst.org) to the 
+astronomical community. *Lasair* (pronounced '*L-AH-s-uh-r*') means flame or 
+flash in Scots and Irish gaelic. To prototype functionality needed to process transient 
+event alerts from LSST, Lasair is currently processing and serving data from the 
+public stream of the [Zwicky Transient Facility (ZTF)](http://www.ztf.caltech.edu/), 
+which is releasing a transient alert stream in a format similar to that 
+envisaged for LSST. We thank ZTF for access to this valuable public data stream.
 
-If you make use of Lasair in any of your work, please remember to cite our paper: [Lasair: The Transient Alert Broker for LSST:UK](https://doi.org/10.3847/2515-5172/ab020f), K. W. Smith, R. D. Williams et. al., Research Notes AAS, **3**,26 (2019).
+If you make use of [Lasair]({%lasairurl%}) in any of your work, please remember to cite our paper: [Lasair: The Transient Alert Broker for LSST:UK](https://doi.org/10.3847/2515-5172/ab020f), K. W. Smith, R. D. Williams et. al., Research Notes AAS, **3**,26 (2019).
 
 To start using Lasair to filter the deluge of alerts:
 ```eval_rst
@@ -33,7 +41,6 @@ Please start here to discover the key ideas of Lasair:
    concepts/objects_sources
    concepts/lightcurve
    concepts/sky-context
-   concepts/sky-search
    concepts/querying
    concepts/coding
    concepts/added-value

@@ -64,13 +64,14 @@ def filter_query_index(request):
                    'authenticated': request.user.is_authenticated})
 
 
-def filter_query_detail(request, mq_id):
+def filter_query_detail(request, mq_id, action=False):
     """*return the result of a filter query*
 
     **Key Arguments:**
 
     - `request` -- the original request
     - `mq_id` -- the filter UUID
+    - `run` -- run filter
 
     **Usage:**
 
@@ -171,17 +172,23 @@ def filter_query_detail(request, mq_id):
 
     limit = 5000
     offset = 0
+    count = None
+    table = {}
+    schema = {}
 
-    table, schema, count, topic, error = run_filter(
-        selected=filterQuery.selected,
-        tables=filterQuery.tables,
-        conditions=filterQuery.conditions,
-        limit=limit,
-        offset=offset,
-        mq_id=mq_id,
-        query_name=filterQuery.name)
+    if action == "run":
+        table, schema, count, topic, error = run_filter(
+            selected=filterQuery.selected,
+            tables=filterQuery.tables,
+            conditions=filterQuery.conditions,
+            limit=limit,
+            offset=offset,
+            mq_id=mq_id,
+            query_name=filterQuery.name)
+        if error:
+            messages.error(request, error)
 
-    if count > limit:
+    if count and count > limit:
         if settings.DEBUG:
             apiUrl = "https://lasair.readthedocs.io/en/develop/core_functions/rest-api.html"
         else:
@@ -189,9 +196,6 @@ def filter_query_detail(request, mq_id):
         messages.info(request, f"We are only displaying the first <b>{limit}</b> of {count} objects matched against this filter. But don't worry! You can access all {count} results via the <a class='alert-link' href='{apiUrl}' target='_blank'>Lasair API</a>.")
     else:
         limit = False
-
-    if error:
-        messages.error(request, error)
 
     return render(request, 'filter_query/filter_query_detail.html', {
         'filterQ': filterQuery,
@@ -263,8 +267,12 @@ def filter_query_create(request, mq_id=False):
         elif request.method != 'POST' and mq_id:
             filterQuery = get_object_or_404(filter_query, mq_id=mq_id)
             form = filterQueryForm(request=request, instance=filterQuery)
+            if filterQuery.user.id != request.user.id:
+                messages.error(request, f'You can not edit a filter you do not own.')
+                return redirect(f'filter_query_detail', filterQuery.pk)
+
             # COLLECT FORM CONTENT
-            action = "run"
+            action = False
             selected = form.fields['selected'].widget.attrs['value']
             conditions = form.fields['conditions'].widget.attrs['value']
             watchmaps, watchlists, annotators = None, None, None

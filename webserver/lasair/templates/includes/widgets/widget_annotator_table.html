@@ -74,7 +74,7 @@
                                         <td  style="white-space: normal;">{% if annotator.description|length > 60 %}
                                             {{ annotator.description|safe|slice:"0:60" }} ...
 
-                                            <a href="#" class="link-primary disable" data-bs-container="body" data-bs-toggle="popover" data-bs-trigger="focus" data-bs-placement="top" data-bs-html="true" data-bs-content="{{annotator.description|safe}}">more</a>
+                                            <a tabindex="0"  class="link-primary disable" data-bs-container="body" data-bs-toggle="popover" data-bs-trigger="focus" data-bs-placement="top" data-bs-html="true" data-bs-content="{{annotator.description|safe}}">more</a>
 
                                         {% else %} {{ annotator.description|safe|slice:"0:100" }}{% endif %} </td>
                                         <td>{{annotator.count|intcomma}}</td>
@@ -97,7 +97,7 @@
                                         <td  style="white-space: normal;">{% if annotator.description|safe|length > 60 %}
                                             {{ annotator.description|safe|slice:"0:60" }} ...
 
-                                            <a href="#" class="link-primary disable" data-bs-container="body" data-bs-toggle="popover" data-bs-trigger="focus" data-bs-placement="top" data-bs-html="true" data-bs-content="{{annotator.description|safe}}">more</a>
+                                            <a tabindex="0"  class="link-primary disable" data-bs-container="body" data-bs-toggle="popover" data-bs-trigger="focus" data-bs-placement="top" data-bs-html="true" data-bs-content="{{annotator.description|safe}}">more</a>
 
                                         {% else %} {{ annotator.description|safe|slice:"0:100" }}{% endif %} </td>
                                         <td>{{annotator.count|intcomma}}</td>

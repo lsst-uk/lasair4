@@ -42,10 +42,10 @@
                     <div class=" ms-auto ps-1">
                         <span data-bs-toggle="tooltip" data-bs-placement="auto" data-bs-title="view Lasair processing plots for this day">
                             {% if daysAgo > 0%}
-                                <a class="btn btn-sm btn-secondary me-1 align-middle " href='{{ lasair_grafana_url }}?orgId=1&refresh=5m&from=now-{{daysAgo}}d%2Fd&to=now-{{daysAgo}}d%2Fd&viewPanel=8'>
+                                <a class="btn btn-sm btn-secondary me-1 align-middle " href='{{ lasair_grafana_url }}?orgId=1&refresh=5m&from=now-{{daysAgo}}d%2Fd&to=now-{{daysAgo}}d%2Fd'>
 
                             {% else %}
-                                <a class="btn btn-sm btn-secondary me-1 align-middle " href='{{ lasair_grafana_url }}?orgId=1&refresh=5m&from=now-24h&to=now&viewPanel=8'>
+                                <a class="btn btn-sm btn-secondary me-1 align-middle " href='{{ lasair_grafana_url }}?orgId=1&refresh=5m&from=now-24h&to=now'>
                             {%endif%}
                             {% include "includes/icons/icon_status.html" %}
                             <span class="align-middle">Graph</span></a>

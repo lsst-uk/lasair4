@@ -116,7 +116,7 @@ def decsex(de):
         return '-%02d:%02d:%.3f' % (d, m, s)
 
 
-def objjson(objectId):
+def objjson(objectId, full=False):
     """return all data for an object as a json object (`objectId`,`objectData`,`candidates`,`count_isdiffpos`,`count_all_candidates`,`count_noncandidate`,`sherlock`,`TNS`)
 
     **Usage:**
@@ -187,13 +187,15 @@ def objjson(objectId):
                 TNS[k] = v
 
     LF = lightcurve_fetcher(cassandra_hosts=settings.CASSANDRA_HEAD)
-    candidates = LF.fetch(objectId)
+    candidates = LF.fetch(objectId, full=full)
     LF.close()
 
     count_isdiffpos = count_all_candidates = count_noncandidate = 0
     image_store = objectStore.objectStore(suffix='fits', fileroot=settings.IMAGEFITS)
     image_urls = {}
     for cand in candidates:
+        json_formatted_str = json.dumps(cand, indent=2)
+        cand['json'] = json_formatted_str[1:-1]
         cand['mjd'] = mjd = float(cand['jd']) - 2400000.5
         cand['since_now'] = mjd - now
         if 'candid' in cand:
