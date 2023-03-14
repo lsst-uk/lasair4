@@ -1,6 +1,6 @@
-import settings
 import sys
 sys.path.append('../common')
+import settings
 sys.path.append('../common/src')
 
 import slack_webhook
