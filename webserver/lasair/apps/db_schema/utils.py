@@ -78,11 +78,14 @@ def get_schema_for_query_selected(
         select = select.strip()
         if " " not in select:
             select = select.split(".")
-            if len(select) == 2 and select[0] in schemas.keys():
+            listName = []
+            if len(select) == 2 and select[0].lower() in [k.lower() for k in schemas.keys()]:
                 if select[1] == "*":
-                    for k, v in schemas[select[0]].items():
-                        tableSchema[k] = v
+                    if select[0] in schemas.keys():
+                        for k, v in schemas[select[0]].items():
+                            tableSchema[k] = v
                 else:
-                    tableSchema[select[1]] = schemas[select[0]][select[1]]
+                    if select[0] in schemas.keys() and select[1] in schemas[select[0]].keys():
+                        tableSchema[select[1]] = schemas[select[0]][select[1]]
 
     return tableSchema

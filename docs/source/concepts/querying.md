@@ -21,7 +21,16 @@ ORDER BY glatmean
 and I click 'Run this Query', then I get a list of objects that are coincident with
 the given watchlist, together with the watchlist's name, and the galactiv latitude.
 The `WHERE` clause has restricted the results by galactic latitude, and the results
-come in order of galactic latittude.
+come in order of galactic latitude.
+
+## Multiple Tables
+
+Lasair supports queries that join multiple tables, for example a watchlist of 
+your favourite sources, or the [TNS](https://www.wis-tns.org/) list of known 
+supernovae and other transients. In this case, you are selecting **ONLY** those
+objects that are **ALSO* in the chosen table. If you make a filter that selects 
+```objectId``` and you also choose a watchlist, then your filter returns only alerts
+coincident with the sources in the watchlist. 
 
 ## Streaming Filter
 

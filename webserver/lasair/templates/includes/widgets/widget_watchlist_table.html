@@ -81,7 +81,7 @@
                                     <td  style="white-space: normal;">{% if wl.description|length > 60 %}
                                         {{ wl.description|slice:"0:60" }} ...
 
-                                        <a href="#" class="link-primary disable" data-bs-container="body" data-bs-toggle="popover" data-bs-trigger="focus" data-bs-placement="top" data-bs-content="{{wl.description}}">more</a>
+                                        <a tabindex="0"  class="link-primary disable" data-bs-container="body" data-bs-toggle="popover" data-bs-trigger="focus" data-bs-placement="top" data-bs-content="{{wl.description}}">more</a>
 
                                     {% else %} {{ wl.description|slice:"0:100" }}{% endif %} </td>
                                     <td>{{wl.count|intcomma}}</td>
@@ -106,7 +106,7 @@
                                     <td  style="white-space: normal;">{% if wl.description|length > 60 %}
                                         {{ wl.description|slice:"0:60" }} ...
 
-                                        <a href="#" class="link-primary disable" data-bs-container="body" data-bs-toggle="popover" data-bs-trigger="focus" data-bs-placement="top" data-bs-content="{{wl.description}}">more</a>
+                                        <a tabindex="0"  class="link-primary disable" data-bs-container="body" data-bs-toggle="popover" data-bs-trigger="focus" data-bs-placement="top" data-bs-content="{{wl.description}}">more</a>
 
                                     {% else %} {{ wl.description|slice:"0:100" }}{% endif %} </td>
                                     <td>{{wl.count|intcomma}}</td>

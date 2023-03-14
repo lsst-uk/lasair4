@@ -45,20 +45,17 @@ def status(request, nid):
     ]
     ```           
     """
-    message = ''
     web_domain = settings.WEB_DOMAIN
     try:
         filename = '%s_%d.json' % (settings.SYSTEM_STATUS, nid)
         jsonstr = open(filename).read()
     except:
         jsonstr = ''
-        # return render(request, 'error.html', {'message': 'Cannot open status file for nid=%d' % nid})
 
     try:
         status = json.loads(jsonstr)
     except:
         status = None
-        # return render(request, 'error.html', {'message': 'Cannot parse status file for nid=%d' % nid})
 
     if status and 'today_filter' in status:
         status['today_singleton'] = \
@@ -106,5 +103,4 @@ def status(request, nid):
         'nid': nid,
         'mjd': int(mjd),
         'prettyDate': prettyDate,
-        'lasair_grafana_url': settings.LASAIR_GRAFANA_URL,
-        'message': message})
+        'lasair_grafana_url': settings.LASAIR_GRAFANA_URL})

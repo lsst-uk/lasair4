@@ -1,9 +1,5 @@
 # Questions and Answers
 
-**Table of Contents**
-
-{{TOC}}
-
 ## What are Lasair-ZTF and Lasair-LSST?
 
 See [ZTF and LSST](../about.html#ztf-and-lsst)
@@ -50,7 +46,7 @@ Choosing interesting alerts can be based on several criteria: The characteristic
 
 ## Why should I register on the Lasair website?
 
-Registration is easy, and just requires a valid email (signup [here]({%lasairurl%}/signup)). You can then build and save queries, watchlists, and sky areas, convert those to real-time slert treams, and use the Lasair API.
+Registration is easy, and just requires a valid email (signup [here]({%lasairurl%}/signup)). You can then build and save queries, watchlists, and watchmaps (sky areas), convert those to real-time slert treams, and use the Lasair API.
 
 ## Besides Lasair, what other websites carry astronommical transients?
 
@@ -61,9 +57,15 @@ There are seven community brokers that will receive and process LSST alerts in r
 Lasair has been processing, storing, and distributing alerts from the ZTF survey since 2018.
 Operation with LSST will start in 2023.
 
+## Why are there no alerts on the Lasair front page?
+
+The front page shows alerts from the last seven days. Sometimes no alerts have been received
+in that time, and so none are shown. Reasons may be weather or equipment failure.
+More information is available in the green news bar at the top of the front page.
+
 ## Can I get alerts from a particular region of the sky?
 
-Lasair supports "sky areas", defined by a [MOC](https://cds-astro.github.io/mocpy/), that you build yourself.
+Lasair supports "watchmaps", defined by a [MOC](https://cds-astro.github.io/mocpy/), that you build yourself.
 
 ## Can I get alerts associated with my favourite sources?
 
@@ -100,9 +102,13 @@ The Lasair client is described [here](../core_functions/rest-api.html).
 
 This is explained [here](../concepts/objects_sources.html).
 
+## How do search for an object by position in the sky?
+
+This is called a "cone search". See next question.
+
 ## What is a cone-search and can Lasair do this?
 
-A *cone* in this contect means a point in the sky with an angular tolerance -- the opening
+A *cone* in this context means a point in the sky with an angular tolerance -- the opening
 angle of the cone, as explained [here](../concepts/sky-search.html). 
 You can use the [Lasair Sky Search](../core_functions/sky-search.html)
 to do this.

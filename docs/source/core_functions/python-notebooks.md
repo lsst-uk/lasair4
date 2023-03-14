@@ -6,11 +6,12 @@
 
 
 
-Below are some Google colab notebooks that use Lasair API, which has a token authentication scheme. The notebooks below have a "free sample" token that allows only 10 calls to the API in an hour. You can get a much better token by
+Below are some Google colab notebooks that use Lasair API, which has a token authentication scheme. 
+The notebooks below have a fake token "xxxxxxx" that doesn't work. To use the notebooks, you will need to :
 
-*   get a Lasair account [here]({%lasairurl%}/signup)
-*   follow the instructions in the **[API documentation](core_functions/rest-api.html)
-*   then copy the notebook to your own Google account.
+*   Get a Lasair account [here]({%lasairurl%}/signup), and log in to the Lasair website.
+*   Click on your username at the top right and select "My Profile"
+*   Copy the notebook to your own Google account, and replace the xxxxxxx with your own token.
 
 ---
 
