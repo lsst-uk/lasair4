@@ -73,7 +73,7 @@ else:
         print('Unknown classifier, quitting')
         sys.exit()
 
-    L = lasair.lasair_client(settings.API_TOKEN, endpoint='https://lasair-dev.lsst.ac.uk/api')
+    L = lasair.lasair_client(settings.API_TOKEN, endpoint='https://lasair-ztf.lsst.ac.uk/api')
 #    L = lasair.lasair_client(settings.API_TOKEN)
 
     streamReader.subscribe([topic])
