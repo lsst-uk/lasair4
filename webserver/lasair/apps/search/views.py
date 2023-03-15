@@ -128,6 +128,12 @@ def do_search(
         cursor.execute(query)
         results += cursor.fetchall()
 
+    # MAKE UNIQUE
+    try:
+        results = list({v['objectId']: v for v in results}.values())
+    except:
+        pass
+
     return results, schema
 
 # use the tab-trigger below for new function
