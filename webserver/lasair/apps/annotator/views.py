@@ -76,7 +76,7 @@ def annotator_detail(request, topic):
 
     # IS USER ALLOWED TO SEE THIS RESOURCE?
     is_owner = (request.user.is_authenticated) and (request.user.id == annotator.user.id)
-    is_public = (annotator.public == 1)
+    is_public = (annotator.public > 0)
     is_visible = is_owner or is_public
     if not is_visible:
         messages.error(request, "This annotator is private and not visible to you")
