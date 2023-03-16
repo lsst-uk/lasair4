@@ -22,4 +22,5 @@ def global_vars(request):
         docroot = "https://lasair.readthedocs.io/en/develop"
     else:
         docroot = "https://lasair.readthedocs.io/en/main"
-    return {'docroot': docroot}
+
+    return {'docroot': docroot, 'lasair_grafana_url': settings.LASAIR_GRAFANA_URL}
