@@ -81,10 +81,11 @@ def run_filter(
     table = cursor.fetchall()
     count = len(table)
 
-    if count == limit:
-        countQuery = build_query("count(*) as count", tables, conditions)
-        cursor.execute(countQuery)
-        count = cursor.fetchone()["count"]
+    count = 0
+    # if count == limit:
+    #     countQuery = build_query("count(*) as count", tables, conditions)
+    #     cursor.execute(countQuery)
+    #     count = cursor.fetchone()["count"]
 
     tableSchema = get_schema_for_query_selected(selected)
     if len(table):
