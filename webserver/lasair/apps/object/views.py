@@ -40,7 +40,7 @@ def object_detail(request, objectId):
     """
     data = objjson(objectId, full=True)
 
-    if not data:
+    if data:
         return render(request, 'error.html',
                       {'message': 'Object %s not in database' % objectId})
 
