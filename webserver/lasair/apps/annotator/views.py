@@ -72,7 +72,7 @@ def annotator_detail(request, topic):
     cursor = msl.cursor(buffered=True, dictionary=True)
     annotator = get_object_or_404(Annotators, topic=topic)
 
-    resultCap = 5000
+    resultCap = 1000
 
     # IS USER ALLOWED TO SEE THIS RESOURCE?
     is_owner = (request.user.is_authenticated) and (request.user.id == annotator.user.id)
