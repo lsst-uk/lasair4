@@ -99,16 +99,7 @@ LIMIT {resultCap}
 
     if count == resultCap:
         limit = resultCap
-        countQuery = f"""
-        SELECT count(*) as count
-        FROM annotations as h, objects AS o
-        WHERE h.topic="{topic}"
-        AND o.objectId=h.objectId
-        """
-        cursor.execute(countQuery)
-        count = cursor.fetchone()["count"]
-
-        messages.info(request, f"We are only displaying the first <b>{resultCap}</b> of {count} objects matched against this annotator. ")
+        messages.info(request, f"We are only displaying the first <b>{resultCap}</b> objects matched against this annotator. ")
     else:
         limit = False
 
