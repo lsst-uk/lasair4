@@ -170,7 +170,7 @@ def filter_query_detail(request, mq_id, action=False):
         real_sql = row['real_sql']
         filterQuery.real_sql = sqlparse.format(filterQuery.real_sql, reindent=True, keyword_case='upper', strip_comments=True)
 
-    limit = 5000
+    limit = 1000
     offset = 0
     count = None
     table = {}
