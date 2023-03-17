@@ -329,7 +329,7 @@ class LightcurvesSerializer(serializers.Serializer):
         lightcurves = []
         for objectId in olist:
             candidates = LF.fetch(objectId)
-            lightcurves.append(candidates)
+            lightcurves.append({'objectId':objectId, 'candidates':candidates})
 
         LF.close()
         return lightcurves
