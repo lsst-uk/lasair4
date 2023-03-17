@@ -210,7 +210,7 @@ def objjson(objectId, full=False):
             for cutoutType in ['Science', 'Template', 'Difference']:
                 candid_cutoutType = '%s_cutout%s' % (candid, cutoutType)
                 filename = image_store.getFileName(candid_cutoutType)
-                if os.path.exists(filename):
+                if 1 == 1 or os.path.exists(filename):
                     url = filename.replace(
                         '/mnt/cephfs/lasair',
                         f'https://{settings.LASAIR_URL}/lasair/static')

@@ -243,7 +243,7 @@ def watchlist_detail(request, wl_id):
     for row in cursor:
         number_cones = row['count']
 
-    resultCap = 5000
+    resultCap = 1000
 
     # GRAB ALL WATCHLIST MATCHES
     query_hit = f"""
