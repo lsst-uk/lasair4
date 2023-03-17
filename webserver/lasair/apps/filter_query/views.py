@@ -193,7 +193,7 @@ def filter_query_detail(request, mq_id, action=False):
             apiUrl = "https://lasair.readthedocs.io/en/develop/core_functions/rest-api.html"
         else:
             apiUrl = "https://lasair.readthedocs.io/en/main/core_functions/rest-api.html"
-        messages.info(request, f"We are only displaying the first <b>{limit}</b> of {count} objects matched against this filter. But don't worry! You can access all {count} results via the <a class='alert-link' href='{apiUrl}' target='_blank'>Lasair API</a>.")
+        messages.info(request, f"We are only displaying the first <b>{limit}</b> objects matched against this filter. But don't worry! You can access all results via the <a class='alert-link' href='{apiUrl}' target='_blank'>Lasair API</a>.")
     else:
         limit = False
 

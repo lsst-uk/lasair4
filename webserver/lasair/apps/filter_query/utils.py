@@ -81,7 +81,6 @@ def run_filter(
     table = cursor.fetchall()
     count = len(table)
 
-    count = 0
     # if count == limit:
     #     countQuery = build_query("count(*) as count", tables, conditions)
     #     cursor.execute(countQuery)
