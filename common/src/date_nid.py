@@ -45,7 +45,7 @@ def nid_to_pretty_date(nid):
     """
     d0 = datetime.date(2017, 1, 1)
     d1 = d0 + datetime.timedelta(days=nid)
-    return d1.strftime("%a, %-m %B %Y")
+    return d1.strftime("%a, %-d %B %Y")
 
 
 if __name__ == "__main__":
