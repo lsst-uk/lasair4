@@ -122,7 +122,7 @@ def watchmap_detail(request, ar_id):
     cursor = msl.cursor(buffered=True, dictionary=True)
     watchmap = get_object_or_404(Watchmap, ar_id=ar_id)
 
-    resultCap = 5000
+    resultCap = 1000
 
     # IS USER ALLOWED TO SEE THIS RESOURCE?
     is_owner = (request.user.is_authenticated) and (request.user.id == watchmap.user.id)
