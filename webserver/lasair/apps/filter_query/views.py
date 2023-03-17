@@ -188,7 +188,7 @@ def filter_query_detail(request, mq_id, action=False):
         if error:
             messages.error(request, error)
 
-    if count and count > limit:
+    if count and count == limit:
         if settings.DEBUG:
             apiUrl = "https://lasair.readthedocs.io/en/develop/core_functions/rest-api.html"
         else:
