@@ -268,7 +268,7 @@ def filter_query_create(request, mq_id=False):
             filterQuery = get_object_or_404(filter_query, mq_id=mq_id)
             form = filterQueryForm(request=request, instance=filterQuery)
             if filterQuery.user.id != request.user.id:
-                messages.error(request, f'You can not edit a filter you do not own.')
+                messages.error(request, f'You cannot edit a filter you do not own.')
                 return redirect(f'filter_query_detail', filterQuery.pk)
 
             # COLLECT FORM CONTENT
