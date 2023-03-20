@@ -8,7 +8,7 @@ class objectStore():
     """objectStore.
     """
 
-    def __init__(self, suffix='txt', fileroot='/data'):
+    def __init__(self, suffix='txt', fileroot='/data', double=False):
         """__init__.
 
         Args:
@@ -19,6 +19,7 @@ class objectStore():
         os.system('mkdir -p ' + fileroot)
         self.fileroot = fileroot
         self.suffix = suffix
+        self.double = double
     
     def getFileName(self, objectId, mkdir=False):
         """getFileName.
@@ -31,6 +32,9 @@ class objectStore():
         # max number of directories 16**3 = 4096
         h = hashlib.md5(objectId.encode())
         dir = h.hexdigest()[:3]
+        if self.double:
+            dir += '/' + h.hexdigest()[3:6]
+
         if mkdir:
             try:
                 os.makedirs(self.fileroot+'/'+dir)
