@@ -231,6 +231,7 @@ def filter_query_create(request, mq_id=False):
     ]
     ```
     """
+    message = ''
 
     # BUILD CONTENT FOR THE CREATION FORM
     schemas_core = {
@@ -365,7 +366,7 @@ def filter_query_create(request, mq_id=False):
             # AFTER SAVING, DELETE THE TOPIC AND PUSH SOME RECORDS FROM THE DATABASE
             if filterQuery.active == 2:
                 try:
-                    message = topic_refresh(filterQuery.real_sql, tn, limit=10)
+                    message += topic_refresh(filterQuery.real_sql, tn, limit=10)
                 except Exception as e:
                     messages.error(request, f'The kafka topic could not be refreshed for this filter. {e}')
 
