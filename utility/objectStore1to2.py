@@ -29,7 +29,7 @@ for i in range(start, 4096, step):
     for filename_fits in os.listdir(dir1 +'/'+ d4):
         filename = filename_fits.split('.')[0]
         n2 = store2.getFileName(filename, mkdir=True)
-        cmd = 'cp %s/%s/%s.fits %s' % (dir1, d4, filename, n2)
+        cmd = 'cp -p %s/%s/%s.fits %s' % (dir1, d4, filename, n2)
         os.system(cmd)
         nfile += 1
     t = (time.time() - tstart)/nfile
