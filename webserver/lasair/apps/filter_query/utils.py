@@ -197,7 +197,7 @@ def topic_refresh(real_sql, topic, limit=10):
             recorddict = dict(record)
             query_results.append(recorddict)
     except Exception as e:
-        message = "SQL error for %s: %s" % (topic, str(e))
+        message += "SQL error for %s: %s" % (topic, str(e))
         return message
 
     try:
