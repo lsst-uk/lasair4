@@ -55,32 +55,27 @@ Type these lines in the SELECT COLUMNS. Each line is explained in the dropdown.
 ```eval_rst
 .. dropdown:: ``objects.objectId,``
 
-    Notice that as you type, the intelligent autocomplete makes suggestions.  
-Don't forget the comma at the end.
+Notice that as you type, the intelligent autocomplete makes suggestions.  Don't forget the comma at the end.
 ```
 ```eval_rst
 .. dropdown:: ``objects.ramean, objects.decmean,``
 
-    The word *mean* is because this is the average position of the multiple 
-alerts that are part of the same object. Don't forget the comma at the end.
+The word *mean* is because this is the average position of the multiple alerts that are part of the same object. Don't forget the comma at the end.
 ```
 ```eval_rst
 .. dropdown:: ``objects.gmag, objects.rmag,``
 
-    The g or r magnitude for the most recent alert. Each alert is done with one 
-of the filters, so either `gmag` or `rmag` will be `NULL`.
+The g or r magnitude for the most recent alert. Each alert is done with one of the filters, so either `gmag` or `rmag` will be `NULL`.
 ```
 ```eval_rst
 .. dropdown:: ``jdnow()-objects.jdmax AS age,``
 
-    This SQL fragment subtracts the Julian Day now from the Julia Day of the 
-alert, and renames the result as `age`.
+This SQL fragment subtracts the Julian Day now from the Julia Day of the alert, and renames the result as `age`.
 ```
 ```eval_rst
 .. dropdown:: ``sherlock_classifications.classification AS class``
 
-    This attribute is from a different table, the Sherlock classification of 
-the object. The long name is renamed as the much simpler `class`.
+This attribute is from a different table, the Sherlock classification of the object. The long name is renamed as the much simpler `class`.
 ```
 
 You see as you type that the tables you are using appear in the middle of the 
@@ -91,29 +86,22 @@ Now type these lines into the **WHERE** box:
 ```eval_rst
 .. dropdown:: ``objects.jdmax > jdnow() - 7``
 
-    We select only those objects whose most recent alert has been in the last 7 
-days.
+We select only those objects whose most recent alert has been in the last 7 days.
 ```
 ```eval_rst
 .. dropdown:: ``AND (objects.gmag < 17 OR objects.rmag < 17)``
 
-    We want bright objects only, mostly to cut the numbers being drawn on the 
-Lasair front page. Give that one of the attributes is `NULL` the `OR` selects 
-the one that is not, and requires it to be less than 17. Don't forget the `AND` 
-at the beginning.
+We want bright objects only, mostly to cut the numbers being drawn on the Lasair front page. Give that one of the attributes is `NULL` the `OR` selects the one that is not, and requires it to be less than 17. Don't forget the `AND` at the beginning.
 ```
 ```eval_rst
 .. dropdown:: ``AND objects.ncandgp > 1``
 
-    There are a lot of 'orphans' in the Lasair database, that have only one 
-alert. Many of these are not worth looking at, so we require the number of 
-candidates to be greater than 1.
+There are a lot of 'orphans' in the Lasair database, that have only one alert. Many of these are not worth looking at, so we require the number of candidates to be greater than 1.
 ```
 ```eval_rst
 .. dropdown:: ``AND sherlock_classifications.classification in ("SN", "NT", "CV", "AGN")``
 
-    These codes are for the different Sherlock classifications: possible supernova, nuclear transient
-cataclysmic variable, active galaxy.
+These codes are for the different Sherlock classifications: possible supernova, nuclear transient cataclysmic variable, active galaxy.
 ```
 
 ### Run your filter
