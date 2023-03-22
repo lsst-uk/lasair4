@@ -111,10 +111,10 @@ candidates to be greater than 1.
 ```
 ```eval_rst
 .. dropdown:: ``AND sherlock_classifications.classification in ("SN", "NT", "CV", "AGN")``
-```
 
-    These codes are for the different Sherlock classifications. They are 
-written more fully on the [Lasair front page]({% lasairurl %}/).
+    These codes are for the different Sherlock classifications: possible supernova, nuclear transient
+cataclysmic variable, active galaxy.
+```
 
 ### Run your filter
 You can simply run the filter on the existing database by clicking the red 
