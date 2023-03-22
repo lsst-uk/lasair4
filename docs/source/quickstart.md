@@ -110,8 +110,7 @@ alert. Many of these are not worth looking at, so we require the number of
 candidates to be greater than 1.
 ```
 ```eval_rst
-.. dropdown:: ``AND sherlock_classifications.classification in ("SN", "NT", 
-"CV", "AGN")``
+.. dropdown:: ``AND sherlock_classifications.classification in ("SN", "NT", "CV", "AGN")``
 
     These codes are for the different Sherlock classifications. They are 
 written more fully on the [Lasair front page]({% lasairurl %}/).
