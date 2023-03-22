@@ -116,11 +116,11 @@ for any of the objects.
 ### Save your filter
 But doing more with Lasair requires an account -- its just a simple matter of 
 entering
-your valid email address -- see [here to register]({% lasairurl %}/register).
+your valid email address -- see [here to register]({%lasairurl%}/register).
 
 Click the black button 'Save' on the create fulter page, then fill in the 
 details: Name and Description, and you can choose to make it public, so that it 
-appears in the [Public Gallery](({% lasairurl %}/filters). Once its shared like 
+appears in the [Public Gallery](({%lasairurl%}/filters). Once its shared like 
 this, others can use it, or copy and modify it. Another option in the Save 
 dialogue 
 has three choices:
@@ -134,7 +134,7 @@ see [here](core_functions/alert-streams.html) for more.
 
 Other options on the filter page bring in other tablesin addition to teh 
 `objects` table 
--- see [the schema browser]({% lasairurl %}/schema) for the full list. These 
+-- see [the schema browser]({%lasairurl%}/schema) for the full list. These 
 include:
 
 * `sherlock_classifications`: the results of an intelligent matching of 
