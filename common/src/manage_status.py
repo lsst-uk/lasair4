@@ -76,7 +76,12 @@ class manage_status():
         f.write(json.dumps(status))
         f.close()
         # rename lock file as atatus file
-        os.rename(lock_file, status_file)
+        while 1:
+            try:
+                os.rename(lock_file, status_file)
+                break
+            except:
+                time.sleep(SLEEPTIME)
 
     def tostr(self, file_id):
         """ __repr__:
