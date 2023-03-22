@@ -3,9 +3,9 @@ from src import db_connect
 from lasair.apps.db_schema.utils import get_schema, get_schema_dict, get_schema_for_query_selected
 from lasair.utils import datetime_converter
 import settings
-import os
+import os, json
 from datetime import datetime
-from confluent_kafka import admin
+from confluent_kafka import admin, Producer
 
 
 def add_filter_query_metadata(
@@ -187,9 +187,31 @@ def topic_refresh(real_sql, topic, limit=10):
         message += 'Topic is ' + topic + '<br/>'
         message += str(e) + '<br/>'
 
+    query = real_sql + ' LIMIT %d' % limit
+    msl = db_connect.readonly()
+    cursor = msl.cursor(buffered=True, dictionary=True)
+    query_results = []
+    try:
+        cursor.execute(query)
+        for record in cursor:
+            recorddict = dict(record)
+            query_results.append(recorddict)
+    except Exception as e:
+        message += "SQL error for %s: %s" % (topic, str(e))
+        return message
+
+    try:
+        p = Producer(conf)
+        for out in query_results:
+            jsonout = json.dumps(out, default=datetime_converter)
+            p.produce(topic, value=jsonout)
+        p.flush(10.0)   # 10 second timeout
+        message += '%d records inserted into kafka %s' % (len(query_results), topic)
+    except Exception as e:
+        message += "ERROR in filter/run_active_queries: cannot produce to public kafka: %s" % str(e)
+
     return message
-
-
+   
 def delete_stream_file(request, query_name):
     """*delete a filter kafka log file*
 
