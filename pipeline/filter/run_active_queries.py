@@ -194,8 +194,6 @@ def run_query(query, msl, annotator=None, objectId=None):
         log.warning("SQL error for %s: %s" % (topic, str(e)))
         log.warning(sqlquery_real)
         return []
-    if n > 0:
-        log.debug("%s --> %d" % (topic, n))
     return query_results
 
 def dispose_query_results(query, query_results):
@@ -284,7 +282,7 @@ def dispose_email(allrecords, last_email, query):
                 message += jsonout + '\n'
     try:
         send_email(query['email'], topic, message, message_html)
-        log.debug("%s gets %d" %  (query['email'], n))
+        log.debug("%s gets %d by email" %  (query['email'], n))
         return utcnow
     except Exception as e:
         log = lasairLogging.getLogger("filter")
@@ -328,6 +326,7 @@ def dispose_kafka(query_results, topic):
             jsonout = json.dumps(out, default=datetime_converter)
             p.produce(topic, value=jsonout)
         p.flush(10.0)   # 10 second timeout
+        log.debug("%s gets %d by kafka" %  (topic, len(query_results)))
     except Exception as e:
         log = lasairLogging.getLogger("filter")
         log.error("ERROR in filter/run_active_queries: cannot produce to public kafka: %s" % str(e))
