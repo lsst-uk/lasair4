@@ -186,6 +186,7 @@ def run_query(query, msl, annotator=None, objectId=None):
             recorddict = dict(record)
             utcnow = datetime.datetime.utcnow()
             recorddict['UTC'] = utcnow.strftime("%Y-%m-%d %H:%M:%S")
+            query_results.append(recorddict)
             n += 1
     except Exception as e:
         log = lasairLogging.getLogger("filter")
