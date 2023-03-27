@@ -56,7 +56,7 @@ document.addEventListener('DOMContentLoaded', function() {
         whichonchange: "selected" // which to list ("all" or "selected")
     };
 
-    let fns = [loadFitsImages, fixJS9ExtraStyles, collapseJS9Extras];
+    let fns = [loadFitsImages, fixJS9ExtraStyles, collapseJS9Extras, scrollToTop];
 
     // chain function will call the supplied function
     // and recursively call the chain function with the
@@ -67,6 +67,13 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     }
     chain(fns.shift());
+
+    // This prevents the page from scrolling down to where it was previously.
+    if ('scrollRestoration' in history) {
+        history.scrollRestoration = 'manual';
+    }
+    // This is needed if the user scrolls down during page load and you want to make sure the page is scrolled to the top once it's fully loaded. This has Cross-browser support.
+    window.scrollTo(0, 0);
 
 });
 
@@ -162,9 +169,10 @@ function collapseJS9Extras(next) {
     var myCollapse = document.getElementById('collapseJS9Extras');
     if (typeof myCollapse !== 'undefined' && myCollapse !== null) {
         myCollapse.classList.add("collapse");
-        next();
+
     }
-}
+    next();
+};
 
 function setDefaultParams(display) {
 
@@ -220,3 +228,14 @@ function JS9Popout(file, opts) {
     }
 
 }
+
+function scrollToTop(next) {
+    // This prevents the page from scrolling down to where it was previously.
+    if ('scrollRestoration' in history) {
+        history.scrollRestoration = 'manual';
+    }
+    // This is needed if the user scrolls down during page load and you want to make sure the page is scrolled to the top once it's fully loaded. This has Cross-browser support.
+    window.scrollTo(0, 0);
+    next();
+
+};
