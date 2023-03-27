@@ -165,6 +165,7 @@ def run_query(query, msl, annotator=None, objectId=None):
     email = query['email']
     topic = query['topic_name']
     limit = 1000
+    log = lasairLogging.getLogger("filter")
 
     sqlquery_real = query['real_sql']
     if annotator:
@@ -186,14 +187,13 @@ def run_query(query, msl, annotator=None, objectId=None):
             recorddict = dict(record)
             utcnow = datetime.datetime.utcnow()
             recorddict['UTC'] = utcnow.strftime("%Y-%m-%d %H:%M:%S")
-            query_results.append(recorddict)
             n += 1
     except Exception as e:
-        log = lasairLogging.getLogger("filter")
         log.warning("SQL error for %s: %s" % (topic, str(e)))
         log.warning(sqlquery_real)
         return []
-
+    if n > 0:
+        log.debug("%s --> %d" % (topic, n))
     return query_results
 
 def dispose_query_results(query, query_results):
@@ -264,22 +264,25 @@ def dispose_email(allrecords, last_email, query):
     log = lasairLogging.getLogger("filter")
     log.info('   --- send email to %s' % query['email'])
     topic = query['topic_name']
-    query_url = '/query/%d/' % (query['mq_id'])
+    query_url = 'https://%s/filters/%d/' % (settings.LASAIR_URL, query['mq_id'])
     message      = 'Your active query with Lasair on topic %s\n' % topic
     message_html = 'Your active query with Lasair on <a href=%s>%s</a><br/>' % (query_url, topic)
+    n = 0
     for out in allrecords: 
         out_time = datetime.datetime.strptime(out['UTC'], "%Y-%m-%d %H:%M:%S")
         # gather all records that have accumulated since last email
         if out_time > last_email:
+            n += 1
             if 'objectId' in out:
                 objectId = out['objectId']
                 message      += objectId + '\n'
-                message_html += '<a href="%s/object/%s/">%s</a><br/>' % (settings.LASAIR_URL, objectId, objectId)
+                message_html += '<a href="https://%s/objects/%s/">%s</a><br/>' % (settings.LASAIR_URL, objectId, objectId)
             else:
                 jsonout = json.dumps(out, default=datetime_converter)
                 message += jsonout + '\n'
     try:
         send_email(query['email'], topic, message, message_html)
+        log.debug("%s gets %d" %  (query['email'], n))
         return utcnow
     except Exception as e:
         log = lasairLogging.getLogger("filter")
