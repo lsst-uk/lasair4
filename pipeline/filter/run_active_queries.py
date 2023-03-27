@@ -312,6 +312,7 @@ def send_email(email, topic, message, message_html):
 def dispose_kafka(query_results, topic):
     """ Send out query results by kafka to the given topic.
     """
+    log = lasairLogging.getLogger("filter")
     conf = {
         'bootstrap.servers': settings.PUBLIC_KAFKA_SERVER,
         'security.protocol': 'SASL_PLAINTEXT',
