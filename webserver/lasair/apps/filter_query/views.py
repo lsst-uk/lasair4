@@ -127,11 +127,14 @@ def filter_query_detail(request, mq_id, action=False):
             delete_stream_file(request, filterQuery.name)
             if filterQuery.active == 2:
                 try:
-                    topic_refresh(filterQuery.real_sql, tn, limit=10)
+                    message = topic_refresh(filterQuery.real_sql, tn, limit=10)
                 except Exception as e:
                     messages.error(request, f'The kafka topic could not be refreshed for this filter. {e}')
             filterQuery.save()
-            messages.success(request, f'Your filter has been successfully updated')
+            if len(message) == 0:
+                messages.success(request, f'Your filter has been successfully updated')
+            else:
+                messages.success(request, message)
     elif request.method == 'POST' and action == 'copy' and duplicateForm.is_valid():
 
         oldName = copy.deepcopy(filterQuery.name)
@@ -228,6 +231,7 @@ def filter_query_create(request, mq_id=False):
     ]
     ```
     """
+    message = ''
 
     # BUILD CONTENT FOR THE CREATION FORM
     schemas_core = {
@@ -362,12 +366,13 @@ def filter_query_create(request, mq_id=False):
             # AFTER SAVING, DELETE THE TOPIC AND PUSH SOME RECORDS FROM THE DATABASE
             if filterQuery.active == 2:
                 try:
-                    topic_refresh(filterQuery.real_sql, tn, limit=10)
+                    message += topic_refresh(filterQuery.real_sql, tn, limit=10)
                 except Exception as e:
                     messages.error(request, f'The kafka topic could not be refreshed for this filter. {e}')
 
             filtername = form.cleaned_data.get('name')
-            messages.success(request, f'The "{filtername}" filter has been successfully {verb}')
+#            messages.success(request, f'The "{filtername}" filter has been successfully {verb}')
+            messages.success(request, message)     ####  hack hack
             return redirect(f'filter_query_detail', filterQuery.pk)
 
     else:
