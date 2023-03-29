@@ -165,6 +165,7 @@ def run_query(query, msl, annotator=None, objectId=None):
     email = query['email']
     topic = query['topic_name']
     limit = 1000
+    log = lasairLogging.getLogger("filter")
 
     sqlquery_real = query['real_sql']
     if annotator:
@@ -193,7 +194,6 @@ def run_query(query, msl, annotator=None, objectId=None):
         log.warning("SQL error for %s: %s" % (topic, str(e)))
         log.warning(sqlquery_real)
         return []
-
     return query_results
 
 def dispose_query_results(query, query_results):
@@ -264,22 +264,25 @@ def dispose_email(allrecords, last_email, query):
     log = lasairLogging.getLogger("filter")
     log.info('   --- send email to %s' % query['email'])
     topic = query['topic_name']
-    query_url = '/query/%d/' % (query['mq_id'])
+    query_url = 'https://%s/filters/%d/' % (settings.LASAIR_URL, query['mq_id'])
     message      = 'Your active query with Lasair on topic %s\n' % topic
     message_html = 'Your active query with Lasair on <a href=%s>%s</a><br/>' % (query_url, topic)
+    n = 0
     for out in allrecords: 
         out_time = datetime.datetime.strptime(out['UTC'], "%Y-%m-%d %H:%M:%S")
         # gather all records that have accumulated since last email
         if out_time > last_email:
+            n += 1
             if 'objectId' in out:
                 objectId = out['objectId']
                 message      += objectId + '\n'
-                message_html += '<a href="%s/object/%s/">%s</a><br/>' % (settings.LASAIR_URL, objectId, objectId)
+                message_html += '<a href="https://%s/objects/%s/">%s</a><br/>' % (settings.LASAIR_URL, objectId, objectId)
             else:
                 jsonout = json.dumps(out, default=datetime_converter)
                 message += jsonout + '\n'
     try:
         send_email(query['email'], topic, message, message_html)
+        log.debug("%s gets %d by email" %  (query['email'], n))
         return utcnow
     except Exception as e:
         log = lasairLogging.getLogger("filter")
@@ -309,6 +312,7 @@ def send_email(email, topic, message, message_html):
 def dispose_kafka(query_results, topic):
     """ Send out query results by kafka to the given topic.
     """
+    log = lasairLogging.getLogger("filter")
     conf = {
         'bootstrap.servers': settings.PUBLIC_KAFKA_SERVER,
         'security.protocol': 'SASL_PLAINTEXT',
@@ -323,6 +327,7 @@ def dispose_kafka(query_results, topic):
             jsonout = json.dumps(out, default=datetime_converter)
             p.produce(topic, value=jsonout)
         p.flush(10.0)   # 10 second timeout
+        log.debug("%s gets %d by kafka" %  (topic, len(query_results)))
     except Exception as e:
         log = lasairLogging.getLogger("filter")
         log.error("ERROR in filter/run_active_queries: cannot produce to public kafka: %s" % str(e))
