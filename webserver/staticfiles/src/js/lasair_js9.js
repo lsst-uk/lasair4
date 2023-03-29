@@ -23,7 +23,7 @@ document.addEventListener('DOMContentLoaded', function() {
         scaleclipping: "dataminmax", // "dataminmax", "zscale", or "user" (when scalemin, scalemax is supplied)
         scalemin: Number.NaN, // default scale min is undefined
         scalemax: Number.NaN, // default scale max is undefined
-        flip: "none", // default flip state
+        flip: "y", // default flip state
         rot90: 0, // default 90 deg rotation state
         rotate: 0, // default rotation state
         zscalecontrast: 0.25, // default from ds9
@@ -156,6 +156,7 @@ function loadFitsImages(next) {
         JS9.Preload(fitsScr, {
             scale: 'linear',
             zoom: 'toFit',
+            flip: 'y',
             onload: setDefaultParams
         }, {
             display: uuid
@@ -218,6 +219,7 @@ function JS9Popout(file, opts) {
     var myopts = opts || {};
     myopts.onload = setDefaultParams;
     myopts.id = "Stamp";
+    myopts.flip = "y";
     if (dobj == null) {
 
         lastid = JS9.LoadWindow(file, myopts, "light");
