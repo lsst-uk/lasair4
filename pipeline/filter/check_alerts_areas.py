@@ -52,7 +52,12 @@ def check_alerts_against_area(alertlist, area):
     alertdelist  = alertlist['de']
 
     # here is the crossmatch
-    result = area['moc'].contains(alertralist*u.deg, alertdelist*u.deg)
+    try:
+        result = area['moc'].contains(alertralist*u.deg, alertdelist*u.deg)
+    except Exception as e:
+        log = lasairLogging.getLogger("filter")
+        log.error("ERROR in filter/get_area_hits ar_id=%d: %s" % (area['ar_id'], str(e)))
+        return []
 
     hits = []
     # go through the boolean vector, looking for hits
