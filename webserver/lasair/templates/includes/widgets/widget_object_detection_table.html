@@ -69,9 +69,9 @@
 
 
                             <td>{% if cand.candid > 0 %}
-                                {% if cand.image_urls.Science %}<a href='javascript:JS9Popout("/fits/{{ data.candidates.0.candid }}_cutoutScience");'><small>target</small></a> {% endif %}
-                                {% if cand.image_urls.Template %} <a href='javascript:JS9Popout("/fits/{{ data.candidates.0.candid }}_cutoutTemplate");'><small>ref</small></a> {% endif %}
-                                {% if cand.image_urls.Difference %} <a href='javascript:JS9Popout("/fits/{{ data.candidates.0.candid }}_cutoutDifference");'><small>diff</small></a> {% endif %}
+                                {% if cand.image_urls.Science %}<a href='javascript:JS9Popout("/fits/{{ cand.candid }}_cutoutScience");'><small>target</small></a> {% endif %}
+                                {% if cand.image_urls.Template %} <a href='javascript:JS9Popout("/fits/{{ cand.candid }}_cutoutTemplate");'><small>ref</small></a> {% endif %}
+                                {% if cand.image_urls.Difference %} <a href='javascript:JS9Popout("/fits/{{ cand.candid }}_cutoutDifference");'><small>diff</small></a> {% endif %}
                             {% endif %}</td>
 
                             <td> {% if cand.candid %}<a tabindex="0" class="disable"  data-bs-html="true"  data-bs-container="body" data-bs-toggle="popover" data-bs-trigger="focus" data-bs-placement="top" data-bs-content='<pre><code>{{cand.json}}</code></pre>'>data</a>{% endif %}</td>
