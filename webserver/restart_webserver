@@ -12,6 +12,7 @@ mod_wsgi-express setup-server \
 --group ubuntu \
 --working-directory /home/ubuntu/lasair4/webserver/ \
 --python-path       /home/ubuntu/lasair4/webserver/ \
+--limit-request-body 70000000 \
 --url-alias /lasair/static static \
 --url-alias /media /home/ubuntu/media/ \
 --application-type module lasair.wsgi \
