@@ -11,7 +11,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
             let perPage = 100;
             if (dataTableEl.hasAttribute('data-perPage')) {
-                perPage = dataTableEl.getAttribute('data-perPage');
+                perPage = parseInt(dataTableEl.getAttribute('data-perPage'));
             }
 
             const dataTable = new simpleDatatables.DataTable(dataTableEl, {
