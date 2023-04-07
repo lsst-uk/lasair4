@@ -45,6 +45,7 @@ def batch_statistics():
             break
     except:
         total_count = -1
+        since = -1.0
 
     # statistics for most recent batch
     min_delay = -1
