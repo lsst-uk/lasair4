@@ -125,7 +125,7 @@ def run_filter(args):
         hits = get_area_hits(msl_local, settings.AREA_MOCS)
     except Exception as e:
         log.error("ERROR in filter/get_area_hits: %s" % str(e))
-        sys.exit(0)
+        hits = []
     
     log.info('got %d area hits' % len(hits))
     if len(hits) > 0:
