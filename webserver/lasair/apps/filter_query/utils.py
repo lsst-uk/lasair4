@@ -5,6 +5,7 @@ from lasair.utils import datetime_converter
 import settings
 import os
 import json
+import time
 from datetime import datetime
 from confluent_kafka import admin, Producer
 
