@@ -132,8 +132,8 @@ the Milky Way. We will do this by providing combined access to the alerts, to
 the annual data releases, and to external data sources, and by providing a 
 flexible platform which creative users can adapt to their own ends. Design of 
 Lasair is driven by a detailed Science Requirements Document which is available 
-on request. We will have a review with broader international input if we are 
-selected. Below we explore the issues arising from key science topics.
+on request. 
+Below we explore the issues arising from key science topics.
 
 ### Extragalactic Transients
 Luminous transients outside our own galaxy include supernovae, kilonovae, tidal 
