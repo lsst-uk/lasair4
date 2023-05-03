@@ -78,7 +78,11 @@ def read_watchlist_cache_files(cache_dir):
                 delist   = []
                 radius   = []
                 names    = []
-                for line in open(gfile).readlines():
+                try:
+                    f = open(gfile)
+                except:
+                    continue
+                for line in f.readlines():
                     tok = line.split(',')
                     cone_ids.append(int(tok[0]))
                     ralist.append(float(tok[1]))
