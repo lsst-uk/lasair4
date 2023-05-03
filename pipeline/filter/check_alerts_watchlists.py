@@ -66,7 +66,10 @@ def read_watchlist_cache_files(cache_dir):
 
             # read in the mocs
             if file.startswith('moc'):
-                moclist.append(MOC.from_fits(gfile))
+                try:
+                    moclist.append(MOC.from_fits(gfile))
+                except:
+                    continue
 
             # read in the csv files of watchlist cones
             if file.startswith('watchlist'):
