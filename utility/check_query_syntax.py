@@ -4,7 +4,7 @@ from src import db_connect
 sys.path.append('../webserver/lasair')
 from query_builder import check_query, build_query
 
-def check_query_syntax(mq_id, update=False):
+def check_query_syntax(mq_id, verbose=False, update=False):
     msl = db_connect.remote()
     message = 'checking query %d' % mq_id
     query = 'SELECT selected, conditions, tables FROM myqueries WHERE mq_id=%d'
@@ -22,7 +22,8 @@ def check_query_syntax(mq_id, update=False):
         print(e)
     else:
         real_sql = build_query(s, f, w)
-#        print(real_sql)
+        if verbose:
+            print(real_sql)
     try:
         cursor.execute(real_sql + ' LIMIT 0')
         message += ' --> OK'
@@ -42,7 +43,7 @@ def check_query_syntax(mq_id, update=False):
 if __name__ == "__main__":
     if len(sys.argv) > 1:
         mq_id = int(sys.argv[1])
-        message = check_query_syntax(mq_id, True)
+        message = check_query_syntax(mq_id, verbose=True, update=True)
         print(message)
     else:
         query = 'SELECT mq_id FROM myqueries ORDER BY mq_id'
@@ -50,6 +51,6 @@ if __name__ == "__main__":
         cursor = msl.cursor(buffered=True, dictionary=True)
         cursor.execute(query)
         for row in cursor:
-            message = check_query_syntax(row['mq_id'], False)
+            message = check_query_syntax(row['mq_id'], verbose=False, update=False)
             print(message)
 
