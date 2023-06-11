@@ -28,7 +28,7 @@ SQL filters and code can be made public, shared with a group of colleagues,
 copied, and edited.
 SQL filters can be escalated from static (run on command) to streaming filters, 
 that run whenever new alerts arrive. A broad overview of the Lasair design is 
-given in Figure 1.
+given in the diagram below.
 
 ## How Lasair Works
 Lasair runs in the Somerville computing cloud at the Advanced Computing Facility 
@@ -41,7 +41,7 @@ job, some more compute/data intensive than others, so it is difficult to know a
 priori how much resource should be allocated to each. Our design gives 
 flexibility: each cluster can be grown or reduced according to need. Also, 
 there are various persistent data stores, again, each is driven by a resilient 
-cluster that can be grown or reduced according to need. Figure 1 shows the 
+cluster that can be grown or reduced according to need. The diagram shows the 
 concept: data enters the Kafka system on the left and progresses to the right. 
 The green cluster reads, processes, and puts different data into the Kafka bus; 
 as soon as that starts the yellow cluster pulls and pushes; eventually the 
@@ -55,7 +55,7 @@ computing centre and not controlled by us, but they are in this picture because
 just like the others, they push data into the data storage and may read from 
 Kafka.
 
-The Kafka system is represented by the green nodes in Figure 2 as well as the 
+The Kafka system is represented by the green nodes in the diagram as well as the 
 grey arrow at the top. It is responsible for reading and caching the alert 
 packets from the USA, as well as sending it to the compute nodes and receiving 
 their resulting packets.
@@ -125,6 +125,13 @@ utilising our flexible schema system. Lasair will add new tables and schemas to
 our databases, and build information systems to make it easy for scientists to 
 navigate the deluge of metadata.
 
+## What Lasair is not
+Lasair is built to process transient alerts rapidly and make the key decision: is this an object I want to follow up? LSST alerts will come at very high rate, and Lasair takes advantage of the design of the distribution system: ["Events are sent in rich alert packets to enable standalone classification"](https://simons.berkeley.edu/sites/default/files/docs/9308/bellmlsst180226.pdf). Thus alerts are judged based only on that rich alert packet, without database interaction, leading to a very fast processing rate.
+
+The "rich data packet" means a year of past data about each object (or a month for the ZTF prototype). Note that Lasair has the full light curves -- available through the object web page or API -- but queries and filters are based on these shorter light curves.
+
+We note that the calibrated ZTF data releases are [hosted at Caltech](https://irsa.ipac.caltech.edu/docs/program_interface/ztf_api.html) and the LSST archives will hosted by [LSST:UK Science Platform](https://rsp.lsst.ac.uk/) and [Rubin Science Platform](https://data.lsst.cloud). These resources may be better suited for long-term archival research.
+
 ## Scientific goals of Lasair
 We aim to facilitate all four science themes of LSST within the Lasair 
 platform: Dark Matter and Dark Energy, the Solar System, the Changing Sky, and 
@@ -132,8 +139,8 @@ the Milky Way. We will do this by providing combined access to the alerts, to
 the annual data releases, and to external data sources, and by providing a 
 flexible platform which creative users can adapt to their own ends. Design of 
 Lasair is driven by a detailed Science Requirements Document which is available 
-on request. We will have a review with broader international input if we are 
-selected. Below we explore the issues arising from key science topics.
+on request. 
+Below we explore the issues arising from key science topics.
 
 ### Extragalactic Transients
 Luminous transients outside our own galaxy include supernovae, kilonovae, tidal 
@@ -203,9 +210,9 @@ currently can provide streams of objects matched to known stars (via watch
 lists of $10^6$ objects) and trigger on a particular magnitude variability 
 index. We are working with scientists within TVS in particular to define 
 features that can be measured on the incoming stream and used to provide 
-alerts.  For example, outbursts of AM CVn stars\cite{AMCVn} which are then 
-linked to the binary system's long term lightcurve (SDSS J1240-0159 is a recent 
-example). Lasair-LSST will expand on its current functionality to provide 
+alerts.  For example, outbursts of [AM CVn stars](https://en.wikipedia.org/wiki/AM_Canum_Venaticorum_star) 
+which are then linked to the binary system's long term lightcurve 
+Lasair-LSST will expand on its current functionality to provide 
 seamless cross-links to the data releases within the UK IDAC infrastructure. 
 
 ### Solar System objects
