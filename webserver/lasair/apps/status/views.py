@@ -81,7 +81,7 @@ def status(request, nid):
     statusOrder = ["total_count", "nid", "update_time", "today_ztf", "today_alert", "today_filter_out", "today_filter_ss", "today_filter", "today_candidate", "today_database", "min_delay", "countTNS"]
 
     for k, v in statusSchema.items():
-        if not k in status:
+        if status and not k in status:
             status[k] = ''
 
     statusTable = []

@@ -21,9 +21,18 @@ def check_query_syntax(mq_id, verbose=False, update=False):
     if e:
         print(e)
     else:
+<<<<<<< HEAD
         real_sql = build_query(s, f, w)
         if verbose:
             print(real_sql)
+=======
+        try:
+            real_sql = build_query(s, f, w)
+        except Exception as e:
+            message = 'Query building failed %s\n%s\n%s\n%s\n' % (str(e), s, f, w)
+            return message
+#        print(real_sql)
+>>>>>>> ef6411b7f8519dbf061ab7b667ff23bd076c0d11
     try:
         cursor.execute(real_sql + ' LIMIT 0')
         message += ' --> OK'
@@ -41,10 +50,13 @@ def check_query_syntax(mq_id, verbose=False, update=False):
     return message
 
 if __name__ == "__main__":
+    # if there is a specific query, check it and update it
     if len(sys.argv) > 1:
         mq_id = int(sys.argv[1])
         message = check_query_syntax(mq_id, verbose=True, update=True)
         print(message)
+
+    # if no specific query, just check them all
     else:
         query = 'SELECT mq_id FROM myqueries ORDER BY mq_id'
         msl = db_connect.remote()
