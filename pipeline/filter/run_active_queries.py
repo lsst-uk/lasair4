@@ -181,19 +181,16 @@ def run_query(query, msl, annotator=None, objectId=None):
     cursor = msl.cursor(buffered=True, dictionary=True)
     n = 0
     query_results = []
+    utc = datetime.datetime.utcnow().strftime("%Y-%m-%d %H:%M:%S")
     try:
         cursor.execute(sqlquery_real)
         for record in cursor:
             recorddict = dict(record)
-            utcnow = datetime.datetime.utcnow()
-            recorddict['UTC'] = utcnow.strftime("%Y-%m-%d %H:%M:%S")
+            recorddict['UTC'] = utc
             query_results.append(recorddict)
             n += 1
     except Exception as e:
-        if e.args[0] == 1969:  # https://mariadb.com/kb/en/mariadb-error-codes/
-            error = 'Query %s timed out after 10 seconds, please check it' % topic
-        else:
-            error = "SQL error for %s, please check it: %s" % (topic, str(e))
+        error = "%s UTC: Your streaming query %s didn't run, the error is: %s, please check it, and write to lasair-help@roe.ac.uk if you want help." % (utc, topic, str(e))
         log = lasairLogging.getLogger("filter")
         log.warning(error)
         log.warning(sqlquery_real)
