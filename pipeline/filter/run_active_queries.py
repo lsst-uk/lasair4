@@ -175,8 +175,8 @@ def run_query(query, msl, annotator=None, objectId=None):
         # run the query against main for this specific object that has been annotated
         sqlquery_real = query_for_object(sqlquery_real, objectId)
 
-    # in any case, limit the output
-    sqlquery_real += (' LIMIT %d' % limit)
+    # in any case, 10 second timeout and limit the output
+    sqlquery_real = ('SET STATEMENT max_statement_time=10 FOR %s LIMIT %d' % (sqlquery_real, limit))
 
     cursor = msl.cursor(buffered=True, dictionary=True)
     n = 0
@@ -190,10 +190,16 @@ def run_query(query, msl, annotator=None, objectId=None):
             query_results.append(recorddict)
             n += 1
     except Exception as e:
+        if e.args[0] == 1969:  # https://mariadb.com/kb/en/mariadb-error-codes/
+            error = 'Query %s timed out after 10 seconds, please check it' % topic
+        else:
+            error = "SQL error for %s, please check it: %s" % (topic, str(e))
         log = lasairLogging.getLogger("filter")
-        log.warning("SQL error for %s: %s" % (topic, str(e)))
+        log.warning(error)
         log.warning(sqlquery_real)
+        send_email(email, topic, error)
         return []
+
     return query_results
 
 def dispose_query_results(query, query_results):
@@ -289,7 +295,7 @@ def dispose_email(allrecords, last_email, query):
         log.error('ERROR in filter/run_active_queries: Cannot send email!: %s' % str(e))
         return last_email
 
-def send_email(email, topic, message, message_html):
+def send_email(email, topic, message, message_html=''):
     """send_email.
 
     Args:
@@ -304,7 +310,8 @@ def send_email(email, topic, message, message_html):
     msg['To']      = email
 
     msg.attach(MIMEText(message, 'plain'))
-    msg.attach(MIMEText(message_html, 'html'))
+    if len(message_html) > 0:
+        msg.attach(MIMEText(message_html, 'html'))
     s = smtplib.SMTP('localhost')
     s.sendmail('donotreply@%s' % settings.LASAIR_URL, email, msg.as_string())
     s.quit()
