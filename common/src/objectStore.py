@@ -16,7 +16,7 @@ class objectStore():
             fileroot:
         """
         # make the directories if needed
-        os.system('mkdir -p ' + fileroot)
+#        os.system('mkdir -p ' + fileroot)
         self.fileroot = fileroot
         self.suffix = suffix
         self.double = double
