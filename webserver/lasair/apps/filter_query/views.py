@@ -122,6 +122,7 @@ def filter_query_detail(request, mq_id, action=False):
                 filterQuery.public = 0
 
             # REFRESH STREAM
+            message = ''
             tn = topic_name(request.user.id, filterQuery.name)
             filterQuery.topic_name = tn
             delete_stream_file(request, filterQuery.name)
