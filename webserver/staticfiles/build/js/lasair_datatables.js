@@ -31,13 +31,13 @@ document.addEventListener('DOMContentLoaded', function() {
 
             const headings = dataTable.columns().dt.labels;
 
-            if (headings.includes("objectId")) {
-                const idx = headings.indexOf("objectId");
-                dataTable.columns().sort(idx, "desc")
-            } else if (headings.includes("Created")) {
-                const idx = headings.indexOf("Created");
-                dataTable.columns().sort(idx, "desc")
-            }
+            // if (headings.includes("objectId")) {
+            //     const idx = headings.indexOf("objectId");
+            //     dataTable.columns().sort(idx, "desc")
+            // } else if (headings.includes("Created")) {
+            //     const idx = headings.indexOf("Created");
+            //     dataTable.columns().sort(idx, "desc")
+            // }
             // console.log(dataTable.columns().dt.labels);
 
             if (tableId !== null) {
