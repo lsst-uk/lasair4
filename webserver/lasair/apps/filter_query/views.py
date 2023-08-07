@@ -202,7 +202,7 @@ def filter_query_detail(request, mq_id, action=False):
     else:
         limit = False
 
-    if "order by" in filterQuery.conditions.lower():
+    if "order by" in filterQuery.real_sql.lower():
         sortTable = False
     else:
         sortTable = True
