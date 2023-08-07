@@ -202,6 +202,11 @@ def filter_query_detail(request, mq_id, action=False):
     else:
         limit = False
 
+    if "order by" in filterQuery.lower():
+        sortTable = False
+    else:
+        sortTable = True
+
     return render(request, 'filter_query/filter_query_detail.html', {
         'filterQ': filterQuery,
         'table': table,
@@ -209,7 +214,8 @@ def filter_query_detail(request, mq_id, action=False):
         "schema": schema,
         "form": form,
         "duplicateForm": duplicateForm,
-        'limit': str(limit)
+        'limit': str(limit),
+        'sortTable': sortTable
     })
 
 
