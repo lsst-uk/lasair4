@@ -443,13 +443,19 @@ def filter_query_log(request, topic):
         if k not in tableSchema:
             tableSchema[k] = "custom column"
 
+    if "order by" in filterQuery.conditions.lower():
+        sortTable = False
+    else:
+        sortTable = True
+
     return render(request, 'filter_query/filter_query_detail.html', {
         'filterQ': filterQuery,
         'table': table,
         'count': count,
         "schema": tableSchema,
         "form": form,
-        'limit': None
+        'limit': None,
+        'sortTable': sortTable
     })
 
 
