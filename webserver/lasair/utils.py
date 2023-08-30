@@ -197,6 +197,7 @@ def objjson(objectId, full=False):
         json_formatted_str = json.dumps(cand, indent=2)
         cand['json'] = json_formatted_str[1:-1]
         cand['mjd'] = mjd = float(cand['jd']) - 2400000.5
+        cand['imjd'] = int(mjd)
         cand['since_now'] = mjd - now
         if 'candid' in cand:
             count_all_candidates += 1
@@ -209,7 +210,7 @@ def objjson(objectId, full=False):
             cand['image_urls'] = {}
             for cutoutType in ['Science', 'Template', 'Difference']:
                 candid_cutoutType = '%s_cutout%s' % (candid, cutoutType)
-                filename = image_store.getFileName(candid_cutoutType)
+                filename = image_store.getFileName(candid_cutoutType, int(mjd))
                 if 1 == 1 or os.path.exists(filename):
                     url = filename.replace(
                         '/mnt/cephfs/lasair',
@@ -337,12 +338,12 @@ def string2bytes(str):
     return bytes
 
 
-def fits(request, candid_cutoutType):
+def fits(request, imjd, candid_cutoutType):
     # cutoutType can be cutoutDifference, cutoutTemplate, cutoutScience
 #    image_store = objectStore.objectStore(suffix='fits', fileroot=settings.IMAGEFITS, double=True)
     image_store = objectStore.objectStore(suffix='fits', fileroot=settings.IMAGEFITS)
     try:
-        fitsdata = image_store.getFileObject(candid_cutoutType)
+        fitsdata = image_store.getFileObject(candid_cutoutType, imjd)
     except:
         fitsdata = ''
 
