@@ -171,7 +171,7 @@ def handle_alert(alert, image_store, producer, topic_out, cassandra_session):
 
     # store the fits images
     if image_store:
-        imjd = int(alert_noimages['candidate']['jd'] - 2440000.5)
+        imjd = int(alert_noimages['candidate']['jd'] - 2400000.5)
         if store_images(alert, image_store, candid, imjd) == None:
             log.error('ERROR: in ingest/ingest: Failed to put cutouts in file system')
             return None   # ingest batch failed
