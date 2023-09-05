@@ -79,7 +79,12 @@ tags. Other tables have already been copied into the local database from the
 main SQL database (see Background Services below). After a batch of perhaps 
 10,000 alerts are ingested to the local database, it can now execute the 
 user-made queries and push out results via the public Kafka system – or via 
-email if the user has chosen this option. The tables in the local database are 
+email if the user has chosen this option. **NOTE** User-made queries have a time-out 
+of 10 seconds, so they can't hold up the entire system if they are too resource intensive.
+Usually, however, a user query will execute in a second or less since there are only 10,000
+objects in the local database.
+
+The tables in the local database are 
 then pushed to the main SQL database and replace any earlier information where 
 and object is already known. Once a batch is finished, the local database 
 tables are truncated and a new batch started.
@@ -124,6 +129,13 @@ mechanisms for dynamic cross-match (e.g. the IAU's Transient Name Server) and
 utilising our flexible schema system. Lasair will add new tables and schemas to 
 our databases, and build information systems to make it easy for scientists to 
 navigate the deluge of metadata.
+
+## What Lasair is not
+Lasair is built to process transient alerts rapidly and make the key decision: is this an object I want to follow up? LSST alerts will come at very high rate, and Lasair takes advantage of the design of the distribution system: ["Events are sent in rich alert packets to enable standalone classification"](https://simons.berkeley.edu/sites/default/files/docs/9308/bellmlsst180226.pdf). Thus alerts are judged based only on that rich alert packet, without database interaction, leading to a very fast processing rate.
+
+The "rich data packet" means a year of past data about each object (or a month for the ZTF prototype). Note that Lasair has the full light curves -- available through the object web page or API -- but queries and filters are based on these shorter light curves.
+
+We note that the calibrated ZTF data releases are [hosted at Caltech](https://irsa.ipac.caltech.edu/docs/program_interface/ztf_api.html) and the LSST archives will hosted by [LSST:UK Science Platform](https://rsp.lsst.ac.uk/) and [Rubin Science Platform](https://data.lsst.cloud). These resources may be better suited for long-term archival research.
 
 ## Scientific goals of Lasair
 We aim to facilitate all four science themes of LSST within the Lasair 
