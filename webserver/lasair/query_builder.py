@@ -49,6 +49,7 @@ select_forbidden_word_list = [
     'high_priority', 'straight_join',
     'sql_small_result', 'sql_big_result', 'sql_buffer_result',
     'sql_no_cache', 'sql_calc_found_rows',
+    'sleep',
 ]
 
 
@@ -245,8 +246,7 @@ def build_query(select_expression, from_expression, where_condition):
                 where_clauses.append(where_condition)
 
     # Now we can build the real SQL
-    sql = 'SELECT /*+ MAX_EXECUTION_TIME(%d) */ ' % max_execution_time
-    sql += select_expression
+    sql = 'SELECT ' + select_expression
 
     # FROM these tables
     sql += ' \nFROM ' + ', '.join(from_table_list)
