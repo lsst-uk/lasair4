@@ -1,0 +1,19 @@
+(1) Took the schema file
+https://github.com/ZwickyTransientFacility/ztf-avro-alert/blob/master/schema/fp_hist.avsc
+wrote code to convert to cassandra CREATE TABLE
+
+Change string to ascii, change long to bigint
+
+add in extra objectId attribute that will come from the alert
+
+(2) Put all the sample alerts into kafka
+Fetch https://caltech.box.com/s/09wdqwg3xv6kitq4k8na5qn01gw62pxc
+which is a .tar.gz of 24,000 avro files
+
+each is about 65kbyte including schema
+code avro2kafka_schema.py --> topic forcedphot_schema
+
+also tried without schema, now only 45kbyte each
+code avro2kafka_schemaless.py --> topic forcedphot
+
+
