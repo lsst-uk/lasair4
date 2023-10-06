@@ -29,5 +29,5 @@ CREATE TABLE IF NOT EXISTS forcedphot(
   sigmagnr float,
   chinr float,
   sharpnr float,
-  PRIMARY KEY (objectid)
+  PRIMARY KEY (objectid, jd)
 )

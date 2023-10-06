@@ -16,5 +16,5 @@ for a in fp['fields']:
     if t == 'long':     t = 'bigint'
 
     print('  %s %s,' % (a['name'], t))
-print('  PRIMARY KEY (objectid)')
+print('  PRIMARY KEY (objectid, jd)')
 print(')')
