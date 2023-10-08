@@ -150,7 +150,6 @@ if __name__ == "__main__":
     rname  = args['<resource>']
     rid    = args['<rid>']
     
-    print(args)
     msl = db_connect.remote()
 
     if args['list']:
