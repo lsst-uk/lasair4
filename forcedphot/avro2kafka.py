@@ -20,7 +20,7 @@ conf = {
 }
 p = Producer(conf)
 
-topic='forcedphot_schema'
+topic='fp'
 
 nalert = 0
 for filename in os.listdir(dir):
