@@ -122,7 +122,7 @@ def filter_query_detail(request, mq_id, action=False):
                 filterQuery.public = 0
 
             filterQuery.date_expire = \
-                    datetime.datetime.now() + datetime.timedelta(days=30*settings.ACTIVE_EXPIRE)
+                    datetime.datetime.now() + datetime.timedelta(days=settings.ACTIVE_EXPIRE)
 
             # REFRESH STREAM
             message = ''
@@ -157,7 +157,7 @@ def filter_query_detail(request, mq_id, action=False):
             newFil.public = False
 
         newFil.date_expire = \
-            datetime.datetime.now() + datetime.timedelta(days=30*settings.ACTIVE_EXPIRE)
+            datetime.datetime.now() + datetime.timedelta(days=settings.ACTIVE_EXPIRE)
 
         newFil.save()
         filterQuery = newFil
@@ -385,7 +385,7 @@ def filter_query_create(request, mq_id=False):
                 verb = "created"
 
             filterQuery.date_expire = \
-                datetime.datetime.now() + datetime.timedelta(days=30*settings.ACTIVE_EXPIRE)
+                datetime.datetime.now() + datetime.timedelta(days=settings.ACTIVE_EXPIRE)
 
             filterQuery.save()
 
