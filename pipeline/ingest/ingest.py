@@ -319,7 +319,7 @@ def run_ingest(args):
         # no messages available
         if msg is None:
             end_batch(consumer, producer, ms, nalert, ncandidate, nnoncandidate, nforcedphot)
-            nalert = ncandidate = 0
+            nalert = ncandidate = nnoncandidate = nforcedphot = 0
             log.debug('no more messages ... sleeping %d seconds' % settings.WAIT_TIME)
             sys.stdout.flush()
             time.sleep(settings.WAIT_TIME)
