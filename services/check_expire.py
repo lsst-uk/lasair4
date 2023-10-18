@@ -79,7 +79,7 @@ def send_email(email, message, message_html=''):
     s = smtplib.SMTP('localhost')
     s.sendmail('lasair@lsst.ac.uk', email, msg.as_string())
     s.quit()
-    log('Expiry email sent to %s' % email)
+    log('Email sent to %s' % email)
 
 def list_resources(msl):
     """
@@ -149,7 +149,7 @@ def check_and_action(msl, rname, resource, action, daysAhead, rid=None):
     for row in cursor:
         if row['date_expire'] and row['date_expire'] < timelimit:
             rid = row['id']
-            log('expiry for %s:%s is after %d daysAhead'% (rname, rid, daysAhead))
+            log('expiry for %s:%s is after %d days ahead'% (rname, rid, daysAhead))
             name = '%s %s' % (row['first_name'], row['last_name'])
 
             url      = 'https://%s/%ss/%d/' % (settings.LASAIR_URL, rname, rid)
