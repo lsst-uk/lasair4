@@ -6,8 +6,10 @@ import sys
 import re
 import time
 import json
-sys.path.append('../../common')
-from src import slack_webhook
+#sys.path.append('../../common')
+#from src import slack_webhook
+import slack_webhook
+
 
 delay = 60
 max_delay = 21600
