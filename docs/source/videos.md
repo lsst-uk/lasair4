@@ -18,3 +18,14 @@
 **[How to make a watchmap for Lasair](https://www.youtube.com/watch?v=hoVEeWGOum0)**
 
 * A watchmap is an area of the sky defined by a [MOC](https://cds-astro.github.io/mocpy/). This video shows how to create a watchmap from such a file, and how to build the file. Once you have a watchmap, you can use it in a Lasair filter to select alerts from your favourite area of the sky.
+
+**[Topic and GroupID for a Lasair Kafka Stream](https://youtu.be/HJneKr1EhmY)**
+
+* You can have results of a filter delivered in near-real-time to your machine. 
+This video explains two important concepts: Topic and GroupId
+
+**[The Lasair Marshall Notebook](https://youtu.be/sgH5cQk-TDU)**
+
+* You can browse the output of a filter with the Lasair Marshall Notebook.
+This video shows how it works.
+
