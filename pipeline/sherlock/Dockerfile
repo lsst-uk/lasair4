@@ -8,10 +8,14 @@ RUN apt-get update && apt-get -yq dist-upgrade && apt-get install -yq --no-insta
   python3-dev \
   python3-yaml \
   python3-pip
+
+RUN pip3 install \
+  numpy
+
 RUN pip3 install \
   wheel \
   confluent-kafka==1.7.0 \
-  qub-sherlock==2.2.0
+  qub-sherlock==2.3.0
 
 COPY wrapper.py /
 COPY wrapper_runner.py /
