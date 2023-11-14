@@ -73,7 +73,7 @@ def watchlist_index(request):
             count = len(coneLines)
 
             if count > settings.WATCHLIST_MAX:
-                messages.error(request, f"The watchlist can't contain more than containing {settings.WATCHLIST_MAX} sources. Please reduce the size of your watchlist and try again.")
+                messages.error(request, f"The watchlist can't contain more than {settings.WATCHLIST_MAX} sources. Please reduce the size of your watchlist and try again.")
                 return redirect(f'watchlist_index')
 
             cone_list = []
