@@ -1,9 +1,10 @@
+import settings
 import math
 import sys
 sys.path.append('..')
-import settings
 
-def run_crossmatch(msl, radius, wl_id, batchSize=5000):
+
+def run_crossmatch(msl, radius, wl_id, batchSize=5000, wlMax=False):
     """ Delete all the hits and remake.
     """
 
@@ -23,14 +24,6 @@ def run_crossmatch(msl, radius, wl_id, batchSize=5000):
         dbSettings=dbSettings
     ).connect()
 
-    # TRASH PREVIOUS MATCHES
-    sqlQuery = f"""DELETE FROM watchlist_hits WHERE wl_id={wl_id}"""
-    writequery(
-        log=emptyLogger(),
-        sqlQuery=sqlQuery,
-        dbConn=dbConn
-    )
-
     # GRAB ALL SOURCES IN THE WATCHLIST
     sqlQuery = f"""
         SELECT cone_id, ra,decl, name FROM watchlist_cones WHERE wl_id={wl_id}
@@ -42,6 +35,17 @@ def run_crossmatch(msl, radius, wl_id, batchSize=5000):
     )
     # WATCHLIST COUNT
     n_cones = len(wlCones)
+
+    if wlMax and n_cones > wlMax:
+        return -1, f"A full watchlist match can only be run for watchlists with less than {wlMax} objects."
+
+    # TRASH PREVIOUS MATCHES
+    sqlQuery = f"""DELETE FROM watchlist_hits WHERE wl_id={wl_id}"""
+    writequery(
+        log=emptyLogger(),
+        sqlQuery=sqlQuery,
+        dbConn=dbConn
+    )
 
     total = len(wlCones[1:])
     batches = int(total / batchSize)
@@ -110,8 +114,9 @@ def run_crossmatch(msl, radius, wl_id, batchSize=5000):
             dbSettings=dbSettings
         )
 
-    print("%d cones, %d hits" % (n_cones, n_hits))
-    return n_hits
+    message = f"{n_hits} ZTF objects have been associated with the {n_cones} sources in this watchlist"
+    print(message)
+    return n_hits, message
 
 
 if __name__ == "__main__":
