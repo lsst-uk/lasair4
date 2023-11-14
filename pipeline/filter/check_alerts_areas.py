@@ -33,7 +33,12 @@ def read_area_cache_files(cache_dir):
         except:  continue
 
         gfile = cache_dir + '/' + ar_file
-        moc = MOC.from_fits(gfile)
+#        print(gfile)
+        if 1:
+            moc = MOC.from_fits(gfile)
+#        except:
+#            print('Watchmap %d failed' % ar_id)
+#            continue
         area = {'ar_id':ar_id, 'moc':moc}
         arealist.append(area)
     return arealist
@@ -67,6 +72,7 @@ def check_alerts_against_area(alertlist, area):
                         'ar_id'   :area['ar_id'], 
                         'objectId':alertobjlist[ialert]
                     })
+#    print('%d hits for area %d' % (len(hits), area['ar_id']))
     return hits
 
 def check_alerts_against_areas(alertlist, arealist):
@@ -159,7 +165,3 @@ if __name__ == "__main__":
 
     # can run the area process without the rest of the filter code 
     hits = get_area_hits(msl_local, settings.AREA_MOCS)
-    if hits:
-        for hit in hits: 
-            log.info(hit)
-        insert_area_hits(msl_local, hits)

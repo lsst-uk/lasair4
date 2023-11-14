@@ -55,14 +55,14 @@ def msg_text(message):
                     if k not in ['cutoutDifference', 'cutoutTemplate', 'cutoutScience']}
     return message_text
 
-def store_images(message, store, candid):
+def store_images(message, store, candid, imjd):
     global log
     try:
         for cutoutType in ['cutoutDifference', 'cutoutTemplate', 'cutoutScience']:
             contentgz = message[cutoutType]['stampData']
             content = zlib.decompress(contentgz, 16+zlib.MAX_WBITS)
             filename = '%d_%s' % (candid, cutoutType)
-            store.putObject(filename, content)
+            store.putObject(filename, imjd, content)
         return 0
     except Exception as e:
         log.error('ERROR in ingest/ingest: ', e)
@@ -118,9 +118,15 @@ def insert_cassandra(alert, cassandra_session):
         else:
             detectionCandlist.append(cand)
 
-    if len(detectionCandlist) == 0 and len(nondetectionCandlist) == 0:
+    fplist = []
+    if 'fp_hists' in alert and alert['fp_hists']:
+        for fp in alert['fp_hists']:
+            fp['objectId'] = objectId
+            fplist.append(fp)
+
+    if len(detectionCandlist) == 0 and len(nondetectionCandlist) == 0 and len(fplist) == 0:
         # No point continuing. We have no data.
-        return 0
+        return (0,0,0)
 
     if len(detectionCandlist) > 0:
         # Add the htm16 IDs in bulk. Could have done it above as we iterate through the candidates,
@@ -133,12 +139,15 @@ def insert_cassandra(alert, cassandra_session):
         for i in range(len(detectionCandlist)):
             detectionCandlist[i]['htmid16'] = htm16s[i]
 
-        executeLoad(cassandra_session, settings.CASSANDRA_CANDIDATES, detectionCandlist)
+        executeLoad(cassandra_session, 'candidates', detectionCandlist)
 
     if len(nondetectionCandlist) > 0:
-        executeLoad(cassandra_session, settings.CASSANDRA_NONCANDIDATES, nondetectionCandlist)
+        executeLoad(cassandra_session, 'noncandidates', nondetectionCandlist)
 
-    return len(detectionCandlist)
+    if len(fplist) > 0:
+        executeLoad(cassandra_session, 'forcedphot', fplist)
+
+    return (len(detectionCandlist), len(nondetectionCandlist), len(fplist))
 
 def handle_alert(alert, image_store, producer, topic_out, cassandra_session):
     """handle_alert.
@@ -160,20 +169,22 @@ def handle_alert(alert, image_store, producer, topic_out, cassandra_session):
 
     if not alert_noimages:
         log.error('ERROR:  in ingest/ingest: No json in alert')
-        return None  # ingest batch failed
+        return (0,0,0)  # ingest batch failed
 
     # candidates to cassandra
     try:
-        ncandidate = insert_cassandra(alert_noimages, cassandra_session)
-    except:
-        log.error('ERROR in ingest/ingest: Cassandra insert failed')
-        return None  # ingest batch failed
+        (ncandidate, nnoncandidate, nforcedphot) = \
+            insert_cassandra(alert_noimages, cassandra_session)
+    except Exception as e:
+        log.error('ERROR in ingest/ingest: Cassandra insert failed:%s' % str(e))
+        return (0,0,0)  # ingest batch failed
 
     # store the fits images
     if image_store:
-        if store_images(alert, image_store, candid) == None:
+        imjd = int(alert_noimages['candidate']['jd'] - 2400000.5)
+        if store_images(alert, image_store, candid, imjd) == None:
             log.error('ERROR: in ingest/ingest: Failed to put cutouts in file system')
-            return None   # ingest batch failed
+            return (0,0,0)   # ingest batch failed
 
     # do not put known solar system objects into kafka
 #    ss_mag = alert_noimages['candidate']['ssmagnr']
@@ -189,8 +200,8 @@ def handle_alert(alert, image_store, producer, topic_out, cassandra_session):
             log.error("ERROR in ingest/ingest: Kafka production failed for %s" % topic_out)
             log.error("ERROR:", e)
             sys.stdout.flush()
-            return None   # ingest failed
-    return ncandidate
+            return (0,0,0)   # ingest failed
+    return (ncandidate, nnoncandidate, nforcedphot)
 
 def run_ingest(args):
     """run.
@@ -293,6 +304,8 @@ def run_ingest(args):
 
     nalert = 0        # number not yet send to manage_status
     ncandidate = 0    # number not yet send to manage_status
+    nnoncandidate = 0    # number not yet send to manage_status
+    nforcedphot = 0    # number not yet send to manage_status
     ntotalalert = 0   # number since this program started
     log.info('INGEST starts %s' % now())
 
@@ -305,8 +318,8 @@ def run_ingest(args):
 
         # no messages available
         if msg is None:
-            end_batch(consumer, producer, ms, nalert, ncandidate)
-            nalert = ncandidate = 0
+            end_batch(consumer, producer, ms, nalert, ncandidate, nnoncandidate, nforcedphot)
+            nalert = ncandidate = nnoncandidate = nforcedphot = 0
             log.debug('no more messages ... sleeping %d seconds' % settings.WAIT_TIME)
             sys.stdout.flush()
             time.sleep(settings.WAIT_TIME)
@@ -328,19 +341,22 @@ def run_ingest(args):
                 break
 
             # Apply filter to each alert
-            icandidate = handle_alert(alert, image_store, producer, topic_out, cassandra_session)
+            (icandidate, inoncandidate, iforcedphot) = \
+                handle_alert(alert, image_store, producer, topic_out, cassandra_session)
 
-            if icandidate == None:
+            if ncandidate == None:
                 log.info('Ingestion failed ')
                 return 0
 
             nalert += 1
             ntotalalert += 1
-            ncandidate += icandidate
+            ncandidate    += icandidate
+            nnoncandidate += inoncandidate
+            nforcedphot   += iforcedphot
 
             # every so often commit, flush, and update status
             if nalert >= 250:
-                end_batch(consumer, producer, ms, nalert, ncandidate)
+                end_batch(consumer, producer, ms, nalert, ncandidate, nnoncandidate, nforcedphot)
                 nalert = ncandidate = 0
                 # check for lockfile
                 if not os.path.isfile(settings.LOCKFILE):
@@ -352,7 +368,7 @@ def run_ingest(args):
 
     # if we exit this loop, clean up
     log.info('Shutting down')
-    end_batch(consumer, producer, ms, nalert, ncandidate)
+    end_batch(consumer, producer, ms, nalert, ncandidate, nnoncandidate, nforcedphot)
 
     # shut down kafka consumer
     consumer.close()
@@ -365,11 +381,11 @@ def run_ingest(args):
     if ntotalalert > 0: return 1
     else:               return 0
 
-def end_batch(consumer, producer, ms, nalert, ncandidate):
+def end_batch(consumer, producer, ms, nalert, ncandidate, nnoncandidate, nforcedphot):
     global log
     now = datetime.now()
     date = now.strftime("%Y-%m-%d %H:%M:%S")
-    log.info('%s %d alerts %d candidates' % (date, nalert, ncandidate))
+    log.info('%s %d alerts %d/%d/%d cand/noncand/fp' % (date, nalert, ncandidate, nnoncandidate, nforcedphot))
     # if this is not flushed, it will run out of memory
     if producer is not None:
         producer.flush()
@@ -380,7 +396,8 @@ def end_batch(consumer, producer, ms, nalert, ncandidate):
 
     # update the status page
     nid  = date_nid.nid_now()
-    ms.add({'today_alert':nalert, 'today_candidate':ncandidate}, nid)
+    ms.add({'today_alert':nalert, 'today_candidate':ncandidate, \
+            'today_noncandidate':nnoncandidate, 'today_forcedphot':nforcedphot}, nid)
 
 if __name__ == "__main__":
     lasairLogging.basicConfig(stream=sys.stdout)
