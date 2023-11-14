@@ -5,8 +5,8 @@ def bad_moc_stream(stream):
     try:
         hdu = fits.open(stream)
         header = dict(hdu[1].header)
-    except:
-        return 'Cannot open as a FITS file'
+    except Exception as e:
+        return 'Cannot open as a FITS file %s' % str(e)
     if 'MOCORDER' in header and int(header['MOCORDER']) > 14:
         return 'Bad MOCORDER in MOC file'
     return None
