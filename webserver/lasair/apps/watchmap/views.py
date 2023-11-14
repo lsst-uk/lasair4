@@ -68,6 +68,7 @@ def watchmap_index(request):
             if 'watchmap_file' in request.FILES:
                 fits_stream = (request.FILES['watchmap_file'])
                 fits_message = bad_fits.bad_moc_stream(fits_stream)
+                fits_stream.seek(0)
                 if fits_message is not None:
                     messages.error(request, f'Bad FITS file: {fits_message}')
                     return render(request, 'error.html')
