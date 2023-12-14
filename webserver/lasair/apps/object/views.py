@@ -55,10 +55,19 @@ def object_detail(request, objectId):
     if 'sherlock' in data2:
         data2.pop('sherlock')
 
+    lightcurveHtml, mergedDF = object_difference_lightcurve(data)
+    fplightcurveHtml, mergedDF = object_difference_lightcurve_forcedphot(data)
+    lcData = mergedDF.to_dict('records')
+
+    for c in lcData:
+        print()
+        print(c)
+
     return render(request, 'object/object_detail.html', {
         'data': data,
         'json_data': json.dumps(data2),
         'authenticated': request.user.is_authenticated,
-        'lightcurveHtml': object_difference_lightcurve(data),
-        'fplightcurveHtml': object_difference_lightcurve_forcedphot(data)
+        'lightcurveHtml': lightcurveHtml,
+        'fplightcurveHtml': fplightcurveHtml,
+        'lcData': lcData
     })

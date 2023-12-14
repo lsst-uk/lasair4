@@ -77,7 +77,7 @@ class forcedphot_lightcurve_fetcher(lightcurve_fetcher):
             if full:
                 query = "SELECT * "
             else:
-                query = "SELECT objectid, jd, ranr, decnr, fid, forcediffimflux, forcediffimfluxunc "
+                query = "SELECT objectid, jd, ranr, decnr, fid, forcediffimflux, forcediffimfluxunc, magzpsci "
             query += "from forcedphot where objectId = '%s'" % objectId
             ret = self.session.execute(query)
             candidates = [c for c in ret]
