@@ -57,11 +57,10 @@ def object_detail(request, objectId):
 
     lightcurveHtml, mergedDF = object_difference_lightcurve(data)
     fplightcurveHtml, mergedDF = object_difference_lightcurve_forcedphot(data)
-    lcData = mergedDF.to_dict('records')
-
-    for c in lcData:
-        print()
-        print(c)
+    if mergedDF is not None:
+        lcData = mergedDF.to_dict('records')
+    else:
+        lcData = data["candidates"]
 
     return render(request, 'object/object_detail.html', {
         'data': data,
