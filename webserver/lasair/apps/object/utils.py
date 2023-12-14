@@ -22,7 +22,7 @@ def object_difference_lightcurve(
     ```
     """
     # CREATE DATA FRAME FOR LC
-    forcedDF, unforcedDF = convert_objectdata_to_dataframes(objectData)
+    forcedDF, unforcedDF, mergedDF = convert_objectdata_to_dataframes(objectData)
 
     # FILTER DATA FRAME
     unforcedDF["marker_color"] = "#268bd2"
@@ -188,7 +188,7 @@ def object_difference_lightcurve(
             'responsive': True
         })
 
-    return htmlLightcurve
+    return htmlLightcurve, mergedDF
 
 
 def object_difference_lightcurve_forcedphot(
@@ -207,7 +207,7 @@ def object_difference_lightcurve_forcedphot(
     htmlLightcurve = object_difference_lightcurve_forcedphot(data)
     ```
     """
-    forcedDF, unforcedDF = convert_objectdata_to_dataframes(objectData)
+    forcedDF, unforcedDF, mergedDF = convert_objectdata_to_dataframes(objectData)
 
     if forcedDF is None:
         return None
@@ -243,13 +243,13 @@ def object_difference_lightcurve_forcedphot(
     for data in allDataSets:
         if len(data.index):
             dataType = "Diff Flux"
-            error_y = {'type': 'data', 'array': data["forcediffimfluxunc"]}
+            error_y = {'type': 'data', 'array': data["microjanskyerr"]}
             fig.add_trace(
 
                 go.Scatter(
                     x=data["mjd"],
-                    y=data["forcediffimflux"],
-                    customdata=np.stack((data['utc'], data['forcediffimflux'], data['forcediffimfluxunc']), axis=-1),
+                    y=data["microjansky"],
+                    customdata=np.stack((data['utc'], data['microjansky'], data['microjansky']), axis=-1),
                     error_y=error_y,
                     error_y_thickness=0.7,
                     error_y_color=data["bcolor"].values[0],
@@ -264,7 +264,7 @@ def object_difference_lightcurve_forcedphot(
                     hovertemplate="<b>" + data["name"] + "</b><br>" +
                     "MJD: %{x:.2f}<br>" +
                     "UTC: %{customdata[0]}<br>" +
-                    "Flux: %{customdata[1]:.2f} DN %{customdata[2]:.2f}" +
+                    "Flux: %{customdata[1]:.2f} μJy %{customdata[2]:.2f}" +
                     "<extra></extra>",
                 ),
                 secondary_y=False
@@ -272,7 +272,7 @@ def object_difference_lightcurve_forcedphot(
 
             fig.add_traces(
                 go.Scatter(x=data["utc"],
-                           y=data["forcediffimflux"],
+                           y=data["microjansky"],
                            showlegend=False,
                            opacity=0,
                            hoverinfo='skip',
@@ -306,14 +306,16 @@ def object_difference_lightcurve_forcedphot(
         gridcolor='#F0F0F0',
         gridwidth=1,
         zeroline=False,
-        zerolinewidth=1.5,
-        zerolinecolor='#1F2937',
+        zerolinewidth=3.0,
+        zerolinecolor='rgba(60, 60, 60, 0.4)',
         mirror=True,
         ticks='inside',
-        title="Difference Flux (DN)",
+        title="Difference Flux (μJy)",
         title_font_size=16,
         secondary_y=False
     )
+
+    fig.add_hrect(y0=-100, y1=0, line_width=0, fillcolor="black", opacity=0.1)
 
     # UPDATE PLOT LAYOUT
     fig.update_layout(
@@ -358,7 +360,7 @@ def object_difference_lightcurve_forcedphot(
             'responsive': True
         })
 
-    return htmlLightcurve
+    return htmlLightcurve, mergedDF
 
 
 def get_default_axis_ranges(
@@ -372,12 +374,17 @@ def get_default_axis_ranges(
     - `unforcedDF` -- unforced photometry dataframe    
     """
 
+    mjdMin = unforcedDF.loc[(unforcedDF['candid'] > 0), "mjd"].min()
+    mjdMax = unforcedDF.loc[(unforcedDF['candid'] > 0), "mjd"].max()
+
     if forcedDF is not None:
-        mjdMin = forcedDF.loc[((forcedDF['forcediffimflux'] > 50) & (forcedDF['forcediffimfluxunc'] < 50)), "mjd"].min()
-        mjdMax = forcedDF.loc[((forcedDF['forcediffimflux'] > 50) & (forcedDF['forcediffimfluxunc'] < 50)), "mjd"].max()
-    else:
-        mjdMin = unforcedDF.loc[(unforcedDF['candid'] > 0), "mjd"].min()
-        mjdMax = unforcedDF.loc[(unforcedDF['candid'] > 0), "mjd"].max()
+        mjdMin2 = forcedDF.loc[((forcedDF['forcediffimflux'] > 50) & (forcedDF['forcediffimfluxunc'] < 50)), "mjd"].min()
+        mjdMax2 = forcedDF.loc[((forcedDF['forcediffimflux'] > 50) & (forcedDF['forcediffimfluxunc'] < 50)), "mjd"].max()
+
+        if mjdMin2 < mjdMin:
+            mjdMin = mjdMin2
+        if mjdMax2 > mjdMax:
+            mjdMax = mjdMax2
 
     # SORT BY COLUMN NAME
     discovery = unforcedDF.loc[(unforcedDF['candid'] > 0)].head(1)
@@ -395,9 +402,9 @@ def get_default_axis_ranges(
 
     # DETERMINE SENSIBLE Y-AXIS LIMITS
     if forcedDF is not None:
-        fluxMax = forcedDF.loc[((forcedDF['mjd'] > mjdMin) & (forcedDF['mjd'] < mjdMax)), "forcediffimflux"] + forcedDF.loc[((forcedDF['mjd'] > mjdMin) & (forcedDF['mjd'] < mjdMax)), "forcediffimfluxunc"]
+        fluxMax = forcedDF.loc[((forcedDF['mjd'] > mjdMin) & (forcedDF['mjd'] < mjdMax)), "microjansky"] + forcedDF.loc[((forcedDF['mjd'] > mjdMin) & (forcedDF['mjd'] < mjdMax)), "microjanskyerr"]
         fluxMax = fluxMax.max()
-        fluxMin = forcedDF.loc[((forcedDF['mjd'] > mjdMin) & (forcedDF['mjd'] < mjdMax)), "forcediffimflux"] - forcedDF.loc[((forcedDF['mjd'] > mjdMin) & (forcedDF['mjd'] < mjdMax)), "forcediffimfluxunc"]
+        fluxMin = forcedDF.loc[((forcedDF['mjd'] > mjdMin) & (forcedDF['mjd'] < mjdMax)), "microjansky"] - forcedDF.loc[((forcedDF['mjd'] > mjdMin) & (forcedDF['mjd'] < mjdMax)), "microjanskyerr"]
         fluxMin = fluxMin.min()
 
         yrange = fluxMax - fluxMin
@@ -450,6 +457,13 @@ def convert_objectdata_to_dataframes(
         # SORT BY COLUMN NAME
         forcedDF.sort_values(['mjd'],
                              ascending=[True], inplace=True)
+        # REMOVE NAN VALUES (MAGIC NUMBER -99999)
+        mask = ((forcedDF['procstatus'].astype(int) == 0) & (forcedDF['scisigpix'].astype(float) < 25) & (forcedDF['sciinpseeing'].astype(float) < 4))
+        forcedDF = forcedDF.loc[mask]
+
+        # CONVERT TO μJy
+        forcedDF["microjansky"] = forcedDF['forcediffimflux'] / (np.power(10, 0.4 * (forcedDF['magzpsci'] - 23.9)))
+        forcedDF["microjanskyerr"] = forcedDF['forcediffimfluxunc'] / (np.power(10, 0.4 * (forcedDF['magzpsci'] - 23.9)))
 
     # NORMAL UNFORCED PHOTO
     if len(objectData["candidates"]):
@@ -460,7 +474,12 @@ def convert_objectdata_to_dataframes(
         unforcedDF.sort_values(['mjd'],
                                ascending=[True], inplace=True)
 
-    return forcedDF, unforcedDF
+    # MATCH THE FORCED AND UNFORCED TABLES
+    mergedDF = pd.merge(unforcedDF, forcedDF[['microjansky', 'microjanskyerr', 'jd', 'fid']], how='left', on=['jd', 'fid'])
+    mergedDF = mergedDF.replace({np.nan: None})
+    mergedDF.sort_values(['mjd'], ascending=[False], inplace=True)
+
+    return forcedDF, unforcedDF, mergedDF
 
 # use the tab-trigger below for new function
 # xt-def-function
