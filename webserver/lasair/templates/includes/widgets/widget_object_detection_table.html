@@ -68,7 +68,7 @@
                             {% endif %}</td>
 
 
-                            <td>{% if cand.microjansky %}{{ cand.microjansky|floatformat:3 }} &plusmn; {{ cand.microjanskyerr|floatformat:3 }}{% endif %}</td>
+                            <td>{% if cand.microjansky %}{{ cand.microjansky|floatformat:1 }} &plusmn; {{ cand.microjanskyerr|floatformat:1 }}{% endif %}</td>
 
                             <td>{% if cand.candid > 0 %}
                                 {% if cand.image_urls.Science %}<a href='javascript:JS9Popout("/fits/{{ cand.imjd }}/{{ cand.candid }}_cutoutScience");'><small>target</small></a> {% endif %}
@@ -105,8 +105,8 @@
                             <td>{% if not cand.candid %}<font color="gray" size=-2>{% endif %}{% if cand.fid == 1 %}g{% else %}r{% endif %}{% if not cand.candid %}</font>{% endif %}</td>
                             <td>{{ cand.magpsf|floatformat:3 }}</td>
                             <td>{% if cand.candid %}{{ cand.sigmapsf|floatformat:3 }}{% endif %}</td>
-                            <td>{% if cand.microjansky %}{{ cand.microjansky|floatformat:2 }}{% endif %}</td>
-                            <td>{% if cand.microjanskyerr %}{{ cand.microjanskyerr|floatformat:2 }}{% endif %}</td>
+                            <td>{% if cand.microjansky %}{{ cand.microjansky|floatformat:1 }}{% endif %}</td>
+                            <td>{% if cand.microjanskyerr %}{{ cand.microjanskyerr|floatformat:1 }}{% endif %}</td>
 
                             <td>{% if cand.candid %}{{ cand.isdiffpos|replace:"t|positive"|replace:"f|negative" }}{% else %}<font color="gray" size=-2>limit</font>{% endif %}</td>
 
