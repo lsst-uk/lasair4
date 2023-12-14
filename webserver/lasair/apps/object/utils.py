@@ -210,7 +210,7 @@ def object_difference_lightcurve_forcedphot(
     forcedDF, unforcedDF, mergedDF = convert_objectdata_to_dataframes(objectData)
 
     if forcedDF is None:
-        return None
+        return None, None
 
     # FILTER DATA FRAME
     forcedDF["marker_color"] = "#268bd2"
@@ -475,7 +475,12 @@ def convert_objectdata_to_dataframes(
                                ascending=[True], inplace=True)
 
     # MATCH THE FORCED AND UNFORCED TABLES
-    mergedDF = pd.merge(unforcedDF, forcedDF[['microjansky', 'microjanskyerr', 'jd', 'fid']], how='left', on=['jd', 'fid'])
+    if forcedDF is not None:
+        mergedDF = pd.merge(unforcedDF, forcedDF[['microjansky', 'microjanskyerr', 'jd', 'fid']], how='left', on=['jd', 'fid'])
+    else:
+        mergedDF = unforcedDF
+        mergedDF['microjansky'] = np.nan
+        mergedDF['microjanskyerr'] = np.nan
     mergedDF = mergedDF.replace({np.nan: None})
     mergedDF.sort_values(['mjd'], ascending=[False], inplace=True)
 
