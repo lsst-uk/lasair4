@@ -150,12 +150,12 @@ def object_difference_lightcurve(
         plot_bgcolor='white',
         paper_bgcolor='white',
         height=650,
-        margin_t=100,
+        margin_t=0,
         margin_r=1,
         legend=dict(
             orientation="h",
             yanchor="top",
-            y=-0.3,
+            y=-0.2,
             xanchor="left",
             x=0
         ),
@@ -181,7 +181,7 @@ def object_difference_lightcurve(
 
     htmlLightcurve = fig.to_html(
         config={
-            'displayModeBar': True,
+            'displayModeBar': False,
             'displaylogo': False,
             'modeBarButtonsToRemove': ['select2d', 'lasso2d'],
             'toImageButtonOptions': {'filename': objectData["objectId"] + "_lasair_lc"},
@@ -249,11 +249,12 @@ def object_difference_lightcurve_forcedphot(
                 go.Scatter(
                     x=data["mjd"],
                     y=data["microjansky"],
-                    customdata=np.stack((data['utc'], data['microjansky'], data['microjansky']), axis=-1),
+                    customdata=np.stack((data['utc'], data['microjansky'], data['microjanskyerr']), axis=-1),
                     error_y=error_y,
                     error_y_thickness=0.7,
                     error_y_color=data["bcolor"].values[0],
                     mode='markers',
+                    showlegend=False,
                     marker_size=data["marker_size"].values[0],
                     marker_color=data["marker_color"].values[0],
                     marker_symbol=data["marker_symbol"].values[0],
@@ -264,7 +265,7 @@ def object_difference_lightcurve_forcedphot(
                     hovertemplate="<b>" + data["name"] + "</b><br>" +
                     "MJD: %{x:.2f}<br>" +
                     "UTC: %{customdata[0]}<br>" +
-                    "Flux: %{customdata[1]:.2f} μJy %{customdata[2]:.2f}" +
+                    "Flux: %{customdata[1]:.2f} ± %{customdata[2]:.2f} μJy" +
                     "<extra></extra>",
                 ),
                 secondary_y=False
@@ -283,7 +284,7 @@ def object_difference_lightcurve_forcedphot(
 
     fig.update_xaxes(range=[mjdMin, mjdMax], tickformat='d', tickangle=-55, tickfont_size=14, showline=True, linewidth=1.5, linecolor='#1F2937',
                      gridcolor='#F0F0F0', gridwidth=1,
-                     zeroline=True, zerolinewidth=1.5, zerolinecolor='#1F2937', ticks='inside', title="MJD", title_font_size=16)
+                     zeroline=True, zerolinewidth=1.5, zerolinecolor='#1F2937', ticks='inside', title_font_size=16)
     fig.update_layout(xaxis2={'range': [utcMin, utcMax],
                               'showgrid': False,
                               'anchor': 'y',
@@ -305,9 +306,9 @@ def object_difference_lightcurve_forcedphot(
         linecolor='#1F2937',
         gridcolor='#F0F0F0',
         gridwidth=1,
-        zeroline=False,
+        zeroline=True,
         zerolinewidth=3.0,
-        zerolinecolor='rgba(60, 60, 60, 0.4)',
+        zerolinecolor='rgba(60, 60, 60, 0.8)',
         mirror=True,
         ticks='inside',
         title="Difference Flux (μJy)",
@@ -315,14 +316,13 @@ def object_difference_lightcurve_forcedphot(
         secondary_y=False
     )
 
-    fig.add_hrect(y0=-100, y1=0, line_width=0, fillcolor="black", opacity=0.1)
-
     # UPDATE PLOT LAYOUT
     fig.update_layout(
         plot_bgcolor='white',
         paper_bgcolor='white',
         height=650,
-        margin_t=100,
+        margin_t=0,
+        margin_b=0,
         margin_r=1,
         legend=dict(
             orientation="h",
@@ -353,7 +353,7 @@ def object_difference_lightcurve_forcedphot(
 
     htmlLightcurve = fig.to_html(
         config={
-            'displayModeBar': True,
+            'displayModeBar': False,
             'displaylogo': False,
             'modeBarButtonsToRemove': ['select2d', 'lasso2d'],
             'toImageButtonOptions': {'filename': objectData["objectId"] + "_lasair_lc"},
