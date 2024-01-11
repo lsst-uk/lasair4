@@ -17,7 +17,7 @@ import base64
 from src import db_connect
 from datetime import date
 import settings
-from lasair.lightcurves import lightcurve_fetcher
+from lasair.lightcurves import lightcurve_fetcher, forcedphot_lightcurve_fetcher
 from astropy.time import Time
 sys.path.append('../../common')
 
@@ -190,6 +190,13 @@ def objjson(objectId, full=False):
     candidates = LF.fetch(objectId, full=full)
     LF.close()
 
+    LF = forcedphot_lightcurve_fetcher(cassandra_hosts=settings.CASSANDRA_HEAD)
+    fpcandidates = LF.fetch(objectId, full=full)
+    for cand in fpcandidates:
+        cand['mjd'] = mjd = float(cand['jd']) - 2400000.5
+
+    LF.close()
+
     count_isdiffpos = count_all_candidates = count_noncandidate = 0
     image_store = objectStore.objectStore(suffix='fits', fileroot=settings.IMAGEFITS)
     image_urls = {}
@@ -286,6 +293,7 @@ def objjson(objectId, full=False):
             'count_isdiffneg': count_all_candidates - count_isdiffpos,
             'count_all_candidates': count_all_candidates,
             'count_noncandidate': count_noncandidate,
+            'forcedphot': fpcandidates,
             'sherlock': sherlock,
             'image_urls': image_urls,
             'TNS': TNS, 'message': message}
@@ -340,7 +348,7 @@ def string2bytes(str):
 
 def fits(request, imjd, candid_cutoutType):
     # cutoutType can be cutoutDifference, cutoutTemplate, cutoutScience
-#    image_store = objectStore.objectStore(suffix='fits', fileroot=settings.IMAGEFITS, double=True)
+    #    image_store = objectStore.objectStore(suffix='fits', fileroot=settings.IMAGEFITS, double=True)
     image_store = objectStore.objectStore(suffix='fits', fileroot=settings.IMAGEFITS)
     try:
         fitsdata = image_store.getFileObject(candid_cutoutType, imjd)

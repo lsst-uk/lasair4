@@ -21,7 +21,7 @@
 
             <div class="col-10 col-md-11 px-xl-0">
                 <div>
-                    <h2 class="h5 text-gray-400 mb-0 ps-2">Difference Image Lightcurve{% include "includes/info_tooltip.html" with info="The difference image lightcurve reveals how the transient flux differs over time with respect to the baseline flux found in the reference image at the location of the transient" position="auto" link=docroot|add:"/concepts/lightcurve.html" %}</h2>
+                    <h2 class="h5 text-gray-400 mb-0 ps-2">Difference Image Lightcurves{% include "includes/info_tooltip.html" with info="These difference image lightcurves reveals how the transient flux differs over time with respect to the baseline flux found in the reference image at the location of the transient" position="auto" link=docroot|add:"/concepts/lightcurve.html" %}</h2>
 
                 </div>
             </div>
@@ -32,20 +32,48 @@
         </div>
         <div class="col-12 col-xl-10 pe-xl-5 ps-sm-4">
             <small class="text-gray-500">
-                Access the data from this plot in the <em>ZTF Alert Packet Data</em> table below.
+                Access the data from these plots in the <em>ZTF Alert Packet Data</em> table below. Double click on the plots to see the full lightcurve.
             </small>
         </div>
     </div>
-    <div class="card-body">
+    {% if fplightcurveHtml %}
+        <div class="card-body  pb-0  pt-0">
+
+            <div class="d-flex justify-content-center ms-2">
+                <h4 class="h5 text-gray-400 mb-2 ps-2">Forced{% include "includes/info_tooltip.html" with info="Source photometry calculated by 'forcing' a PSF measurement at the exact location of the object in difference images. Presented in flux-space." position="auto" link=docroot|add:"/concepts/lightcurve.html" %} and Unforced{% include "includes/info_tooltip.html" with info="Photometry collected near the location of the object during difference image processing if a source is detected above a 5𝜎 threshold (less accurate than forced photometry). Presented in magnitude-space." position="auto" link=docroot|add:"/concepts/lightcurve.html" %} Photometry</h2>
+
+            </div>
 
 
-        <div class="w-100 ps-1 pe-1 pb-2">{{ lightcurveHtml|safe }}</div>
-        <div class="d-flex justify-content-end ms-2">
-            <small class="text-gray-500">
-                Learn how to <a href="https://plotly.com/chart-studio-help/zoom-pan-hover-controls/">interact with this plot.</a>
-            </small>
+            <div class="w-100 ps-1 pe-1 pb-2">{{ fplightcurveHtml|safe }}</div>
+
+
+
         </div>
+        <div class="card-body pt-0">
+    {% else %}
+
+        <div class="card-body pt-0">
+            <div class="d-flex justify-content-center ms-2">
+                <h4 class="h5 text-gray-400 mb-2 ps-2">Unforced Photometry{% include "includes/info_tooltip.html" with info="Photometry collected near the location of the object during difference image processing if a source is detected above a 5𝜎 threshold (less accurate than forced photometry)" position="auto" link=docroot|add:"/concepts/lightcurve.html" %}</h2>
+
+            </div>
+
+
+    {% endif %}
+
+
+
+
+
+
+    <div class="w-100 ps-1 pe-1 pb-2">{{ lightcurveHtml|safe }}</div>
+    <div class="d-flex justify-content-end ms-2">
+        <small class="text-gray-500">
+            Learn how to <a href="https://plotly.com/chart-studio-help/zoom-pan-hover-controls/">interact with these plots.</a>
+        </small>
     </div>
+</div>
 </div>
 
 
