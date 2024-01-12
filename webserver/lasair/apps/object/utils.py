@@ -214,6 +214,7 @@ def object_difference_lightcurve_forcedphot(
 
     # FILTER DATA FRAME
     forcedDF["marker_color"] = "#268bd2"
+    forcedDF["bcolor"] = "#268bd2"
     forcedDF["marker_symbol"] = "arrow-bar-down-open"
     forcedDF["marker_size"] = 8
     forcedDF["marker_opacity"] = 0.6
