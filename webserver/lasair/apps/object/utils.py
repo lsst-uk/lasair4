@@ -214,6 +214,7 @@ def object_difference_lightcurve_forcedphot(
 
     # FILTER DATA FRAME
     forcedDF["marker_color"] = "#268bd2"
+    forcedDF["bcolor"] = "#268bd2"
     forcedDF["marker_symbol"] = "arrow-bar-down-open"
     forcedDF["marker_size"] = 8
     forcedDF["marker_opacity"] = 0.6
@@ -464,6 +465,9 @@ def convert_objectdata_to_dataframes(
         # CONVERT TO μJy
         forcedDF["microjansky"] = forcedDF['forcediffimflux'] / (np.power(10, 0.4 * (forcedDF['magzpsci'] - 23.9)))
         forcedDF["microjanskyerr"] = forcedDF['forcediffimfluxunc'] / (np.power(10, 0.4 * (forcedDF['magzpsci'] - 23.9)))
+
+    if len(forcedDF.index) == 0:
+        forcedDF = None
 
     # NORMAL UNFORCED PHOTO
     if len(objectData["candidates"]):
