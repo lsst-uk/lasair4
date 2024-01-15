@@ -198,7 +198,7 @@ def handle_alert(alert, image_store, producer, topic_out, cassandra_session):
             producer.produce(topic_out, json.dumps(alert_noimages))
         except Exception as e:
             log.error("ERROR in ingest/ingest: Kafka production failed for %s" % topic_out)
-            log.error("ERROR:", e)
+            log.error(str(e))
             sys.stdout.flush()
             return (0,0,0)   # ingest failed
     return (ncandidate, nnoncandidate, nforcedphot)
