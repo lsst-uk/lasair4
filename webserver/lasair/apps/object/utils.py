@@ -466,7 +466,7 @@ def convert_objectdata_to_dataframes(
         forcedDF["microjansky"] = forcedDF['forcediffimflux'] / (np.power(10, 0.4 * (forcedDF['magzpsci'] - 23.9)))
         forcedDF["microjanskyerr"] = forcedDF['forcediffimfluxunc'] / (np.power(10, 0.4 * (forcedDF['magzpsci'] - 23.9)))
 
-    if forcedDF and len(forcedDF.index) == 0:
+    if forcedDF is not None and len(forcedDF.index) == 0:
         forcedDF = None
 
     # NORMAL UNFORCED PHOTO
