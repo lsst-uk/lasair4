@@ -5,7 +5,7 @@ adds the Sherlock classification and crossmatches back into the alert and
 republishes on the output topic.
 """
 
-__version__ = "0.6.2"
+__version__ = "0.6.7"
 
 import warnings
 import json
@@ -266,6 +266,7 @@ def produce(conf, log, alerts):
     # set up Kafka
     settings = {
         'bootstrap.servers': conf['broker'],
+        'message.max.bytes': 10000000,
     }
     p = Producer(settings, logger=log)
 
