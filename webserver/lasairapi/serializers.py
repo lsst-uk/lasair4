@@ -327,7 +327,7 @@ class LightcurvesSerializer(serializers.Serializer):
         LF = lightcurve_fetcher(cassandra_hosts=lasair_settings.CASSANDRA_HEAD)
 
         # 2024-01-31 KWS Add the forced photometry
-        FLF = forcedphot_lightcurve_fetcher(cassandra_hosts=settings.CASSANDRA_HEAD)
+        FLF = forcedphot_lightcurve_fetcher(cassandra_hosts=lasair_settings.CASSANDRA_HEAD)
 
         lightcurves = []
         for objectId in olist:
@@ -336,6 +336,7 @@ class LightcurvesSerializer(serializers.Serializer):
             lightcurves.append({'objectId':objectId, 'candidates':candidates, 'forcedphot': fpcandidates})
 
         LF.close()
+        FLF.close()
         return lightcurves
 
 
