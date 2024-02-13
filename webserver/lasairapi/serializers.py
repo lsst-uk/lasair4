@@ -6,7 +6,7 @@ from cassandra.cluster import Cluster
 from lasair.query_builder import check_query, build_query
 from lasair.utils import objjson
 import requests
-from lasair.lightcurves import lightcurve_fetcher
+from lasair.lightcurves import lightcurve_fetcher, forcedphot_lightcurve_fetcher
 from cassandra.query import dict_factory
 from django.db import IntegrityError
 from django.db import connection
@@ -326,12 +326,17 @@ class LightcurvesSerializer(serializers.Serializer):
             # Fetch the lightcurve, either from cassandra or file system
         LF = lightcurve_fetcher(cassandra_hosts=lasair_settings.CASSANDRA_HEAD)
 
+        # 2024-01-31 KWS Add the forced photometry
+        FLF = forcedphot_lightcurve_fetcher(cassandra_hosts=lasair_settings.CASSANDRA_HEAD)
+
         lightcurves = []
         for objectId in olist:
             candidates = LF.fetch(objectId)
-            lightcurves.append({'objectId':objectId, 'candidates':candidates})
+            fpcandidates = FLF.fetch(objectId)
+            lightcurves.append({'objectId':objectId, 'candidates':candidates, 'forcedphot': fpcandidates})
 
         LF.close()
+        FLF.close()
         return lightcurves
 
 
