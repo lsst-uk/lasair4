@@ -110,9 +110,18 @@ def object_difference_lightcurve(
     # DETERMINE SENSIBLE X-AXIS LIMITS
     mjdMin, mjdMax, utcMin, utcMax, fluxMin, fluxMax, magMin, magMax = get_default_axis_ranges(forcedDF, unforcedDF)
 
-    fig.update_xaxes(range=[mjdMin, mjdMax], tickformat='d', tickangle=-55, tickfont_size=14, showline=True, linewidth=1.5, linecolor='#1F2937',
+    if forcedDF is None:
+        title = "MJD"
+        tickfont_size = 14
+        title_font_size = 1
+    else:
+        title = ""
+        tickfont_size = 11
+        title_font_size = 16
+
+    fig.update_xaxes(range=[mjdMin, mjdMax], tickformat='d', tickangle=-55, tickfont_size=tickfont_size, showline=True, linewidth=1.5, linecolor='#1F2937',
                      gridcolor='#F0F0F0', gridwidth=1,
-                     zeroline=True, zerolinewidth=1.5, zerolinecolor='#1F2937', ticks='inside', title="MJD", title_font_size=16)
+                     zeroline=True, zerolinewidth=1.5, zerolinecolor='#1F2937', ticks='inside', title=title, title_font_size=title_font_size)
     fig.update_layout(xaxis2={'range': [utcMin, utcMax],
                               'showgrid': False,
                               'anchor': 'y',
@@ -149,15 +158,19 @@ def object_difference_lightcurve(
     fig.update_layout(
         plot_bgcolor='white',
         paper_bgcolor='white',
-        height=650,
+        height=550,
         margin_t=0,
+        margin_b=0,
         margin_r=1,
         legend=dict(
-            orientation="h",
+            orientation="v",
             yanchor="top",
-            y=-0.2,
+            y=1.0,
             xanchor="left",
-            x=0
+            x=0,
+            bgcolor="#E6E5E5",
+            borderwidth=4,
+            bordercolor="#E6E5E5",
         ),
         hoverlabel=dict(
             font_color="white",
@@ -178,6 +191,14 @@ def object_difference_lightcurve(
         text=["Discovery Epoch"],
         textposition="middle right"
     ))
+
+    fig.update_layout(
+        title=dict(text="Standard Photometry Magnitudes", font=dict(size=20), y=0.85,
+                   x=0.5,
+                   xanchor='center',
+                   yanchor='top',
+                   font_color="#657b83",)
+    )
 
     htmlLightcurve = fig.to_html(
         config={
@@ -255,7 +276,7 @@ def object_difference_lightcurve_forcedphot(
                     error_y_thickness=0.7,
                     error_y_color=data["bcolor"].values[0],
                     mode='markers',
-                    showlegend=False,
+                    showlegend=True,
                     marker_size=data["marker_size"].values[0],
                     marker_color=data["marker_color"].values[0],
                     marker_symbol=data["marker_symbol"].values[0],
@@ -285,14 +306,14 @@ def object_difference_lightcurve_forcedphot(
 
     fig.update_xaxes(range=[mjdMin, mjdMax], tickformat='d', tickangle=-55, tickfont_size=14, showline=True, linewidth=1.5, linecolor='#1F2937',
                      gridcolor='#F0F0F0', gridwidth=1,
-                     zeroline=True, zerolinewidth=1.5, zerolinecolor='#1F2937', ticks='inside', title_font_size=16)
+                     zeroline=True, zerolinewidth=1.5, zerolinecolor='#1F2937', ticks='inside', title="MJD", title_font_size=16)
     fig.update_layout(xaxis2={'range': [utcMin, utcMax],
                               'showgrid': False,
                               'anchor': 'y',
                               'overlaying': 'x',
                               'side': 'top',
                               'tickangle': -55,
-                              'tickfont_size': 14,
+                              'tickfont_size': 11,
                               'showline': True,
                               'linewidth': 1.5,
                               'linecolor': '#1F2937'})
@@ -321,16 +342,19 @@ def object_difference_lightcurve_forcedphot(
     fig.update_layout(
         plot_bgcolor='white',
         paper_bgcolor='white',
-        height=650,
+        height=550,
         margin_t=0,
         margin_b=0,
         margin_r=1,
         legend=dict(
-            orientation="h",
+            orientation="v",
             yanchor="top",
-            y=-0.3,
+            y=1.0,
             xanchor="left",
-            x=0
+            x=0,
+            bgcolor="#E6E5E5",
+            borderwidth=4,
+            bordercolor="#E6E5E5",
         ),
         hoverlabel=dict(
             font_color="white",
@@ -351,6 +375,14 @@ def object_difference_lightcurve_forcedphot(
         text=["Discovery Epoch"],
         textposition="middle right"
     ))
+
+    fig.update_layout(
+        title=dict(text="Forced Photometry Flux", font=dict(size=20), y=0.87,
+                   x=0.5,
+                   xanchor='center',
+                   yanchor='top',
+                   font_color="#657b83",)
+    )
 
     htmlLightcurve = fig.to_html(
         config={
