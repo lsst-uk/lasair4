@@ -158,7 +158,7 @@ def object_difference_lightcurve(
     fig.update_layout(
         plot_bgcolor='white',
         paper_bgcolor='white',
-        height=550,
+        height=450,
         margin_t=0,
         margin_b=0,
         margin_r=1,
@@ -193,7 +193,7 @@ def object_difference_lightcurve(
     ))
 
     fig.update_layout(
-        title=dict(text="Standard Photometry Magnitudes", font=dict(size=20), y=0.85,
+        title=dict(text="Standard Photometry Magnitudes", font=dict(size=20), y=0.8,
                    x=0.5,
                    xanchor='center',
                    yanchor='top',
@@ -342,7 +342,7 @@ def object_difference_lightcurve_forcedphot(
     fig.update_layout(
         plot_bgcolor='white',
         paper_bgcolor='white',
-        height=550,
+        height=450,
         margin_t=0,
         margin_b=0,
         margin_r=1,
@@ -377,7 +377,7 @@ def object_difference_lightcurve_forcedphot(
     ))
 
     fig.update_layout(
-        title=dict(text="Forced Photometry Flux", font=dict(size=20), y=0.87,
+        title=dict(text="Forced Photometry Flux", font=dict(size=20), y=0.85,
                    x=0.5,
                    xanchor='center',
                    yanchor='top',
