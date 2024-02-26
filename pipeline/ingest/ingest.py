@@ -316,6 +316,9 @@ def run_ingest(args):
     while ntotalalert < maxalert:
 
         msg = consumer.poll(timeout=5)
+        if msg.error():
+            log.error('ERROR in ingest/poll: ' +  str(msg.error()))
+            break
 
         # no messages available
         if msg is None:
@@ -331,7 +334,7 @@ def run_ingest(args):
             bytes_io = io.BytesIO(msg.value())
             msg = fastavro.reader(bytes_io)
         except:
-            log.error('ERROR in ingest/ingest: ', str(msg.value()))
+            log.error('ERROR in ingest/ingest: ' + str(msg.value()))
             break
 
         for alert in msg:
