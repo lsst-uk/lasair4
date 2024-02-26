@@ -4,6 +4,9 @@ import plotly.graph_objects as go
 import math
 import numpy as np
 
+filterNames  = ['g', 'r']
+filterColors = ['#859900', '#dc322f']
+filterFids   = [1, 2]
 
 def object_difference_lightcurve(
     objectData
@@ -31,10 +34,10 @@ def object_difference_lightcurve(
     unforcedDF["marker_opacity"] = 0.6
     unforcedDF["name"] = "anon"
     symbol_sequence = ["arrow-bar-down-open", "circle"]
-    unforcedDF.loc[(unforcedDF['fid'] == 1), "marker_color"] = "#859900"
-    unforcedDF.loc[(unforcedDF['fid'] == 1), "bcolor"] = "#606e03"
-    unforcedDF.loc[(unforcedDF['fid'] == 2), "marker_color"] = "#dc322f"
-    unforcedDF.loc[(unforcedDF['fid'] == 2), "bcolor"] = "#b01f1c"
+    for color,fid in zip(filterColors, filterFids):
+        unforcedDF.loc[(unforcedDF['fid'] == fid), "marker_color"] = color
+        unforcedDF.loc[(unforcedDF['fid'] == fid), "bcolor"] = color
+
     unforcedDF.loc[(unforcedDF['candid'] > 0), "marker_symbol"] = "circle-open"
     unforcedDF.loc[((unforcedDF['candid'] > 0) & (unforcedDF['isdiffpos'].isin([1, 't']))), "marker_symbol"] = "circle"
     unforcedDF.loc[(unforcedDF['candid'] > 0), "marker_size"] = 10
@@ -43,23 +46,21 @@ def object_difference_lightcurve(
     discovery = unforcedDF.loc[(unforcedDF['candid'] > 0)].head(1)
 
     # GENERATE THE DATASETS
-    gBandData = unforcedDF.loc[(unforcedDF['fid'] == 1)]
-    rBandData = unforcedDF.loc[(unforcedDF['fid'] == 2)]
-    rBandDetections = rBandData.loc[(rBandData['candid'] > 0)]
-    rBandNonDetections = rBandData.loc[~(rBandData['candid'] > 0)]
-    rBandNonDetections["name"] = "r-band limiting mag"
-    gBandDetections = gBandData.loc[(gBandData['candid'] > 0)]
-    gBandNonDetections = gBandData.loc[~(gBandData['candid'] > 0)]
-    gBandNonDetections["name"] = "g-band limiting mag"
-    rBandDetectionsPos = rBandDetections.loc[(rBandDetections['isdiffpos'].isin([1, 't']))]
-    rBandDetectionsNeg = rBandDetections.loc[~(rBandDetections['isdiffpos'].isin([1, 't']))]
-    gBandDetectionsPos = gBandDetections.loc[(gBandDetections['isdiffpos'].isin([1, 't']))]
-    gBandDetectionsNeg = gBandDetections.loc[~(gBandDetections['isdiffpos'].isin([1, 't']))]
-    rBandDetectionsPos["name"] = "r-band detection"
-    rBandDetectionsNeg["name"] = "r-band neg. flux detection"
-    gBandDetectionsPos["name"] = "g-band detection"
-    gBandDetectionsNeg["name"] = "g-band neg. flux detection"
-    allDataSets = [rBandNonDetections, rBandDetectionsPos, rBandDetectionsNeg, gBandNonDetections, gBandDetectionsPos, gBandDetectionsNeg]
+    allDataSets = []
+
+    for filt,fid in zip(filterNames, filterFids):
+        BandData = unforcedDF.loc[(unforcedDF['fid'] == fid)]
+        BandDetections = BandData.loc[(BandData['candid'] > 0)]
+        BandNonDetections = BandData.loc[~(BandData['candid'] > 0)]
+        BandNonDetections["name"] = filt + "-band limiting mag"
+        BandDetectionsPos = BandDetections.loc[(BandDetections['isdiffpos'].isin([1, 't']))]
+        BandDetectionsNeg = BandDetections.loc[~(BandDetections['isdiffpos'].isin([1, 't']))]
+        BandDetectionsPos["name"] = filt + "-band detection"
+        BandDetectionsNeg["name"] = filt + "-band neg. flux detection"
+
+        allDataSets.append(BandNonDetections)
+        allDataSets.append(BandDetectionsPos)
+        allDataSets.append(BandDetectionsNeg)
 
     # START TO PLOT
     from plotly.subplots import make_subplots
@@ -110,9 +111,18 @@ def object_difference_lightcurve(
     # DETERMINE SENSIBLE X-AXIS LIMITS
     mjdMin, mjdMax, utcMin, utcMax, fluxMin, fluxMax, magMin, magMax = get_default_axis_ranges(forcedDF, unforcedDF)
 
-    fig.update_xaxes(range=[mjdMin, mjdMax], tickformat='d', tickangle=-55, tickfont_size=14, showline=True, linewidth=1.5, linecolor='#1F2937',
+    if forcedDF is None:
+        title = "MJD"
+        tickfont_size = 14
+        title_font_size = 1
+    else:
+        title = ""
+        tickfont_size = 11
+        title_font_size = 16
+
+    fig.update_xaxes(range=[mjdMin, mjdMax], tickformat='d', tickangle=-55, tickfont_size=tickfont_size, showline=True, linewidth=1.5, linecolor='#1F2937',
                      gridcolor='#F0F0F0', gridwidth=1,
-                     zeroline=True, zerolinewidth=1.5, zerolinecolor='#1F2937', ticks='inside', title="MJD", title_font_size=16)
+                     zeroline=True, zerolinewidth=1.5, zerolinecolor='#1F2937', ticks='inside', title=title, title_font_size=title_font_size)
     fig.update_layout(xaxis2={'range': [utcMin, utcMax],
                               'showgrid': False,
                               'anchor': 'y',
@@ -149,15 +159,19 @@ def object_difference_lightcurve(
     fig.update_layout(
         plot_bgcolor='white',
         paper_bgcolor='white',
-        height=650,
+        height=450,
         margin_t=0,
+        margin_b=0,
         margin_r=1,
         legend=dict(
-            orientation="h",
+            orientation="v",
             yanchor="top",
-            y=-0.2,
+            y=1.0,
             xanchor="left",
-            x=0
+            x=0,
+            bgcolor="#E6E5E5",
+            borderwidth=4,
+            bordercolor="#E6E5E5",
         ),
         hoverlabel=dict(
             font_color="white",
@@ -178,6 +192,14 @@ def object_difference_lightcurve(
         text=["Discovery Epoch"],
         textposition="middle right"
     ))
+
+    fig.update_layout(
+        title=dict(text="Standard Photometry Magnitudes", font=dict(size=20), y=0.8,
+                   x=0.5,
+                   xanchor='center',
+                   yanchor='top',
+                   font_color="#657b83",)
+    )
 
     htmlLightcurve = fig.to_html(
         config={
@@ -220,21 +242,21 @@ def object_difference_lightcurve_forcedphot(
     forcedDF["marker_opacity"] = 0.6
     forcedDF["name"] = "anon"
     symbol_sequence = ["arrow-bar-down-open", "circle"]
-    forcedDF.loc[(forcedDF['fid'] == 1), "marker_color"] = "#859900"
-    forcedDF.loc[(forcedDF['fid'] == 1), "bcolor"] = "#606e03"
-    forcedDF.loc[(forcedDF['fid'] == 2), "marker_color"] = "#dc322f"
-    forcedDF.loc[(forcedDF['fid'] == 2), "bcolor"] = "#b01f1c"
+    for color,fid in zip(filterColors, filterFids):
+        forcedDF.loc[(forcedDF['fid'] == fid), "marker_color"] = color
+        forcedDF.loc[(forcedDF['fid'] == fid), "bcolor"] = color
+
     forcedDF["marker_symbol"] = "circle"
     forcedDF["marker_size"] = 10
 
     discovery = unforcedDF.loc[(unforcedDF['candid'] > 0)].head(1)
 
     # GENERATE THE DATASETS
-    gBandDetections = forcedDF.loc[(forcedDF['fid'] == 1)]
-    rBandDetections = forcedDF.loc[(forcedDF['fid'] == 2)]
-    gBandDetections["name"] = "g-band detection"
-    rBandDetections["name"] = "r-band detection"
-    allDataSets = [gBandDetections, rBandDetections]
+    allDataSets = []
+    for filt,fid in zip(filterNames, filterFids):
+        BandDetections = forcedDF.loc[(forcedDF['fid'] == fid)]
+        BandDetections["name"] = filt + "-band detection"
+        allDataSets.append(BandDetections)
 
     # START TO PLOT
     from plotly.subplots import make_subplots
@@ -255,7 +277,7 @@ def object_difference_lightcurve_forcedphot(
                     error_y_thickness=0.7,
                     error_y_color=data["bcolor"].values[0],
                     mode='markers',
-                    showlegend=False,
+                    showlegend=True,
                     marker_size=data["marker_size"].values[0],
                     marker_color=data["marker_color"].values[0],
                     marker_symbol=data["marker_symbol"].values[0],
@@ -285,14 +307,14 @@ def object_difference_lightcurve_forcedphot(
 
     fig.update_xaxes(range=[mjdMin, mjdMax], tickformat='d', tickangle=-55, tickfont_size=14, showline=True, linewidth=1.5, linecolor='#1F2937',
                      gridcolor='#F0F0F0', gridwidth=1,
-                     zeroline=True, zerolinewidth=1.5, zerolinecolor='#1F2937', ticks='inside', title_font_size=16)
+                     zeroline=True, zerolinewidth=1.5, zerolinecolor='#1F2937', ticks='inside', title="MJD", title_font_size=16)
     fig.update_layout(xaxis2={'range': [utcMin, utcMax],
                               'showgrid': False,
                               'anchor': 'y',
                               'overlaying': 'x',
                               'side': 'top',
                               'tickangle': -55,
-                              'tickfont_size': 14,
+                              'tickfont_size': 11,
                               'showline': True,
                               'linewidth': 1.5,
                               'linecolor': '#1F2937'})
@@ -321,16 +343,19 @@ def object_difference_lightcurve_forcedphot(
     fig.update_layout(
         plot_bgcolor='white',
         paper_bgcolor='white',
-        height=650,
+        height=450,
         margin_t=0,
         margin_b=0,
         margin_r=1,
         legend=dict(
-            orientation="h",
+            orientation="v",
             yanchor="top",
-            y=-0.3,
+            y=1.0,
             xanchor="left",
-            x=0
+            x=0,
+            bgcolor="#E6E5E5",
+            borderwidth=4,
+            bordercolor="#E6E5E5",
         ),
         hoverlabel=dict(
             font_color="white",
@@ -351,6 +376,14 @@ def object_difference_lightcurve_forcedphot(
         text=["Discovery Epoch"],
         textposition="middle right"
     ))
+
+    fig.update_layout(
+        title=dict(text="Forced Photometry Flux", font=dict(size=20), y=0.85,
+                   x=0.5,
+                   xanchor='center',
+                   yanchor='top',
+                   font_color="#657b83",)
+    )
 
     htmlLightcurve = fig.to_html(
         config={
