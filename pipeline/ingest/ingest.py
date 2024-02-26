@@ -331,7 +331,7 @@ def run_ingest(args):
             bytes_io = io.BytesIO(msg.value())
             msg = fastavro.reader(bytes_io)
         except:
-            log.error('ERROR in ingest/ingest: ', msg.value())
+            log.error('ERROR in ingest/ingest: ', str(msg.value()))
             break
 
         for alert in msg:
