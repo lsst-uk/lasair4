@@ -10,7 +10,7 @@ The Lasair API uses either HTTP GET or POST. Arguments can be passed in the quer
 The examples below show how to drive the API with either GET URL, POST curl or python with the 'lasair' package. The URL should be pasted into a web browser. The curl script pasted into a terminal window, and the python code copied into a file and executed as a python program.
 
 #### Sample Notebooks
-There is an [accompanying set of jupyter notebooks](../python-notebooks.html)
+There is an [accompanying set of jupyter notebooks](python-notebooks.html)
  that show how to use the API.
 
 #### Throttling of API Usage
