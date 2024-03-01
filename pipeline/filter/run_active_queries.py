@@ -176,7 +176,7 @@ def run_query(query, msl, annotator=None, objectId=None):
         sqlquery_real = query_for_object(sqlquery_real, objectId)
 
     # in any case, 10 second timeout and limit the output
-    sqlquery_real = ('SET STATEMENT max_statement_time=10 FOR %s LIMIT %d' % (sqlquery_real, limit))
+    sqlquery_real = ('SET STATEMENT max_statement_time=%d FOR %s LIMIT %d' % (settings.MAX_STATEMENT_TIME, sqlquery_real, limit))
 
     cursor = msl.cursor(buffered=True, dictionary=True)
     n = 0
@@ -303,14 +303,14 @@ def send_email(email, topic, message, message_html=''):
     msg = MIMEMultipart('alternative')
 
     msg['Subject'] = 'Lasair query ' + topic
-    msg['From']    = 'donotreply@%s' % settings.LASAIR_URL
+    msg['From']    = 'lasair@lsst.ac.uk'
     msg['To']      = email
 
     msg.attach(MIMEText(message, 'plain'))
     if len(message_html) > 0:
         msg.attach(MIMEText(message_html, 'html'))
     s = smtplib.SMTP('localhost')
-    s.sendmail('donotreply@%s' % settings.LASAIR_URL, email, msg.as_string())
+    s.sendmail('lasair@lsst.ac.uk', email, msg.as_string())
     s.quit()
 
 def dispose_kafka(query_results, topic):
