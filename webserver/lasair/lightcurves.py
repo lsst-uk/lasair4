@@ -51,7 +51,7 @@ class lightcurve_fetcher():
                 candidates.append(cand)
             return candidates
         else:
-#            store = objectStore(suffix='json', fileroot=self.fileroot, double=True)
+            #            store = objectStore(suffix='json', fileroot=self.fileroot, double=True)
             store = objectStore(suffix='json', fileroot=self.fileroot)
             lc = store.getObject(objectId)
 
@@ -63,12 +63,25 @@ class lightcurve_fetcher():
                 candidates = candlist['candidates']
                 return candidates
             except:
-                print(lc)
                 raise lightcurve_fetcher_error('Cannot parse json for object %s' % objectId)
 
     def close(self):
         if self.session:
             self.cluster.shutdown()
+
+
+class forcedphot_lightcurve_fetcher(lightcurve_fetcher):
+
+    def fetch(self, objectId, full=False):
+        if self.using_cassandra:
+            if full:
+                query = "SELECT * "
+            else:
+                query = "SELECT objectid, jd, ranr, decnr, fid, forcediffimflux, forcediffimfluxunc, magzpsci "
+            query += "from forcedphot where objectId = '%s'" % objectId
+            ret = self.session.execute(query)
+            candidates = [c for c in ret]
+            return candidates
 
 
 if __name__ == "__main__":

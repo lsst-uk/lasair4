@@ -198,7 +198,7 @@ def handle_alert(alert, image_store, producer, topic_out, cassandra_session):
             producer.produce(topic_out, json.dumps(alert_noimages))
         except Exception as e:
             log.error("ERROR in ingest/ingest: Kafka production failed for %s" % topic_out)
-            log.error("ERROR:", e)
+            log.error(str(e))
             sys.stdout.flush()
             return (0,0,0)   # ingest failed
     return (ncandidate, nnoncandidate, nforcedphot)
@@ -298,6 +298,7 @@ def run_ingest(args):
     producer_conf = {
         'bootstrap.servers': '%s' % settings.KAFKA_SERVER,
         'client.id': 'client-1',
+        'message.max.bytes': 10000000,
     }
     producer = Producer(producer_conf)
     log.info('Producing to   %s' % settings.KAFKA_SERVER)
@@ -330,7 +331,7 @@ def run_ingest(args):
             bytes_io = io.BytesIO(msg.value())
             msg = fastavro.reader(bytes_io)
         except:
-            log.error('ERROR in ingest/ingest: ', msg.value())
+            log.error('ERROR in ingest/ingest: ', str(msg.value()))
             break
 
         for alert in msg:
