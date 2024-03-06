@@ -316,9 +316,6 @@ def run_ingest(args):
     while ntotalalert < maxalert:
 
         msg = consumer.poll(timeout=5)
-        if msg.error():
-            log.error('ERROR in ingest/poll: ' +  str(msg.error()))
-            break
 
         # no messages available
         if msg is None:
@@ -326,6 +323,12 @@ def run_ingest(args):
             nalert = ncandidate = nnoncandidate = nforcedphot = 0
             log.debug('no more messages ... sleeping %d seconds' % settings.WAIT_TIME)
             sys.stdout.flush()
+            time.sleep(settings.WAIT_TIME)
+            continue
+
+        if msg.error():
+            # lets hope its just a glitch and the ingest can start again in a few minutes
+            log.error('ERROR in ingest/poll: ' +  str(msg.error()))
             time.sleep(settings.WAIT_TIME)
             continue
 
