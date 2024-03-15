@@ -232,7 +232,7 @@ is [shown here](ZTF23aabplmy.html).
 
 ### <a name="lightcurves"></a>/api/lightcurves/
 
-This method returns simple lightcurves for a number of objects. **NOTE:** these are difference magnitudes from a reference source, not apparent magnitudes. See [this python code](/lasair/static/mag.py) to convert the quantities below to apparent magnitude. Each lightcurve is a sequence of detections, or _candidates_, each of which has the quantities:
+This method returns simple lightcurves for a number of objects. **NOTE:** these are difference magnitudes from a reference source, not apparent magnitudes. See [this python code](https://raw.githubusercontent.com/lsst-uk/lasair4/main/webserver/static/files/mag.py) to convert the quantities below to apparent magnitude. Each lightcurve is a sequence of detections, or _candidates_, each of which has the quantities:
 
 *   `candid`: the candidate ID for the detection
 *   `fid`: The filter ID for the detection (1 = g and 2 = r)
