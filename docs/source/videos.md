@@ -1,7 +1,10 @@
 ## Videos
-**[Lasair introduction and object page](https://www.youtube.com/watch?v=CKunfN98AO0)**
 
-* The front page of Lasair, and all the goodies to be found on the page of a specific astronomical object.
+**Lasair introduction and object page**
+
+The front page of Lasair, and all the goodies to be found on the page of a specific astronomical object.
+
+<iframe width="560" height="315" src="https://www.youtube.com/embed/CKunfN98AO0?si=nustwSzIEvlfjC-1" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
 
 **[How to get a Lasair account](https://www.youtube.com/watch?v=ekjl5DpLV_Q)**
 
