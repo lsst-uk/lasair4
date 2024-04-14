@@ -47,8 +47,8 @@ def make_lc_annotation(record):
 conf = {
     'bootstrap.servers': settings.ALERCE_KAFKA,
     'group.id'         : settings.ALERCE_GROUP_ID,
-    'security.protocol': 'SASL_PLAINTEXT',
-    'sasl.mechanism'   : 'SCRAM-SHA-256',
+    'security.protocol': 'SASL_SSL',
+    'sasl.mechanism'   : 'SCRAM-SHA-512',
     'sasl.username'    : 'lasair',
     'sasl.password'    : settings.ALERCE_PASSWORD,
     'auto.offset.reset': 'earliest',
@@ -73,14 +73,18 @@ else:
         print('Unknown classifier, quitting')
         sys.exit()
 
-    L = lasair.lasair_client(settings.API_TOKEN, endpoint='https://lasair-ztf.lsst.ac.uk/api')
-#    L = lasair.lasair_client(settings.API_TOKEN)
+    L = lasair.lasair_client(settings.API_TOKEN, endpoint='https://' + settings.LASAIR_URL + '/api')
 
     streamReader.subscribe([topic])
     while 1:
         msg = streamReader.poll(timeout=5)
         if msg == None: 
             break
+        if msg.error():
+            print('ERROR in ingest/poll: ' +  str(msg.error()))
+            break
+        print('message:', msg.value())
+        sys.exit()
         fo = io.BytesIO(msg.value())
         for record in reader(fo):
             r = make_annotation(record)
