@@ -98,7 +98,10 @@ class ObjectsSerializer(serializers.Serializer):
 
         result = []
         for objectId in olist:
-            result.append(objjson(objectId))
+            try:
+                result.append(objjson(objectId))
+            except Exception as e:
+                result.append({'error': str(e)})
         return result
 
 
@@ -331,9 +334,12 @@ class LightcurvesSerializer(serializers.Serializer):
 
         lightcurves = []
         for objectId in olist:
-            candidates = LF.fetch(objectId)
-            fpcandidates = FLF.fetch(objectId)
-            lightcurves.append({'objectId':objectId, 'candidates':candidates, 'forcedphot': fpcandidates})
+            try:
+                candidates = LF.fetch(objectId)
+                fpcandidates = FLF.fetch(objectId)
+                lightcurves.append({'objectId':objectId, 'candidates':candidates, 'forcedphot': fpcandidates})
+            except Exception as e:
+                lightcurves.append({'error': str(e)})
 
         LF.close()
         FLF.close()
