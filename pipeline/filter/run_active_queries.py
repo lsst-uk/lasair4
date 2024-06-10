@@ -190,7 +190,7 @@ def run_query(query, msl, annotator=None, objectId=None):
             query_results.append(recorddict)
             n += 1
     except Exception as e:
-        error = "%s UTC: Your streaming query %s didn't run, the error is: %s, please check it, and write to lasair-help@roe.ac.uk if you want help." % (utc, topic, str(e))
+        error = "%s UTC: Your streaming query %s didn't run, the error is: %s, please check it, and write to lasair-help@mlist.is.ed.ac.uk if you want help." % (utc, topic, str(e))
         log = lasairLogging.getLogger("filter")
         log.warning(error)
         log.warning(sqlquery_real)
