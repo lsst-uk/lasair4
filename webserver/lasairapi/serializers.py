@@ -52,9 +52,6 @@ class ConeSerializer(serializers.Serializer):
             info = {"error": replyMessage}
             return info
 
-        replyMessage = 'No object found ra=%.5f dec=%.5f radius=%.2f' % (ra, dec, radius)
-        info = {"error": replyMessage}
-
         # Is there an object within RADIUS arcsec of this object? - KWS - need to fix the gkhtm code!!
         message, results = coneSearchHTM(ra, dec, radius, 'objects', queryType=QUICK, conn=connection, django=True, prefix='htm', suffix='')
 
@@ -62,22 +59,21 @@ class ConeSerializer(serializers.Serializer):
         separation = None
 
         objectList = []
-        if len(results) > 0:
-            if requestType == "nearest":
+        if requestType == "nearest":
+            if len(results) > 0:
                 obj = results[0][1]['objectId']
                 separation = results[0][0]
                 info = {"object": obj, "separation": separation}
-            elif requestType == "all":
-                for row in results:
-                    objectList.append({"object": row[1]["objectId"], "separation": row[0]})
-                info = objectList
-            elif requestType == "count":
-                info = {'count': len(results)}
             else:
-                info = {"error": "Invalid request type"}
+                info = {}
+        if requestType == "all":
+            for row in results:
+                objectList.append({"object": row[1]["objectId"], "separation": row[0]})
+            info = objectList
+        if requestType == "count":
+            info = {'count': len(results)}
 
         return info
-
 
 class ObjectsSerializer(serializers.Serializer):
     objectIds = serializers.CharField(required=True)
