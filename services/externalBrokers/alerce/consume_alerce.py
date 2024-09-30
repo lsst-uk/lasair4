@@ -121,7 +121,7 @@ else:
     # consume a topic from a streamReader and call handle
     streamReader.subscribe([topic])
     nalert = 0
-    while nalert < 50:  # just do 50 at a time for now
+    while nalert < 5000:  # just do 5000 at a time for now
         msg = streamReader.poll(timeout=20)
         if msg == None:
             break
