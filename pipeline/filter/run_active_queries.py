@@ -190,7 +190,7 @@ def run_query(query, msl, annotator=None, objectId=None):
             query_results.append(recorddict)
             n += 1
     except Exception as e:
-        error = "%s UTC: Your streaming query %s didn't run, the error is: %s, please check it, and write to lasair-help@roe.ac.uk if you want help." % (utc, topic, str(e))
+        error = "%s UTC: Your streaming query %s didn't run, the error is: %s, please check it, and write to lasair-help@mlist.is.ed.ac.uk if you want help." % (utc, topic, str(e))
         log = lasairLogging.getLogger("filter")
         log.warning(error)
         log.warning(sqlquery_real)
@@ -279,7 +279,7 @@ def dispose_email(allrecords, last_email, query):
             if 'objectId' in out:
                 objectId = out['objectId']
                 message      += objectId + '\n'
-                message_html += '<a href="https://%s/objects/%s/">%s</a><br/>' % (settings.LASAIR_URL, objectId, objectId)
+                message_html += '<a href="https://%s/objects/%s/">%s</a><br/> \n' % (settings.LASAIR_URL, objectId, objectId)
             else:
                 jsonout = json.dumps(out, default=datetime_converter)
                 message += jsonout + '\n'

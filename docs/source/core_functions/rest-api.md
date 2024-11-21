@@ -5,17 +5,17 @@ The Lasair-Sherlock API allows developers to run queries and cone-searches, to s
 #### Ways to use the API
 
 The Lasair API uses either HTTP GET or POST. Arguments can be passed in the query string, as JSON or form encoded. Responses are JSON. There is a throttling system in the backend: users with an account get up to 100 calls per hour, but "power" users get up to 10,000 calls per hour. If you wish your account to be upgraded to power user, 
-[email Lasair-help](mailto:lasair-help@lists.roe.ac.uk?subject=power user)
+[email Lasair-help](mailto:lasair-help@mlist.is.ed.ac.uk?subject=power user)
 
 The examples below show how to drive the API with either GET URL, POST curl or python with the 'lasair' package. The URL should be pasted into a web browser. The curl script pasted into a terminal window, and the python code copied into a file and executed as a python program.
 
 #### Sample Notebooks
-There is an [accompanying set of jupyter notebooks](../python-notebooks.html)
+There is an [accompanying set of jupyter notebooks](python-notebooks.md)
  that show how to use the API.
 
 #### Throttling of API Usage
 
-The Lasair API counts numbers of calls on a per-user basis, and restricts the number that can be executed in any hour time period. There are also restrictions on the number of rows that can be returned by the 'query' method. To use the API with less throttling, please get your own token from your Lasair account, as explained below "Get Your Token". If you would like to use the system for serious work, please [email Lasair-help](mailto:lasair-help@lists.roe.ac.uk?subject=throttling problem), explain what you are doing, and you will be put into the "Power Users" category. The limits for these three categories of user are:
+The Lasair API counts numbers of calls on a per-user basis, and restricts the number that can be executed in any hour time period. There are also restrictions on the number of rows that can be returned by the 'query' method. To use the API with less throttling, please get your own token from your Lasair account, as explained below "Get Your Token". If you would like to use the system for serious work, please [email Lasair-help](mailto:lasair-help@mlist.is.ed.ac.uk?subject=throttling problem), explain what you are doing, and you will be put into the "Power Users" category. The limits for these three categories of user are:
 
 *   User token (see 'Get Your Token') below: 100 API calls per hour, maximum 10,000 rows from query.
 *   Power user token (on request): 10,000 API calls per hour, maximum 1,000,000 rows from query.
@@ -232,7 +232,7 @@ is [shown here](ZTF23aabplmy.html).
 
 ### <a name="lightcurves"></a>/api/lightcurves/
 
-This method returns simple lightcurves for a number of objects. **NOTE:** these are difference magnitudes from a reference source, not apparent magnitudes. See [this python code](/lasair/static/mag.py) to convert the quantities below to apparent magnitude. Each lightcurve is a sequence of detections, or _candidates_, each of which has the quantities:
+This method returns simple lightcurves for a number of objects. **NOTE:** these are difference magnitudes from a reference source, not apparent magnitudes. See [this python code](https://raw.githubusercontent.com/lsst-uk/lasair4/main/webserver/static/files/mag.py) to convert the quantities below to apparent magnitude. Each lightcurve is a sequence of detections, or _candidates_, each of which has the quantities:
 
 *   `candid`: the candidate ID for the detection
 *   `fid`: The filter ID for the detection (1 = g and 2 = r)
@@ -247,7 +247,7 @@ This method returns simple lightcurves for a number of objects. **NOTE:** these 
 The arguments are:
 
 *   `objectIds`: (string) comma-separated string of objectIds to be fetched
-*   There is a upper limit on the number of lightcurves that can be fetched, currently 50. If you need to do serious data mining on Lasair light curves, please write to [contact the Lasair team](mailto:lasair-help@lists.roe.ac.uk?subject=Notebooks).
+*   There is a upper limit on the number of lightcurves that can be fetched, currently 50. If you need to do serious data mining on Lasair light curves, please write to [contact the Lasair team](mailto:lasair-help@mlist.is.ed.ac.uk?subject=Notebooks).
 
 GET URL Example
 ```
@@ -329,7 +329,7 @@ and the return is something like:
 ```
 ### <a name="sherlockposition"></a>/api/sherlock/position/
 
-This method returns Sherlock information for an arbitrary position in the sky, either the "lite" record that is also in the Lasair database, or the full record including many possible crossmatches. It is meant as an illustration of what Sherlock can do. If you would like to use Sherlock for high volume work, please [Email Lasair-help](mailto:lasair-help@lists.roe.ac.uk?subject=sherlock). The arguments are:
+This method returns Sherlock information for an arbitrary position in the sky, either the "lite" record that is also in the Lasair database, or the full record including many possible crossmatches. It is meant as an illustration of what Sherlock can do. If you would like to use Sherlock for high volume work, please [Email Lasair-help](mailto:lasair-help@mlist.is.ed.ac.uk?subject=sherlock). The arguments are:
 
 *   `ra`: Right ascension of a point in the sky in degrees
 *   `dec`: Declination of a point in the sky in degrees
