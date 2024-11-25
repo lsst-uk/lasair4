@@ -46,7 +46,8 @@ if TESTMODE:
 nalert = {}
 n = 0
 maxtimeout = 5
-while 1:
+maxalert = 5000
+while n < maxalert:
     (topic, alert, version) = consumer.poll(maxtimeout)
     if topic is None:
         break
