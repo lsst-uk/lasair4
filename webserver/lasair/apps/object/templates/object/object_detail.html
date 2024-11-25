@@ -36,7 +36,7 @@
                 {% include "includes/widgets/widget_object_sherlock.html" %}
             </div>
 
-            {% if user.is_authenticated %}
+            {% if user.is_authenticated and data.objectData.ra > 195 and data.objectData.ra < 215 and data.objectData.dec > -10 and data.objectData.dec < 10 %}
             <div class="col-12 col-xl-6 mb-4">
                 {% include "includes/widgets/widget_object_rsp.html" %}
             </div>
