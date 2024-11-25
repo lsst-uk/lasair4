@@ -32,14 +32,19 @@
                 {% include "includes/widgets/widget_object_tns.html" %}
             </div>
 
+	    {% if user.is_authenticated and data.objectData.ramean > 195 and data.objectData.ramean < 215 and data.objectData.decmean > -10 and data.objectData.decmean < 10 %}
             <div class="col-12 col-xl-6 mb-4">
                 {% include "includes/widgets/widget_object_sherlock.html" %}
             </div>
 
-            {% if user.is_authenticated and data.objectData.ra > 195 and data.objectData.ra < 215 and data.objectData.dec > -10 and data.objectData.dec < 10 %}
             <div class="col-12 col-xl-6 mb-4">
                 {% include "includes/widgets/widget_object_rsp.html" %}
             </div>
+	    {% else %}
+            <div class="col-12 mb-4">
+                {% include "includes/widgets/widget_object_sherlock.html" %}
+            </div>
+
             {% endif %}
 
             <div class="col-12 mb-4">
