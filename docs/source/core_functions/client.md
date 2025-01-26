@@ -95,6 +95,19 @@ and the return is something like:
 .... ]
 ```
 
+In order to make an API query that involves a watchlist (or watchmap), first find its ID, the number at the end of the URL when you click through to your watchlist.
+For example [watchlist 139](https://lasair-ztf.lsst.ac.uk/watchlists/139/) is named 'E+A galaxies'. Now add to the `selected` and `tables` variables like this:
+```
+selected = 'objects.objectId, watchlist_hits.name, watchlist_hits.arcsec'
+tables   = 'objects,watchlists:139'
+```
+which returns the name of the associated watchlist entry and its distance in arcseconds.
+
+It is also possible to query the JSON dictionary associated with an annotator. See the section [filtering on an annotator](core_functions/make_filter.html#filtering-on-an-annotator).
+
+
+
+
 ### <a name="object"></a>object
 
 This method returns a machine-readable version of the information on a named object, which replicates the information on the object page of the web server. The arguments are:
