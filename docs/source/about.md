@@ -11,6 +11,9 @@ an International Data Access Centre (IDAC), building on its strengths and
 heritage in leading astronomical surveys, data processing and analysis. The hope
 is that Lasair will be of value to the worldwide community, not just to the the UK consortium.
 
+Please see and cite our paper:
+[R.D.Williams et. al., Enabling science from the Rubin alert stream with Lasair](https://doi.org/10.1093/rasti/rzae024), RAS Techniques and Instruments, **3**,1, 362  (2024).
+
 ## The Lasair approach
 **Lasair is a platform for scientists to make science; it does not try to make 
 the science itself.**
@@ -31,7 +34,7 @@ that run whenever new alerts arrive.
 
 ## How Lasair Works
 Lasair is built to process transient alerts rapidly and make the key decision: is this an object I want to follow up? LSST alerts will come at very high rate, and Lasair takes advantage of the design of the distribution system: 
-["Events are sent in rich alert packets to enable standalone classification"](https://simons.berkeley.edu/sites/default/files/docs/9308/bellmlsst180226.pdf)
+["Events are sent in rich alert packets to enable standalone classification"](https://simons.berkeley.edu/sites/default/files/docs/9308/bellmlsst180226.pdf) (slide 48).
 Thus alerts are judged based only on that rich alert packet, without database interaction, leading to a very fast processing rate.
 
 The “rich data packet” means a year of past data about each object (or a month for the ZTF prototype). Note that Lasair has the full light curves – available through the object web page or API – but queries and filters are based on these shorter light curves.
