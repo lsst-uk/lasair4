@@ -113,8 +113,8 @@ It is also possible to query the JSON dictionary associated with an annotator. S
 This method returns a machine-readable version of the information on a named object, which replicates the information on the object page of the web server. The arguments are:
 
 *   `objectId`: an objectId for which data is wanted
-*   `lite`: Set to 'true' to get the lite information only
-*   `full`: Set to 'true' to get all attributes, including extended
+*   `lasair_added`: Set to 'true' to get the lasair added information such as sherlock, cutout URLs, etc
+*   `lite`: set to 'True' to get all attributes, including extended (default False).
 
 Example:
 ```
@@ -136,9 +136,9 @@ and the return something like this:
 .... }
 ```
 
-The data includes everything on the object page, including the object and candidates, as well as the Sherlock and TNS information. The candidate section has bot detections, that have a `candid` attribute, and the much smaller non-detections (upper limits). Each candidate 
-has links to the cutout images that are shown on the object web page. A complete example
-is [shown here](ZTF23aabplmy.html).
+The data includes everything on the object page, including the object and candidates, as well as the Sherlock and TNS information. The candidate section has bot detections, that have a `candid` attribute, and the much smaller non-detections (upper limits). Each candidate has links to the cutout images that are shown on the object web page. A complete example is [shown here](ZTF23aabplmy.html).
+
+Note that `lite=True` and `lasair_added=False` returns the lightcurve of the object.
 
 ### <a name="sherlockobject"></a>sherlock_object
 
