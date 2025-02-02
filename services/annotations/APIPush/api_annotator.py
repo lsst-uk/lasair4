@@ -71,25 +71,23 @@ consumer = lasair.lasair_consumer('kafka.lsst.ac.uk:9092', group_id, topic_in)
 # the lasair client will be used for pulling all the info about the object
 # and for annotating it
 # Note: topic_out must be owned by the perso whose token this is
-#L = lasair.lasair_client(settings.token, endpoint='http://192.41.108.37:8080/api')
-#L = lasair.lasair_client(settings.token, endpoint='http://lasair-iris.roe.ac.uk/api')
-L = lasair.lasair_client(settings.API_TOKEN)
-topic_out = settings.TOPIC_OUT
+L = lasair.lasair_client(settings.API_TOKEN, endpoint='https://lasair-dev.lsst.ac.uk/api')
+#L = lasair.lasair_client(settings.API_TOKEN)
+topic_out = 'test'
 
 # just get a few to start
 max_alert = 10
+selected    = 'objects.objectId, ramean, decmean'
+tables      = 'objects, sherlock_classifications'
+conditions  = 'sherlock_classifications.classification = "SN"'
+objects = L.query(selected, tables, conditions, limit=10, offset=20)
+print(objects)
 
 n_alert = 0
 n_annotate = 0
-while n_alert < max_alert:
-    msg = consumer.poll(timeout=20)
-    if msg is None:
-        break
-    if msg.error():
-        print(str(msg.error()))
-        break
-    jmsg = json.loads(msg.value())
-    objectId       = jmsg['objectId']
+for o in objects:
+    objectId = o['objectId']
+    print(objectId)
     n_annotate += handle_object(objectId, L, topic_out)
     n_alert += 1
 print('Read %d alerts, and annotated %d of them' % (n_alert, n_annotate))
