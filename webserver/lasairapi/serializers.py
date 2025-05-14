@@ -52,9 +52,6 @@ class ConeSerializer(serializers.Serializer):
             info = {"error": replyMessage}
             return info
 
-        replyMessage = 'No object found ra=%.5f dec=%.5f radius=%.2f' % (ra, dec, radius)
-        info = {"error": replyMessage}
-
         # Is there an object within RADIUS arcsec of this object? - KWS - need to fix the gkhtm code!!
         message, results = coneSearchHTM(ra, dec, radius, 'objects', queryType=QUICK, conn=connection, django=True, prefix='htm', suffix='')
 
@@ -62,24 +59,65 @@ class ConeSerializer(serializers.Serializer):
         separation = None
 
         objectList = []
-        if len(results) > 0:
-            if requestType == "nearest":
+        if requestType == "nearest":
+            if len(results) > 0:
                 obj = results[0][1]['objectId']
                 separation = results[0][0]
                 info = {"object": obj, "separation": separation}
-            elif requestType == "all":
-                for row in results:
-                    objectList.append({"object": row[1]["objectId"], "separation": row[0]})
-                info = objectList
-            elif requestType == "count":
-                info = {'count': len(results)}
             else:
-                info = {"error": "Invalid request type"}
+                info = {}
+        if requestType == "all":
+            for row in results:
+                objectList.append({"object": row[1]["objectId"], "separation": row[0]})
+            info = objectList
+        if requestType == "count":
+            info = {'count': len(results)}
 
         return info
 
+class ObjectSerializer(serializers.Serializer):
+    objectId = serializers.CharField(required=True)
+    lite = serializers.BooleanField()    # doesnt do anything right now
+    lasair_added = serializers.BooleanField()
 
-class ObjectsSerializer(serializers.Serializer):
+    def save(self):
+        objectId = self.validated_data['objectId']
+        lite = self.validated_data['lite']
+        lasair_added = self.validated_data['lasair_added']
+
+        # Get the authenticated user, if it exists.
+        userId = 'unknown'
+        request = self.context.get("request")
+        if request and hasattr(request, "user"):
+            userId = request.user
+
+        if lasair_added:
+            try:
+                result = objjson(objectId)
+            except Exception as e:
+                result = {'error': str(e)}
+            return result
+        else:
+            # Fetch the lightcurve, either from cassandra or file system
+            LF = lightcurve_fetcher(cassandra_hosts=lasair_settings.CASSANDRA_HEAD)
+
+            # 2024-01-31 KWS Add the forced photometry
+            FLF = forcedphot_lightcurve_fetcher(cassandra_hosts=lasair_settings.CASSANDRA_HEAD)
+
+            lightcurves = []
+            try:
+                candidates = LF.fetch(objectId)
+                fpcandidates = FLF.fetch(objectId)
+                result = {'objectId':objectId, 'candidates':candidates, 'forcedphot': fpcandidates}
+            except Exception as e:
+                result = {'error': str(e)}
+
+            LF.close()
+            FLF.close()
+            return result
+
+
+class ObjectsSerializer(serializers.Serializer):    # DEPRECATED
     objectIds = serializers.CharField(required=True)
 
     def save(self):
@@ -98,11 +136,50 @@ class ObjectsSerializer(serializers.Serializer):
 
         result = []
         for objectId in olist:
-            result.append(objjson(objectId))
+            try:
+                result.append(objjson(objectId))
+            except Exception as e:
+                result.append({'error': str(e)})
         return result
 
 
-class SherlockObjectsSerializer(serializers.Serializer):
+class SherlockObjectSerializer(serializers.Serializer):
+    objectId = serializers.CharField(required=True)
+    lite = serializers.BooleanField()
+
+    def save(self):
+        objectId = None
+        lite = True
+        objectId = self.validated_data['objectId']
+
+        if 'lite' in self.validated_data:
+            lite = self.validated_data['lite']
+
+        # Get the authenticated user, if it exists.
+        userId = 'unknown'
+        request = self.context.get("request")
+        if request and hasattr(request, "user"):
+            userId = request.user
+
+        if not lasair_settings.SHERLOCK_SERVICE:
+            return {"error": "This Lasair cluster does not have a Sherlock service"}
+
+        datadict = {}
+        data = {'lite': lite}
+        # sherlock service expects a comma-separated list
+        r = requests.post(
+            'http://%s/object/%s' % (lasair_settings.SHERLOCK_SERVICE, objectId),
+            headers={"Content-Type": "application/json"},
+            data=json.dumps(data)
+        )
+
+        if r.status_code == 200:
+            response = r.json()
+            return response
+        else:
+            return {"error": r.text}
+
+class SherlockObjectsSerializer(serializers.Serializer):   # DEPRECATED
     objectIds = serializers.CharField(required=True)
     lite = serializers.BooleanField()
 
@@ -148,7 +225,7 @@ class SherlockPositionSerializer(serializers.Serializer):
     lite = serializers.BooleanField()
 
     def save(self):
-        lite = False
+        lite = True
         ra = self.validated_data['ra']
         dec = self.validated_data['dec']
         if 'lite' in self.validated_data:
@@ -245,70 +322,7 @@ class QuerySerializer(serializers.Serializer):
             error = 'Your query:<br/><b>' + sqlquery_real + '</b><br/>returned the error<br/><i>' + str(e) + '</i>'
             return {"error": error}
 
-
-class StreamsSerializer(serializers.Serializer):
-    topic = serializers.SlugField(required=False)
-    limit = serializers.IntegerField(required=False)
-    regex = serializers.CharField(required=False)
-
-    def save(self):
-        topic = None
-        if 'topic' in self.validated_data:
-            topic = self.validated_data['topic']
-
-        limit = None
-        if 'limit' in self.validated_data:
-            limit = self.validated_data['limit']
-
-        regex = None
-        if 'regex' in self.validated_data:
-            regex = self.validated_data['regex']
-
-        if not topic and not regex:
-            regex = '.*'
-
-        # Get the authenticated user, if it exists.
-        userId = 'unknown'
-        request = self.context.get("request")
-        if request and hasattr(request, "user"):
-            userId = request.user
-
-        if topic:
-            filename = lasair_settings.KAFKA_STREAMS + '/' + topic
-            try:
-                datafile = open(filename, 'r').read()
-                data = json.loads(datafile)['digest']
-                if limit:
-                    data = data[:limit]
-                return data
-            except:
-                error = 'Cannot open digest file %s' % filename
-                return {"error": error}
-
-        if regex:
-            try:
-                r = re.compile(regex)
-            except:
-                replyMessage = '%s is not a regular expression' % regex
-                return {"topics": [], "info": replyMessage}
-
-            msl = db_connect.readonly()
-            cursor = msl.cursor(buffered=True, dictionary=True)
-            result = []
-            query = 'SELECT mq_id, user, name, topic_name FROM myqueries WHERE active>0'
-            cursor.execute(query)
-            for row in cursor:
-                tn = row['topic_name']
-                if r.match(tn):
-                    td = {'topic': tn, 'more_info': 'https://%s/query/%d/' % (lasair_settings.LASAIR_URL, row['mq_id'])}
-                    result.append(td)
-            info = result
-            return info
-
-        return {"error": 'Must supply either topic or regex'}
-
-
-class LightcurvesSerializer(serializers.Serializer):
+class LightcurvesSerializer(serializers.Serializer):    # DEPRECATED
     objectIds = serializers.CharField(max_length=16384, required=True)
 
     def save(self):
@@ -331,14 +345,17 @@ class LightcurvesSerializer(serializers.Serializer):
 
         lightcurves = []
         for objectId in olist:
-            candidates = LF.fetch(objectId)
-            fpcandidates = FLF.fetch(objectId)
-            lightcurves.append({'objectId':objectId, 'candidates':candidates, 'forcedphot': fpcandidates})
+            try:
+                candidates = LF.fetch(objectId)
+                fpcandidates = FLF.fetch(objectId)
+                lightcurves.append({'objectId':objectId, 'candidates':candidates, 'forcedphot': fpcandidates})
+            except Exception as e:
+                lightcurves.append({'error': str(e)})
 
         LF.close()
         FLF.close()
         return lightcurves
-
+#################################### 
 
 class AnnotateSerializer(serializers.Serializer):
     topic = serializers.CharField(max_length=256, required=True)

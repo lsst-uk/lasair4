@@ -21,3 +21,6 @@ mod_wsgi-express setup-server \
 --mount-point /
 
 $APACHEPATH/apachectl start
+
+# this option is not found -- RW 3/6/2023
+# --listen-backlog 1000 \

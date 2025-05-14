@@ -370,7 +370,8 @@ def watchlist_download(request, wl_id):
     cursor.execute('SELECT name FROM watchlists WHERE wl_id=%d' % wl_id)
     name = cursor.fetchall()[0]["name"].replace(" ", "_") + "_watchlist_original.csv"
 
-    cursor.execute('SELECT ra, decl, name, radius FROM watchlist_cones WHERE wl_id=%d LIMIT 10000' % wl_id)
+#    cursor.execute('SELECT ra, decl, name, radius FROM watchlist_cones WHERE wl_id=%d LIMIT 10000' % wl_id)
+    cursor.execute('SELECT ra, decl, name, radius FROM watchlist_cones WHERE wl_id=%d' % wl_id)
     cones = cursor.fetchall()
     content = []
     content[:] = [','.join(str(value) for value in c.values()) for c in cones]
