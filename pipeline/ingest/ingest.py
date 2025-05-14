@@ -326,12 +326,18 @@ def run_ingest(args):
             time.sleep(settings.WAIT_TIME)
             continue
 
+        if msg.error():
+            # lets hope its just a glitch and the ingest can start again in a few minutes
+            log.error('ERROR in ingest/poll: ' +  str(msg.error()))
+            time.sleep(settings.WAIT_TIME)
+            continue
+
         # read the avro contents
         try:
             bytes_io = io.BytesIO(msg.value())
             msg = fastavro.reader(bytes_io)
         except:
-            log.error('ERROR in ingest/ingest: ', str(msg.value()))
+            log.error('ERROR in ingest/ingest: ' + str(msg.value()))
             break
 
         for alert in msg:
@@ -358,7 +364,7 @@ def run_ingest(args):
             # every so often commit, flush, and update status
             if nalert >= 250:
                 end_batch(consumer, producer, ms, nalert, ncandidate, nnoncandidate, nforcedphot)
-                nalert = ncandidate = 0
+                nalert = ncandidate = nnoncandidate = nforcedphot = 0
                 # check for lockfile
                 if not os.path.isfile(settings.LOCKFILE):
                     log.info('Lockfile not present')

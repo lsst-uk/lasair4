@@ -83,6 +83,8 @@
 
                                 {% if key == "objectId" %}
                                     <td><a href='{% url "object_detail" object.objectId %}'>{{ object.objectId }}</a></td>
+				    {% elif key == "url" and object.url|length > 0 %}
+				<td><a href="{{ object.url }}">url</a></td>
 
                                 {% elif key in 'decmean' %}
                                     <td>{{object|keyvalue:key|floatformat:6 }}</td>
