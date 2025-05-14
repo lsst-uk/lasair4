@@ -66,7 +66,7 @@ def check_select_forbidden(select_expression):
             return ('Cannot use %s in the SELECT clause' % s)
 
     # Want to split on whitespace, parentheses, curlys
-    se = re.split('\s|\(|\)|\{|\}', select_expression.lower())
+    se = re.split('\\s|\(|\)|\{|\}', select_expression.lower())
 
     # Check no forbidden words
     for s in select_forbidden_word_list:
@@ -101,7 +101,7 @@ def check_where_forbidden(where_condition):
         where_condition = regex.sub("", where_condition)
 
     # Want to split on whitespace, parentheses, curlys
-    wc = re.split('\s|\(|\)|\{|\}', where_condition.lower())
+    wc = re.split('\\s|\(|\)|\{|\}', where_condition.lower())
     for w in where_forbidden_word_list:
         if w in wc or w.upper() in wc:
             return('Cannot use the word %s in the WHERE clause' % w.upper())
@@ -163,14 +163,14 @@ def build_query(select_expression, from_expression, where_condition):
         if table == 'sherlock_classifications':
             sherlock_classifications = True
 
-        if table.startswith('watchlist:'):
+        if table.startswith('watchlist:') or table.startswith('watchlists:'):
             w = table.split(':')
             try:
                 watchlist_id = int(w[1])
             except:
                 raise QueryBuilderError('Error in FROM list, %s not of the form watchlist:nnn' % table)
 
-        if table.startswith('area:'):
+        if table.startswith('area:') or table.startswith('areas:'):
             w = table.split(':')
             try:
                 area_ids = w[1].split('&')
