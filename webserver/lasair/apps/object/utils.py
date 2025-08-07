@@ -4,9 +4,9 @@ import plotly.graph_objects as go
 import math
 import numpy as np
 
-filterNames  = ['g', 'r']
-filterColors = ['#859900', '#dc322f']
-filterFids   = [1, 2]
+filterNames  = ['g', 'r', 'i']
+filterColors = ['#859900', '#dc322f', '#2ca4db']
+filterFids   = [1, 2, 3]
 
 def object_difference_lightcurve(
     objectData
