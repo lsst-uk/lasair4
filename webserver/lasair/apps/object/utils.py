@@ -5,7 +5,7 @@ import math
 import numpy as np
 
 filterNames  = ['g', 'r', 'i']
-filterColors = ['#859900', '#dc322f', '#2ca4db']
+filterColors = ['#31de1f', '#b52626', '#370201']
 filterFids   = [1, 2, 3]
 
 def object_difference_lightcurve(
