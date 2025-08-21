@@ -264,8 +264,10 @@ def objjson(objectId, full=False):
     objectData["discMag"] = f"{detections['magpsf'].values[0]:.2f}±{detections['sigmapsf'].values[0]:.2f}"
     if detections['fid'].values[0] == 1:
         objectData["discFilter"] = "g"
-    else:
+    elif detections['fid'].values[0] == 2:
         objectData["discFilter"] = "r"
+    else:
+        objectData["discFilter"] = "i"
 
     # LATEST MAGS
     objectData["latestMjd"] = detections["mjd"].values[-1]
@@ -273,8 +275,10 @@ def objjson(objectId, full=False):
     objectData["latestMag"] = f"{detections['magpsf'].values[-1]:.2f}±{detections['sigmapsf'].values[-1]:.2f}"
     if detections['fid'].values[-1] == 1:
         objectData["latestFilter"] = "g"
+    elif detections['fid'].values[-1] == 2:
+        objectData["discFilter"] = "r"
     else:
-        objectData["latestFilter"] = "r"
+        objectData["discFilter"] = "i"
 
     # PEAK MAG
     peakMag = detections[detections['magpsf'] == detections['magpsf'].min()]
@@ -283,8 +287,10 @@ def objjson(objectId, full=False):
     objectData["peakMag"] = f"{peakMag['magpsf'].values[0]:.2f}±{peakMag['sigmapsf'].values[0]:.2f}"
     if peakMag['fid'].values[0] == 1:
         objectData["peakFilter"] = "g"
-    else:
+    elif peakMag['fid'].values[0] == 2:
         objectData["peakFilter"] = "r"
+    else:
+        objectData["peakFilter"] = "i"
 
     data = {'objectId': objectId,
             'objectData': objectData,

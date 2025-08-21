@@ -59,7 +59,7 @@
                         <tr>
                             <td>{% if not cand.candid %}<font color="gray" size=-2>{% endif %}{{ cand.mjd|floatformat:6 }}{% if not cand.candid %}</font>{% endif %}</td>
                             <td>{% if not cand.candid %}<font color="gray" size=-2>{% endif %}{{ cand.utc }}{% if not cand.candid %}</font>{% endif %}</td>
-                            <td>{% if not cand.candid %}<font color="gray" size=-2>{% endif %}{% if cand.fid == 1 %}g{% else %}r{% endif %}{% if not cand.candid %}</font>{% endif %}</td>
+			    <td>{% if not cand.candid %}<font color="gray" size=-2>{% endif %}{% if cand.fid == 1 %}g{% elif cand.fid == 1 %}r{% else %}i{% endif %}{% if not cand.candid %}</font>{% endif %}</td>
                             <td>{% if not cand.candid %}<font color="gray" size=-2>{% endif %}{{ cand.magpsf|floatformat:3 }} {% if cand.candid %}&plusmn; {{ cand.sigmapsf|floatformat:3 }}{% endif %}{% if not cand.candid %}</font>{% endif %}</td>
 
 
@@ -102,7 +102,7 @@
 
                         <tr>
                             <td>{% if not cand.candid %}<font color="gray" size=-2>{% endif %}{{ cand.mjd|floatformat:6 }}{% if not cand.candid %}</font>{% endif %}</td>
-                            <td>{% if not cand.candid %}<font color="gray" size=-2>{% endif %}{% if cand.fid == 1 %}g{% else %}r{% endif %}{% if not cand.candid %}</font>{% endif %}</td>
+			    <td>{% if not cand.candid %}<font color="gray" size=-2>{% endif %}{% if cand.fid == 1 %}g{% elif cand.fid == 2 %}r{% else %}i{% endif %}{% if not cand.candid %}</font>{% endif %}</td>
                             <td>{{ cand.magpsf|floatformat:3 }}</td>
                             <td>{% if cand.candid %}{{ cand.sigmapsf|floatformat:3 }}{% endif %}</td>
                             <td>{% if cand.candid %}{{ cand.isdiffpos|replace:"t|positive"|replace:"f|negative" }}{% else %}<font color="gray" size=-2>limit</font>{% endif %}</td>
