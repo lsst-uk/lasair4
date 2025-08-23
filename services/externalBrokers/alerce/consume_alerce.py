@@ -43,11 +43,16 @@ def make_lc_annotation(record):
     lcc = record['lc_classification']
     r['classification'] = lcc['class']
     classdict = {}
+    maxprob = 0.0
     for k,v in lcc['probabilities'].items():
-        if v > 0.02:
+        if v > 0.1:
             classdict[k] = float('%.3f'%v)
+        if v > maxprob:
+            maxprob = v
     r['classdict'] = classdict
-    if r['classification'] in ['E', 'Periodic-Other']:
+    if maxprob < 0.3:
+        return None
+    if r['classification'] in ['YSO', 'E', 'Periodic-Other']:
         return None
     else:
         return r
@@ -137,7 +142,7 @@ else:
                 classdict=r['classdict'],
                 url='')
 
-        nalert += 1
+            nalert += 1
 streamReader.close()
 if nann > 0:
     print('\n-- %d annotations from alerce_%s at %s' % (nann, classifier_type, datetime.datetime.now()))
