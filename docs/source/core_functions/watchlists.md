@@ -75,11 +75,11 @@ says “Watchlist created successfully”. You can now find it in the list of �
 
 ## Large Watchlists
 
-If you try to ingest a large watchlist, there may be a "Gateway Timeout" on the web server after 60 seconds or so. This is because of the way webservers are designed. However, a member of the Lasair team can ingest your watchlist from the command line. First create an empty watchlist with the web app: fill in all the fields but without any cones. Then send us the watchlist ID of your empty list, together with your file with the list of cones, either email or dropbox or the like. The email address is lasair-help at mlist.is.ed.ac.uk. 
+If you try to ingest a large watchlist, there may be a **"Gateway Timeout"** on the web server after 60 seconds or so. This is because of the way webservers are designed. However, a member of the Lasair team can ingest your watchlist from the command line. First create an empty watchlist with the web app: fill in all the fields but without any cones. Then send us the watchlist ID of your empty list, together with your file with the list of cones, either email or dropbox or the like. Send us email at [Email Lasair-help](mailto:lasair-help@mlist.is.ed.ac.uk?subject=watchlist)
 
 ## About "Rerun Watchlist"
 
-Watchlists are made for real time matching with the alert stream: click on "settings", then set it to "active" and save. This means that future alerts will be matched as they flow through Lasair. However, users often want to know about past alerts that match their watchlist, hence the "Rerun watchlist" button. However, if your watchlist is too large, or the association radii are too large, there will not be enough time for the webserver to compute, and you will get a "Gteway Timeout". In this case, you can email the Lasair team at lasair-help at mlist.is.ed.ac.uk, and we can do this on the command line, matching your watchlist with existing Lasair objects.
+Watchlists are made for real time matching with the alert stream: click on "settings", then set it to "active" and save. This means that future alerts will be matched as they flow through Lasair. However, users often want to know about past alerts that match their watchlist, hence the "Rerun watchlist" button. However, if your watchlist is too large, or the association radii are too large, there will not be enough time for the webserver to compute, and you will get a **"Gateway Timeout"**. In this case, you can email the Lasair team at [Email Lasair-help](mailto:lasair-help@mlist.is.ed.ac.uk?subject=watchlist), and we can do this on the command line, matching your watchlist with existing Lasair objects.
 
 ## Find outbursts from my watchlist
 
