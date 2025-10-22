@@ -74,12 +74,14 @@ def run_crossmatch(msl, radius, wl_id, batchSize=5000, wlMax=False):
             end = end + batchSize
             start = i * batchSize
             thisBatch = groupbatch[start:end]
-            theseBatches.append(thisBatch)
+            if len(thisBatch):
+                theseBatches.append(thisBatch)
 
     n_hits = 0
     wlMatches = []
     for batch in theseBatches:
         # DO THE CONESEARCH
+        
         raList, decList, nameList, coneIdList, radiusList = zip(*[(s["ra"], s["decl"], s["name"], s["cone_id"], s["radius"]) for s in batch])
         cs = conesearch(
             log=emptyLogger(),
