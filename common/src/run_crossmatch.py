@@ -10,7 +10,7 @@ def distance(ra1, de1, ra2, de2):
     dde = (de1 - de2)
     return math.sqrt(dra*dra + dde*dde)
 
-def run_crossmatch(msl, radius, wl_id):
+def run_crossmatch(msl, radius, wl_id, batchSize=5000, wlMax=False):
     """ Delete all the hits and remake.
     """
     cursor  = msl.cursor(buffered=True, dictionary=True)
@@ -21,13 +21,16 @@ def run_crossmatch(msl, radius, wl_id):
     n_cones = 0
     n_hits = 0
     # get all the cones and run them
-    query = 'SELECT cone_id, ra,decl, name FROM watchlist_cones WHERE wl_id=%d' % wl_id
+    query = 'SELECT cone_id, ra,decl, name, radius FROM watchlist_cones WHERE wl_id=%d' % wl_id
     cursor.execute(query)
     for row in cursor:
         n_cones += 1
-        n_hits += crossmatch(msl, wl_id, row['cone_id'], row['ra'], row['decl'], row['name'], radius)
-    print("%d cones, %d hits" % (n_cones, n_hits))
-    return n_hits
+        r = radius
+        if row['radius']:
+            r = row['radius']
+        n_hits += crossmatch(msl, wl_id, row['cone_id'], row['ra'], row['decl'], row['name'], r)
+    message = "%d cones, %d hits" % (n_cones, n_hits)
+    return n_hits, message
 
 def crossmatch(msl, wl_id, cone_id, myRA, myDecl, name, radius):
     cursor2 = msl.cursor(buffered=True, dictionary=True)
@@ -61,4 +64,5 @@ if __name__ == "__main__":
         sys.exit()
     radius = 3  # arcseconds
     msl = db_connect.remote()
-    run_crossmatch(msl, radius, wl_id)
+    n_hits, message = run_crossmatch(msl, radius, wl_id)
+    print(message)
