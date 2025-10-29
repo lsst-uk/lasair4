@@ -68,7 +68,10 @@ The return has object identifiers, and their separations in arcseconds, somethin
 ```
 ### <a name="query"></a>/api/query/
 
-This method runs a query on the Lasair database. There is an [interactive query builder](/query), and a [schema description](/schema). The arguments are:
+This method runs a query on the Lasair database. The easiest way to start is to create 
+a query with the [filter builder](https://lasair-ztf.lsst.ac.uk/filters/create/), which 
+has auto-complete. You can also look at the
+[schema browser](https://lasair-ztf.lsst.ac.uk/schema/). The arguments are:
 
 *   `selected`: (string) the list of attributes to be returned,
 *   `tables`: (string) the list of tables to be joined,
