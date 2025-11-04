@@ -2,17 +2,26 @@ import math
 import sys
 sys.path.append('../common')
 import settings
+from HMpTy.mysql import conesearch
+from fundamentals.logs import emptyLogger
+from fundamentals.mysql import database, readquery, writequery, insert_list_of_dictionaries_into_database_tables
+from collections import defaultdict
 
+def flip_hits(dbConn, wl_id):
+    sqlQuery = 'DELETE FROM watchlist_hits WHERE cone_id > 0 AND wl_id=%d' % wl_id
+    writequery(
+        log=emptyLogger(),
+        sqlQuery=sqlQuery,
+        dbConn=dbConn
+    )
+    sqlQuery = 'UPDATE watchlist_hits SET cone_id=-cone_id WHERE wl_id=%d' % wl_id
+    writequery(
+        log=emptyLogger(),
+        sqlQuery=sqlQuery,
+        dbConn=dbConn
+    )
 
 def run_crossmatch(msl, radius, wl_id, batchSize=5000, wlMax=False):
-    """ Delete all the hits and remake.
-    """
-
-    from HMpTy.mysql import conesearch
-    from fundamentals.logs import emptyLogger
-    from fundamentals.mysql import database, readquery, writequery, insert_list_of_dictionaries_into_database_tables
-    from collections import defaultdict
-
     dbSettings = {
         'host': settings.DB_HOST,
         'user': settings.DB_USER_READWRITE,
@@ -39,14 +48,6 @@ def run_crossmatch(msl, radius, wl_id, batchSize=5000, wlMax=False):
 
     if wlMax and n_cones > wlMax:
         return -1, f"A full watchlist match can only be run for watchlists with less than {wlMax} objects."
-
-    # TRASH PREVIOUS MATCHES
-    sqlQuery = f"""DELETE FROM watchlist_hits WHERE wl_id={wl_id}"""
-    writequery(
-        log=emptyLogger(),
-        sqlQuery=sqlQuery,
-        dbConn=dbConn
-    )
 
     # GROUP SOURCES BY RADIUS
     grouped_by_radius = defaultdict(list)
@@ -109,9 +110,10 @@ def run_crossmatch(msl, radius, wl_id, batchSize=5000, wlMax=False):
             # VALUES TO ADD TO DB
 
             for r, d, n, c, m in zip(raList, decList, nameList, coneIdList, matches.list):
+                negative_c = -c
                 keepDict = {
                     "wl_id": wl_id,
-                    "cone_id": c,
+                    "cone_id": negative_c,
                     "arcsec": m["cmSepArcsec"],
                     "name": n,
                     "objectId": m["objectId"]
@@ -133,6 +135,7 @@ def run_crossmatch(msl, radius, wl_id, batchSize=5000, wlMax=False):
             dbSettings=dbSettings
         )
 
+    flip_hits(dbConn, wl_id)
     message = f"{n_hits} ZTF objects have been associated with the {n_cones} sources in this watchlist"
     print(message)
     return n_hits, message
