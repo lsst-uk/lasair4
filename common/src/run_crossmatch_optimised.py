@@ -21,7 +21,7 @@ def flip_hits(dbConn, wl_id):
         dbConn=dbConn
     )
 
-def run_crossmatch(msl, radius, wl_id, batchSize=5000, wlMax=False):
+def run_crossmatch(msl, radius, wl_id, batchSize=1000, wlMax=False):
     dbSettings = {
         'host': settings.DB_HOST,
         'user': settings.DB_USER_READWRITE,
@@ -62,7 +62,6 @@ def run_crossmatch(msl, radius, wl_id, batchSize=5000, wlMax=False):
         for i in range(0, len(sources), batchSize):
             batch = sources[i:i + batchSize]
             batches_by_radius.append((radius, batch))
-
 
     # SPLIT INTO BATCHES
     theseBatches = []
