@@ -5,9 +5,6 @@ import settings
 
 
 def run_crossmatch(msl, radius, wl_id, batchSize=5000, wlMax=False):
-    """ Delete all the hits and remake.
-    """
-
     from HMpTy.mysql import conesearch
     from fundamentals.logs import emptyLogger
     from fundamentals.mysql import database, readquery, writequery, insert_list_of_dictionaries_into_database_tables
@@ -40,14 +37,6 @@ def run_crossmatch(msl, radius, wl_id, batchSize=5000, wlMax=False):
     if wlMax and n_cones > wlMax:
         return -1, f"A full watchlist match can only be run for watchlists with less than {wlMax} objects."
 
-    # TRASH PREVIOUS MATCHES
-    sqlQuery = f"""DELETE FROM watchlist_hits WHERE wl_id={wl_id}"""
-    writequery(
-        log=emptyLogger(),
-        sqlQuery=sqlQuery,
-        dbConn=dbConn
-    )
-
     # GROUP SOURCES BY RADIUS
     grouped_by_radius = defaultdict(list)
     for s in wlCones:
@@ -61,7 +50,6 @@ def run_crossmatch(msl, radius, wl_id, batchSize=5000, wlMax=False):
         for i in range(0, len(sources), batchSize):
             batch = sources[i:i + batchSize]
             batches_by_radius.append((radius, batch))
-
 
     # SPLIT INTO BATCHES
     theseBatches = []
@@ -130,6 +118,7 @@ def run_crossmatch(msl, radius, wl_id, batchSize=5000, wlMax=False):
             dbTableName="watchlist_hits",
             dateCreated=False,
             batchSize=200000,
+            replace = True,
             dbSettings=dbSettings
         )
 
