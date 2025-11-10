@@ -209,7 +209,11 @@ def watchlist_detail(request, wl_id, action=False):
                 messages.success(request, f'Your watchlist has been successfully updated')
         # REQUEST TO REFRESH THE WATCHLIST MATCHES
         elif action == 'run':
-            hits, message = run_crossmatch.run_crossmatch(msl, watchlist.radius, watchlist.wl_id, wlMax=settings.WATCHLIST_MAX_CROSSMATCH)
+            hits, message = run_crossmatch.run_crossmatch(msl, 
+                watchlist.radius, 
+                watchlist.wl_id, 
+                batchSize=1000,
+                wlMax=settings.WATCHLIST_MAX_CROSSMATCH)
             if int(hits) == -1:
                 messages.error(request, f'{message}')
             else:
