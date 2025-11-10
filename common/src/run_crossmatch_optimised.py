@@ -4,20 +4,6 @@ sys.path.append('../common')
 import settings
 
 
-def flip_hits(dbConn, wl_id):
-    sqlQuery = 'DELETE FROM watchlist_hits WHERE cone_id > 0 AND wl_id=%d' % wl_id
-    writequery(
-        log=emptyLogger(),
-        sqlQuery=sqlQuery,
-        dbConn=dbConn
-    )
-    sqlQuery = 'UPDATE watchlist_hits SET cone_id=-cone_id WHERE wl_id=%d' % wl_id
-    writequery(
-        log=emptyLogger(),
-        sqlQuery=sqlQuery,
-        dbConn=dbConn
-    )
-
 def run_crossmatch(msl, radius, wl_id, batchSize=5000, wlMax=False):
     from HMpTy.mysql import conesearch
     from fundamentals.logs import emptyLogger
@@ -64,7 +50,6 @@ def run_crossmatch(msl, radius, wl_id, batchSize=5000, wlMax=False):
         for i in range(0, len(sources), batchSize):
             batch = sources[i:i + batchSize]
             batches_by_radius.append((radius, batch))
-
 
     # SPLIT INTO BATCHES
     theseBatches = []
