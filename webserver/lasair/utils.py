@@ -276,9 +276,9 @@ def objjson(objectId, full=False):
     if detections['fid'].values[-1] == 1:
         objectData["latestFilter"] = "g"
     elif detections['fid'].values[-1] == 2:
-        objectData["discFilter"] = "r"
+        objectData["latestFilter"] = "r"
     else:
-        objectData["discFilter"] = "i"
+        objectData["latestFilter"] = "i"
 
     # PEAK MAG
     peakMag = detections[detections['magpsf'] == detections['magpsf'].min()]
