@@ -114,7 +114,7 @@ def fetch_active_watchlists(msl, cache_dir):
 
     keep = []
     get  = []
-    cursor.execute('SELECT wl_id, name, radius, date_modified FROM watchlists WHERE active > 0 ')
+    cursor.execute('SELECT wl_id, name, radius, date_modified FROM watchlists WHERE active > 0 OR wl_id=1')
     for row in cursor:
         # unix time of last update from the database
         watchlist_timestamp = time.mktime(row['date_modified'].timetuple())
@@ -132,7 +132,7 @@ def fetch_active_watchlists(msl, cache_dir):
         # if the watchlist from the database is newer than the cache, rebuild it
         # print(row['wl_id'], 'watchlist newer by %d seconds'%newer)
         d = {'wl_id':row['wl_id'], 'name':row['name'],'radius':row['radius']}
-        if newer > 0:
+        if newer > 0 or row['wl_id'] == 1:
             get.append(d)
             logf.write('Make %s\n' % d['name'])
         else:
@@ -175,7 +175,7 @@ def rebuild_cache(wl_id, name, cones, max_depth, cache_dir, chk):
 
     # now write the moc files
     for i in range(len(moclist)):
-        moclist[i].write(watchlist_dir_new + 'moc%03d.fits'%i)
+        moclist[i].save(watchlist_dir_new + 'moc%03d.fits'%i, "fits")
     logf.write('Watchlist "%s" with %d cones rebuilt in %.2f seconds\n' 
             % (name, len(ralist), time.time() - t))
 
@@ -219,6 +219,7 @@ if __name__ == "__main__":
     watchlists = fetch_active_watchlists(msl, cache_dir)
 
     for watchlist in watchlists['get']:
+        print(watchlist['wl_id'])
         # get the data from the database
         cones = fetch_watchlist(msl, watchlist['wl_id'], watchlist['radius'])
         rebuild_cache(watchlist['wl_id'], watchlist['name'], \
