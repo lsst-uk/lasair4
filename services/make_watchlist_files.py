@@ -193,10 +193,6 @@ if __name__ == "__main__":
     sys.path.append('../../common/src')
     import date_nid, slack_webhook, lasairLogging
 
-    # get rid of the _new files left over
-    cmd = 'rm -r ' + settings.WATCHLIST_MOCS + '/*new'
-    os.system(cmd)
-
     lasairLogging.basicConfig(
         filename='/home/ubuntu/logs/svc.log',
         webhook=slack_webhook.SlackWebhook(url=settings.SLACK_URL),
