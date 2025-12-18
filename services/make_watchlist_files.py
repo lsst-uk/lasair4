@@ -192,7 +192,6 @@ if __name__ == "__main__":
     import settings
     sys.path.append('../../common/src')
     import date_nid, slack_webhook, lasairLogging
-
     lasairLogging.basicConfig(
         filename='/home/ubuntu/logs/svc.log',
         webhook=slack_webhook.SlackWebhook(url=settings.SLACK_URL),
