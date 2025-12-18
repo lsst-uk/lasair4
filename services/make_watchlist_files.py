@@ -180,7 +180,10 @@ def rebuild_cache(wl_id, name, cones, max_depth, cache_dir, chk):
             % (name, len(ralist), time.time() - t))
 
     # move the new stuff into the correct directory name
-    cmd = 'rm -r %s; mv %s %s' % (watchlist_dir, watchlist_dir_new, watchlist_dir)
+    if os.path.exists(watchlist_dir):
+        cmd = 'rm -r %s' % watchlist_dir
+        execute_cmd(cmd, logfile)
+    cmd = 'mv %s %s' % (watchlist_dir_new, watchlist_dir)
     execute_cmd(cmd, logfile)
 
 if __name__ == "__main__":
@@ -189,6 +192,11 @@ if __name__ == "__main__":
     import settings
     sys.path.append('../../common/src')
     import date_nid, slack_webhook, lasairLogging
+
+    # get rid of the _new files left over
+    cmd = 'rm -r ' + settings.WATCHLIST_MOCS + '/*new'
+    os.system(cmd)
+
     lasairLogging.basicConfig(
         filename='/home/ubuntu/logs/svc.log',
         webhook=slack_webhook.SlackWebhook(url=settings.SLACK_URL),
