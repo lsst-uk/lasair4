@@ -19,6 +19,14 @@ import settings as lasair_settings
 import sys
 sys.path.append('../common')
 
+def log_call(request, call):
+    if request and hasattr(request, "user"):
+        userId = request.user
+    else:
+        userId = 'unknown'
+    with open('/home/ubuntu/api_log', 'a') as f:
+        f.write('%s %s\n' % (str(userId), call))
+
 CAT_ID_RA_DEC_COLS['objects'] = [['objectId', 'ramean', 'decmean'], 1018]
 
 REQUEST_TYPE_CHOICES = (
@@ -35,6 +43,7 @@ class ConeSerializer(serializers.Serializer):
     requestType = serializers.ChoiceField(choices=REQUEST_TYPE_CHOICES)
 
     def save(self):
+        log_call(self.context.get("request"), 'Cone')
 
         ra = self.validated_data['ra']
         dec = self.validated_data['dec']
@@ -81,6 +90,8 @@ class ObjectSerializer(serializers.Serializer):
     lasair_added = serializers.BooleanField()
 
     def save(self):
+        log_call(self.context.get("request"), 'Object')
+
         objectId = self.validated_data['objectId']
         lite = self.validated_data['lite']
         lasair_added = self.validated_data['lasair_added']
@@ -121,6 +132,8 @@ class ObjectsSerializer(serializers.Serializer):    # DEPRECATED
     objectIds = serializers.CharField(required=True)
 
     def save(self):
+        log_call(self.context.get("request"), 'Objects')
+
         objectIds = self.validated_data['objectIds']
 
         olist = []
@@ -148,6 +161,8 @@ class SherlockObjectSerializer(serializers.Serializer):
     lite = serializers.BooleanField()
 
     def save(self):
+        log_call(self.context.get("request"), 'SherlockObject')
+
         objectId = None
         lite = True
         objectId = self.validated_data['objectId']
@@ -184,6 +199,8 @@ class SherlockObjectsSerializer(serializers.Serializer):   # DEPRECATED
     lite = serializers.BooleanField()
 
     def save(self):
+        log_call(self.context.get("request"), 'SherlockObjects')
+
         objectIds = None
         lite = False
         objectIds = self.validated_data['objectIds']
@@ -225,6 +242,8 @@ class SherlockPositionSerializer(serializers.Serializer):
     lite = serializers.BooleanField()
 
     def save(self):
+        log_call(self.context.get("request"), 'SherlockPosition')
+
         lite = True
         ra = self.validated_data['ra']
         dec = self.validated_data['dec']
@@ -263,6 +282,8 @@ class QuerySerializer(serializers.Serializer):
     offset = serializers.IntegerField(required=False)
 
     def save(self):
+        log_call(self.context.get("request"), 'SherlockPosition')
+
         selected = self.validated_data['selected']
         tables = self.validated_data['tables']
         conditions = self.validated_data['conditions']
@@ -326,6 +347,8 @@ class LightcurvesSerializer(serializers.Serializer):    # DEPRECATED
     objectIds = serializers.CharField(max_length=16384, required=True)
 
     def save(self):
+        log_call(self.context.get("request"), 'Lightcurves')
+
         objectIds = self.validated_data['objectIds']
         olist = []
         for tok in objectIds.split(','):
@@ -367,6 +390,8 @@ class AnnotateSerializer(serializers.Serializer):
     url = serializers.CharField(max_length=1024, required=True, allow_blank=True)
 
     def save(self):
+        log_call(self.context.get("request"), 'Annotate')
+
         topic = self.validated_data['topic']
         objectId = self.validated_data['objectId']
         classification = self.validated_data['classification']
