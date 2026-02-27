@@ -8,9 +8,6 @@ Installation:
 pip3 install lasair
 ```
 
-#### Sample Notebooks
-There is an [accompanying set of jupyter notebooks](python-notebooks.md)
-
 #### Throttling of API Usage
 The client has a throttling system in the backend: users with an account get up to 100 calls per hour, but "power" users get up to 10,000 calls per hour. If you wish your account to be upgraded to power user, 
 [email Lasair-help](mailto:lasair-help@mlist.is.ed.ac.uk?subject=power user)
