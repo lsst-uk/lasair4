@@ -63,7 +63,6 @@ Lasair's core features are described in more detail here:
    core_functions/watchmaps
    core_functions/client
    core_functions/rest-api
-   core_functions/python-notebooks
    core_functions/alert-streams
    core_functions/make_annotator
 ```

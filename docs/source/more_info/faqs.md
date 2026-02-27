@@ -84,11 +84,6 @@ Not yet, but soon.
 
 General FAQ on LSST and Rubin is [here](https://www.lsst.org/content/rubin-observatory-general-public-faqs), about community alert brokers in particular [here](https://www.lsst.org/scientists/alert-brokers)
 
-* **How can I write code and notebooks that use the Lasair database?**
-
-The Lasair client is described [here](../core_functions/rest-api.html), and
-there are sample notebooks [here](../core_functions/python-notebooks.html).
-
 * **Does Lasair classify alerts into classes?**
 
 Lasair supports the idea of *annotation*, where external users and other brokers build and
