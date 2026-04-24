@@ -64,9 +64,15 @@ while not stop:
         time.sleep(settings.WAIT_TIME)
         continue
     log.info('------------- Filter_runner at %s' % now())
-    
-    retcode = run_filter(args)
 
+    try:
+        retcode = run_filter(args)
+    except Exception as e:
+        log.error(str(e))
+        log.info('Waiting...')
+        time.sleep(600)
+        log.info('Restarting')
+        
     if retcode == 0:   # process got no alerts, so sleep a few minutes
         log.info('Waiting for more alerts ....')
         time.sleep(settings.WAIT_TIME)
