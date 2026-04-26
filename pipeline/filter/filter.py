@@ -60,7 +60,7 @@ def run_filter(args):
     cmd = 'python3 refresh.py'
     if os.system(cmd) != 0:
         log.error("ERROR in filter/filter.py: refresh.py failed")
-        sys.exit(0)
+        raise Exception("refresh.py failed")
     
     ##### fetch a batch of annotated alerts
     log.info('FILTER start %s' % datetime.utcnow().strftime("%H:%M:%S"))
@@ -88,15 +88,15 @@ def run_filter(args):
     # rc is the return code from ingestion, number of alerts received
     if rc < 0:
         log.error("ERROR in filter/filter: consume_kafka failed")
-        sys.exit(0)
+        raise Exception("consume_kafka failed")
     
     log.info('FILTER duration %.1f seconds' % (time.time() - t))
     
     try:
         msl_local = db_connect.local()
-    except:
+    except Exception as e:
         log.error('ERROR in filter/filter: cannot connect to local database')
-        sys.exit(0)
+        raise e
     
     ##### run the watchlists
     log.info('WATCHLIST start %s' % datetime.utcnow().strftime("%H:%M:%S"))
@@ -105,7 +105,7 @@ def run_filter(args):
         hits = get_watchlist_hits(msl_local, settings.WATCHLIST_MOCS, settings.WATCHLIST_CHUNK)
     except Exception as e:
         log.error("ERROR in filter/get_watchlist_hits: %s" % str(e))
-        sys.exit(0)
+        raise e
     
     log.info('got %d watchlist hits' % len(hits))
     
@@ -114,7 +114,7 @@ def run_filter(args):
             insert_watchlist_hits(msl_local, hits)
         except Exception as e:
             log.error("ERROR in filter/insert_watchlist_hits: %s" % str(e))
-            sys.exit(0)
+            raise e
     
     log.info('WATCHLIST %.1f seconds' % (time.time() - t))
     
@@ -133,7 +133,7 @@ def run_filter(args):
             insert_area_hits(msl_local, hits)
         except Exception as e:
             log.error("ERROR in filter/insert_area_hits: %s" % str(e))
-            sys.exit(0)
+            raise e
     log.info('AREA %.1f seconds' % (time.time() - t))
     
     ##### run the user queries
@@ -143,13 +143,13 @@ def run_filter(args):
         query_list = run_active_queries.fetch_queries()
     except Exception as e:
         log.error("ERROR in filter/run_active_queries.fetch_queries: %s" % str(e))
-        sys.exit(0)
+        raise e
     
     try:
         run_active_queries.run_queries(query_list)
     except Exception as e:
         log.error("ERROR in filter/run_active_queries.run_queries: %s" % str(e))
-        sys.exit(0)
+        raise e
     log.info('QUERIES %.1f seconds' % (time.time() - t))
     
     ##### run the annotation queries
@@ -170,7 +170,7 @@ def run_filter(args):
     cmd = 'mysql --user=ztf --database=ztf --password=%s < output_csv.sql' % settings.LOCAL_DB_PASS
     if os.system(cmd) != 0:
         log.error('ERROR in filter/filter: cannot build CSV from local database')
-        sys.exit(0)
+        raise Exception("cannot build CSV from local database")
     
     tablelist = ['objects', 'sherlock_classifications', 'watchlist_hits', 'area_hits']
     
@@ -206,7 +206,7 @@ def run_filter(args):
         log.info('ERROR: No kafka commit')
         consumer.close()
         time.sleep(600)
-        sys.exit(1)
+        raise Exception("No kafka commit")
 
     ms = manage_status.manage_status(settings.SYSTEM_STATUS)
     nid = date_nid.nid_now()
