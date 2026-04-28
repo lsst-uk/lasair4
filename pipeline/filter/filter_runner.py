@@ -69,9 +69,8 @@ while not stop:
         retcode = run_filter(args)
     except Exception as e:
         log.error(str(e))
-        log.info('Waiting...')
         time.sleep(600)
-        log.info('Restarting')
+        sys.exit(1)
         
     if retcode == 0:   # process got no alerts, so sleep a few minutes
         log.info('Waiting for more alerts ....')
