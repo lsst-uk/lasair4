@@ -237,8 +237,10 @@ def run_filter(args):
     f.write(s)
     f.close()
     log.info('\n' + s)
-    time.sleep(30)
+    time.sleep(10)
 
+    msl_local.close()
+    
     log.info('Return status %d' % rc)
     if rc > 0: return(1)
     else:      return(0)
