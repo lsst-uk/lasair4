@@ -15,8 +15,8 @@ import settings
 sys.path.append('../common/src')
 from slack_webhook import _send
 
-def is_fresh():
-    file_path = Path("/home/ubuntu/logs/ingest.log")
+def is_fresh(component):
+    file_path = Path(f'/home/ubuntu/logs/{component}.log')
 
     modified_time = datetime.fromtimestamp(file_path.stat().st_mtime)
 
@@ -31,6 +31,8 @@ def shout_on_slack(message):
 
 if __name__ == "__main__":
     hostname = socket.gethostname()
-    if not is_fresh():
-        message = f'Log file on {hostname} is stale'
+    tok = hostname.split('-')
+    component = tok[2]
+    if not is_fresh(component):
+        message = f'Log file on {component} is stale'
         shout_on_slack(message)
