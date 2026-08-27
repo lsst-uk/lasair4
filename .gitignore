@@ -37,3 +37,6 @@ admin/
 node_modules
 #webserver/staticfiles/build/
 /docs/build
+common/settings.py.old
+*.lprof
+webserver/static_old
