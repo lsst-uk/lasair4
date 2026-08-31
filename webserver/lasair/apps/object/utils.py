@@ -50,13 +50,13 @@ def object_difference_lightcurve(
 
     for filt,fid in zip(filterNames, filterFids):
         BandData = unforcedDF.loc[(unforcedDF['fid'] == fid)]
-        BandDetections = BandData.loc[(BandData['candid'] > 0)]
-        BandNonDetections = BandData.loc[~(BandData['candid'] > 0)]
-        BandNonDetections["name"] = filt + "-band limiting mag"
-        BandDetectionsPos = BandDetections.loc[(BandDetections['isdiffpos'].isin([1, 't']))]
-        BandDetectionsNeg = BandDetections.loc[~(BandDetections['isdiffpos'].isin([1, 't']))]
-        BandDetectionsPos["name"] = filt + "-band detection"
-        BandDetectionsNeg["name"] = filt + "-band neg. flux detection"
+        BandDetections = BandData.loc[(BandData['candid'] > 0)].copy()
+        BandNonDetections = BandData.loc[~(BandData['candid'] > 0)].copy()
+        BandNonDetections.loc[:, "name"] = filt + "-band limiting mag"
+        BandDetectionsPos = BandDetections.loc[(BandDetections['isdiffpos'].isin([1, 't']))].copy()
+        BandDetectionsNeg = BandDetections.loc[~(BandDetections['isdiffpos'].isin([1, 't']))].copy()
+        BandDetectionsPos.loc[:, "name"] = filt + "-band detection"
+        BandDetectionsNeg.loc[:, "name"] = filt + "-band neg. flux detection"
 
         allDataSets.append(BandNonDetections)
         allDataSets.append(BandDetectionsPos)
@@ -254,8 +254,8 @@ def object_difference_lightcurve_forcedphot(
     # GENERATE THE DATASETS
     allDataSets = []
     for filt,fid in zip(filterNames, filterFids):
-        BandDetections = forcedDF.loc[(forcedDF['fid'] == fid)]
-        BandDetections["name"] = filt + "-band detection"
+        BandDetections = forcedDF.loc[(forcedDF['fid'] == fid)].copy()
+        BandDetections.loc[:, "name"] = filt + "-band detection"
         allDataSets.append(BandDetections)
 
     # START TO PLOT
@@ -453,9 +453,9 @@ def get_default_axis_ranges(
         fluxMin, fluxMax = None, None
 
     # DETERMINE SENSIBLE Y-AXIS LIMITS
-    unforcedDF["tmpSigmapsf"] = 0
+    unforcedDF["tmpSigmapsf"] = 0.0
 
-    unforcedDF.loc[(unforcedDF['sigmapsf'] > 0), "tmpSigmapsf"] = unforcedDF.loc[(unforcedDF['sigmapsf'] > 0), "sigmapsf"]
+    unforcedDF.loc[(unforcedDF['sigmapsf'] > 0), "tmpSigmapsf"] = unforcedDF.loc[(unforcedDF['sigmapsf'] > 0), "sigmapsf"].astype(float)
     unforcedDF["tmpSigmapsf"]
     unforcedDF.loc[((unforcedDF['mjd'] > mjdMin) & (unforcedDF['mjd'] < mjdMax)), "sigmapsf"] = 0
     magMax = unforcedDF.loc[((unforcedDF['mjd'] > mjdMin) & (unforcedDF['mjd'] < mjdMax)), "magpsf"] + unforcedDF.loc[((unforcedDF['mjd'] > mjdMin) & (unforcedDF['mjd'] < mjdMax)), "tmpSigmapsf"]
