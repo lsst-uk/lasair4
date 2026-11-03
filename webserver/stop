@@ -1,0 +1,5 @@
+export APACHEPATH=/home/ubuntu/mod_wsgi
+export PORT=8080
+export PYTHONPATH="$PYTHONPATH:/home/ubuntu/lasair4/common/"
+
+$APACHEPATH/apachectl stop
