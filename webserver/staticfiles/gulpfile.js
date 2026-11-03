@@ -128,7 +128,6 @@ gulp.task('concat:vendor:css', function() {
             paths.src.node_modules + '/js9/js9support.css',
             paths.src.node_modules + '/js9/js9.css',
             paths.src.node_modules + '/tributejs/dist/tribute.css',
-            //paths.src.vendor + '/aladin.min.css',
             paths.src.vendor + '/prism.css',
             paths.src.vendor + '/prism-live.css',
             paths.src.vendor + '/style.css',
@@ -257,6 +256,8 @@ gulp.task('replace_2', function() {
 gulp.task('copy:dist:vendor', function() {
     gulp.src(paths.src.node_modules + '/bootstrap-multiselect/dist/**/*.*', )
         .pipe(gulp.dest(paths.dist.vendor + "/bootstrap-multiselect"))
+    gulp.src(paths.src.vendor + '/aladin-lite/**/*.*', )
+        .pipe(gulp.dest(paths.dist.vendor + "/aladin-lite"))
     return gulp.src(paths.src.node_modules + '/js9/**/*.*', )
         .pipe(gulp.dest(paths.dist.vendor + "/js9"))
 });

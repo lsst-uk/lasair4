@@ -1,8 +1,3 @@
-cat > /home/ubuntu/mod_wsgi/rotate-logging.conf << 'EOF'
-ErrorLog "|/usr/bin/rotatelogs -L /home/ubuntu/mod_wsgi/error_log /home/ubuntu/mod_wsgi/error_log.%Y-%m-%d-%H%M%S 10M"
-CustomLog "|/usr/bin/rotatelogs -L /home/ubuntu/mod_wsgi/access_log /home/ubuntu/mod_wsgi/access_log.%Y-%m-%d-%H%M%S 10M" "%h %l %u %t \"%r\" %>s %O"
-EOF
-
 export APACHEPATH=/home/ubuntu/mod_wsgi
 export PORT=8080
 export PYTHONPATH="$PYTHONPATH:/home/ubuntu/lasair4/common/"
@@ -23,9 +18,7 @@ mod_wsgi-express setup-server \
 --application-type module lasair.wsgi \
 --server-root $APACHEPATH \
 --port $PORT \
---access-log \
---include-file /home/ubuntu/mod_wsgi/rotate-logging.conf \
---processes 1 --threads 5 --mount-point /
+--mount-point /
 
 $APACHEPATH/apachectl start
 
