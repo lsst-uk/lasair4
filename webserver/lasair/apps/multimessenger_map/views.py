@@ -4,7 +4,7 @@ import math
 import dateutil.parser as dp
 import json
 from subprocess import Popen, PIPE
-from src import date_nid
+from src import date_nid, db_connect
 import settings
 from django.db import connection
 from django.template.context_processors import csrf
