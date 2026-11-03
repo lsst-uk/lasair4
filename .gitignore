@@ -25,6 +25,7 @@ _ignore_*
 
 # Settings files and compiled binaries
 settings.py
+settings.py.bak-*
 
 # Symlinks and directories
 admin/
