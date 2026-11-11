@@ -25,6 +25,16 @@ _ignore_*
 
 # Settings files and compiled binaries
 settings.py
+# Old copies and backups of settings files, which hold passwords
+old_settings.py
+settings.py.bak*
+settings.py.old*
+settings.py.orig*
+settings_old.py
+settings copy*.py
+
+# Test reports written by xmlrunner
+test-reports/
 
 # Symlinks and directories
 admin/
