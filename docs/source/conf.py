@@ -91,6 +91,11 @@ html_theme_options = {
     'strap_line': "Documentation for the Lasair Transient Science Platform"
 }
 html_theme_path = ['_static/whistles-theme/sphinx/_themes']
+# SURVEY LOGO SHOWN BELOW THE LASAIR LOGO IN THE SIDEBAR (FILE IN _static)
+html_context = {
+    'survey_logo': 'ztf_logo_light_bg.png',
+    'survey_logo_alt': 'Zwicky Transient Facility (ZTF) logo',
+}
 html_title = None
 html_short_title = None
 # html_sidebars = {}
